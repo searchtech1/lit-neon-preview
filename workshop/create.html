@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Design your sign | Lit Neon</title>
+<meta name="description" content="Design a custom LED neon sign. See it at true size on your wall, get a drawing to approve, free UK delivery.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Archivo:wght@400;500;600;700&family=B612+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="../shared/catalog.js"></script>
+<script>document.head.insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="${LIT.googleFontsHref}">`);</script>
+<link rel="stylesheet" href="workshop.css">
+<style>
+:root{--hh:66px}
+html,body{height:100%}
+body{overflow:hidden}
+.builder{display:grid;grid-template-columns:minmax(0,1fr) 472px;height:calc(100dvh - var(--hh));min-height:0}
+
+/* ---------- stage ---------- */
+.stage{position:relative;overflow:hidden;background:#2a2622;isolation:isolate;user-select:none}
+.wall,.floor,.skirting,.wainscot,.dado,.sofa,.dimmer,.spill,.wash,.board,.standbase{position:absolute;pointer-events:none}
+.wall{inset:0;background-repeat:repeat}
+.floor{left:0;right:0;bottom:0}
+.skirting,.wainscot,.dado{left:0;right:0}
+.dimmer{inset:0;background:rgba(7,8,15,.72);transition:background .6s}
+.stage.day .dimmer{background:rgba(255,248,238,0)}
+.stage:not(.day).signoff .dimmer{background:rgba(5,6,12,.86)}
+.wash{inset:0;mix-blend-mode:screen;transition:opacity .5s}
+.spill{border-radius:50%;mix-blend-mode:screen;transition:opacity .45s}
+.stage.rgb .spill,.stage.rgb .wash{animation:ws-hue 6s linear infinite}
+.stage:not(.day) .board,.stage:not(.day) .standbase{filter:brightness(.62)}
+.board{display:none}
+.board i{position:absolute;width:var(--so);height:var(--so);border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0,#d8dbe0 30%,#8d929b 70%,#5d626b 100%);box-shadow:0 1px 2px rgba(0,0,0,.4)}
+.board i:nth-child(1){left:var(--soi);top:var(--soi)}
+.board i:nth-child(2){right:var(--soi);top:var(--soi)}
+.board i:nth-child(3){left:var(--soi);bottom:var(--soi)}
+.board i:nth-child(4){right:var(--soi);bottom:var(--soi)}
+.standbase{display:none;border-radius:0 0 4px 4px}
+.stage.spec .wall,.stage.spec .floor,.stage.spec .skirting,.stage.spec .wainscot,.stage.spec .dado,.stage.spec .sofa,.stage.spec .dimmer,.stage.spec .spill,.stage.spec .wash,.stage.spec .board,.stage.spec .standbase,.stage.spec #sceneStage,.stage.spec #dims,.stage.spec .scenes{display:none!important}
+#sceneStage{position:absolute;inset:0}
+#dims .dim{color:rgba(255,255,255,.85)}
+.stage.lightwall #dims .dim{color:rgba(28,34,31,.85)}
+
+/* stage controls */
+.ctrls{position:absolute;left:18px;top:16px;right:18px;display:flex;flex-wrap:wrap;gap:8px;z-index:5}
+.spill-btn,.seg button,.chip{border:1px solid rgba(255,255,255,.18);background:rgba(18,22,20,.6);color:#eceee9;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font-size:13px}
+.spill-btn{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 13px 0 11px;border-radius:4px}
+.spill-btn svg{width:16px;height:16px;flex:none}
+.spill-btn[aria-pressed="true"] .dot{background:var(--glow);box-shadow:0 0 8px var(--glow)}
+.dot{width:8px;height:8px;border-radius:50%;background:#6c706b;flex:none}
+.seg{display:inline-flex;border-radius:4px;overflow:hidden}
+.seg button{height:34px;padding:0 13px;border-radius:0}
+.seg button+button{border-left:none}
+.seg button[aria-pressed="true"],.chip[aria-pressed="true"]{background:var(--bone-raised);color:var(--ink);border-color:var(--bone-raised)}
+.spill-btn:hover,.seg button:hover,.chip:hover{border-color:rgba(255,255,255,.45)}
+.stage.spec .spill-btn,.stage.spec .seg button{background:rgba(238,236,230,.8);color:var(--ink);border-color:var(--rule)}
+.stage.spec .seg button[aria-pressed="true"]{background:var(--green);color:var(--bone-raised);border-color:var(--green)}
+.scenes{position:absolute;left:18px;bottom:16px;right:18px;display:flex;gap:8px;z-index:5;overflow-x:auto;scrollbar-width:none}
+.scenes::-webkit-scrollbar{display:none}
+.chip{flex:none;display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 13px 0 6px;border-radius:4px}
+.chip .sw{width:22px;height:22px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background-size:cover;flex:none}
+.chip.upload{padding-left:11px}
+
+/* ---------- spec sheet ---------- */
+.sheet{position:absolute;inset:0;display:none;color:var(--ink);background-color:var(--bone-raised);background-image:var(--noise),linear-gradient(var(--draft-faint) 1px,transparent 1px),linear-gradient(90deg,var(--draft-faint) 1px,transparent 1px);background-size:220px 220px,24px 24px,24px 24px;overflow:hidden}
+.stage.spec .sheet{display:block}
+.sheet .frame{position:absolute;inset:18px;border:1px solid var(--ink);pointer-events:none}
+.sheet .frame::before{content:"";position:absolute;inset:4px;border:1px solid var(--rule)}
+.sheet .sh-title{position:absolute;left:34px;top:64px;font-family:var(--display);font-weight:600;font-variation-settings:"SOFT" 100,"WONK" 1;font-size:22px;letter-spacing:-.01em}
+.sheet .sh-sub{position:absolute;left:34px;top:94px;font-family:var(--mono);font-size:12px;color:var(--ink-soft)}
+.sheet .drawing{position:absolute}
+.sheet .drawing svg{position:absolute;overflow:visible}
+.sheet .drawing svg text{fill:none;stroke:var(--draft);stroke-width:1.4;stroke-linejoin:round;stroke-linecap:round}
+.sheet .drawing svg path{fill:none;stroke:var(--draft);stroke-width:1.7;stroke-linejoin:round;stroke-linecap:round}
+.sheet .drawing .ws-sign{display:none}
+.sheet .contourL{position:absolute;color:#fff}
+.sheet .rectL{position:absolute;border:1px dashed var(--draft);border-radius:2px}
+.sheet .rectL i{position:absolute;width:7px;height:7px;border:1px solid var(--draft);border-radius:50%}
+.sheet .rectL i:nth-child(1){left:6px;top:6px}.sheet .rectL i:nth-child(2){right:6px;top:6px}.sheet .rectL i:nth-child(3){left:6px;bottom:6px}.sheet .rectL i:nth-child(4){right:6px;bottom:6px}
+.sheet .capline{position:absolute;border-top:1px dashed var(--draft);opacity:.6}
+.sheet .tb{position:absolute;right:34px;bottom:30px;width:min(380px,44%);border:1px solid var(--ink);background:var(--bone-raised);font-size:12.5px}
+.sheet .tb table{width:100%;border-collapse:collapse}
+.sheet .tb td{padding:3px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.sheet .tb tr:last-child td{border-bottom:none}
+.sheet .tb td:first-child{color:var(--ink-soft);width:38%;border-right:1px solid var(--rule)}
+.sheet .tb td:last-child{font-family:var(--mono);font-size:12px}
+.sheet .tb td.name{font-family:var(--display);font-weight:600;font-variation-settings:"SOFT" 100;font-size:15px;color:var(--ink)}
+.sheet .notes{position:absolute;left:34px;bottom:30px;width:min(300px,30%);font-size:12.5px;color:var(--ink-soft)}
+.sheet .notes h4{font-family:var(--ui);font-weight:600;font-size:12.5px;color:var(--ink);margin-bottom:6px}
+.sheet .notes ol{margin:0;padding-left:18px;display:grid;gap:4px}
+.sheet .stamp{position:absolute;right:46px;top:64px;padding:6px 12px;border:2px solid var(--oxblood);color:var(--oxblood);font-family:var(--mono);font-size:12px;letter-spacing:.04em;transform:rotate(-6deg);opacity:.85;border-radius:3px}
+.sheet .stamp small{display:block;font-size:10px;letter-spacing:0}
+@media (max-width:1100px){.sheet .notes{display:none}.sheet .tb{width:min(330px,52%)}}
+.spec-table{border:1px solid var(--rule);border-radius:3px;overflow:hidden;background:var(--bone-raised)}
+.spec-table table{width:100%;border-collapse:collapse;font-size:13.5px}
+.spec-table td{padding:7px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+.spec-table tr:last-child td{border-bottom:none}
+.spec-table td:first-child{color:var(--ink-soft);width:40%}
+.spec-table td:last-child{font-family:var(--mono);font-size:12.5px}
+.spec-table td.name{font-family:var(--ui);font-weight:600;font-size:14px}
+
+/* ---------- panel ---------- */
+.panel{display:flex;flex-direction:column;min-height:0;position:relative;background:var(--bone) var(--noise);border-left:1px solid var(--rule)}
+.panel::before{content:"";position:absolute;left:0;top:0;bottom:0;width:80px;pointer-events:none;z-index:1;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--glow) calc(var(--spill)*100%),transparent),transparent);transition:background .5s}
+.scroll{overflow-y:auto;flex:1;padding:28px 30px 26px;position:relative}
+.handle{display:none}
+.stepnav{display:none}
+.step{padding:0 0 24px;margin:0 0 24px;border-bottom:1px solid var(--rule)}
+.step:last-of-type{border-bottom:none}
+.step h2{display:flex;align-items:baseline;gap:10px;font-family:var(--ui);font-size:17px;font-weight:600;margin:0 0 3px;letter-spacing:0;font-variation-settings:normal}
+.step h2 .n{font-family:var(--mono);font-size:12px;color:var(--draft);width:16px}
+.step .hint{margin:0 0 14px 26px;color:var(--ink-soft);font-size:14px}
+.step .body{margin-left:26px}
+
+textarea#words{width:100%;min-height:92px;resize:none;border:1px solid var(--rule);background:var(--bone-raised);border-radius:4px;padding:12px 14px;font-size:18px;line-height:1.45}
+textarea#words:focus{outline:none;border-color:var(--draft);box-shadow:0 0 0 3px var(--draft-faint)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px}
+.align{display:inline-flex;border:1px solid var(--rule);border-radius:4px;overflow:hidden;background:var(--bone-raised)}
+.align button{width:38px;height:32px;border:none;background:none;display:grid;place-items:center;color:var(--ink-soft)}
+.align button+button{border-left:1px solid var(--rule)}
+.align button[aria-pressed="true"]{background:var(--green);color:#fff}
+.align svg{width:16px;height:16px}
+.counter{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft)}
+.warn{margin:10px 0 0;font-size:13.5px;color:var(--oxblood)}
+
+.fonts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ft{border:1px solid var(--rule);background:var(--bone-raised);border-radius:4px;padding:10px 12px 8px;text-align:left;min-height:78px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.ft .pv{font-size:24px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+.ft .nm{font-size:12.5px;color:var(--ink-soft)}
+.ft:hover{border-color:var(--ink-faint)}
+.ft[aria-pressed="true"]{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
+
+.colours{display:grid;grid-template-columns:repeat(6,1fr);gap:12px 8px}
+.cs{border:none;background:none;padding:0;display:grid;justify-items:center}
+.cs .ball{width:38px;height:38px;border-radius:50%;background:var(--c);box-shadow:0 0 0 1px rgba(0,0,0,.1),0 0 12px color-mix(in srgb,var(--c) 55%,transparent);transition:transform .15s}
+.cs:hover .ball{transform:scale(1.06)}
+.cs[aria-pressed="true"] .ball{box-shadow:0 0 0 2px var(--bone),0 0 0 4px var(--green),0 0 16px color-mix(in srgb,var(--c) 70%,transparent)}
+.cs.rgbsw .ball{background:conic-gradient(#ff2d55,#ff9f1a,#ffe43a,#2dff7a,#2bd4ff,#2b6cff,#a64dff,#ff2d55)}
+.cname{margin-top:14px;font-size:14.5px;display:flex;justify-content:space-between}
+.cname b{font-weight:600}
+.cname span{color:var(--ink-soft)}
+
+.sizes{display:grid;gap:6px}
+.sz{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 12px;border:1px solid var(--rule);background:var(--bone-raised);border-radius:4px;padding:11px 14px;text-align:left}
+.sz .nm{font-weight:600;font-size:15px}
+.sz .dm{grid-column:1;font-family:var(--mono);font-size:12px;color:var(--ink-soft)}
+.sz .pr{grid-row:1 / span 2;grid-column:2;font-weight:600;font-variant-numeric:tabular-nums}
+.sz[aria-pressed="true"]{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
+.sz:disabled{opacity:.5;cursor:not-allowed}
+.sz:disabled .pr{font-weight:500;font-size:12.5px;color:var(--ink-soft)}
+
+.icons{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.ic{aspect-ratio:1;border:1px solid var(--rule);background:var(--bone-raised);border-radius:4px;display:grid;place-items:center;color:var(--ink);font-size:11.5px}
+.ic svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.ic[aria-pressed="true"]{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
+
+.opts{display:grid;gap:6px}
+.opt{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:12px;border:1px solid var(--rule);background:var(--bone-raised);border-radius:4px;padding:10px 14px 10px 10px;text-align:left}
+.opt svg{width:44px;height:30px}
+.opt .nm{font-weight:600;font-size:14.5px;display:block}
+.opt .ds{font-size:12.5px;color:var(--ink-soft);display:block}
+.opt .pr{font-size:13px;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.opt[aria-pressed="true"]{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
+.sublabel{font-size:13.5px;font-weight:600;margin:18px 0 8px}
+.boards{display:flex;flex-wrap:wrap;gap:8px}
+.bd{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--rule);background:var(--bone-raised);border-radius:999px;padding:5px 12px 5px 6px;font-size:13.5px}
+.bd i{width:20px;height:20px;border-radius:50%;border:1px solid rgba(0,0,0,.15);background:var(--b)}
+.bd small{color:var(--ink-soft);font-size:12px}
+.bd[aria-pressed="true"]{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
+
+.segs{display:grid;gap:14px}
+.sg-label{font-size:13.5px;font-weight:600;margin:0 0 6px}
+.sgrp{display:flex;border:1px solid var(--rule);border-radius:4px;background:var(--bone-raised);overflow:hidden}
+.sgrp button{flex:1;border:none;background:none;padding:9px 8px;font-size:13.5px;line-height:1.3;text-align:center}
+.sgrp button+button{border-left:1px solid var(--rule)}
+.sgrp button small{display:block;font-size:11.5px;color:var(--ink-soft)}
+.sgrp button[aria-pressed="true"]{background:var(--green);color:#fff}
+.sgrp button[aria-pressed="true"] small{color:rgba(255,255,255,.75)}
+.included{margin:16px 0 0;font-size:13.5px;color:var(--ink-soft)}
+
+.logo-cta{width:100%;display:flex;align-items:center;gap:14px;border:1px dashed var(--ink-faint);background:none;border-radius:4px;padding:14px 16px;text-align:left;text-decoration:none;color:inherit}
+.logo-cta b{display:block;font-weight:600;font-size:14.5px}
+.logo-cta span{font-size:13px;color:var(--ink-soft)}
+.logo-cta svg{width:28px;height:28px;flex:none;color:var(--ink-soft)}
+.logo-cta:hover{border-color:var(--ink)}
+.proto-note{margin:22px 0 0;font-size:12px;color:var(--ink-faint)}
+
+/* ---------- footer (price) ---------- */
+.foot{border-top:1px solid var(--rule);padding:16px 30px 18px;background:var(--bone-raised) var(--noise);position:relative;z-index:2}
+.buyrow{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.price{font-family:var(--display);font-weight:600;font-variation-settings:"SOFT" 100;font-size:34px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.1}
+.price small{font-family:var(--ui);font-variant-numeric:normal;font-size:13px;font-weight:500;color:var(--ink-soft);letter-spacing:0;margin-left:6px;font-variation-settings:normal}
+.klarna{margin:4px 0 0;font-size:13px;color:var(--ink-soft)}
+.klarna b{color:var(--ink);font-weight:600}
+.meta{margin:12px 0 0;display:grid;gap:4px;font-size:13.5px}
+.meta p{margin:0;display:flex;gap:8px;align-items:flex-start}
+.meta svg{width:16px;height:16px;flex:none;margin-top:2px;color:var(--ink-soft)}
+.links{display:flex;gap:18px;margin-top:12px}
+.emailform{display:flex;gap:8px;margin-top:10px}
+.emailform input{flex:1;height:38px;border:1px solid var(--rule);border-radius:4px;background:var(--bone);padding:0 12px;font-size:14px}
+.emailform button{height:38px;border-radius:4px;border:none;background:var(--green);color:#fff;padding:0 14px;font-weight:600;font-size:13.5px}
+.mobile-meta{display:none}
+
+/* ---------- mobile: stage pinned, controls as a sheet ---------- */
+@media (max-width:900px){
+  :root{--hh:60px}
+  html,body{height:auto}
+  body{overflow:auto}
+  .builder{display:block;height:auto}
+  .stage{position:sticky;top:var(--hh);height:44svh;z-index:10}
+  .ctrls{left:12px;right:12px;top:12px;gap:6px}
+  .spill-btn,.seg button,.chip{height:32px;font-size:12.5px}
+  .spill-btn{padding:0 10px}
+  .seg button{padding:0 10px}
+  #btnDims{display:none}
+  .scenes{left:12px;right:12px;bottom:14px}
+  .panel{border-left:none;position:relative;background:transparent}
+  .panel::before{display:none}
+  .handle{display:block;width:44px;height:4px;border-radius:2px;background:var(--rule);position:absolute;left:50%;top:8px;transform:translateX(-50%)}
+  .stepnav{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:20px 16px 10px;position:sticky;top:calc(var(--hh) + 44svh);background:var(--bone) var(--noise);z-index:3;border-bottom:1px solid var(--rule);border-radius:14px 14px 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.25)}
+  .scroll{background:var(--bone) var(--noise)}
+  .stepnav::-webkit-scrollbar{display:none}
+  .stepnav a{flex:none;height:32px;padding:0 12px;border-radius:999px;border:1px solid var(--rule);font-size:13px;display:inline-flex;align-items:center;text-decoration:none;color:var(--ink);background:var(--bone-raised)}
+  .scroll{overflow:visible;padding:20px 16px 170px}
+  .step{scroll-margin-top:calc(var(--hh) + 44svh + 64px)}
+  .step .hint,.step .body{margin-left:0}
+  .spec-table.body{margin-left:0}
+  .foot{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:12px 16px calc(12px + env(safe-area-inset-bottom));box-shadow:0 -8px 24px rgba(0,0,0,.08)}
+  .price{font-size:28px}
+  .foot .meta,.foot .links,.foot .emailform{display:none!important}
+  .klarna{font-size:12px}
+  .mobile-meta{display:block;margin-top:4px}
+  .mobile-meta .meta{margin:0}
+  .sheet .sh-title{font-size:15px;left:26px;top:56px}
+  .sheet .sh-sub{left:26px;top:78px;font-size:10px;right:26px}
+  .sheet .frame{inset:12px}
+  .sheet .tb{display:none}
+  .sheet .stamp{right:24px;top:52px;font-size:9.5px;padding:3px 7px}
+  .sheet .stamp small{display:none}
+}
+@media (max-width:420px){.colours{grid-template-columns:repeat(6,1fr)}.fonts{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div role="note" style="position:relative;z-index:9999;background:#C8A253;color:#17352B;font:600 13px/1.4 system-ui,-apple-system,sans-serif;padding:8px 16px;text-align:center">Original "Signwriters' Workshop" concept from 8 Oct, built before your decisions: VAT wording, delivery area and launch offer here are out of date. <a href="../index.html" style="color:#17352B;text-decoration:underline">See the current fused design</a></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <filter id="contourF" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+    <feMorphology in="SourceAlpha" operator="dilate" radius="10" result="d"/>
+    <feGaussianBlur in="d" stdDeviation="4" result="b"/>
+    <feComponentTransfer in="b" result="shape"><feFuncA type="linear" slope="24" intercept="-11"/></feComponentTransfer>
+    <feMorphology in="shape" operator="erode" radius="1.3" result="inner"/>
+    <feComposite in="shape" in2="inner" operator="out" result="edge"/>
+    <feFlood id="cfFill" flood-color="#ffffff" flood-opacity=".08"/>
+    <feComposite in2="shape" operator="in" result="fill"/>
+    <feFlood id="cfEdge" flood-color="#ffffff" flood-opacity=".45"/>
+    <feComposite in2="edge" operator="in" result="edgeC"/>
+    <feMerge><feMergeNode in="fill"/><feMergeNode in="edgeC"/></feMerge>
+  </filter>
+  <filter id="contourSpec" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+    <feMorphology in="SourceAlpha" operator="dilate" radius="10" result="d"/>
+    <feGaussianBlur in="d" stdDeviation="4" result="b"/>
+    <feComponentTransfer in="b" result="shape"><feFuncA type="linear" slope="24" intercept="-11"/></feComponentTransfer>
+    <feMorphology in="shape" operator="erode" radius="1.2" result="inner"/>
+    <feComposite in="shape" in2="inner" operator="out" result="edge"/>
+    <feFlood flood-color="#2F5D8A" flood-opacity=".9"/>
+    <feComposite in2="edge" operator="in"/>
+  </filter>
+</svg>
+
+<div id="wsHeader"></div>
+
+<main class="builder">
+  <section class="stage" id="stage" aria-label="Live preview of your sign">
+    <div class="wall" id="wall"></div>
+    <div class="wainscot" id="wainscot"></div>
+    <div class="dado" id="dado"></div>
+    <div class="skirting" id="skirting"></div>
+    <div class="floor" id="floor"></div>
+    <svg class="sofa" id="sofa" viewBox="0 0 210 84" preserveAspectRatio="none" aria-hidden="true">
+      <defs><linearGradient id="fab" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4b505c"/><stop offset="1" stop-color="#30333c"/></linearGradient>
+      <linearGradient id="seat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#555b68"/><stop offset="1" stop-color="#3a3e48"/></linearGradient></defs>
+      <rect x="19" y="76" width="3" height="8" rx="1" fill="#17181c"/><rect x="188" y="76" width="3" height="8" rx="1" fill="#17181c"/>
+      <rect x="10" y="10" width="190" height="44" rx="11" fill="url(#fab)"/>
+      <rect x="2" y="46" width="206" height="32" rx="7" fill="url(#fab)"/>
+      <rect x="19" y="43" width="85.5" height="13" rx="5" fill="url(#seat)"/><rect x="105.5" y="43" width="85.5" height="13" rx="5" fill="url(#seat)"/>
+      <rect x="0" y="32" width="21" height="46" rx="9" fill="#3d414c"/><rect x="189" y="32" width="21" height="46" rx="9" fill="#3d414c"/>
+    </svg>
+    <div class="dimmer"></div>
+    <div class="wash" id="wash"></div>
+    <div class="spill" id="spill"></div>
+    <div class="board" id="board"><i></i><i></i><i></i><i></i></div>
+    <div class="standbase" id="standbase"></div>
+    <div class="ws-stage" id="sceneStage"></div>
+    <div id="dims"></div>
+
+    <div class="sheet" id="specSheet" aria-label="Specification drawing of your sign">
+      <div class="frame"></div>
+      <div class="sh-title">Custom neon sign, drawing 1</div>
+      <div class="sh-sub" id="shSub"></div>
+      <div class="stamp">For approval<small>nothing is made until you say yes</small></div>
+      <div class="drawing" id="shDrawing"></div>
+      <div id="shDims"></div>
+      <div class="notes" id="shNotes"></div>
+      <div class="tb" id="shTable"></div>
+    </div>
+
+    <div class="ctrls" role="toolbar" aria-label="Preview controls">
+      <button class="spill-btn" id="btnPower" aria-pressed="false"><span class="dot" aria-hidden="true"></span><span class="lbl">Sign off</span></button>
+      <button class="spill-btn" id="btnRoom" aria-pressed="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></svg>
+        <span class="lbl">Evening</span>
+      </button>
+      <div class="seg" role="group" aria-label="View">
+        <button data-view="room" aria-pressed="true">In a room</button>
+        <button data-view="fit" aria-pressed="false">Close-up</button>
+        <button data-view="spec" aria-pressed="false">Spec sheet</button>
+      </div>
+      <button class="spill-btn" id="btnDims" aria-pressed="true"><span class="dot" aria-hidden="true"></span>Measurements</button>
+    </div>
+
+    <div class="scenes" role="group" aria-label="Wall" id="scenes"></div>
+    <input type="file" id="ownWall" accept="image/*" class="sr" tabindex="-1">
+  </section>
+
+  <section class="panel" aria-label="Design your sign">
+    <nav class="stepnav" aria-label="Steps"><span class="handle" aria-hidden="true"></span><a href="#s1">Words</a><a href="#s2">Lettering</a><a href="#s3">Colour</a><a href="#s4">Size</a><a href="#s5">Symbol</a><a href="#s6">Backing</a><a href="#s7">Finishing</a><a href="#s8">Spec</a></nav>
+    <div class="scroll" id="scroll">
+      <section class="step" id="s1" aria-labelledby="h1">
+        <h2 id="h1"><span class="n">1</span>Your words</h2>
+        <p class="hint">Up to three lines of 24 characters. Press Enter for a new line.</p>
+        <div class="body">
+          <label for="words" class="sr">Your words</label>
+          <textarea id="words" maxlength="74" spellcheck="false" autocomplete="off"></textarea>
+          <div class="row">
+            <div class="align" role="group" aria-label="Line alignment">
+              <button data-align="left" aria-pressed="false" aria-label="Align left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h10M4 17h13"/></svg></button>
+              <button data-align="center" aria-pressed="true" aria-label="Centre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M7 12h10M5.5 17h13"/></svg></button>
+              <button data-align="right" aria-pressed="false" aria-label="Align right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M10 12h10M7 17h13"/></svg></button>
+            </div>
+            <span class="counter" id="counter"></span>
+          </div>
+          <p class="warn" id="wordsWarn" hidden></p>
+        </div>
+      </section>
+
+      <section class="step" id="s2" aria-labelledby="h2">
+        <h2 id="h2"><span class="n">2</span>Lettering</h2>
+        <p class="hint">Each style is shown with your words.</p>
+        <div class="body"><div class="fonts" id="fonts" role="group" aria-label="Lettering style"></div></div>
+      </section>
+
+      <section class="step" id="s3" aria-labelledby="h3">
+        <h2 id="h3"><span class="n">3</span>Colour</h2>
+        <p class="hint">Switch the sign on in the preview to see the real glow.</p>
+        <div class="body">
+          <div class="colours" id="colours" role="group" aria-label="Colour"></div>
+          <div class="cname"><b id="cName"></b><span id="cNote"></span></div>
+        </div>
+      </section>
+
+      <section class="step" id="s4" aria-labelledby="h4">
+        <h2 id="h4"><span class="n">4</span>Size</h2>
+        <p class="hint">Measured from your words and lettering, backing included.</p>
+        <div class="body"><div class="sizes" id="sizes" role="group" aria-label="Size"></div></div>
+      </section>
+
+      <section class="step" id="s5" aria-labelledby="h5">
+        <h2 id="h5"><span class="n">5</span>Symbol</h2>
+        <p class="hint">Optional. Sits to the left of your words, in the same colour.</p>
+        <div class="body"><div class="icons" id="icons" role="group" aria-label="Symbol"></div></div>
+      </section>
+
+      <section class="step" id="s6" aria-labelledby="h6">
+        <h2 id="h6"><span class="n">6</span>Backing</h2>
+        <p class="hint">The acrylic your sign is mounted on.</p>
+        <div class="body">
+          <div class="opts" id="backings" role="group" aria-label="Backing shape"></div>
+          <p class="sublabel">Acrylic finish</p>
+          <div class="boards" id="boards" role="group" aria-label="Acrylic finish"></div>
+        </div>
+      </section>
+
+      <section class="step" id="s7" aria-labelledby="h7">
+        <h2 id="h7"><span class="n">7</span>Finishing</h2>
+        <p class="hint">Where it goes and how fast you need it.</p>
+        <div class="body">
+          <div class="segs">
+            <div><p class="sg-label">Where it will hang</p><div class="sgrp" id="use" role="group" aria-label="Where it will hang"></div></div>
+            <div><p class="sg-label">Plug</p><div class="sgrp" id="plug" role="group" aria-label="Plug"></div></div>
+            <div><p class="sg-label">Making time</p><div class="sgrp" id="prod" role="group" aria-label="Making time"></div></div>
+          </div>
+          <p class="included">Every sign comes with a dimmer and remote, a 12 V adapter, 2 m of clear cable and wall fixings.</p>
+        </div>
+      </section>
+
+      <section class="step" id="s8" aria-labelledby="h8">
+        <h2 id="h8">Specification</h2>
+        <p class="hint">What goes on the drawing you approve. Choose the spec sheet view above to see it drawn with dimensions.</p>
+        <div class="body spec-table" id="panelSpec"></div>
+      </section>
+
+      <a class="logo-cta" href="business.html#quote">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        <span><b>Have a logo or artwork?</b><span>Send it over and we'll draw it in neon, with a free mockup and price.</span></span>
+      </a>
+
+      <div class="mobile-meta"><div class="meta" data-meta></div>
+        <div class="links" style="display:flex"><button class="link-btn" data-share>Share this design</button><button class="link-btn" data-email>Email it to me</button></div>
+      </div>
+
+      <p class="proto-note" id="protoNote"></p>
+    </div>
+
+    <div class="foot" id="foot">
+      <div class="buyrow">
+        <div>
+          <div class="price" id="price" aria-live="polite">£0<small>inc. VAT</small></div>
+          <p class="klarna" id="klarna"></p>
+        </div>
+        <button class="btn primary" id="addBtn">Add to basket</button>
+      </div>
+      <div class="meta" data-meta></div>
+      <div class="links"><button class="link-btn" data-share>Share this design</button><button class="link-btn" data-email>Email it to me</button></div>
+      <form class="emailform" id="emailForm" hidden>
+        <label for="emailIn" class="sr">Email address</label>
+        <input id="emailIn" type="email" placeholder="you@example.co.uk" required>
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<div id="wsFooter" hidden></div>
+
+<script src="workshop.js"></script>
+<script>
+(() => {
+"use strict";
+const {$, $$, byId, gbp, gbp2, rgba, mix} = WS;
+const FONTS = WS.FONTS, COLOURS = WS.COLOURS, SIZES = WS.SIZES, BACKINGS = WS.BACKINGS, BOARDS = WS.BOARDS, USES = WS.USES, PLUGS = WS.PLUGS, PRODS = WS.PRODS;
+const BACKING_ICONS = {
+  cut: '<svg viewBox="0 0 44 30" fill="none"><path d="M6 19c0-6 4-11 9-11 3 0 4 3 7 3s5-4 9-4 7 4 7 9-3 8-8 8H13c-4 0-7-2-7-5Z" stroke="currentColor" stroke-width="1.4"/><path d="M12 18c2-5 5-6 6-2s4 3 6-1 5-2 6 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+  rect: '<svg viewBox="0 0 44 30" fill="none"><rect x="4" y="5" width="36" height="20" rx="2" stroke="currentColor" stroke-width="1.4"/><circle cx="8" cy="9" r="1.2" fill="currentColor"/><circle cx="36" cy="9" r="1.2" fill="currentColor"/><circle cx="8" cy="21" r="1.2" fill="currentColor"/><circle cx="36" cy="21" r="1.2" fill="currentColor"/><path d="M12 17c2-5 5-6 6-2s4 3 6-1 5-2 6 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+  stand: '<svg viewBox="0 0 44 30" fill="none"><rect x="6" y="3" width="32" height="18" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M12 27h20l-3-6H15l-3 6Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M13 14c2-5 5-6 6-2s4 3 6-1 5-2 6 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'
+};
+const DEFAULT = {text: "Let's stay in", align: 'center', font: 'soho', colour: 'pink', size: 'm', backing: 'cut', board: 'clear', use: 'in', plug: 'uk', prod: 'std', icon: ''};
+const view = {scene: 'brick', on: false, night: true, mode: innerWidth > 900 ? 'room' : 'fit', dims: true, ownUrl: null};
+let st = Object.assign({}, DEFAULT, fromHash());
+
+/* ---------- design maths ---------- */
+function lines() {
+  let L = st.text.replace(/\r/g, '').split('\n').slice(0, WS.MAXLINES).map(l => l.replace(/\s+$/, ''));
+  while (L.length > 1 && L[L.length - 1] === '') L.pop();
+  return L;
+}
+const hasText = () => st.text.trim().length > 0;
+const dz = () => ({lines: hasText() ? lines() : ['Your words'], font: st.font, colour: st.colour, icon: st.icon, align: st.align});
+const realDz = () => ({lines: hasText() ? lines() : [], font: st.font, colour: st.colour, icon: st.icon, align: st.align});
+const font = () => byId(FONTS, st.font), colour = () => byId(COLOURS, st.colour), backing = () => byId(BACKINGS, st.backing), board = () => byId(BOARDS, st.board);
+const dimsFor = sizeId => WS.dimsFor(dz(), sizeId, st.backing);
+const priceFor = (d, s = st) => WS.priceFor(d, s);
+
+/* ---------- hash state ---------- */
+function fromHash() {
+  try {
+    const h = location.hash.match(/d=([\w-]+)/); if (!h) return {};
+    const o = JSON.parse(WS.b64d(h[1])), out = {};
+    const lists = {font: FONTS, colour: COLOURS, size: SIZES, backing: BACKINGS, board: BOARDS, use: USES, plug: PLUGS, prod: PRODS, icon: WS.ICON_LIST};
+    if (typeof o.text === 'string') out.text = o.text.slice(0, 74);
+    if (['left', 'center', 'right'].includes(o.align)) out.align = o.align;
+    for (const k in lists) if (lists[k].some(x => x.id === o[k])) out[k] = o[k];
+    return out;
+  } catch (e) { return {}; }
+}
+function writeHash() { try { history.replaceState(null, '', '#d=' + WS.b64e(JSON.stringify(st))); } catch (e) {} }
+
+/* ---------- elements ---------- */
+const stage = $('#stage'), wall = $('#wall'), floor = $('#floor'), skirting = $('#skirting'), sofa = $('#sofa'), wains = $('#wainscot'), dado = $('#dado'),
+      sceneStage = $('#sceneStage'), boardEl = $('#board'), standbase = $('#standbase'), spill = $('#spill'), wash = $('#wash'), dimsEl = $('#dims'), words = $('#words');
+
+/* ---------- panel ---------- */
+function pressGroup(container, attr, value) { $$(`[${attr}]`, container).forEach(b => b.setAttribute('aria-pressed', String(b.getAttribute(attr) === value))); }
+function buildPanel() {
+  $('#fonts').innerHTML = FONTS.map(f => `<button class="ft" data-font="${f.id}" aria-pressed="false"><span class="pv" style="font-family:'${f.family}';font-weight:${f.weight || 400}"></span><span class="nm">${f.name}</span></button>`).join('');
+  $('#colours').innerHTML = COLOURS.map(c => `<button class="cs${c.rgb ? ' rgbsw' : ''}" data-colour="${c.id}" aria-pressed="false" aria-label="${c.name}" style="--c:${c.hex}"><span class="ball"></span></button>`).join('');
+  $('#sizes').innerHTML = SIZES.map(s => `<button class="sz" data-size="${s.id}" aria-pressed="false"><span class="nm">${s.name}</span><span class="dm"></span><span class="pr"></span></button>`).join('');
+  $('#icons').innerHTML = WS.ICON_LIST.map(i => `<button class="ic" data-icon="${i.id}" aria-pressed="false" aria-label="${i.name}" title="${i.name}">${i.id ? `<svg viewBox="0 0 24 24"><path d="${LIT.icons[i.id]}"/></svg>` : 'None'}</button>`).join('');
+  $('#backings').innerHTML = BACKINGS.map(b => `<button class="opt" data-backing="${b.id}" aria-pressed="false">${BACKING_ICONS[b.id]}<span><span class="nm">${b.name}</span><span class="ds">${b.desc}</span></span><span class="pr">${b.add ? '+' + gbp(b.add) : 'Included'}</span></button>`).join('');
+  $('#boards').innerHTML = BOARDS.map(b => `<button class="bd" data-board="${b.id}" aria-pressed="false"><i style="--b:${b.swatch}"></i>${b.name}${b.add ? ` <small>+${gbp(b.add)}</small>` : ''}</button>`).join('');
+  $('#use').innerHTML = USES.map(u => `<button data-use="${u.id}" aria-pressed="false">${u.name}<small>${u.sub}</small></button>`).join('');
+  $('#plug').innerHTML = PLUGS.map(p => `<button data-plug="${p.id}" aria-pressed="false">${p.name}<small>${p.sub}</small></button>`).join('');
+  $('#prod').innerHTML = PRODS.map(p => `<button data-prod="${p.id}" aria-pressed="false">${p.name}<small>${p.sub}</small></button>`).join('');
+  $('#scenes').innerHTML = Object.entries(WS.SCENES).map(([id, sc]) => id === 'own'
+    ? `<button class="chip upload" id="ownWallBtn" data-scene="own" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m21 16-5-5-9 8"/></svg>Your wall</button>`
+    : `<button class="chip" data-scene="${id}" aria-pressed="false"><span class="sw" style="background:${sc.sw}"></span>${sc.name}</button>`).join('');
+  $('#protoNote').textContent = 'Prototype. ' + LIT.brand.note;
+
+  const bind = (sel, key, opts = {}) => $(sel).addEventListener('click', e => {
+    const b = e.target.closest(`[data-${key}]`); if (!b || b.disabled) return;
+    st[key] = b.dataset[key];
+    if (opts.flick) strike();
+    update();
+  });
+  bind('#fonts', 'font', {flick: true}); bind('#colours', 'colour', {flick: true}); bind('#sizes', 'size'); bind('#icons', 'icon');
+  bind('#backings', 'backing'); bind('#boards', 'board'); bind('#use', 'use'); bind('#plug', 'plug'); bind('#prod', 'prod');
+  $('.align').addEventListener('click', e => { const b = e.target.closest('[data-align]'); if (!b) return; st.align = b.dataset.align; update(); });
+
+  words.value = st.text;
+  words.addEventListener('input', () => {
+    let L = words.value.replace(/\r/g, '').split('\n'), changed = false;
+    if (L.length > WS.MAXLINES) { L = L.slice(0, WS.MAXLINES); changed = true; }
+    L = L.map(l => { if (l.length > WS.MAXLINE) { changed = true; return l.slice(0, WS.MAXLINE); } return l; });
+    if (changed) { const pos = words.selectionStart; words.value = L.join('\n'); words.selectionStart = words.selectionEnd = Math.min(pos, words.value.length); }
+    st.text = words.value; update();
+  });
+  $$('.stepnav a').forEach(a => a.addEventListener('click', e => { e.preventDefault(); const t = $(a.getAttribute('href')); t.scrollIntoView({behavior: WS.reduced() ? 'auto' : 'smooth', block: 'start'}); }));
+}
+
+/* ---------- update ---------- */
+let shownPrice = null, priceRaf = 0;
+function animatePrice(to) {
+  const el = $('#price');
+  if (shownPrice === null || WS.reduced()) { shownPrice = to; el.firstChild.nodeValue = gbp(to); return; }
+  const from = shownPrice, t0 = performance.now(); cancelAnimationFrame(priceRaf);
+  const tick = t => { const k = Math.min(1, (t - t0) / 260), v = Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3))); el.firstChild.nodeValue = gbp(v); if (k < 1) priceRaf = requestAnimationFrame(tick); };
+  shownPrice = to; priceRaf = requestAnimationFrame(tick);
+}
+
+function update() {
+  const text = hasText();
+  if (text && !dimsFor(st.size).ok) {
+    const fit = SIZES.filter(s => dimsFor(s.id).ok).pop();
+    if (fit && fit.id !== st.size) { WS.toast(`Too wide for ${byId(SIZES, st.size).name.toLowerCase()}. Switched to ${fit.name.toLowerCase()}. Add a line break to go bigger.`); st.size = fit.id; }
+  }
+  const d = dimsFor(st.size), c = colour();
+  document.documentElement.style.setProperty('--glow', c.rgb ? '#ff5fa2' : c.hex);
+  document.documentElement.style.setProperty('--spill', view.on ? (view.night ? .13 : .06) : 0);
+
+  pressGroup($('#fonts'), 'data-font', st.font); pressGroup($('#colours'), 'data-colour', st.colour); pressGroup($('#sizes'), 'data-size', st.size);
+  pressGroup($('#icons'), 'data-icon', st.icon); pressGroup($('#backings'), 'data-backing', st.backing); pressGroup($('#boards'), 'data-board', st.board);
+  pressGroup($('#use'), 'data-use', st.use); pressGroup($('#plug'), 'data-plug', st.plug); pressGroup($('#prod'), 'data-prod', st.prod); pressGroup($('.align'), 'data-align', st.align);
+
+  const first = (lines().find(l => l.trim()) || 'Your words').slice(0, 16);
+  $$('.ft').forEach(b => { const f = byId(FONTS, b.dataset.font), el = b.querySelector('.pv'); el.textContent = text ? first : 'Your words'; const cap = WS.measure(f, ['H'], 'left').cap; el.style.fontSize = Math.max(18, Math.min(34, 15.5 / cap)) + 'px'; });
+  $('#cName').textContent = c.name;
+  $('#cNote').textContent = c.rgb ? 'Remote picks colours and effects, +25%' : '';
+
+  const tooLongAll = text && !SIZES.some(s => dimsFor(s.id).ok);
+  $$('.sz').forEach(b => {
+    const dd = dimsFor(b.dataset.size);
+    b.querySelector('.dm').textContent = `${dd.W} × ${dd.H} cm`;
+    b.disabled = text && !dd.ok;
+    b.querySelector('.pr').textContent = !text ? '' : dd.ok ? gbp(priceFor(dd, Object.assign({}, st, {size: b.dataset.size}))) : 'Over 2.1 m wide';
+  });
+  const L2 = st.text.split('\n');
+  $('#counter').textContent = `Longest line ${Math.max(...L2.map(l => l.length))} of ${WS.MAXLINE}`;
+  const warn = $('#wordsWarn'); warn.hidden = !tooLongAll;
+  warn.textContent = tooLongAll ? 'That line is too long for one sign. Press Enter to split it into two lines.' : '';
+
+  const addBtn = $('#addBtn'), priceEl = $('#price');
+  if (!text || tooLongAll) {
+    addBtn.disabled = true; priceEl.firstChild.nodeValue = '£ –'; shownPrice = null;
+    $('#klarna').textContent = text ? 'Shorten or split a line to see your price.' : 'Type your words to see a price.';
+  } else {
+    addBtn.disabled = false; const p = priceFor(d); animatePrice(p);
+    $('#klarna').innerHTML = `or 3 interest-free payments of <b>${gbp2(p / 3)}</b> with Klarna`;
+  }
+  const metaHtml = `
+    <p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.6"/><circle cx="17" cy="17.5" r="1.6"/></svg><span>Arrives ${WS.arrival(byId(PRODS, st.prod).days)}, free UK delivery</span></p>
+    <p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h10l4 4v14H5z"/><path d="M15 3v4h4"/><path d="m8 15 2.5 2.5L16 12"/></svg><span>You approve a drawing like the spec sheet before we make it</span></p>`;
+  $$('[data-meta]').forEach(el => el.innerHTML = metaHtml);
+  $('#panelSpec').innerHTML = specTableHtml(d, hasText() || st.icon ? WS.flexMetres(realDz(), d.emcm) : 0);
+  renderStage(); writeHash();
+}
+
+/* ---------- stage render ---------- */
+function setFilter(R, b) {
+  const f = document.getElementById('contourF'), ms = f.querySelectorAll('feMorphology');
+  ms[0].setAttribute('radius', (R * .9).toFixed(2));
+  f.querySelector('feGaussianBlur').setAttribute('stdDeviation', Math.max(1, R * .32).toFixed(2));
+  ms[1].setAttribute('radius', Math.max(.8, R * .045).toFixed(2));
+  const fill = document.getElementById('cfFill'), edge = document.getElementById('cfEdge');
+  fill.setAttribute('flood-color', b.fill[0]); fill.setAttribute('flood-opacity', b.fill[1]);
+  edge.setAttribute('flood-color', b.edge[0]); edge.setAttribute('flood-opacity', b.edge[1]);
+}
+function setSpecFilter(R) {
+  const f = document.getElementById('contourSpec'), ms = f.querySelectorAll('feMorphology');
+  ms[0].setAttribute('radius', (R * .9).toFixed(2));
+  f.querySelector('feGaussianBlur').setAttribute('stdDeviation', Math.max(1, R * .32).toFixed(2));
+}
+
+function renderStage() {
+  const d = dimsFor(st.size), g = d.g, c = colour(), bk = backing(), bd = board(), sc = WS.SCENES[view.scene];
+  stage.classList.toggle('spec', view.mode === 'spec');
+  if (view.mode === 'spec') { renderSheet(d); renderControls(); return; }
+  const R = stage.getBoundingClientRect(), SW = R.width, SH = R.height;
+  const room = view.mode === 'room' && view.scene !== 'own';
+  let ppc;
+  if (room) ppc = Math.min(SW / 340, SH / Math.max(175 + d.H, 255));
+  else ppc = Math.min(SW * (SW < 600 ? .58 : .7) / d.W, SH * .48 / d.H, 14);
+  const w = d.W * ppc, h = d.H * ppc, floorY = SH - 34 * ppc;
+  let top; if (room) top = Math.max(60, floorY - (84 + 24) * ppc - h); else top = SH * .47 - h / 2;
+  const left = SW / 2 - w / 2;
+
+  stage.classList.toggle('day', !view.night); stage.classList.toggle('signoff', !view.on);
+  stage.classList.toggle('lightwall', !view.night && sc.light); stage.classList.toggle('rgb', !!c.rgb);
+  Object.assign(wall.style, {backgroundImage: '', backgroundSize: '', backgroundPosition: ''}, sc.paint(ppc, view.ownUrl));
+  [floor, skirting, sofa].forEach(el => el.style.display = room ? 'block' : 'none');
+  const greenRoom = room && view.scene === 'green';
+  wains.style.display = dado.style.display = greenRoom ? 'block' : 'none';
+  if (room) {
+    Object.assign(floor.style, {top: floorY + 'px', background: `linear-gradient(rgba(0,0,0,.25), rgba(0,0,0,.55)), repeating-linear-gradient(90deg, #6b4c37 0, #6b4c37 ${14 * ppc - 1}px, #3f2c20 ${14 * ppc - 1}px, #3f2c20 ${14 * ppc}px)`});
+    Object.assign(skirting.style, {top: (floorY - 11 * ppc) + 'px', height: 11 * ppc + 'px', background: `linear-gradient(${sc.skirt}, ${sc.skirt} 82%, rgba(0,0,0,.25))`});
+    Object.assign(sofa.style, {width: 210 * ppc + 'px', height: 84 * ppc + 'px', left: (SW / 2 - 105 * ppc) + 'px', top: (floorY - 82 * ppc) + 'px'});
+    if (greenRoom) {
+      const dadoY = floorY - 92 * ppc;
+      Object.assign(dado.style, {top: dadoY + 'px', height: 4 * ppc + 'px', background: 'linear-gradient(#4a5d51,#2c3a32)', boxShadow: '0 2px 3px rgba(0,0,0,.3)'});
+      Object.assign(wains.style, {top: dadoY + 'px', height: (floorY - dadoY) + 'px', background: `repeating-linear-gradient(90deg, rgba(0,0,0,.2) 0, rgba(0,0,0,.2) 1px, rgba(255,255,255,.04) 1px, transparent 3px, transparent ${12 * ppc}px), #34463b`});
+    }
+  }
+
+  // the sign: ink box sits inside the W×H box with the backing margin around it
+  const mg = bk.margin * ppc, emPx = d.emcm * ppc;
+  const inkLeft = left + mg, inkTop = top + mg;
+  const contour = bk.id === 'cut' ? {pad: mg * 1.4, filterId: 'contourF', dim: view.night} : null;
+  if (contour) setFilter(mg, bd);
+  WS.renderSign(sceneStage, {dz: dz(), on: view.on, emPx, pos: {left: inkLeft, top: inkTop}, contour});
+  const sign = sceneStage.querySelector('.ws-sign'); if (sign) { sign.querySelectorAll('.ws-tube').forEach(t => t.classList.toggle('placeholder', !hasText())); sign.style.opacity = hasText() ? 1 : .4; }
+
+  if (bk.id === 'cut') { boardEl.style.display = 'none'; standbase.style.display = 'none'; }
+  else {
+    boardEl.style.display = 'block';
+    Object.assign(boardEl.style, {left: left + 'px', top: top + 'px', width: w + 'px', height: h + 'px', background: bd.rect, border: `1px solid ${bd.border}`, borderRadius: Math.max(3, .8 * ppc) + 'px', boxShadow: `0 ${1.2 * ppc}px ${2.4 * ppc}px rgba(0,0,0,.35)`});
+    boardEl.style.setProperty('--so', Math.max(4, 1.6 * ppc) + 'px'); boardEl.style.setProperty('--soi', Math.max(3, 1.8 * ppc) + 'px');
+    standbase.style.display = bk.id === 'stand' ? 'block' : 'none';
+    Object.assign(standbase.style, {left: (left + w * .18) + 'px', width: w * .64 + 'px', top: (top + h) + 'px', height: 5 * ppc + 'px', background: bd.id === 'clear' ? 'linear-gradient(rgba(255,255,255,.18),rgba(255,255,255,.06))' : bd.rect, border: `1px solid ${bd.border}`});
+  }
+
+  // light spill
+  const cx = left + w / 2, cy = top + h / 2;
+  const sw = Math.min(w * 1.5 + 70 * ppc, SW * 1.3), sh = Math.min(h * 2.1 + 70 * ppc, SH * 1.1);
+  Object.assign(spill.style, {left: (cx - sw / 2) + 'px', top: (cy - sh / 2) + 'px', width: sw + 'px', height: sh + 'px', background: `radial-gradient(closest-side, ${rgba(c.hex, .46)}, ${rgba(c.hex, .16)} 45%, transparent 100%)`, opacity: view.on ? (view.night ? 1 : .35) : 0});
+  wash.style.background = `radial-gradient(circle at ${cx}px ${cy}px, ${rgba(c.hex, .1)}, transparent ${Math.max(SW, SH) * .55}px)`;
+  wash.style.opacity = view.on && view.night ? 1 : 0;
+
+  // measurements
+  const showDims = view.dims && hasText();
+  if (showDims) {
+    const extra = bk.id === 'stand' ? 5 * ppc : 0;
+    const vRight = left + w + 16 + 54 <= SW;
+    dimsEl.innerHTML = WS.dimH(left, top + h + extra + 16, w, `${d.W} cm`, 'below') + WS.dimV(vRight ? left + w + 16 : left - 16, top, h, `${d.H} cm`, vRight ? '' : 'flip');
+  } else dimsEl.innerHTML = '';
+  renderControls();
+}
+function renderControls() {
+  const pw = $('#btnPower'); pw.setAttribute('aria-pressed', String(view.on)); pw.querySelector('.lbl').textContent = view.on ? 'Sign on' : 'Sign off';
+  const rm = $('#btnRoom'); rm.setAttribute('aria-pressed', String(view.night)); rm.querySelector('.lbl').textContent = view.night ? 'Evening' : 'Daytime';
+  rm.querySelector('svg').innerHTML = view.night ? '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/>' : '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+  pressGroup($('.seg'), 'data-view', view.mode);
+  $('#btnDims').setAttribute('aria-pressed', String(view.dims));
+  pressGroup($('#scenes'), 'data-scene', view.scene);
+  [pw, rm, $('#btnDims')].forEach(b => b.hidden = view.mode === 'spec');
+}
+
+/* ---------- spec sheet ---------- */
+function specTableHtml(d, flex) {
+  const g = d.g, bk = backing(), bd = board(), c = colour(), f = font();
+  const today = new Date().toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'});
+  return `<table>
+    <tr><td>Words</td><td class="name">${WS.esc(hasText() ? lines().join(' / ') : '—')}${g.icon ? ` + ${g.icon}` : ''}</td></tr>
+    <tr><td>Lettering</td><td>${f.name} (${f.family})</td></tr>
+    <tr><td>Colour</td><td>${c.name}${c.rgb ? '' : ' ' + c.hex}</td></tr>
+    <tr><td>Letter height</td><td>${d.letterCm ? d.letterCm + ' cm' : 'n/a'}</td></tr>
+    <tr><td>Overall</td><td>${d.W} × ${d.H} cm (${WS.cmToIn(d.W)} × ${WS.cmToIn(d.H)} in)</td></tr>
+    <tr><td>LED flex, est.</td><td>${flex.toFixed(1)} m</td></tr>
+    <tr><td>Backing</td><td>${bk.name}, ${bd.name.toLowerCase()} acrylic</td></tr>
+    <tr><td>Use</td><td>${byId(USES, st.use).name}${st.use === 'out' ? ', weatherproof' : ''}</td></tr>
+    <tr><td>Power</td><td>12 V adapter, ${byId(PLUGS, st.plug).name} plug, dimmer + remote</td></tr>
+    <tr><td>Drawn</td><td>${today} · sheet 1 of 1</td></tr>
+  </table>`;
+}
+function renderSheet(d) {
+  const g = d.g, bk = backing(), f = font();
+  const flex = hasText() || g.icon ? WS.flexMetres(realDz(), d.emcm) : 0;
+  $('#shTable').innerHTML = specTableHtml(d, flex);
+  $('#shNotes').innerHTML = `<h4>Construction notes</h4><ol>
+    <li>Tube path follows the centreline of each letter${g.icon ? ' and the symbol' : ''}.</li>
+    <li>${bk.id === 'cut' ? `Acrylic cut ${bk.margin} cm outside the lettering.` : `Acrylic panel with ${bk.margin} cm clearance, four polished standoffs.`}</li>
+    <li>Lines ${st.align === 'center' ? 'centred' : 'aligned ' + st.align}.</li>
+    <li>Cable exits bottom right, 2 m clear.</li>
+    <li>${st.prod === 'exp' ? 'Express making time, 2 working days.' : 'Standard making time, 5 working days.'}</li></ol>`;
+  $('#shSub').textContent = `${g.L.length} line${g.L.length > 1 ? 's' : ''} · ${d.letterCm || '–'} cm letter height · approx. ${flex.toFixed(1)} m of LED flex · not to scale`;
+  const R = stage.getBoundingClientRect(), SW = R.width, SH = R.height, narrow = SW < 600;
+  const tbH = $('#shTable').offsetHeight || 0; // 0 on phones (hidden)
+  // drawing area: below the title, above the title block and the width dimension label
+  const areaL = SW * .07, areaT = narrow ? 100 : 128, areaW = SW * .86, areaH = SH - areaT - (tbH ? tbH + 30 + 56 : 48);
+  const ppc = Math.max(.5, Math.min((areaW - 80) / d.W, (areaH - 56) / d.H));
+  const w = d.W * ppc, h = d.H * ppc, left = areaL + (areaW - w) / 2, top = areaT + (areaH - h) / 2 - 8;
+  const mg = bk.margin * ppc, emPx = d.emcm * ppc;
+  const dr = $('#shDrawing');
+  Object.assign(dr.style, {left: left + 'px', top: top + 'px', width: w + 'px', height: h + 'px'});
+  // tube paths as outlined lettering + symbol, in drafting blue
+  const s = 100, iw = g.inkW * emPx, ih = g.inkH * emPx;
+  let svg = `<svg viewBox="0 0 ${g.inkW * s} ${g.inkH * s}" style="left:${mg}px;top:${mg}px;width:${iw}px;height:${ih}px">`;
+  if (g.icon) svg += `<g transform="translate(0 ${(g.inkH - g.iconH) / 2 * s}) scale(${g.iconH * s / 24})"><path d="${LIT.icons[g.icon]}" style="stroke-width:${(1.7 * 24 / (g.iconH * s)).toFixed(3)}"/></g>`;
+  if (g.hasText && g.m) {
+    const m = g.m, textLeft = g.iconW + g.gap - m.minX, textTop = (g.inkH - m.inkH) / 2 - m.top;
+    g.L.forEach((line, li) => {
+      const x0 = (textLeft + (st.align === 'left' ? 0 : st.align === 'right' ? (m.blockW - m.lineWidths[li]) : (m.blockW - m.lineWidths[li]) / 2)) * s, y = (textTop + m.baselines[li]) * s;
+      svg += `<text x="${x0.toFixed(1)}" y="${y.toFixed(1)}" style="font-family:'${f.family}';font-weight:${f.weight || 400};font-size:100px">${WS.esc(line)}</text>`;
+    });
+  }
+  svg += '</svg>';
+  // backing outline
+  let backHtml = '';
+  if (bk.id === 'cut') {
+    setSpecFilter(mg);
+    const pad = mg * 1.4;
+    backHtml = `<div class="contourL" style="left:${mg - pad}px;top:${mg - pad}px;width:${iw + 2 * pad}px;height:${ih + 2 * pad}px;filter:url(#contourSpec)"><div style="position:absolute;left:${pad}px;top:${pad}px;width:${iw}px;height:${ih}px" class="ws-stage" id="shContourInner"></div></div>`;
+  } else {
+    backHtml = `<div class="rectL" style="left:0;top:0;width:${w}px;height:${h}px"><i></i><i></i><i></i><i></i></div>` + (bk.id === 'stand' ? `<div class="rectL" style="left:${w * .18}px;top:${h}px;width:${w * .64}px;height:${5 * ppc}px;border-style:solid"></div>` : '');
+  }
+  dr.innerHTML = backHtml + svg;
+  if (bk.id === 'cut') { const inner = $('#shContourInner'); WS.renderSign(inner, {dz: dz(), on: false, plain: true, emPx, pos: {left: 0, top: 0}}); inner.querySelector('.ws-sign').style.display = 'block'; }
+  // cap height marks (letter height)
+  let dimsHtml = narrow
+    ? WS.dimH(left, top + h + 22, w, `${d.W} × ${d.H} cm`, 'below')
+    : WS.dimH(left, top + h + 22, w, `${d.W} cm`, 'below') + WS.dimV(left + w + 22, top, h, `${d.H} cm`);
+  if (g.hasText && g.m && !narrow) {
+    const m = g.m, textTop = (g.inkH - m.inkH) / 2 - m.top;
+    const base = top + mg + (textTop + m.baselines[0]) * emPx, capTop = base - m.cap * emPx;
+    dimsHtml += WS.dimV(left - 22, capTop, base - capTop, `${d.letterCm} cm`, 'flip') + `<div class="capline" style="left:${left - 30}px;width:${mg + 30}px;top:${capTop}px"></div><div class="capline" style="left:${left - 30}px;width:${mg + 30}px;top:${base}px"></div>`;
+  }
+  $('#shDims').innerHTML = dimsHtml;
+}
+function strike() {
+  if (!view.on || view.mode === 'spec') return;
+  const tube = sceneStage.querySelector('.ws-tube'), ico = sceneStage.querySelector('.ws-ico');
+  [tube, ico, spill].forEach(el => { if (!el) return; el.classList.remove('ws-strike'); void el.offsetWidth; el.classList.add('ws-strike'); });
+}
+
+/* ---------- stage controls ---------- */
+$('#btnPower').addEventListener('click', () => { view.on = !view.on; update(); if (view.on) strike(); });
+$('#btnRoom').addEventListener('click', () => { view.night = !view.night; update(); });
+$('#btnDims').addEventListener('click', () => { view.dims = !view.dims; renderStage(); });
+$('.seg').addEventListener('click', e => { const b = e.target.closest('[data-view]'); if (!b) return; view.mode = b.dataset.view; renderStage(); });
+$('#scenes').addEventListener('click', e => {
+  const b = e.target.closest('[data-scene]'); if (!b) return;
+  if (b.dataset.scene === 'own') { $('#ownWall').click(); return; }
+  view.scene = b.dataset.scene; renderStage();
+});
+$('#ownWall').addEventListener('change', e => {
+  const file = e.target.files[0]; if (!file) return;
+  if (view.ownUrl) URL.revokeObjectURL(view.ownUrl);
+  view.ownUrl = URL.createObjectURL(file); view.scene = 'own'; if (view.mode === 'spec') view.mode = 'fit';
+  renderStage(); WS.toast('Your photo stays on this device. It is never uploaded.');
+});
+
+/* ---------- share / email ---------- */
+async function share() {
+  writeHash(); const url = location.href;
+  try { await navigator.clipboard.writeText(url); WS.toast('Design link copied. Anyone with the link sees this exact sign.'); }
+  catch (e) {
+    const ta = document.createElement('textarea'); ta.value = url; document.body.appendChild(ta); ta.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch (_) {}
+    ta.remove(); WS.toast(ok ? 'Design link copied.' : 'Copy the link from your address bar to share this design.');
+  }
+}
+$$('[data-share]').forEach(b => b.addEventListener('click', share));
+$$('[data-email]').forEach(b => b.addEventListener('click', () => {
+  const form = $('#emailForm');
+  if (innerWidth <= 900) { const e = prompt('Email address for your design'); if (e) WS.toast(`Prototype: in the live store we email the design to ${e}.`); return; }
+  form.hidden = !form.hidden; if (!form.hidden) $('#emailIn').focus();
+}));
+$('#emailForm').addEventListener('submit', e => { e.preventDefault(); const v = $('#emailIn').value; e.target.hidden = true; WS.toast(`Prototype: in the live store we email the design to ${v}.`); });
+
+/* ---------- basket ---------- */
+$('#addBtn').addEventListener('click', () => {
+  const d = dimsFor(st.size);
+  WS.basket.add({kind: 'custom', dz: realDz(), s: Object.assign({}, st), d: {W: d.W, H: d.H, letterCm: d.letterCm}, price: priceFor(d), flex: WS.flexMetres(realDz(), d.emcm)});
+  WS.openDrawer(); WS.toast('Added to your basket');
+});
+
+/* ---------- boot ---------- */
+buildPanel();
+WS.onFonts(update);
+new ResizeObserver(() => renderStage()).observe(stage);
+// the sign strikes on once, like a tube warming up
+setTimeout(() => { view.on = true; update(); strike(); }, WS.reduced() ? 0 : 650);
+})();
+</script>
+</body>
+</html>

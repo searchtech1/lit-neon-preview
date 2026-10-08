@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ready-made neon signs | Lit Neon</title>
+<meta name="description" content="Ready-made LED neon sign designs for weddings, home, bars, business, kids and gaming. Change the colour and size, free UK delivery.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Archivo:wght@400;500;600;700&family=B612+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="../shared/catalog.js"></script>
+<script>document.head.insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="${LIT.googleFontsHref}">`);</script>
+<link rel="stylesheet" href="workshop.css">
+<style>
+.shop-head{padding:56px 0 28px}
+.shop-head h1{font-size:clamp(36px,4.4vw,56px)}
+.shop-head .lede{margin-top:14px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:18px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);margin-bottom:32px}
+.toolbar .pill-row{flex:1}
+.sort{display:flex;align-items:center;gap:10px;font-size:14.5px;color:var(--ink-soft)}
+.sort select{height:38px;border:1px solid var(--rule);background:var(--bone-raised);border-radius:4px;padding:0 12px;font-size:14.5px;color:var(--ink)}
+.count{font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin-bottom:14px}
+.empty{padding:48px 0;color:var(--ink-soft)}
+.cta-band{margin-top:72px;border:1px solid var(--rule);background:var(--bone-raised) var(--noise);padding:36px 40px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;border-radius:3px}
+.cta-band p{color:var(--ink-soft);margin-top:8px;max-width:56ch}
+@media (max-width:700px){.cta-band{grid-template-columns:1fr;padding:26px 22px}.shop-head{padding:36px 0 20px}
+  .toolbar{display:block}
+  .toolbar .pill-row{display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -16px 12px;padding:2px 16px;width:calc(100% + 32px)}
+  .toolbar .pill-row::-webkit-scrollbar{display:none}
+  .sort{display:flex;justify-content:space-between;width:100%}.sort select{width:60%;max-width:240px}}
+</style>
+</head>
+<body>
+<div role="note" style="position:relative;z-index:9999;background:#C8A253;color:#17352B;font:600 13px/1.4 system-ui,-apple-system,sans-serif;padding:8px 16px;text-align:center">Original "Signwriters' Workshop" concept from 8 Oct, built before your decisions: VAT wording, delivery area and launch offer here are out of date. <a href="../index.html" style="color:#17352B;text-decoration:underline">See the current fused design</a></div>
+<div id="wsHeader"></div>
+<main>
+  <section class="ws-wrap shop-head">
+    <h1>Ready-made designs</h1>
+    <p class="lede">Lettering we have already drawn and priced. Every design can be made in any of our colours and five sizes, and you can change the words in the builder.</p>
+  </section>
+  <section class="ws-wrap" aria-labelledby="h-grid">
+    <h2 id="h-grid" class="sr">Designs</h2>
+    <div class="toolbar">
+      <div class="pill-row" id="cats" role="group" aria-label="Filter by category"></div>
+      <label class="sort">Sort <select id="sort"><option value="featured">Featured</option><option value="low">Price, low to high</option><option value="high">Price, high to low</option><option value="name">Name</option></select></label>
+    </div>
+    <p class="count" id="count"></p>
+    <div class="spec-grid" id="grid"></div>
+    <p class="empty" id="empty" hidden>No designs in this category yet. Try another, or design your own.</p>
+    <div class="cta-band">
+      <div><h2 style="font-size:30px">Can't see your words?</h2><p>Type anything up to three lines in the builder. You see the exact size and price as you go, on your own wall if you like.</p></div>
+      <a class="btn primary" href="create.html">Design your own</a>
+    </div>
+  </section>
+</main>
+<div id="wsFooter"></div>
+<script src="workshop.js"></script>
+<script>
+(() => {
+"use strict";
+const {$, $$} = WS;
+const params = new URLSearchParams(location.search);
+let cat = WS.CATS.some(c => c.id === params.get('cat')) ? params.get('cat') : 'all', sort = 'featured';
+$('#cats').innerHTML = [{id: 'all', name: 'All'}].concat(WS.CATS).map(c => `<button class="pill" data-cat="${c.id}" aria-pressed="false">${c.name}</button>`).join('');
+function render() {
+  $$('#cats .pill').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.cat === cat)));
+  let list = WS.DESIGNS.filter(d => cat === 'all' || d.category === cat);
+  if (sort === 'low') list = list.slice().sort((a, b) => a.from - b.from);
+  if (sort === 'high') list = list.slice().sort((a, b) => b.from - a.from);
+  if (sort === 'name') list = list.slice().sort((a, b) => a.name.localeCompare(b.name));
+  $('#grid').innerHTML = list.map(WS.cardHtml).join('');
+  $('#count').textContent = `${list.length} design${list.length === 1 ? '' : 's'}${cat === 'all' ? '' : ' in ' + WS.byId(WS.CATS, cat).name.toLowerCase()}`;
+  $('#empty').hidden = list.length > 0;
+  WS.hydrateCards();
+  const u = new URL(location.href); if (cat === 'all') u.searchParams.delete('cat'); else u.searchParams.set('cat', cat); history.replaceState(null, '', u);
+}
+$('#cats').addEventListener('click', e => { const b = e.target.closest('[data-cat]'); if (!b) return; cat = b.dataset.cat; render(); });
+$('#sort').addEventListener('change', e => { sort = e.target.value; render(); });
+WS.onFonts(render);
+let rT; addEventListener('resize', () => { clearTimeout(rT); rT = setTimeout(() => WS.hydrateCards(), 120); });
+})();
+</script>
+</body>
+</html>

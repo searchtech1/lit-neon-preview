@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ready-made neon sign | Lit Neon</title>
+<meta name="description" content="A ready-made LED neon sign design. Choose colour, size and backing, see it lit and unlit, free UK delivery.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Archivo:wght@400;500;600;700&family=B612+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="../shared/catalog.js"></script>
+<script>document.head.insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="${LIT.googleFontsHref}">`);</script>
+<link rel="stylesheet" href="workshop.css">
+<style>
+.crumbs{padding:22px 0 0;font-size:14px;color:var(--ink-soft)}
+.crumbs a{color:var(--ink-soft)}
+.crumbs span{margin:0 8px;opacity:.6}
+.pgrid{display:grid;grid-template-columns:minmax(0,7fr) minmax(320px,5fr);gap:48px;padding:22px 0 72px;align-items:start}
+.media{position:sticky;top:90px}
+.pstage{position:relative;aspect-ratio:4/3;border-radius:3px;overflow:hidden;background:#2a2622;border:1px solid var(--rule)}
+.pstage .wall,.pstage .floor,.pstage .skirting,.pstage .sofa,.pstage .dimmer,.pstage .spill,.pstage .rect{position:absolute;pointer-events:none}
+.pstage .wall{inset:0}
+.pstage .floor{left:0;right:0;bottom:0}
+.pstage .skirting{left:0;right:0}
+.pstage .dimmer{inset:0;background:rgba(7,8,15,.7);transition:background .5s}
+.pstage.off .dimmer{background:rgba(5,6,12,.86)}
+.pstage .spill{border-radius:50%;mix-blend-mode:screen;transition:opacity .4s}
+.pstage .rect{border-radius:4px}
+.pstage .rect i{position:absolute;width:var(--so);height:var(--so);border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0,#d8dbe0 30%,#8d929b 70%,#5d626b 100%)}
+.pstage .rect i:nth-child(1){left:var(--soi);top:var(--soi)}.pstage .rect i:nth-child(2){right:var(--soi);top:var(--soi)}.pstage .rect i:nth-child(3){left:var(--soi);bottom:var(--soi)}.pstage .rect i:nth-child(4){right:var(--soi);bottom:var(--soi)}
+.pstage .dim{color:rgba(255,255,255,.85)}
+.pctrls{position:absolute;left:14px;top:14px;right:14px;display:flex;gap:8px;z-index:3;flex-wrap:wrap}
+.pctrls button{height:34px;padding:0 12px;border-radius:4px;border:1px solid rgba(255,255,255,.2);background:rgba(18,22,20,.6);color:#eceee9;font-size:13px;display:inline-flex;align-items:center;gap:7px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.pctrls button[aria-pressed="true"]{background:var(--bone-raised);color:var(--ink);border-color:var(--bone-raised)}
+.pctrls .dot{width:8px;height:8px;border-radius:50%;background:#6c706b}
+.pctrls button[aria-pressed="true"] .dot{background:var(--glow);box-shadow:0 0 8px var(--glow)}
+.pctrls .grp{display:inline-flex;margin-left:auto}
+.pctrls .grp button{border-radius:0}
+.pctrls .grp button:first-child{border-radius:4px 0 0 4px}
+.pctrls .grp button:last-child{border-radius:0 4px 4px 0;border-left:none}
+.spec-strip{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;font-family:var(--mono);font-size:12px;color:var(--ink-soft)}
+.spec-strip b{font-weight:400;color:var(--ink)}
+.buy h1{font-size:clamp(34px,3.6vw,48px)}
+.buy .cat{font-size:14px;color:var(--ink-soft);margin-bottom:10px}
+.buy .pricebox{display:flex;align-items:baseline;gap:10px;margin:16px 0 4px}
+.buy .pricebox b{font-family:var(--display);font-weight:600;font-variation-settings:"SOFT" 100;font-size:36px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.buy .pricebox small{font-size:14px;color:var(--ink-soft)}
+.buy .klarna{font-size:14px;color:var(--ink-soft)}
+.buy .klarna b{color:var(--ink);font-weight:600}
+.optgroup{margin-top:26px}
+.optgroup .lbl{display:flex;justify-content:space-between;font-size:14.5px;font-weight:600;margin-bottom:10px}
+.optgroup .lbl span{font-weight:400;color:var(--ink-soft)}
+.swatches{display:flex;flex-wrap:wrap;gap:10px}
+.sw{width:36px;height:36px;border-radius:50%;border:none;padding:0;background:var(--c);box-shadow:0 0 0 1px rgba(0,0,0,.1),0 0 10px color-mix(in srgb,var(--c) 50%,transparent)}
+.sw[aria-pressed="true"]{box-shadow:0 0 0 2px var(--bone),0 0 0 4px var(--green),0 0 14px color-mix(in srgb,var(--c) 70%,transparent)}
+.sw.rgbsw{background:conic-gradient(#ff2d55,#ff9f1a,#ffe43a,#2dff7a,#2bd4ff,#2b6cff,#a64dff,#ff2d55)}
+.sizes{display:grid;gap:6px}
+.sz{display:grid;grid-template-columns:1fr auto;gap:2px 12px;align-items:center;border:1px solid var(--rule);background:var(--bone-raised);border-radius:4px;padding:11px 14px;text-align:left}
+.sz .nm{font-weight:600;font-size:15px}
+.sz .dm{grid-column:1;font-family:var(--mono);font-size:12px;color:var(--ink-soft)}
+.sz .pr{grid-row:1 / span 2;grid-column:2;font-weight:600;font-variant-numeric:tabular-nums}
+.sz[aria-pressed="true"]{border-color:var(--green);box-shadow:inset 0 0 0 1px var(--green)}
+.sz:disabled{opacity:.5;cursor:not-allowed}
+.seg3{display:flex;border:1px solid var(--rule);border-radius:4px;overflow:hidden;background:var(--bone-raised)}
+.seg3 button{flex:1;border:none;background:none;padding:10px 8px;font-size:14px;line-height:1.3}
+.seg3 button+button{border-left:1px solid var(--rule)}
+.seg3 button small{display:block;font-size:11.5px;color:var(--ink-soft)}
+.seg3 button[aria-pressed="true"]{background:var(--green);color:#fff}
+.seg3 button[aria-pressed="true"] small{color:rgba(255,255,255,.75)}
+.actions{margin-top:28px;display:grid;gap:10px}
+.actions .btn{width:100%}
+.meta{margin-top:18px;display:grid;gap:6px;font-size:14.5px}
+.meta p{display:flex;gap:8px;align-items:flex-start}
+.meta svg{width:17px;height:17px;flex:none;margin-top:2px;color:var(--ink-soft)}
+.buy .acc{margin-top:30px}
+.related{padding:0 0 80px}
+.review-note{border:1px dashed var(--ink-faint);border-radius:3px;padding:16px 18px;font-size:14px;color:var(--ink-soft);margin-top:26px}
+@media (max-width:1000px){.pgrid{grid-template-columns:1fr;gap:28px}.media{position:static}}
+@media (max-width:600px){.pstage{aspect-ratio:1/1}.pctrls{left:10px;top:10px;right:10px}.pctrls button{height:32px;font-size:12.5px;padding:0 10px}.pctrls .grp{margin-left:0}}
+</style>
+</head>
+<body>
+<div role="note" style="position:relative;z-index:9999;background:#C8A253;color:#17352B;font:600 13px/1.4 system-ui,-apple-system,sans-serif;padding:8px 16px;text-align:center">Original "Signwriters' Workshop" concept from 8 Oct, built before your decisions: VAT wording, delivery area and launch offer here are out of date. <a href="../index.html" style="color:#17352B;text-decoration:underline">See the current fused design</a></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <filter id="contourF" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+    <feMorphology in="SourceAlpha" operator="dilate" radius="10" result="d"/>
+    <feGaussianBlur in="d" stdDeviation="4" result="b"/>
+    <feComponentTransfer in="b" result="shape"><feFuncA type="linear" slope="24" intercept="-11"/></feComponentTransfer>
+    <feMorphology in="shape" operator="erode" radius="1.3" result="inner"/>
+    <feComposite in="shape" in2="inner" operator="out" result="edge"/>
+    <feFlood id="cfFill" flood-color="#ffffff" flood-opacity=".08"/>
+    <feComposite in2="shape" operator="in" result="fill"/>
+    <feFlood id="cfEdge" flood-color="#ffffff" flood-opacity=".45"/>
+    <feComposite in2="edge" operator="in" result="edgeC"/>
+    <feMerge><feMergeNode in="fill"/><feMergeNode in="edgeC"/></feMerge>
+  </filter>
+</svg>
+<div id="wsHeader"></div>
+<main class="ws-wrap">
+  <p class="crumbs"><a class="u" href="shop.html">Ready-made</a><span>/</span><a class="u" id="crumbCat" href="shop.html"></a></p>
+  <div class="pgrid">
+    <div class="media">
+      <div class="pstage" id="pstage" aria-label="Live preview">
+        <div class="wall" id="wall"></div><div class="skirting" id="skirting"></div><div class="floor" id="floor"></div>
+        <svg class="sofa" id="sofa" viewBox="0 0 210 84" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="fab" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4b505c"/><stop offset="1" stop-color="#30333c"/></linearGradient><linearGradient id="seat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#555b68"/><stop offset="1" stop-color="#3a3e48"/></linearGradient></defs><rect x="19" y="76" width="3" height="8" rx="1" fill="#17181c"/><rect x="188" y="76" width="3" height="8" rx="1" fill="#17181c"/><rect x="10" y="10" width="190" height="44" rx="11" fill="url(#fab)"/><rect x="2" y="46" width="206" height="32" rx="7" fill="url(#fab)"/><rect x="19" y="43" width="85.5" height="13" rx="5" fill="url(#seat)"/><rect x="105.5" y="43" width="85.5" height="13" rx="5" fill="url(#seat)"/><rect x="0" y="32" width="21" height="46" rx="9" fill="#3d414c"/><rect x="189" y="32" width="21" height="46" rx="9" fill="#3d414c"/></svg>
+        <div class="dimmer"></div><div class="spill" id="spill"></div>
+        <div class="rect" id="rect" hidden><i></i><i></i><i></i><i></i></div>
+        <div class="ws-stage" id="signStage" style="position:absolute;inset:0"></div>
+        <div id="pdims"></div>
+        <div class="pctrls">
+          <button id="pPower" aria-pressed="true"><span class="dot"></span><span>Sign on</span></button>
+          <div class="grp" role="group" aria-label="View"><button data-pview="fit" aria-pressed="true">Close-up</button><button data-pview="room" aria-pressed="false">In a room</button></div>
+        </div>
+      </div>
+      <p class="spec-strip" id="specStrip"></p>
+    </div>
+    <div class="buy">
+      <p class="cat" id="pCat"></p>
+      <h1 id="pName"></h1>
+      <div class="pricebox"><b id="pPrice"></b><small>inc. VAT</small></div>
+      <p class="klarna" id="pKlarna"></p>
+      <div id="pOptions">
+        <div class="optgroup"><div class="lbl">Colour <span id="colourName"></span></div><div class="swatches" id="colours" role="group" aria-label="Colour"></div></div>
+        <div class="optgroup"><div class="lbl">Size <span>width × height, backing included</span></div><div class="sizes" id="sizes" role="group" aria-label="Size"></div></div>
+        <div class="optgroup"><div class="lbl">Backing</div><div class="seg3" id="backings" role="group" aria-label="Backing"></div></div>
+        <div class="optgroup"><div class="lbl">Acrylic finish</div><div class="pill-row" id="boards" role="group" aria-label="Acrylic finish"></div></div>
+      </div>
+      <div class="actions">
+        <button class="btn primary" id="pAdd">Add to basket</button>
+        <a class="btn ghost" id="pCustom" href="create.html">Customise this design</a>
+      </div>
+      <div class="meta" id="pMeta"></div>
+      <div class="acc" id="pDetails">
+        <details open><summary>What's in the box</summary><div class="ans"><p>Your sign on its acrylic backing, a 12 V adapter with a UK 3-pin plug, a dimmer and remote, 2 m of clear cable and wall fixings. Other plugs are available in the builder.</p></div></details>
+        <details><summary>Delivery</summary><div class="ans"><p>Free tracked delivery to any UK address. Standard making time is 5 working days, then delivery. The arrival window above skips weekends and bank holidays. Times are placeholders until our supplier confirms them.</p></div></details>
+        <details><summary>Returns</summary><div class="ans"><p>Ready-made designs are still made to order in your chosen colour and size, so they can't be returned for a change of mind. If a sign arrives damaged or faulty, tell us within 30 days and we'll replace or repair it.</p></div></details>
+        <details><summary>Installation</summary><div class="ans"><p>Cut-to-shape signs hang from pre-drilled holes with the fixings supplied. Rectangle signs mount on four polished standoffs. You need a drill, a spirit level and ten minutes.</p></div></details>
+      </div>
+      <p class="review-note">Reviews from our first customers will appear here.</p>
+    </div>
+  </div>
+  <section class="related" aria-labelledby="h-rel">
+    <div class="ws-head"><div><h2 id="h-rel">More in this category</h2></div><a class="btn ghost" href="shop.html">All designs</a></div>
+    <div class="spec-grid" id="related"></div>
+  </section>
+</main>
+<div id="wsFooter"></div>
+<script src="workshop.js"></script>
+<script>
+(() => {
+"use strict";
+const {$, $$, byId, gbp, gbp2, rgba} = WS;
+const params = new URLSearchParams(location.search);
+const D = WS.DESIGNS.find(d => d.id === params.get('id')) || WS.DESIGNS[0];
+const cat = byId(WS.CATS, D.category);
+const s = {colour: D.colour, size: 's', backing: 'cut', board: 'clear'};
+const view = {on: true, mode: 'fit'};
+document.title = `${D.name} neon sign | Lit Neon`;
+$('#pName').textContent = D.name; $('#pCat').textContent = cat.name; $('#crumbCat').textContent = cat.name; $('#crumbCat').href = `shop.html?cat=${cat.id}`;
+const dz = () => Object.assign(WS.designOf(D), {colour: s.colour});
+const dims = sizeId => WS.dimsFor(dz(), sizeId, s.backing);
+const BASE = WS.priceFor(WS.dimsFor(WS.designOf(D), 's', 'cut'), {colour: D.colour, backing: 'cut', board: 'clear', use: 'in', prod: 'std'});
+const price = sizeId => D.from + WS.priceFor(dims(sizeId), {colour: s.colour, backing: s.backing, board: s.board, use: 'in', prod: 'std'}) - BASE;
+
+$('#colours').innerHTML = WS.COLOURS.map(c => `<button class="sw${c.rgb ? ' rgbsw' : ''}" data-colour="${c.id}" aria-pressed="false" aria-label="${c.name}" style="--c:${c.hex}"></button>`).join('');
+$('#sizes').innerHTML = WS.SIZES.map(z => `<button class="sz" data-size="${z.id}" aria-pressed="false"><span class="nm">${z.name}</span><span class="dm"></span><span class="pr"></span></button>`).join('');
+$('#backings').innerHTML = WS.BACKINGS.map(b => `<button data-backing="${b.id}" aria-pressed="false">${b.name}<small>${b.add ? '+' + gbp(b.add) : 'Included'}</small></button>`).join('');
+$('#boards').innerHTML = WS.BOARDS.map(b => `<button class="pill" data-board="${b.id}" aria-pressed="false"><i style="width:16px;height:16px;border-radius:50%;background:${b.swatch};border:1px solid rgba(0,0,0,.15);display:inline-block"></i>${b.name}${b.add ? ` <small style="color:inherit;opacity:.7">+${gbp(b.add)}</small>` : ''}</button>`).join('');
+const bind = (sel, key) => $(sel).addEventListener('click', e => { const b = e.target.closest(`[data-${key}]`); if (!b || b.disabled) return; s[key] = b.dataset[key]; update(); });
+bind('#colours', 'colour'); bind('#sizes', 'size'); bind('#backings', 'backing'); bind('#boards', 'board');
+const press = (sel, attr, v) => $$(`${sel} [${attr}]`).forEach(b => b.setAttribute('aria-pressed', String(b.getAttribute(attr) === v)));
+
+function setFilter(R, b) {
+  const f = document.getElementById('contourF'), ms = f.querySelectorAll('feMorphology');
+  ms[0].setAttribute('radius', (R * .9).toFixed(2)); f.querySelector('feGaussianBlur').setAttribute('stdDeviation', Math.max(1, R * .32).toFixed(2)); ms[1].setAttribute('radius', Math.max(.8, R * .045).toFixed(2));
+  $('#cfFill').setAttribute('flood-color', b.fill[0]); $('#cfFill').setAttribute('flood-opacity', b.fill[1]); $('#cfEdge').setAttribute('flood-color', b.edge[0]); $('#cfEdge').setAttribute('flood-opacity', b.edge[1]);
+}
+function renderStage() {
+  const st = $('#pstage'), SW = st.clientWidth, SH = st.clientHeight; if (!SW) return;
+  const d = dims(s.size), bk = byId(WS.BACKINGS, s.backing), bd = byId(WS.BOARDS, s.board), c = byId(WS.COLOURS, s.colour);
+  const room = view.mode === 'room';
+  const ppc = room ? Math.min(SW / 340, SH / Math.max(175 + d.H, 255)) : Math.min(SW * (SW < 600 ? .58 : .66) / d.W, SH * .5 / d.H, 14);
+  const w = d.W * ppc, h = d.H * ppc, floorY = SH - 34 * ppc;
+  const top = room ? Math.max(40, floorY - 108 * ppc - h) : SH * .46 - h / 2, left = SW / 2 - w / 2;
+  st.classList.toggle('off', !view.on);
+  Object.assign($('#wall').style, {backgroundImage: '', backgroundSize: ''}, WS.SCENES.brick.paint(ppc));
+  [$('#floor'), $('#skirting'), $('#sofa')].forEach(el => el.style.display = room ? 'block' : 'none');
+  if (room) {
+    Object.assign($('#floor').style, {top: floorY + 'px', background: `linear-gradient(rgba(0,0,0,.25), rgba(0,0,0,.55)), repeating-linear-gradient(90deg, #6b4c37 0, #6b4c37 ${14 * ppc - 1}px, #3f2c20 ${14 * ppc - 1}px, #3f2c20 ${14 * ppc}px)`});
+    Object.assign($('#skirting').style, {top: (floorY - 11 * ppc) + 'px', height: 11 * ppc + 'px', background: `linear-gradient(#d8d2c8, #d8d2c8 82%, rgba(0,0,0,.25))`});
+    Object.assign($('#sofa').style, {position: 'absolute', width: 210 * ppc + 'px', height: 84 * ppc + 'px', left: (SW / 2 - 105 * ppc) + 'px', top: (floorY - 82 * ppc) + 'px'});
+  }
+  const mg = bk.margin * ppc, emPx = d.emcm * ppc;
+  const contour = bk.id === 'cut' ? {pad: mg * 1.4, filterId: 'contourF', dim: true} : null;
+  if (contour) setFilter(mg, bd);
+  WS.renderSign($('#signStage'), {dz: dz(), on: view.on, emPx, pos: {left: left + mg, top: top + mg}, contour});
+  const rect = $('#rect'); rect.hidden = bk.id === 'cut';
+  if (!rect.hidden) { Object.assign(rect.style, {left: left + 'px', top: top + 'px', width: w + 'px', height: h + 'px', background: bd.rect, border: `1px solid ${bd.border}`, filter: 'brightness(.62)', boxShadow: `0 ${1.2 * ppc}px ${2.4 * ppc}px rgba(0,0,0,.35)`}); rect.style.setProperty('--so', Math.max(4, 1.6 * ppc) + 'px'); rect.style.setProperty('--soi', Math.max(3, 1.8 * ppc) + 'px'); }
+  const cx = left + w / 2, cy = top + h / 2, sw = Math.min(w * 1.5 + 70 * ppc, SW * 1.3), sh = Math.min(h * 2.1 + 70 * ppc, SH * 1.1);
+  Object.assign($('#spill').style, {left: (cx - sw / 2) + 'px', top: (cy - sh / 2) + 'px', width: sw + 'px', height: sh + 'px', background: `radial-gradient(closest-side, ${rgba(c.hex, .46)}, ${rgba(c.hex, .16)} 45%, transparent 100%)`, opacity: view.on ? 1 : 0});
+  const vRight = left + w + 16 + 54 <= SW;
+  $('#pdims').innerHTML = WS.dimH(left, top + h + 16, w, `${d.W} cm`, 'below') + WS.dimV(vRight ? left + w + 16 : left - 16, top, h, `${d.H} cm`, vRight ? '' : 'flip');
+  $('#pPower').setAttribute('aria-pressed', String(view.on)); $('#pPower span:last-child').textContent = view.on ? 'Sign on' : 'Sign off';
+  press('.pctrls', 'data-pview', view.mode);
+}
+function update() {
+  press('#colours', 'data-colour', s.colour); press('#sizes', 'data-size', s.size); press('#backings', 'data-backing', s.backing); press('#boards', 'data-board', s.board);
+  const c = byId(WS.COLOURS, s.colour); $('#colourName').textContent = c.name + (c.rgb ? ', +25%' : '');
+  if (!dims(s.size).ok) { const fit = WS.SIZES.filter(z => dims(z.id).ok).pop(); if (fit) s.size = fit.id; }
+  $$('.sz').forEach(b => { const dd = dims(b.dataset.size); b.querySelector('.dm').textContent = `${dd.W} × ${dd.H} cm (${WS.cmToIn(dd.W)} × ${WS.cmToIn(dd.H)} in)`; b.disabled = !dd.ok; b.querySelector('.pr').textContent = dd.ok ? gbp(price(b.dataset.size)) : 'Too wide'; });
+  const p = price(s.size), d = dims(s.size);
+  $('#pPrice').textContent = gbp(p);
+  $('#pKlarna').innerHTML = `or 3 interest-free payments of <b>${gbp2(p / 3)}</b> with Klarna`;
+  const flex = WS.flexMetres(dz(), d.emcm);
+  $('#specStrip').innerHTML = `<span><b>${d.W} × ${d.H} cm</b> overall</span><span><b>${d.letterCm ? d.letterCm + ' cm' : '–'}</b> letters</span><span><b>approx. ${flex.toFixed(1)} m</b> LED flex</span><span><b>${byId(WS.FONTS, D.font).name}</b> lettering</span>`;
+  $('#pMeta').innerHTML = `<p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.6"/><circle cx="17" cy="17.5" r="1.6"/></svg><span>Arrives ${WS.arrival(5)} with free UK delivery. ${WS.orderBy()}.</span></p>
+    <p><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10l4 4v14H5z"/><path d="M15 3v4h4"/><path d="m8 15 2.5 2.5L16 12"/></svg><span>We email a drawing with exact sizes to approve before making it.</span></p>`;
+  $('#pCustom').href = WS.builderLink({text: D.lines.join('\n'), font: D.font, colour: s.colour, size: s.size, backing: s.backing, board: s.board, use: 'in', plug: 'uk', prod: 'std', align: 'center', icon: D.icon || ''});
+  renderStage();
+}
+$('#pPower').addEventListener('click', () => { view.on = !view.on; renderStage(); });
+$('.pctrls .grp').addEventListener('click', e => { const b = e.target.closest('[data-pview]'); if (!b) return; view.mode = b.dataset.pview; renderStage(); });
+$('#pAdd').addEventListener('click', () => {
+  const d = dims(s.size);
+  WS.basket.add({kind: 'ready', designId: D.id, name: D.name, dz: dz(), s: Object.assign({}, s), d: {W: d.W, H: d.H, letterCm: d.letterCm}, price: price(s.size)});
+  WS.openDrawer(); WS.toast('Added to your basket');
+});
+$('#related').innerHTML = WS.DESIGNS.filter(d => d.category === D.category && d.id !== D.id).concat(WS.DESIGNS.filter(d => d.category !== D.category)).slice(0, 3).map(WS.cardHtml).join('');
+WS.onFonts(() => { update(); WS.hydrateCards(); });
+new ResizeObserver(() => renderStage()).observe($('#pstage'));
+})();
+</script>
+</body>
+</html>

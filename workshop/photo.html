@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Photo to neon | Lit Neon</title>
+<meta name="description" content="Turn a photo into a neon drawing in your browser. Trace the outlines, pick a colour, download it or ask us for a quote.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Archivo:wght@400;500;600;700&family=B612+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="../shared/catalog.js"></script>
+<script>document.head.insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="${LIT.googleFontsHref}">`);</script>
+<link rel="stylesheet" href="workshop.css">
+<script src="../shared/neon-photo.js"></script>
+<style>
+.ph-head{padding:56px 0 30px;display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:40px;align-items:end}
+.ph-head h1{font-size:clamp(36px,4.4vw,56px)}
+.ph-head .lede{margin-top:14px}
+.ph-head .privacy{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;color:var(--ink-soft);padding:14px 16px;border:1px solid var(--rule);border-radius:3px;background:var(--bone-raised)}
+.ph-head .privacy svg{width:20px;height:20px;flex:none;stroke:var(--green);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;margin-top:2px}
+.engine{--lnp-font:var(--ui);--lnp-text:var(--ink);--lnp-muted:var(--ink-soft);--lnp-surface:var(--bone-raised);--lnp-line:var(--rule);--lnp-accent:var(--green);--lnp-radius:4px;--lnp-wall:#13281F;
+  border:1px solid var(--rule);border-radius:3px;background:var(--bone-raised) var(--noise);padding:18px;min-height:420px;position:relative}
+.loading{display:grid;place-items:center;text-align:center;min-height:384px;padding:24px}
+.loading .box{max-width:46ch;display:grid;gap:14px;justify-items:center}
+.loading svg{width:120px;height:90px;stroke:var(--draft);fill:none;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4 5;opacity:.8}
+.loading p{color:var(--ink-soft);font-size:15.5px}
+.loading .mono{color:var(--draft)}
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.how .item{border-top:1px solid var(--rule);padding-top:20px;display:grid;gap:8px}
+.how .item b{font-family:var(--mono);font-size:12px;color:var(--draft);font-weight:400}
+.how h3{font-size:22px}
+.how p{color:var(--ink-soft);font-size:15.5px}
+.tips{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.tips ul{margin:16px 0 0;padding:0;list-style:none;display:grid;gap:10px}
+.tips li{display:flex;gap:12px;align-items:flex-start;color:var(--ink-soft)}
+.tips li::before{content:"";width:8px;height:8px;border-radius:50%;flex:none;margin-top:8px;background:var(--green)}
+.tips li.no::before{background:var(--oxblood)}
+.quote-thumb{width:100%;aspect-ratio:16/9;object-fit:contain;background:#13281F;border-radius:3px;border:1px solid var(--rule);margin-bottom:16px}
+@media (max-width:900px){.ph-head{grid-template-columns:1fr;gap:20px;padding:36px 0 22px}.how{grid-template-columns:1fr;gap:18px}.tips{grid-template-columns:1fr;gap:28px}}
+@media (max-width:600px){.engine{padding:10px}}
+</style>
+</head>
+<body>
+<div role="note" style="position:relative;z-index:9999;background:#C8A253;color:#17352B;font:600 13px/1.4 system-ui,-apple-system,sans-serif;padding:8px 16px;text-align:center">Original "Signwriters' Workshop" concept from 8 Oct, built before your decisions: VAT wording, delivery area and launch offer here are out of date. <a href="../index.html" style="color:#17352B;text-decoration:underline">See the current fused design</a></div>
+<div id="wsHeader"></div>
+<main>
+  <section class="ws-wrap ph-head">
+    <div>
+      <h1>Photo to neon</h1>
+      <p class="lede">Upload a photo or point your camera at something. The tool traces the outlines into tube paths, so you can see how a pet, a portrait or a building might look as a neon drawing.</p>
+    </div>
+    <p class="privacy"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v6c0 4 3 7 7 9 4-2 7-5 7-9V6l-7-3z"/><path d="m9 12 2 2 4-4"/></svg><span>Everything runs on your device. Photos and camera frames are never uploaded, and nothing is kept when you leave the page.</span></p>
+  </section>
+
+  <section class="ws-wrap" aria-label="Photo to neon tool">
+    <div class="engine" id="photoNeon">
+      <div class="loading" id="loading">
+        <div class="box">
+          <svg viewBox="0 0 120 90" aria-hidden="true"><rect x="8" y="14" width="104" height="66" rx="4"/><circle cx="60" cy="47" r="18"/><circle cx="60" cy="47" r="9"/><path d="M40 14l6-8h28l6 8"/></svg>
+          <p>The tracing tool is loading. If nothing appears after a few seconds, refresh the page.</p>
+          <span class="mono">shared/neon-photo.js</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ws-section" aria-labelledby="h-how">
+    <div class="ws-wrap">
+      <div class="ws-head"><div><h2 id="h-how">How it works</h2></div></div>
+      <div class="how">
+        <div class="item"><b>1</b><h3>Add a photo</h3><p>Choose one from your device, or use the live camera. Faces in profile, pets, buildings and simple logos trace best.</p></div>
+        <div class="item"><b>2</b><h3>Tune the drawing</h3><p>Slide the detail and tube thickness until the outlines read cleanly, then pick a colour and switch the lights off to see the unlit tubes.</p></div>
+        <div class="item"><b>3</b><h3>Download or get a quote</h3><p>Save the PNG, or send us the render and we'll redraw it properly, with every dimension marked, and price it. You approve before anything is made.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ws-section ws-fascia ws-on-dark" aria-labelledby="h-tips" style="padding-top:64px;padding-bottom:64px">
+    <div class="ws-wrap tips">
+      <div><h2 id="h-tips">What traces well</h2><ul>
+        <li>Clear subject against a plain or blurred background</li>
+        <li>Side-on portraits and profiles</li>
+        <li>Pets with a visible outline, ears and tail</li>
+        <li>Buildings, bikes, bottles and other simple silhouettes</li>
+        <li>Flat logos and line art</li>
+      </ul></div>
+      <div><h2>What struggles</h2><ul>
+        <li class="no">Busy backgrounds and crowds</li>
+        <li class="no">Very fine detail like fur texture or small text</li>
+        <li class="no">Low-light photos with soft edges</li>
+        <li class="no">Gradients and shading, which neon can't show</li>
+      </ul><p style="margin-top:18px;color:rgba(228,226,219,.74)">A real sign is one continuous tube per shape, so we simplify traces by hand before quoting.</p></div>
+    </div>
+  </section>
+</main>
+<div id="wsFooter"></div>
+
+<div class="ws-modal" id="quoteModal" hidden>
+  <div class="ws-scrim" data-close></div>
+  <form class="ws-card" id="quoteForm" role="dialog" aria-modal="true" aria-labelledby="qTitle">
+    <h2 id="qTitle">Get a quote for this drawing</h2>
+    <p>We'll redraw your trace as a proper tube path, mark the dimensions, and reply with a price. Nothing is made until you approve the drawing.</p>
+    <img class="quote-thumb" id="quoteThumb" alt="Your neon render">
+    <label class="field">Your name<input type="text" required autocomplete="name"></label>
+    <label class="field">Email<input type="email" required autocomplete="email" placeholder="you@example.co.uk"></label>
+    <label class="field">Rough width you have in mind<select><option>Not sure yet</option><option>Around 50 cm</option><option>Around 80 cm</option><option>Around 120 cm</option><option>Bigger</option></select></label>
+    <label class="field">Where will it hang?<select><option>Indoors</option><option>Outdoors or a covered area</option></select></label>
+    <label class="field">Anything else<textarea placeholder="Colour you like, deadline, the wall it's going on"></textarea></label>
+    <div class="row"><button type="button" class="btn ghost" data-close>Cancel</button><button class="btn primary" type="submit">Send for a quote</button></div>
+  </form>
+</div>
+
+<script src="workshop.js"></script>
+<script>
+(() => {
+"use strict";
+const {$} = WS;
+const el = $('#photoNeon'), modal = $('#quoteModal');
+let lastQuote = null;
+function openQuote(q) {
+  lastQuote = q; $('#quoteThumb').src = q.png; modal.hidden = false; modal.querySelector('input').focus();
+}
+function closeQuote() { modal.hidden = true; }
+modal.addEventListener('click', e => { if (e.target.closest('[data-close]')) closeQuote(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) closeQuote(); });
+$('#quoteForm').addEventListener('submit', e => { e.preventDefault(); closeQuote(); WS.toast('Prototype: quote request captured with your render. Nothing was sent.'); e.target.reset(); });
+
+if (window.LitNeonPhoto) {
+  $('#loading').remove();
+  window.photoCtl = LitNeonPhoto.mount(el, {colour: '#ff3db4', palette: LIT.colours, onQuote: ({png, settings}) => openQuote({png, settings})});
+} else {
+  // the engine is being built alongside this page: keep the loading state, and mount if it turns up
+  let tries = 0; const t = setInterval(() => { if (window.LitNeonPhoto) { clearInterval(t); location.reload(); } if (++tries > 20) clearInterval(t); }, 1000);
+}
+})();
+</script>
+</body>
+</html>

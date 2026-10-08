@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lit Neon | Custom LED neon signs, drawn to measure</title>
+<meta name="description" content="Custom LED neon signs for weddings, pubs, shops and homes. Type your words, see the real size, approve a drawing, free UK delivery.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Archivo:wght@400;500;600;700&family=B612+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="../shared/catalog.js"></script>
+<script>document.head.insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="${LIT.googleFontsHref}">`);</script>
+<link rel="stylesheet" href="workshop.css">
+<style>
+/* ---------- hero: the drawing board ---------- */
+.hero{position:relative;overflow:hidden;padding:56px 0 72px}
+.hero-grid{display:grid;grid-template-columns:5fr 7fr;gap:56px;align-items:center}
+.hero h1{max-width:12ch}
+.hero .lede{margin-top:22px;max-width:46ch}
+.hero-form{display:flex;gap:10px;margin-top:30px;max-width:520px}
+.hero-form input{flex:1;min-width:0;height:54px;border:1px solid rgba(228,226,219,.4);background:rgba(228,226,219,.08);border-radius:4px;padding:0 16px;font-size:18px;color:var(--bone-raised)}
+.hero-form input::placeholder{color:rgba(228,226,219,.5)}
+.hero-form input:focus{outline:none;border-color:var(--gilt);box-shadow:0 0 0 3px rgba(200,162,83,.25)}
+.hero-form .btn{height:54px}
+.hero-spec{margin-top:16px;color:var(--gilt-hi);font-size:13px;min-height:1.4em;opacity:0;transition:opacity .5s}
+.hero-spec.show{opacity:1}
+.hero-aside{margin-top:30px;font-size:15px;color:rgba(228,226,219,.7)}
+.hero-aside a{color:var(--bone)}
+.board{position:relative;aspect-ratio:5/4;border:1px solid var(--green-line);border-radius:3px;background:var(--green-deep) var(--noise);overflow:hidden;isolation:isolate}
+.board::before{content:"";position:absolute;inset:10px;border:1px solid rgba(200,162,83,.22);pointer-events:none;border-radius:2px}
+.board .guide{position:absolute;pointer-events:none;border-color:rgba(200,162,83,.28);border-style:dashed;border-width:0;opacity:0;transition:opacity .6s}
+.board .guide.x{left:0;right:0;border-top-width:1px}
+.board .guide.y{top:0;bottom:0;border-left-width:1px}
+.board.chalked .guide{opacity:1}
+.board .spill{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 46%,color-mix(in srgb,var(--glow) 28%,transparent),transparent 60%);mix-blend-mode:screen;opacity:0;transition:opacity .9s}
+.board.lit .spill{opacity:1}
+.board .ws-stage{position:absolute;inset:0;opacity:0;transition:opacity .5s}
+.board.lit .ws-stage{opacity:1}
+.board svg.draw{position:absolute;overflow:visible;opacity:1;transition:opacity .7s}
+.board.lit svg.draw{opacity:0}
+.draw text{font-size:100px;fill:none;stroke:rgba(236,232,222,.92);stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round;paint-order:stroke}
+.draw tspan{stroke-dasharray:1000 1000;stroke-dashoffset:1000}
+.board.chalked .draw tspan{animation:ws-draw 1.15s cubic-bezier(.3,.6,.4,1) forwards;animation-delay:var(--d,0s)}
+@keyframes ws-draw{to{stroke-dashoffset:0}}
+.board .dim{opacity:0;transition:opacity .4s}
+.board .dim.h{transform:scaleX(0);transform-origin:left center;transition:transform .55s cubic-bezier(.2,.7,.3,1),opacity .3s}
+.board .dim.v{transform:scaleY(0);transform-origin:center top;transition:transform .55s cubic-bezier(.2,.7,.3,1),opacity .3s}
+.board.measured .dim{opacity:1;transform:none}
+.board .dim span{opacity:0;transition:opacity .3s .45s}
+.board.measured .dim span{opacity:1}
+.board .plate{position:absolute;left:18px;bottom:16px;color:rgba(228,226,219,.6);font-family:var(--mono);font-size:11.5px;line-height:1.6;opacity:0;transition:opacity .6s}
+.board.chalked .plate{opacity:1}
+.board .plate b{color:var(--gilt);font-weight:400}
+.board .power{position:absolute;right:16px;top:16px;display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 12px 0 10px;border-radius:4px;border:1px solid rgba(228,226,219,.3);background:rgba(15,38,30,.6);color:var(--bone);font-size:13px;opacity:0;transition:opacity .4s}
+.board.lit .power{opacity:1}
+.board .power i{width:8px;height:8px;border-radius:50%;background:var(--glow);box-shadow:0 0 8px var(--glow)}
+.board .power[aria-pressed="false"] i{background:#6c706b;box-shadow:none}
+
+/* ---------- how it works ---------- */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;position:relative;margin-top:8px}
+.steps::before{content:"";position:absolute;left:28px;right:28px;top:34px;border-top:1px dashed var(--draft);opacity:.5}
+.step{position:relative;display:grid;gap:12px}
+.step .ico{width:68px;height:68px;border:1px solid var(--draft);border-radius:50%;background:var(--bone-raised);display:grid;place-items:center;color:var(--draft);position:relative}
+.step .ico svg{width:30px;height:30px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.step .ico b{position:absolute;right:-6px;top:-6px;width:24px;height:24px;border-radius:50%;background:var(--green);color:var(--bone-raised);font-family:var(--mono);font-size:12px;display:grid;place-items:center;font-weight:400}
+.step h3{font-size:24px;margin-top:6px}
+.step p{color:var(--ink-soft);font-size:16px;max-width:30ch}
+
+/* ---------- featured ---------- */
+.featured .spec-grid{grid-template-columns:repeat(3,1fr)}
+
+/* ---------- photo teaser ---------- */
+.teaser-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.teaser-grid .lede{margin-top:18px}
+.teaser-grid .btn{margin-top:28px}
+.trace{position:relative;aspect-ratio:4/3;border:1px solid rgba(200,162,83,.4);border-radius:3px;background:var(--oxblood-deep) var(--noise);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:28px;gap:14px}
+.trace .ph{aspect-ratio:1;border:1px solid rgba(228,226,219,.35);border-radius:2px;background:linear-gradient(160deg,rgba(228,226,219,.16),rgba(228,226,219,.04));position:relative;overflow:hidden}
+.trace .ph svg{position:absolute;inset:12%;width:76%;height:76%;stroke:rgba(228,226,219,.55);fill:none;stroke-width:1.2}
+.trace .arrow{color:rgba(228,226,219,.6);font-family:var(--mono);font-size:12px;display:grid;justify-items:center;gap:6px}
+.trace .arrow svg{width:36px;height:12px;stroke:currentColor;fill:none;stroke-width:1.4}
+.trace .ne{aspect-ratio:1;border-radius:2px;background:#180a0b;position:relative;overflow:hidden;display:grid;place-items:center}
+.trace .ne svg{width:70%;height:70%;fill:none;stroke:#ffe6f2;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 2px #ff3db4) drop-shadow(0 0 7px #ff3db4) drop-shadow(0 0 18px rgba(255,61,180,.6))}
+.trace .lbl{position:absolute;left:16px;bottom:12px;font-family:var(--mono);font-size:11.5px;color:rgba(228,226,219,.6)}
+
+/* ---------- occasions ---------- */
+.occ-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.occ{position:relative;display:flex;flex-direction:column;text-decoration:none;color:var(--bone);border-radius:3px;overflow:hidden;min-height:380px;background:var(--green) var(--noise);border:1px solid rgba(200,162,83,.3);transition:border-color .2s}
+.occ:hover{border-color:var(--gilt)}
+.occ.ox{background-color:var(--oxblood)}
+.occ.ink{background-color:#161A18}
+.occ.paper{background-color:var(--bone-raised);color:var(--ink);border-color:var(--rule)}
+.occ .ws-stage{flex:1;min-height:220px}
+.occ .ws-panel{background:transparent}
+.occ .txt{padding:0 20px 22px}
+.occ h3{font-size:26px}
+.occ .txt p{font-size:15px;opacity:.78;margin-top:6px}
+.occ .txt .u{display:inline-block;margin-top:12px;font-size:14.5px;font-weight:500}
+
+/* ---------- promises ---------- */
+.promises{display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
+.promise{display:grid;gap:10px;padding:26px 0 0;border-top:1px solid var(--rule)}
+.promise svg{width:30px;height:30px;stroke:var(--green);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.promise h3{font-size:22px}
+.promise p{color:var(--ink-soft);font-size:15.5px}
+
+/* ---------- faq + newsletter ---------- */
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+.news{border:1px solid var(--rule);background:var(--bone-raised) var(--noise);padding:30px;border-radius:3px}
+.news h3{margin-bottom:8px}
+.news p{color:var(--ink-soft);margin-bottom:18px}
+.news .fine{font-size:13px;color:var(--ink-faint);margin:12px 0 0}
+
+@media (max-width:1100px){
+  .steps{grid-template-columns:repeat(2,1fr);gap:36px 28px}
+  .steps::before{display:none}
+  .occ-grid{grid-template-columns:1fr 1fr}
+  .promises{grid-template-columns:1fr 1fr}
+}
+@media (max-width:900px){
+  .hero{padding:28px 0 48px}
+  .hero-grid{grid-template-columns:1fr;gap:28px}
+  .board{order:-1;aspect-ratio:4/3}
+  .hero h1{max-width:none}
+  .teaser-grid{grid-template-columns:1fr;gap:32px}
+  .faq-grid{grid-template-columns:1fr;gap:40px}
+  .featured .spec-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:600px){
+  .hero-form{flex-direction:column}
+  .hero-form input{flex:none}
+  .board{aspect-ratio:1/1}
+  .board .plate{font-size:10.5px;left:14px;bottom:12px;right:14px}
+  .board .plate .more{display:none}
+  .steps{grid-template-columns:1fr}
+  .occ-grid{grid-template-columns:1fr}
+  .occ{min-height:300px}
+  .promises{grid-template-columns:1fr;gap:18px}
+  .featured .spec-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div role="note" style="position:relative;z-index:9999;background:#C8A253;color:#17352B;font:600 13px/1.4 system-ui,-apple-system,sans-serif;padding:8px 16px;text-align:center">Original "Signwriters' Workshop" concept from 8 Oct, built before your decisions: VAT wording, delivery area and launch offer here are out of date. <a href="../index.html" style="color:#17352B;text-decoration:underline">See the current fused design</a></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <symbol id="i-rule" viewBox="0 0 24 24"><path d="M3 17 17 3l4 4L7 21H3v-4z"/><path d="m6 14 2 2M9 11l2 2M12 8l2 2M15 5l2 2"/></symbol>
+  <symbol id="i-sheet" viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5z"/><path d="M15 3v4h4"/><path d="m8 15 2.5 2.5L16 12"/></symbol>
+  <symbol id="i-bend" viewBox="0 0 24 24"><path d="M4 18c0-6 3-9 7-9s3 6 7 6 2-7 2-9"/><path d="M4 18h3M18 6h2"/></symbol>
+  <symbol id="i-van" viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.6"/><circle cx="17" cy="17.5" r="1.6"/></symbol>
+  <symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5M15 3v5M7 8h10v4a5 5 0 0 1-10 0z"/><path d="M12 17v4"/></symbol>
+  <symbol id="i-split" viewBox="0 0 24 24"><rect x="3" y="7" width="5" height="10" rx="1"/><rect x="9.5" y="7" width="5" height="10" rx="1"/><rect x="16" y="7" width="5" height="10" rx="1"/></symbol>
+  <symbol id="i-remote" viewBox="0 0 24 24"><rect x="8" y="2.5" width="8" height="19" rx="2"/><circle cx="12" cy="7" r="1.2"/><path d="M10 11h4M10 14h4M10 17h4"/></symbol>
+</defs></svg>
+
+<div id="wsHeader"></div>
+
+<main>
+  <section class="hero ws-fascia ws-on-dark" aria-labelledby="h1">
+    <div class="ws-wrap hero-grid">
+      <div class="hero-copy">
+        <h1 id="h1">Made to your words.</h1>
+        <p class="lede">Custom LED neon signs for weddings, pubs, shops and homes. Type your words, see the real size in centimetres, and approve a drawing before anything is made.</p>
+        <form class="hero-form" id="heroForm">
+          <label class="sr" for="heroWords">Your words</label>
+          <input id="heroWords" maxlength="24" autocomplete="off" spellcheck="false" placeholder="Type your words">
+          <button class="btn paper" type="submit">Design this sign</button>
+        </form>
+        <p class="mono hero-spec" id="heroSpec" aria-live="polite"></p>
+        <p class="hero-aside">Or start from a <a class="u" href="shop.html">ready-made design</a>, or <a class="u" href="photo.html">turn a photo into neon</a>.</p>
+      </div>
+      <div class="board" id="board" aria-label="Your sign, drawn then lit">
+        <div class="guide x" id="guideX"></div><div class="guide y" id="guideY"></div>
+        <div class="spill"></div>
+        <svg class="draw" id="heroDraw" aria-hidden="true"></svg>
+        <div class="ws-stage" id="heroStage" aria-hidden="true"></div>
+        <div id="heroDims"></div>
+        <p class="plate" id="plate"></p>
+        <button class="power" id="heroPower" aria-pressed="true" type="button"><i aria-hidden="true"></i><span>Lights on</span></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="ws-section" aria-labelledby="h-how">
+    <div class="ws-wrap">
+      <div class="ws-head"><div><h2 id="h-how">From your words to the wall</h2><p>Four steps, and you see a drawing with exact sizes before you commit to anything.</p></div></div>
+      <ol class="steps" style="list-style:none;margin:0;padding:0">
+        <li class="step"><span class="ico"><svg><use href="#i-rule"/></svg><b>1</b></span><h3>You design it</h3><p>Pick your words, lettering, colour and size. The preview shows the sign at true scale, on your own wall if you like.</p></li>
+        <li class="step"><span class="ico"><svg><use href="#i-sheet"/></svg><b>2</b></span><h3>We draw it</h3><p>You get a free proof with every dimension marked. Nothing is made until you say yes.</p></li>
+        <li class="step"><span class="ico"><svg><use href="#i-bend"/></svg><b>3</b></span><h3>We make it</h3><p>LED neon flex is shaped to your lettering and mounted on acrylic, then tested before it leaves.</p></li>
+        <li class="step"><span class="ico"><svg><use href="#i-van"/></svg><b>4</b></span><h3>Delivered free</h3><p>Tracked UK delivery, with the arrival window shown before you pay. Fixings, dimmer and remote in the box.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="ws-section tight featured" aria-labelledby="h-feat" style="padding-top:0">
+    <div class="ws-wrap">
+      <div class="ws-head"><div><h2 id="h-feat">Ready-made designs</h2><p>Lettering we have already drawn and priced. Change the colour and size, or make it your own in the builder.</p></div><a class="btn ghost" href="shop.html">See all designs</a></div>
+      <div class="spec-grid" id="featured"></div>
+    </div>
+  </section>
+
+  <section class="ws-section ws-fascia ox ws-on-dark" aria-labelledby="h-photo">
+    <div class="ws-wrap teaser-grid">
+      <div>
+        <h2 id="h-photo">Turn a photo into a neon drawing</h2>
+        <p class="lede">Upload a photo or point your camera at something. The tool traces the outlines into tube paths, right on your device, and you can download the result or ask us to quote for it.</p>
+        <a class="btn paper" href="photo.html">Open photo to neon</a>
+      </div>
+      <div class="trace" aria-hidden="true">
+        <div class="ph"><svg viewBox="0 0 24 24"><path d="M3 20 9 11l4 5 3-3 5 7z"/><circle cx="17" cy="6.5" r="2"/></svg></div>
+        <div class="arrow"><svg viewBox="0 0 36 12"><path d="M0 6h33M28 1l5 5-5 5"/></svg><span>traced</span></div>
+        <div class="ne"><svg viewBox="0 0 24 24"><path d="M3 20 9 11l4 5 3-3 5 7z"/><circle cx="17" cy="6.5" r="2"/></svg></div>
+        <span class="lbl">Nothing is uploaded. It all runs in your browser.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="ws-section" aria-labelledby="h-occ">
+    <div class="ws-wrap">
+      <div class="ws-head"><div><h2 id="h-occ">Signs for the occasion</h2><p>Where our signs end up most often.</p></div></div>
+      <div class="occ-grid">
+        <a class="occ" href="weddings.html"><div class="ws-stage" data-occ="mr-and-mrs"></div><div class="txt"><h3>Weddings</h3><p>Your names or a line from the vows, lit above the top table and kept for the hallway after.</p><span class="u">Wedding signs</span></div></a>
+        <a class="occ paper" href="shop.html?cat=home"><div class="ws-stage" data-occ="lets-stay-in"></div><div class="txt"><h3>Home</h3><p>A warm light for the living room, bedroom or landing. Dimmable from the sofa.</p><span class="u">Signs for home</span></div></a>
+        <a class="occ ox" href="shop.html?cat=bars"><div class="ws-stage" data-occ="fancy-a-pint"></div><div class="txt"><h3>Bars and cafés</h3><p>Behind the bar, over the coffee machine, or in the window so people find you in the dark.</p><span class="u">Bar and café signs</span></div></a>
+        <a class="occ ink" href="business.html"><div class="ws-stage" data-occ="open-late"></div><div class="txt"><h3>Business</h3><p>Your logo or trading name in neon for reception, the shopfront or the studio wall.</p><span class="u">Logos and business signs</span></div></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="ws-section tight" aria-labelledby="h-why" style="padding-top:0">
+    <div class="ws-wrap">
+      <div class="ws-head"><div><h2 id="h-why">What comes with every sign</h2></div></div>
+      <div class="promises" id="promises"></div>
+    </div>
+  </section>
+
+  <section class="ws-section" aria-labelledby="h-faq">
+    <div class="ws-wrap faq-grid">
+      <div>
+        <h2 id="h-faq">Good to know</h2>
+        <div class="acc" style="margin-top:24px">
+          <details><summary>How long does a sign take?</summary><div class="ans"><p>Standard making time is 5 working days, with express at 2. Delivery is on top, and you see the arrival window on the sign before you pay. Times are placeholders until our supplier confirms them.</p></div></details>
+          <details><summary>Can I return a custom sign?</summary><div class="ans"><p>Custom signs are made to your words, so they can't be returned for a change of mind. That is why we send a drawing to approve first. If a sign arrives damaged or faulty, we put it right.</p></div></details>
+          <details><summary>Does it come with a plug?</summary><div class="ans"><p>Yes. Every sign ships with a UK 3-pin plug and a low-voltage adapter as standard, plus a dimmer and remote. EU, US and AU plugs are an option in the builder.</p></div></details>
+        </div>
+        <p style="margin-top:20px"><a class="u" href="faq.html">All questions, including installation, outdoor use and care</a></p>
+      </div>
+      <div class="news">
+        <h3>Post from the workshop</h3>
+        <p>New lettering styles, occasional offers and the odd drawing we're proud of. A few emails a year, no more.</p>
+        <form class="inline-form" id="newsForm"><label class="sr" for="newsEmail">Email address</label><input id="newsEmail" type="email" required placeholder="you@example.co.uk"><button class="btn primary" type="submit">Sign up</button></form>
+        <p class="fine">Unsubscribe any time. We never pass your address on.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="wsFooter"></div>
+
+<script src="workshop.js"></script>
+<script>
+(() => {
+"use strict";
+const {$, $$} = WS;
+const HERO_FONT = 'soho', HERO_COLOUR = 'warm', HERO_SIZE = 'm';
+const board = $('#board'), stage = $('#heroStage'), draw = $('#heroDraw'), dimsEl = $('#heroDims'), plate = $('#plate'), input = $('#heroWords'), spec = $('#heroSpec');
+let heroOn = true, animated = false, words = 'Better together';
+
+function dz() { return {lines: [words], font: HERO_FONT, colour: HERO_COLOUR, align: 'center'}; }
+
+/* lay the sign out on the board: lit layer (HTML), outline layer (SVG) and dimension lines all share one box */
+function layout() {
+  const W = board.clientWidth, H = board.clientHeight; if (!W) return null;
+  const d = dz(), g = WS.geom(d);
+  const narrow = W < 520, off = narrow ? 16 : 22;
+  const emPx = Math.min(W * (narrow ? .55 : .72) / Math.max(g.inkW, .01), H * .46 / Math.max(g.inkH, .01));
+  const r = WS.renderSign(stage, {dz: d, on: heroOn, emPx});
+  const left = (W - r.w) / 2, top = (H - r.h) / 2 - H * .03;
+  stage.querySelector('.ws-sign').style.top = `calc(50% - ${H * .03}px)`;
+  // outline layer
+  const m = g.m, s = 100;
+  draw.setAttribute('viewBox', `0 0 ${g.inkW * s} ${g.inkH * s}`);
+  Object.assign(draw.style, {left: left + 'px', top: top + 'px', width: r.w + 'px', height: r.h + 'px'});
+  const textLeft = -m.minX, textTop = (g.inkH - m.inkH) / 2 - m.top;
+  let i = 0;
+  draw.innerHTML = g.L.map((line, li) => {
+    const x0 = (textLeft + (m.blockW - m.lineWidths[li]) / 2) * s, y = (textTop + m.baselines[li]) * s;
+    const spans = Array.from(line).map(ch => `<tspan style="--d:${(i++ * .09).toFixed(2)}s">${ch === ' ' ? '&#160;' : WS.esc(ch)}</tspan>`).join('');
+    return `<text x="${x0.toFixed(1)}" y="${y.toFixed(1)}" style="font-family:'${g.f.family}';font-weight:${g.f.weight || 400}">${spans}</text>`;
+  }).join('');
+  // real-world sizes at Medium, cut to shape
+  const dims = WS.dimsFor(d, HERO_SIZE, 'cut'), ppc = r.w / Math.max(dims.W - 5, 1); // px per cm of the lettering
+  const mg = 2.5 * ppc; // acrylic margin drawn around the ink
+  const flip = left + r.w + mg + off + 54 > W;
+  dimsEl.innerHTML = WS.dimH(left - mg, top + r.h + mg + off, r.w + 2 * mg, `${dims.W} cm`, 'light below') + WS.dimV(left + r.w + mg + off, top - mg, r.h + 2 * mg, `${dims.H} cm`, 'light' + (flip ? ' flip' : ''));
+  $('#guideX').style.top = (top + textTop * emPx + m.baselines[0] * emPx) + 'px';
+  $('#guideY').style.left = (W / 2) + 'px';
+  const flex = WS.flexMetres(d, dims.emcm);
+  plate.innerHTML = `<b>Drawing 1</b> &nbsp;Soho lettering, warm white<span class="more"><br>${g.L.length} line${g.L.length > 1 ? 's' : ''} · ${dims.letterCm} cm letters · ${dims.W} × ${dims.H} cm · not to scale</span>`;
+  spec.textContent = `${g.L.length} line${g.L.length > 1 ? 's' : ''} · ${dims.letterCm} cm letters · ${dims.W} × ${dims.H} cm · approx. ${flex.toFixed(1)} m LED flex`;
+  return {dims};
+}
+
+function light(on) { heroOn = on; board.classList.toggle('lit', on); const p = $('#heroPower'); p.setAttribute('aria-pressed', String(on)); p.querySelector('span').textContent = on ? 'Lights on' : 'Lights off'; WS.renderSign(stage, {dz: dz(), on, emPx: parseFloat(stage.querySelector('.ws-sign').style.fontSize)}); }
+
+/* the one orchestrated moment: chalk the letters, measure, then light */
+function perform() {
+  if (animated) return; animated = true;
+  if (WS.reduced()) { board.classList.add('chalked', 'measured', 'lit'); spec.classList.add('show'); return; }
+  const n = words.length;
+  requestAnimationFrame(() => board.classList.add('chalked'));
+  const drawEnd = 350 + n * 90 + 1150;
+  setTimeout(() => board.classList.add('measured'), drawEnd - 500);
+  setTimeout(() => { board.classList.add('lit'); spec.classList.add('show'); const t = stage.querySelector('.ws-tube'); if (t) { t.classList.add('ws-strike'); } }, drawEnd + 450);
+}
+
+input.addEventListener('input', () => {
+  words = input.value.trim() || 'Better together';
+  if (!board.classList.contains('lit')) { board.classList.add('chalked', 'measured', 'lit'); spec.classList.add('show'); animated = true; }
+  layout();
+  // typing after the show: the chalk layer is hidden, so just keep it in sync without re-animating
+  $$('tspan', draw).forEach(t => { t.style.animation = 'none'; t.style.strokeDashoffset = '0'; });
+});
+$('#heroForm').addEventListener('submit', e => { e.preventDefault(); location.href = WS.builderLink({text: words, font: HERO_FONT, colour: HERO_COLOUR, size: HERO_SIZE, backing: 'cut', board: 'clear', use: 'in', plug: 'uk', prod: 'std', align: 'center', icon: ''}); });
+$('#heroPower').addEventListener('click', () => light(!heroOn));
+
+/* featured, occasions, promises */
+const FEATURED = ['better-together', 'fancy-a-pint', 'sweet-dreams', 'cheers', 'home-sweet-home', 'open-late'];
+$('#featured').innerHTML = FEATURED.map(id => WS.cardHtml(WS.byId(WS.DESIGNS, id))).join('');
+const PROMISE_ICON = {'Free UK delivery': 'i-van', 'Design proof before we make it': 'i-sheet', 'Pay in 3 with Klarna': 'i-split', 'Dimmer and remote included': 'i-remote'};
+const PROMISE_TEXT = {'Free UK delivery': 'To any UK address, tracked, with the arrival window shown before you pay.', 'Design proof before we make it': 'A drawing with every dimension marked. You approve it, then we make it.', 'Pay in 3 with Klarna': 'Split the cost into three interest-free payments at checkout.', 'Dimmer and remote included': 'Set the brightness from across the room, and switch it off at night.'};
+$('#promises').innerHTML = LIT.brand.promises.map(p => `<div class="promise"><svg aria-hidden="true"><use href="#${PROMISE_ICON[p] || 'i-sheet'}"/></svg><h3>${WS.esc(p)}</h3><p>${WS.esc(PROMISE_TEXT[p] || '')}</p></div>`).join('');
+function occasions() { $$('[data-occ]').forEach(el => { const d = WS.byId(WS.DESIGNS, el.dataset.occ); WS.renderSign(el, {dz: WS.designOf(d), fit: {w: el.clientWidth * .68, h: el.clientHeight * .4}}); }); }
+$('#newsForm').addEventListener('submit', e => { e.preventDefault(); WS.toast('Prototype: sign-up captured. Nothing was sent.'); e.target.reset(); });
+
+/* boot: measure once fonts are in, then perform */
+function all() { layout(); WS.hydrateCards(); occasions(); }
+WS.onFonts(all);
+WS.fontsReady().then(perform);
+setTimeout(() => { if (!animated) perform(); }, 2500); // fonts slow? perform anyway
+let rT; addEventListener('resize', () => { clearTimeout(rT); rT = setTimeout(all, 120); });
+})();
+</script>
+</body>
+</html>

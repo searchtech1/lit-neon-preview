@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How it's made | Lit Neon</title>
+<meta name="description" content="How a Lit Neon sign is made: from a measured drawing to LED neon flex shaped on acrylic, tested and delivered. Low voltage, cool to the touch.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Archivo:wght@400;500;600;700&family=B612+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="../shared/catalog.js"></script>
+<script>document.head.insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="${LIT.googleFontsHref}">`);</script>
+<link rel="stylesheet" href="workshop.css">
+<style>
+.ahead{padding:64px 0 40px;display:grid;grid-template-columns:7fr 5fr;gap:48px;align-items:end}
+.ahead h1{font-size:clamp(40px,5vw,64px)}
+.ahead .lede{margin-top:16px}
+.ahead .aside{font-size:15px;color:var(--ink-soft);border-left:2px solid var(--gilt);padding-left:16px}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px}
+.pane{position:relative;aspect-ratio:4/3;border-radius:3px;overflow:hidden;border:1px solid var(--rule)}
+.pane.sketch{background-color:var(--bone-raised);background-image:var(--noise),linear-gradient(var(--draft-faint) 1px,transparent 1px),linear-gradient(90deg,var(--draft-faint) 1px,transparent 1px);background-size:220px 220px,24px 24px,24px 24px}
+.pane.sketch svg{position:absolute;overflow:visible}
+.pane.sketch svg text{fill:none;stroke:var(--draft);stroke-width:1.4;stroke-linejoin:round;stroke-linecap:round}
+.pane.lit{background:#13281F var(--noise)}
+.pane.lit::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 46%,rgba(255,199,122,.3),transparent 60%);mix-blend-mode:screen;pointer-events:none}
+.pane .ws-stage{position:absolute;inset:0}
+.pane .lbl{position:absolute;left:14px;bottom:12px;font-family:var(--mono);font-size:11.5px;color:var(--ink-soft)}
+.pane.lit .lbl,.pane.lit .dim{color:rgba(228,226,219,.75)}
+.stages{display:grid;gap:0;border-top:1px solid var(--rule)}
+.stage-row{display:grid;grid-template-columns:120px 1fr 1.2fr;gap:32px;padding:34px 0;border-bottom:1px solid var(--rule);align-items:start}
+.stage-row .n{font-family:var(--mono);font-size:13px;color:var(--draft)}
+.stage-row h3{font-size:26px}
+.stage-row p{color:var(--ink-soft)}
+.stage-row p+p{margin-top:10px}
+.stage-row .fact{border:1px solid var(--ink);border-radius:3px;padding:14px 16px;background:var(--bone-raised);font-size:14.5px}
+.stage-row .fact b{display:block;font-weight:600;margin-bottom:4px}
+.compare{border:1px solid var(--ink);border-radius:3px;overflow:hidden;background:var(--bone-raised)}
+.compare table{width:100%;border-collapse:collapse;font-size:15px}
+.compare th,.compare td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:top}
+.compare th{font-weight:600;background:var(--bone-deep)}
+.compare tr:last-child td{border-bottom:none}
+.compare td:first-child{color:var(--ink-soft);width:26%}
+.safety{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.safety .item{border-top:1px solid var(--green-line);padding-top:18px}
+.safety h3{font-size:22px}
+.safety p{margin-top:8px;color:rgba(228,226,219,.74);font-size:15.5px}
+.honest{border:1px dashed var(--ink-faint);border-radius:3px;padding:18px 20px;font-size:14.5px;color:var(--ink-soft);max-width:70ch}
+@media (max-width:900px){.ahead{grid-template-columns:1fr;gap:20px;padding:36px 0 24px}.stage-row{grid-template-columns:1fr;gap:12px;padding:26px 0}.safety{grid-template-columns:1fr;gap:18px}}
+@media (max-width:600px){.pair{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div role="note" style="position:relative;z-index:9999;background:#C8A253;color:#17352B;font:600 13px/1.4 system-ui,-apple-system,sans-serif;padding:8px 16px;text-align:center">Original "Signwriters' Workshop" concept from 8 Oct, built before your decisions: VAT wording, delivery area and launch offer here are out of date. <a href="../index.html" style="color:#17352B;text-decoration:underline">See the current fused design</a></div>
+<div id="wsHeader"></div>
+<main>
+  <section class="ws-wrap ahead">
+    <div><h1>From sketch to sign</h1><p class="lede">Every Lit Neon sign starts life as a drawing with dimensions on it, and nothing is made until you've approved that drawing. Here is what happens before and after.</p></div>
+    <p class="aside">We describe our materials and process plainly. Where a figure is still a placeholder, we say so rather than dress it up.</p>
+  </section>
+
+  <section class="ws-wrap" aria-label="The drawing and the sign">
+    <div class="pair">
+      <div class="pane sketch" id="paneSketch"><span class="lbl">1. The drawing you approve</span></div>
+      <div class="pane lit" id="paneLit"><div class="ws-stage" id="litStage"></div><span class="lbl">2. The sign on the wall</span></div>
+    </div>
+  </section>
+
+  <section class="ws-section" aria-labelledby="h-stages">
+    <div class="ws-wrap">
+      <div class="ws-head"><div><h2 id="h-stages">The making, in order</h2></div></div>
+      <div class="stages">
+        <div class="stage-row"><span class="n">Stage 1</span><div><h3>Measured drawing</h3><p>Your words are set in the lettering you chose and measured: letter height, overall width and height, and the path the tube will follow down the centre of each stroke.</p><p>You get the drawing by email with every dimension marked, plus the estimated length of LED flex. Ask for changes until it's right.</p></div><div class="fact"><b>Why we insist on it</b>A sign is cut and bent to the drawing, so this is the moment to catch a spelling, a size that won't fit the wall, or a colour that fights the room.</div></div>
+        <div class="stage-row"><span class="n">Stage 2</span><div><h3>LED neon flex</h3><p>LED neon is a flexible strip of LEDs sealed inside a silicone tube that diffuses the light into one continuous line. It is shaped to follow the drawing, letter by letter, then fixed to the backing.</p><p>It runs on low-voltage power from a plug-in adapter, so there is no glass, no gas and no high-voltage transformer.</p></div><div class="fact"><b>What that means in use</b>The tube stays cool enough to touch, it won't shatter if knocked, and it dims smoothly from the remote.</div></div>
+        <div class="stage-row"><span class="n">Stage 3</span><div><h3>Acrylic backing</h3><p>The tube is mounted on acrylic, either cut to follow the outline of the lettering or as a clean rectangle on polished standoffs. Clear acrylic disappears against the wall; black, white, gold mirror and silver mirror make the panel part of the design.</p></div><div class="fact"><b>Cut to shape or rectangle?</b>Cut to shape is lighter and sits flush. A rectangle gives you a panel edge and standoffs, which suits logos and reception walls.</div></div>
+        <div class="stage-row"><span class="n">Stage 4</span><div><h3>Wired and tested</h3><p>The sign is wired to a single clear cable that exits bottom right, then lit and checked against the drawing before it's packed with its adapter, dimmer, remote and fixings.</p></div><div class="fact"><b>In the box</b>Sign, 12 V adapter with UK plug, dimmer and remote, 2 m clear cable, wall fixings and a copy of the drawing.</div></div>
+        <div class="stage-row"><span class="n">Stage 5</span><div><h3>Delivered</h3><p>Packed flat and tracked to any UK address, free. You see the arrival window before you pay; it skips weekends and bank holidays.</p></div><div class="fact"><b>Placeholder notice</b>Making times, prices and inclusions are placeholders until our supplier confirms them, and we'll say so until they are.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ws-section tight" aria-labelledby="h-cmp" style="padding-top:0">
+    <div class="ws-wrap">
+      <div class="ws-head"><div><h2 id="h-cmp">LED neon and glass neon</h2><p>Both make a line of light. They are different things, and it's worth knowing which you're buying.</p></div></div>
+      <div class="compare"><table>
+        <thead><tr><th></th><th>LED neon flex (what we make)</th><th>Traditional glass neon</th></tr></thead>
+        <tbody>
+          <tr><td>What it is</td><td>LEDs in a flexible silicone tube on an acrylic backing</td><td>Hand-bent glass tubes filled with gas, lit by a high-voltage transformer</td></tr>
+          <tr><td>Power</td><td>Low voltage from a plug-in adapter</td><td>Mains transformer, often needing an electrician to install</td></tr>
+          <tr><td>Touch</td><td>Cool to the touch</td><td>Glass can get warm; the transformer must be kept out of reach</td></tr>
+          <tr><td>Durability</td><td>Flexible tube, hard to break in transit or use</td><td>Glass, fragile, usually repaired rather than replaced</td></tr>
+          <tr><td>Dimming</td><td>Yes, from the remote</td><td>Not usually</td></tr>
+          <tr><td>Look</td><td>Even line of light, slightly softer edge</td><td>Classic glow with visible glass and electrodes</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <section class="ws-section ws-fascia ws-on-dark" aria-labelledby="h-safe">
+    <div class="ws-wrap">
+      <div class="ws-head"><div><h2 id="h-safe">Power and safety, plainly</h2></div></div>
+      <div class="safety">
+        <div class="item"><h3>Low voltage</h3><p>The sign itself runs at 12 V. The adapter plugs into a normal UK socket and does the conversion, like a laptop charger.</p></div>
+        <div class="item"><h3>Cool and quiet</h3><p>LED flex gives off little heat and no noise. It is fine on painted walls, wood, plaster and fabric backdrops.</p></div>
+        <div class="item"><h3>Indoors and out</h3><p>Standard signs are for indoor use. Choose the weatherproof option for porches, gardens and marquees; the adapter always stays indoors or in a dry enclosure.</p></div>
+      </div>
+      <p style="margin-top:32px;max-width:66ch;color:rgba(228,226,219,.7);font-size:14.5px">We don't list certifications or test standards here until we hold the paperwork for the exact components we ship. When we do, they'll be on this page.</p>
+    </div>
+  </section>
+
+  <section class="ws-section tight" aria-label="About the brand">
+    <div class="ws-wrap">
+      <p class="honest">Lit Neon is a new UK brand. The signwriting look of this site is a design language we admire, not a history we're claiming. What we can promise is on every page: a drawing before we make it, free UK delivery, Pay in 3, and a dimmer and remote in the box.</p>
+    </div>
+  </section>
+</main>
+<div id="wsFooter"></div>
+<script src="workshop.js"></script>
+<script>
+(() => {
+"use strict";
+const {$, $$} = WS;
+const dz = {lines: ['Better together'], font: 'soho', colour: 'warm', align: 'center', icon: ''};
+function render() {
+  const lit = $('#litStage'), W = lit.clientWidth, H = lit.clientHeight; if (!W) return;
+  const r = WS.renderSign(lit, {dz, fit: {w: W * .72, h: H * .4}});
+  const d = WS.dimsFor(dz, 'm', 'cut');
+  const left = (W - r.w) / 2, top = (H - r.h) / 2;
+  $$('.dim', lit).forEach(x => x.remove());
+  lit.insertAdjacentHTML('beforeend', WS.dimH(left, top + r.h + 26, r.w, `${d.W} cm`, 'below'));
+  // the drawing: outlined lettering in drafting blue with dimensions
+  const sk = $('#paneSketch'); $$('svg,.dim', sk).forEach(x => x.remove());
+  const g = WS.geom(dz), m = g.m, s = 100, emPx = r.emPx;
+  const textLeft = -m.minX, textTop = (g.inkH - m.inkH) / 2 - m.top;
+  const x0 = (textLeft + (m.blockW - m.lineWidths[0]) / 2) * s, y = (textTop + m.baselines[0]) * s;
+  sk.insertAdjacentHTML('beforeend', `<svg viewBox="0 0 ${g.inkW * s} ${g.inkH * s}" style="left:${left}px;top:${top}px;width:${r.w}px;height:${r.h}px" aria-hidden="true"><text x="${x0.toFixed(1)}" y="${y.toFixed(1)}" style="font-family:'${g.f.family}';font-size:100px">${WS.esc(dz.lines[0])}</text></svg>`
+    + WS.dimH(left, top + r.h + 26, r.w, `${d.W} cm`, 'below') + WS.dimV(left + r.w + 18, top, r.h, `${d.H} cm`));
+}
+WS.onFonts(render);
+let rT; addEventListener('resize', () => { clearTimeout(rT); rT = setTimeout(render, 120); });
+})();
+</script>
+</body>
+</html>
