@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lit Neon | Custom LED neon signs, made in our UK workshop</title>
+<meta name="description" content="Design your own LED neon sign, see it lit at real size, approve the drawing, and have it delivered free across mainland GB in 7 to 10 working days.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Hanken+Grotesk:wght@400;500;600&family=B612+Mono&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Neonderthaw&family=Tilt+Neon&family=Pacifico&family=Sacramento&family=Monoton&family=Yellowtail&family=Great+Vibes&family=Righteous&family=Comfortaa:wght@600&family=Kaushan+Script&display=swap">
+<link rel="stylesheet" href="assets/fused.css">
+</head>
+<body data-page="home">
+<div id="ln-announce"></div>
+<div id="ln-header"></div>
+
+<main>
+  <!-- 2. Hero: type to light -->
+  <section class="hero" aria-labelledby="h-hero">
+    <div class="scene" id="scene" style="--wall-img:none">
+      <div class="neon" id="heroNeon" aria-hidden="true"></div>
+      <div class="skirt"></div>
+      <p class="made"><i aria-hidden="true"></i>Made to order in our UK workshop</p>
+    </div>
+    <div class="console">
+      <div class="wrap">
+        <div class="copy">
+          <h1 id="h-hero">Say it in light.</h1>
+          <p class="lede">Custom LED neon, drawn to your words. You approve the drawing, we make it in our UK workshop, and it arrives free across mainland GB in 7 to 10 working days.</p>
+        </div>
+        <div class="actions ctas"><a class="btn primary" id="heroDesign" href="create.html">Design your sign</a><a class="btn ghost" href="create.html#logo">Upload a logo</a></div>
+        <form class="typer" id="typer" autocomplete="off">
+          <div class="line">
+            <label><small>Type your words</small><input id="heroWords" maxlength="24" value="After dark" placeholder="After dark" aria-label="Your words"></label>
+            <button class="btn primary" type="submit">Light it up</button>
+          </div>
+          <div class="row">
+            <div class="dots" id="heroDots" role="group" aria-label="Colour"></div>
+            <div class="lettering" id="heroFonts" role="group" aria-label="Lettering"></div>
+          </div>
+          <p class="live" id="heroLive" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Trust strip -->
+  <section class="trust" aria-label="What every sign comes with">
+    <div class="wrap" id="trust"></div>
+  </section>
+
+  <!-- 4. Shop by room, occasion and business -->
+  <section class="room" id="shop" aria-labelledby="h-shop">
+    <div class="wrap">
+      <div class="room-head">
+        <h2 id="h-shop">Where's it going?</h2>
+        <p class="lede">Signs we've already drawn for bedrooms, bars, big days and shop windows. Every one opens in the builder, so the words, colour and size are yours to change.</p>
+      </div>
+      <p class="shop-kicker">By room</p>
+      <div class="shopgrid" data-shop="room"></div>
+      <p class="shop-kicker" id="shop-occasion">By occasion</p>
+      <div class="shopgrid" data-shop="occasion"></div>
+      <p class="shop-kicker">For business</p>
+      <div class="shopgrid" data-shop="business"></div>
+    </div>
+  </section>
+
+  <!-- 5. How it works, with the live proof drawing -->
+  <section class="room" id="how" aria-labelledby="h-how">
+    <div class="wrap how">
+      <div>
+        <div class="room-head">
+          <h2 id="h-how">From your words to a drawing to your wall</h2>
+          <p class="lede">Nothing is made until you've seen it drawn. The sheet on the right is the one you'd approve, already showing the words you typed above.</p>
+        </div>
+        <ol class="steps">
+          <li class="step"><span class="n" aria-hidden="true">1</span><h3>Design it</h3><p>Type your words, pick the lettering, colour and size. See it lit at real scale, in a room or on a photo of your own wall.</p></li>
+          <li class="step"><span class="n" aria-hidden="true">2</span><h3>Approve the drawing</h3><p>Within 12 hours we send a proof like this one, every measurement marked. Change anything you like, free. We only start when you say yes.</p></li>
+          <li class="step"><span class="n" aria-hidden="true">3</span><h3>We make it</h3><p>LED neon flex shaped to your lettering and mounted on acrylic in our own UK workshop, then tested before it leaves <span class="cf">[CONFIRM]</span>.</p></li>
+          <li class="step"><span class="n" aria-hidden="true">4</span><h3>Hang it</h3><p>Delivered free across mainland GB in 7 to 10 working days, with fixings, dimmer and remote, and a UK plug in the box.</p></li>
+        </ol>
+        <div class="actions" style="margin-top:32px"><a class="btn primary" id="howCta" href="create.html">Start designing</a></div>
+      </div>
+      <div class="proofwrap">
+        <div class="sheet" id="howSheet" role="img" aria-label="Proof drawing of your sign with dimensions"></div>
+        <p class="caption"><span>Drawn live from the hero, at medium size.</span><span class="mono" id="howCaption"></span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Real-size guide -->
+  <section class="room" id="size" aria-labelledby="h-size">
+    <div class="wrap">
+      <div class="room-head">
+        <h2 id="h-size">How big is big?</h2>
+        <p class="lede">Slide from small to statement and watch it against the furniture. The sofa is 210 cm wide, the bed 160, the bar 240, so what you see is what arrives.</p>
+      </div>
+      <div class="realsize">
+        <div class="stagebox"><div class="stage" id="sizeStage"></div></div>
+        <div class="controls">
+          <div class="readout" id="sizeReadout">Medium<small>67 × 24 cm</small></div>
+          <div>
+            <label class="sr" for="sizeRange">Sign size</label>
+            <input class="range" id="sizeRange" type="range" min="0" max="4" step="1" value="1" aria-valuetext="Medium">
+            <div class="range-row"><span>Small</span><span>Statement</span></div>
+          </div>
+          <div class="chips" id="sizeFurn" role="group" aria-label="Against what">
+            <button class="chip" data-furn="sofa" aria-pressed="true">Sofa</button>
+            <button class="chip" data-furn="bed" aria-pressed="false">Bed</button>
+            <button class="chip" data-furn="bar" aria-pressed="false">Bar</button>
+          </div>
+          <p class="scale" id="sizePrice"></p>
+          <div class="actions"><a class="btn ghost" id="sizeCta" href="create.html">Design at this size</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Tube colour and effects -->
+  <section class="room" id="colour" aria-labelledby="h-colour">
+    <div class="wrap">
+      <div class="room-head">
+        <h2 id="h-colour">Same colour, two kinds of tube</h2>
+        <p class="lede">Every colour glows the same when it's on. The jacket decides what you see when it's off: a white tube that looks like a drawing on the wall, or a coloured tube that keeps its colour by day.</p>
+      </div>
+      <div class="tubes">
+        <div class="wall-tile" id="tubeWhite"><span class="lab">White jacket</span><div class="neon"></div></div>
+        <div class="wall-tile" id="tubeColour"><span class="lab">Coloured jacket</span><div class="neon"></div></div>
+      </div>
+      <div class="tubes expl">
+        <p><b>White jacket</b>Looks white when off, glows in your colour when on. The usual choice for homes and weddings.</p>
+        <p><b>Coloured jacket</b>Shows its colour even when the sign is off. Better for shopfronts and daytime rooms. Which colours come with a coloured jacket <span class="cf">[CONFIRM]</span></p>
+      </div>
+      <div class="democtrls">
+        <div class="seg" id="tubePower" role="group" aria-label="Power"><button data-on="1" aria-pressed="true">Lights on</button><button data-on="0" aria-pressed="false">Lights off</button></div>
+        <div class="seg" id="tubeMode" role="group" aria-label="Effect"><button data-rgb="0" aria-pressed="true">One colour</button><button data-rgb="1" aria-pressed="false">Colour changing</button></div>
+        <div class="dots" id="tubeDots" role="group" aria-label="Colour"></div>
+        <a class="btn ghost sm" href="create.html#step=colour">Pick your colour</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Bestsellers -->
+  <section class="room" id="bestsellers" aria-labelledby="h-best">
+    <div class="wrap">
+      <div class="room-head">
+        <h2 id="h-best">Already lit</h2>
+        <p class="lede">Ready-made designs, for anyone who'd rather not face a blank text box. Tap one to open it in the builder and make it yours.</p>
+      </div>
+      <div class="rail" id="bestRail" aria-label="Ready-made designs"></div>
+      <div class="actions" style="margin-top:28px"><a class="btn ghost" href="#shop">Shop signs</a></div>
+    </div>
+  </section>
+
+  <!-- 9. What's in the box -->
+  <section class="room" id="box" aria-labelledby="h-box">
+    <div class="wrap">
+      <div class="room-head">
+        <h2 id="h-box">What's in the box</h2>
+        <p class="tagline"><span class="lede">Everything you need to hang it and switch it on tonight.</span><span class="ib">Interactive in build</span></p>
+      </div>
+      <div class="anatomy">
+        <div class="box wall-tile" id="anatomyBox"></div>
+        <ol>
+          <li><span class="k">1</span><span><b>Your sign</b>LED neon flex on 5 mm acrylic <span class="cf">[CONFIRM]</span>, cut to shape or on a panel.</span></li>
+          <li><span class="k">2</span><span><b>Dimmer and remote</b>Set the brightness from across the room. Included with every sign.</span></li>
+          <li><span class="k">3</span><span><b>Power supply with a UK plug</b>Low-voltage, so the sign stays cool to touch. UKCA or CE marked <span class="cf">[CONFIRM]</span></span></li>
+          <li><span class="k">4</span><span><b>Fixings</b>Screws, wall plugs and standoffs for your hanging method. Kit contents <span class="cf">[CONFIRM]</span></span></li>
+          <li><span class="k">5</span><span><b>Clear power cable</b>Long enough that the socket doesn't have to be right behind the sign. Length 2 m <span class="cf">[CONFIRM]</span></span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. Logo and business band -->
+  <section class="room" id="business" aria-labelledby="h-biz">
+    <div class="wrap">
+      <div class="biz">
+        <div>
+          <h2 id="h-biz">Your logo, in neon, mocked up free</h2>
+          <p class="lede" style="margin-top:16px">Send us the logo or artwork and a designer draws it in neon. You get a mockup and a price within 12 hours, and nothing is made until you've approved the drawing. Several signs, or a sign for every branch? Ask for a bulk quote.</p>
+          <div class="actions" style="margin-top:24px"><a class="btn primary" href="create.html#logo">Get a free mockup</a><a class="btn ghost" href="create.html#quote=bulk">Bulk quote</a></div>
+        </div>
+        <div class="upload" aria-hidden="true">
+          <div class="row">
+            <div class="ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18 10 9l4 6 3-3 3 6z"/><circle cx="17" cy="6.5" r="2"/></svg></div>
+            <div class="arrow"><svg viewBox="0 0 36 12"><path d="M0 6h33M28 1l5 5-5 5"/></svg><span>12 hours</span></div>
+            <div class="ph wall-tile" style="border:0"><div class="neon" id="bizNeon" style="position:absolute;inset:0"></div></div>
+          </div>
+          <p class="note">PNG, JPG, SVG or PDF. Mockups are drawn by a person, not a filter.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. Day vs night gallery -->
+  <section class="room" id="gallery" aria-labelledby="h-gallery">
+    <div class="wrap">
+      <div class="room-head">
+        <h2 id="h-gallery">By day, by night</h2>
+        <p class="tagline"><span class="lede">A quiet line on the wall at breakfast. The whole room at midnight.</span><span class="ib">Interactive in build</span></p>
+      </div>
+      <div class="daynight" id="daynight" role="img" aria-label="The same sign shown by day on the left and by night on the right">
+        <div class="half day"><div class="wall-tile day" id="dayTile"><div class="neon off"></div></div></div>
+        <div class="half night"><div class="wall-tile" id="nightTile"><div class="neon"></div></div></div>
+        <div class="handle" aria-hidden="true"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6-6 6 6 6M15 6l6 6-6 6"/></svg></i></div>
+        <span class="lab l">Day</span><span class="lab r">Night</span>
+        <span class="credit">Preview render, not a customer photo. Real photos replace this as orders arrive.</span>
+      </div>
+      <div class="actions" style="margin-top:28px"><a class="btn ghost" href="#guides">Inspiration</a></div>
+    </div>
+  </section>
+
+  <!-- 12. Find your sign quiz -->
+  <section class="room" id="quiz" aria-labelledby="h-quiz">
+    <div class="wrap">
+      <div class="room-head">
+        <h2 id="h-quiz">Not sure what to say?</h2>
+        <p class="tagline"><span class="lede">Three questions, and we'll suggest words, a lettering style and a size that fit the room.</span><span class="ib">Interactive in build</span></p>
+      </div>
+      <div class="quiz" aria-hidden="true">
+        <div class="q"><h3>Where's it going?</h3><div class="chips"><span class="chip" aria-pressed="true">Bedroom</span><span class="chip">Kitchen</span><span class="chip">Home bar</span><span class="chip">Shop</span></div></div>
+        <div class="q"><h3>What's the mood?</h3><div class="chips"><span class="chip">Cosy</span><span class="chip" aria-pressed="true">Cheeky</span><span class="chip">Romantic</span><span class="chip">Loud</span></div></div>
+        <div class="q"><h3>How much wall?</h3><div class="chips"><span class="chip">A shelf</span><span class="chip" aria-pressed="true">Above the bed</span><span class="chip">A whole wall</span></div></div>
+      </div>
+      <div class="actions" style="margin-top:24px"><a class="btn ghost" href="#" data-soon="The quiz">Take the quiz</a></div>
+    </div>
+  </section>
+
+  <!-- 13. Our UK workshop -->
+  <section class="room" id="workshop" aria-labelledby="h-work">
+    <div class="wrap workshop">
+      <div class="video" role="img" aria-label="Workshop video, interactive in build">
+        <button class="play" type="button" data-soon="The workshop film" aria-label="Play the workshop film"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg></button>
+        <div class="clips" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      </div>
+      <div>
+        <div class="room-head" style="margin:0">
+          <h2 id="h-work">Made here, not shipped here</h2>
+          <p class="tagline"><span class="lede">Every sign is drawn, bent and mounted in our own UK workshop. If something isn't right, the person who made it is the one who fixes it.</span><span class="ib">Interactive in build</span></p>
+        </div>
+        <div class="facts">
+          <p><b>Drawn first.</b> Your proof comes from the same file the workshop cuts from.</p>
+          <p><b>Tested before it leaves.</b> Every sign runs on the bench before it's boxed. <span class="cf">[CONFIRM]</span></p>
+          <p><b>Two-year warranty.</b> Repair or remake if a fault is ours. Your statutory rights are not affected.</p>
+        </div>
+        <div class="actions" style="margin-top:28px"><a class="btn ghost" href="#" data-soon="About us">About us</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14. Hanging and running costs -->
+  <section class="room" id="hanging" aria-labelledby="h-hang">
+    <div class="wrap">
+      <div class="room-head">
+        <h2 id="h-hang">Hang it, run it</h2>
+        <p class="lede">Four ways to put it up, and what it costs to leave on. Less than you'd think.</p>
+      </div>
+      <div class="hangrow" id="hangrow"></div>
+      <div class="costs">
+        <div>
+          <h3 style="margin-bottom:12px">What does it cost to run?</h3>
+          <p class="muted">LED neon sips power. Pick a size and how long it's on, and the calculator does the sums.</p>
+          <p class="assume muted" style="margin-top:14px">Wattage per size is a placeholder until measured in the workshop <span class="cf">[CONFIRM]</span>. Electricity at 24.5p per kWh, the current price cap for direct-debit customers <span class="cf">[CONFIRM]</span>; yours may differ.</p>
+        </div>
+        <div class="calc">
+          <div class="out" id="costOut">£0<small>a year</small></div>
+          <div class="chips" id="costSize" role="group" aria-label="Sign size"></div>
+          <div>
+            <label for="costHours" class="small muted">Hours on each day: <b id="costHoursLbl" class="tnum" style="color:var(--bone)">5</b></label>
+            <input class="range" id="costHours" type="range" min="1" max="24" step="1" value="5">
+            <div class="range-row"><span>1 hour</span><span>All day</span></div>
+          </div>
+          <p class="small muted" id="costDetail"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15. Reviews: not rendered. No reviews exist yet; the Judge.me and Trustpilot section stays hidden until real ones do. -->
+
+  <!-- 16. FAQ, top 10 in 3 tabs -->
+  <section class="room" id="faq" aria-labelledby="h-faq">
+    <div class="wrap faq">
+      <div class="room-head" style="margin:0">
+        <h2 id="h-faq">Good to know</h2>
+        <p class="lede">The ten questions people ask before their first sign.</p>
+        <div class="actions"><a class="btn ghost" href="#" data-soon="The Help centre">Help centre</a></div>
+      </div>
+      <div>
+        <div class="tabs" role="tablist" aria-label="Question topics" id="faqTabs"></div>
+        <div id="faqPanels"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 17. Guides teaser -->
+  <section class="room" id="guides" aria-labelledby="h-guides">
+    <div class="wrap faq">
+      <div class="room-head" style="margin:0">
+        <h2 id="h-guides">Read before you buy</h2>
+        <p class="lede">Plain guides written by the people who make the signs, so you choose well the first time.</p>
+        <div class="actions"><a class="btn ghost" href="#" data-soon="The guides hub">All guides</a></div>
+      </div>
+      <ul class="guides">
+        <li><a href="#" data-soon="The sizing guide"><b>The sizing guide</b><span>How letter height turns into width, and what fits above a sofa</span></a></li>
+        <li><a href="#" data-soon="LED vs glass neon"><b>LED neon or glass neon?</b><span>Heat, cost, lifespan and the sound it doesn't make</span></a></li>
+        <li><a href="#" data-soon="Choosing colours"><b>Choosing colours and jackets</b><span>White or coloured tube, and which rooms suit which glow</span></a></li>
+        <li><a href="#" data-soon="Installation guide"><b>Hanging your sign</b><span>Screws, chains or strips, and how to find the cable a home</span></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 18. Final CTA and capture -->
+  <section class="room" id="save" aria-labelledby="h-save">
+    <div class="wrap newsletter">
+      <div class="room-head" style="margin:0">
+        <h2 id="h-save">Still thinking?</h2>
+        <p class="lede">Save the words you typed and we'll email the design to you, lit, so you can show whoever shares the wall. Or just start again in the builder.</p>
+        <div class="actions"><a class="btn primary" id="saveCta" href="create.html">Design your sign</a></div>
+      </div>
+      <form id="saveForm" novalidate>
+        <label class="sr" for="saveEmail">Email address</label>
+        <input class="input" id="saveEmail" type="email" placeholder="you@example.co.uk" required>
+        <button class="btn ghost" type="submit">Email my design</button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<div id="ln-footer"></div>
+
+<script src="js/catalog.js"></script>
+<script src="js/rules.js"></script>
+<script src="js/neon-core.js"></script>
+<script src="assets/fused.js"></script>
+</body>
+</html>

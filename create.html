@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Design your sign | Lit Neon</title>
+<meta name="description" content="Design a custom LED neon sign. See it lit at real size, watch the proof drawing update as you type, and get an exact price with free mainland GB delivery.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Hanken+Grotesk:wght@400;500;600&family=B612+Mono&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Neonderthaw&family=Tilt+Neon&family=Pacifico&family=Sacramento&family=Monoton&family=Yellowtail&family=Great+Vibes&family=Righteous&family=Comfortaa:wght@600&family=Kaushan+Script&display=swap">
+<link rel="stylesheet" href="assets/fused.css">
+</head>
+<body class="create" data-page="create">
+<div id="ln-header"></div>
+
+<main class="builder">
+  <section class="stagewrap" id="stagewrap" aria-label="Live preview of your sign">
+    <div id="stage"></div>
+    <div class="sheet" id="stageSheet" role="img" aria-label="Proof drawing of your sign with dimensions"></div>
+    <div class="ctrls" role="toolbar" aria-label="Preview controls">
+      <button class="pill" id="btnPower" aria-pressed="false"><span class="dot" aria-hidden="true"></span><span class="lbl">Sign off</span></button>
+      <button class="pill" id="btnRoom" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></svg><span class="lbl">Evening</span></button>
+      <div class="sseg" role="group" aria-label="View"><button data-view="room" aria-pressed="true">In a room</button><button data-view="fit" aria-pressed="false">Close-up</button><button data-view="spec" aria-pressed="false">Proof drawing</button></div>
+      <button class="pill" id="btnDims" aria-pressed="true"><span class="dot" aria-hidden="true"></span>Measurements</button>
+      <button class="pill ar" id="btnAR" type="button" data-soon="AR in your room" aria-label="See it in your room with AR, interactive in build"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/><path d="m12 7 5 3v5l-5 3-5-3v-5z"/></svg><span class="lbl">In your room (AR)</span><small>Interactive in build</small></button>
+    </div>
+    <div class="scenes" id="scenes" role="group" aria-label="Wall"></div>
+    <input type="file" id="ownWall" accept="image/*" class="sr" tabindex="-1">
+  </section>
+
+  <section class="panel" aria-label="Design your sign">
+    <div class="ptabs" id="ptabs" role="tablist" aria-label="Jump to a step"></div>
+    <div class="scroll" id="scroll">
+      <section class="pstep" id="s-words" aria-labelledby="h1">
+        <h2 id="h1"><span class="n">1</span>Your words</h2>
+        <p class="hint">Up to three lines of 24 characters. Press Enter to start a new line.</p>
+        <div class="body">
+          <label for="words" class="sr">Your words</label>
+          <textarea id="words" maxlength="80" spellcheck="false" autocomplete="off" aria-describedby="wordsWarn"></textarea>
+          <div class="row">
+            <div class="align" role="group" aria-label="Line alignment">
+              <button data-align="left" aria-pressed="false" aria-label="Align left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h10M4 17h13"/></svg></button>
+              <button data-align="center" aria-pressed="true" aria-label="Centre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M7 12h10M5.5 17h13"/></svg></button>
+              <button data-align="right" aria-pressed="false" aria-label="Align right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M10 12h10M7 17h13"/></svg></button>
+            </div>
+            <span class="counter" id="counter"></span>
+          </div>
+          <p class="warn" id="wordsWarn" role="alert" hidden></p>
+          <div class="symbols" id="symbols" role="group" aria-label="Add a symbol above your words"><span class="lbl">Symbol</span></div>
+        </div>
+      </section>
+      <section class="pstep" id="s-font" aria-labelledby="h2">
+        <h2 id="h2"><span class="n">2</span>Lettering</h2>
+        <p class="hint">Each style is shown with your words.</p>
+        <div class="body"><div class="fonts" id="fonts" role="group" aria-label="Lettering style"></div></div>
+      </section>
+      <section class="pstep" id="s-colour" aria-labelledby="h3">
+        <h2 id="h3"><span class="n">3</span>Colour</h2>
+        <p class="hint">The room takes on the colour of your sign.</p>
+        <div class="body">
+          <div class="colours" id="colours" role="group" aria-label="Colour"></div>
+          <div class="cname"><b id="cName"></b><span id="cNote"></span></div>
+          <p class="sublabel">Tube when it's off</p>
+          <div class="sgrp" id="jacket" role="group" aria-label="Tube jacket"></div>
+          <p class="counter" style="margin-top:8px">Which colours come in a coloured jacket <span class="cf">[CONFIRM]</span></p>
+        </div>
+      </section>
+      <section class="pstep" id="s-size" aria-labelledby="h4">
+        <h2 id="h4"><span class="n">4</span>Size</h2>
+        <p class="hint">Worked out from your words and lettering, backing included. Over 2 m wide is a quote.</p>
+        <div class="body"><div class="sizes" id="sizes" role="group" aria-label="Size"></div></div>
+      </section>
+      <section class="pstep" id="s-backing" aria-labelledby="h5">
+        <h2 id="h5"><span class="n">5</span>Backing</h2>
+        <p class="hint">The acrylic your sign is mounted on.</p>
+        <div class="body"><div class="opts" id="backings" role="group" aria-label="Backing shape"></div><p class="sublabel">Acrylic finish</p><div class="boards" id="boards" role="group" aria-label="Acrylic finish"></div></div>
+      </section>
+      <section class="pstep" id="s-extras" aria-labelledby="h6">
+        <h2 id="h6"><span class="n">6</span>Extras</h2>
+        <p class="hint">Where it goes and how it hangs. Nothing paid is pre-selected.</p>
+        <div class="body">
+          <div class="segs">
+            <div><p class="sg-label">Where it will hang</p><div class="sgrp" id="use" role="group" aria-label="Where it will hang"></div></div>
+            <div id="hangWrap"><p class="sg-label">How it hangs</p><div class="sgrp" id="hang" role="group" aria-label="Hanging method"></div><p class="counter" id="hangNote" style="margin-top:8px"></p></div>
+          </div>
+          <div class="included" id="included"></div>
+        </div>
+      </section>
+      <section class="pstep review" id="s-review" aria-labelledby="h7">
+        <h2 id="h7"><span class="n">7</span>Review</h2>
+        <p class="hint">The drawing you'll approve, updating as you type. Choose "Proof drawing" above to see it full size.</p>
+        <div class="body">
+          <div class="sheet compact minisheet" id="miniSheet" role="img" aria-label="Small proof drawing of your sign"></div>
+          <div class="spec-table" id="specTable"></div>
+          <div class="deliv">
+            <p class="when" id="delivWhen"></p>
+            <div class="pcode"><label for="pcode" class="sr">Your postcode</label><input class="input" id="pcode" placeholder="Postcode" autocomplete="postal-code" maxlength="8"><button class="btn ghost sm" id="pcodeBtn" type="button">Check delivery</button></div>
+            <p class="pmsg hint" id="pmsg" aria-live="polite">Free delivery across mainland GB. Check your postcode before you order.</p>
+          </div>
+        </div>
+      </section>
+      <button class="logo-cta" id="logoBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg><span><b>Have a logo or artwork?</b><span>Send it over and a designer draws it in neon, with a free mockup and price within 12 hours.</span></span></button>
+      <div class="mobile-meta"><div class="meta" data-meta></div><div class="links" style="display:flex"><button class="textlink" data-share>Share design</button><button class="textlink" data-email>Email it to me</button><button class="textlink" data-gift>Gift link</button></div></div>
+      <p class="proto-note" id="protoNote"></p>
+    </div>
+    <div class="foot" id="foot">
+      <div class="buyrow" id="buyrow">
+        <div><div class="price" id="price" aria-live="polite"></div><p class="promo" id="promo"></p><p class="klarna" id="klarna"></p></div>
+        <button class="btn primary" id="addBtn">Add to basket</button>
+      </div>
+      <div class="quotebox" id="quoteBox" hidden>
+        <b>This one needs a quote</b>
+        <p id="quoteWhy"></p>
+        <button class="btn primary sm" id="quoteBtn" type="button">Get a free quote (mockup in 12h)</button>
+      </div>
+      <div class="meta" data-meta></div>
+      <div class="links"><button class="textlink" data-share>Share design</button><button class="textlink" data-email>Email it to me</button><button class="textlink" data-gift>Gift link</button></div>
+      <form class="emailform" id="emailForm" hidden><label for="emailIn" class="sr">Email address</label><input id="emailIn" type="email" placeholder="you@example.co.uk" required><button type="submit">Send</button></form>
+    </div>
+  </section>
+</main>
+
+<div class="modal" id="logoModal" hidden>
+  <div class="scrim" data-close></div>
+  <form class="mcard" id="logoForm" role="dialog" aria-modal="true" aria-labelledby="lTitle">
+    <h2 id="lTitle">Your logo in neon</h2>
+    <p class="muted" id="lLede">Send your logo or artwork. A designer redraws it in neon and emails you a free mockup and price within 12 hours.</p>
+    <label class="drop" for="logoFile"><b>Choose a file</b> or drop it here<br><span id="logoName">PNG, JPG, SVG or PDF</span></label>
+    <input id="logoFile" type="file" accept="image/*,.pdf,.svg" class="sr">
+    <label class="field">Your email<input class="input" type="email" required placeholder="you@example.co.uk"></label>
+    <label class="field">Anything we should know?<textarea class="input" id="lNotes" placeholder="Rough size, where it will hang, colours you like, how many you need"></textarea></label>
+    <div class="mrow"><button type="button" class="btn ghost" data-close>Cancel</button><button class="btn primary" type="submit" id="lSubmit">Request free mockup</button></div>
+  </form>
+</div>
+
+<div id="ln-footer" hidden></div>
+<script src="js/catalog.js"></script>
+<script src="js/rules.js"></script>
+<script src="js/neon-core.js"></script>
+<script src="assets/fused.js"></script>
+</body>
+</html>
