@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" width="480" height="360" role="img" aria-labelledby="t d">
+  <title id="t">How your sign is made: 2 Bent</title>
+  <desc id="d">LED neon flex is fed from a spool and bent along the full-size printed template, held by pins.</desc>
+  <!-- WS IMG. Illustration, drafting style. Animation hooks: paths with class "draw" carry pathLength="1"
+       (animate stroke-dasharray:1; stroke-dashoffset 1 -> 0); groups with class "step" / "drop" / "slide" /
+       "glow" are the moving parts. Ids starting "slot-" are filled by script (P1b) with the visitor's design. -->
+  <style>
+    .ink{fill:none;stroke:var(--paper-ink,#180E1F);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .thin{fill:none;stroke:var(--paper-ink,#180E1F);stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+    .draft{fill:none;stroke:var(--draft,#2F5D8A);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+    .dim{fill:none;stroke:var(--draft,#2F5D8A);stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round}
+    .hair{fill:none;stroke:var(--rule,#CFC3B9);stroke-width:1.1;stroke-linecap:round}
+    .dash{fill:none;stroke:var(--draft,#2F5D8A);stroke-width:1.2;stroke-dasharray:3 5;stroke-linecap:round}
+    .hatch{fill:none;stroke:var(--paper-soft,#5A4F5C);stroke-width:1;stroke-linecap:round;opacity:.55}
+    .acrylic{fill:var(--draft-faint,rgba(47,93,138,.14));stroke:var(--draft,#2F5D8A);stroke-width:1.5;stroke-linejoin:round}
+    .tube{fill:none;stroke:var(--room,#C8A04A);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+    .tube-off{fill:none;stroke:var(--paper-soft,#5A4F5C);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;opacity:.55}
+    .glow{fill:none;stroke:var(--room,#C8A04A);stroke-width:16;stroke-linecap:round;stroke-linejoin:round;opacity:.22}
+    .cable{fill:none;stroke:var(--paper-soft,#5A4F5C);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .tint{fill:var(--paper-2,#E9DFD3)}
+    .paperfill{fill:var(--paper,#F2E9DF)}
+    .inkfill{fill:var(--paper-ink,#180E1F)}
+    .ok{fill:none;stroke:var(--draft,#2F5D8A);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+    .num{font:600 13px/1 'Hanken Grotesk',system-ui,sans-serif;fill:var(--paper,#F2E9DF)}
+    .slot{font:500 11px/1 'B612 Mono',ui-monospace,monospace;fill:var(--paper-ink,#180E1F)}
+    .slot-s{font:500 9px/1 'B612 Mono',ui-monospace,monospace;fill:var(--paper-soft,#5A4F5C)}
+  </style>
+
+  <path class="hair" d="M24 312H456"/>
+  <!-- printed template on the bench -->
+  <rect class="paperfill" x="92" y="64" width="300" height="236" rx="3"/>
+  <rect class="thin" x="92" y="64" width="300" height="236" rx="3"/>
+  <path class="dash" d="M190.0 234.8C149.4 206.2 120.3 181.2 125.5 150.0 130.7 120.9 170.2 114.7 190.0 144.8 209.8 114.7 249.3 120.9 254.5 150.0 259.7 181.2 230.6 206.2 190.0 234.8Z"/>
+  <circle class="thin" cx="190" cy="115" r="3"/><circle class="thin" cx="146" cy="120" r="3"/><circle class="thin" cx="126" cy="150" r="3"/><circle class="thin" cx="138" cy="190" r="3"/><circle class="thin" cx="166" cy="220" r="3"/><circle class="thin" cx="214" cy="220" r="3"/><circle class="thin" cx="242" cy="190" r="3"/><circle class="thin" cx="254" cy="150" r="3"/><circle class="thin" cx="234" cy="120" r="3"/>
+  <!-- spool of flex -->
+  <g id="spool">
+    <circle class="ink" cx="430" cy="250" r="40"/>
+    <circle class="thin" cx="430" cy="250" r="30"/>
+    <circle class="ink" cx="430" cy="250" r="9"/>
+    <path class="thin" d="M404 304h52M430 290v14"/>
+  </g>
+  <!-- the tube being laid: follows the visitor's lettering when filled -->
+  <g id="slot-tube">
+    <path class="tube draw" pathLength="1" d="M190.0 234.8C149.4 206.2 120.3 181.2 125.5 150.0 130.7 120.9 170.2 114.7 190.0 144.8 209.8 114.7 249.3 120.9 254.5 150.0 259.7 181.2 230.6 206.2 190.0 234.8Z"/>
+  </g>
+  <path class="cable draw" pathLength="1" d="M190 235c0 30 40 44 90 44s116-10 140-29"/>
+</svg>

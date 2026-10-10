@@ -1,0 +1,73 @@
+{
+  "_meta": {
+    "page": "guides",
+    "owner": "P6",
+    "renders": ["guides.html", "guides/*.html"],
+    "status": "filled by P6. UI strings for the hub and the article template; the article bodies are written in the HTML so they are indexable. Tiles are the neon words drawn on each guide's card (lettering and colour ids from catalog.js)."
+  },
+  "guides": {
+    "hub": {
+      "searchLabel": "Search the guides",
+      "searchPlaceholder": "Try “size”, “renters” or “colour”",
+      "all": "All guides",
+      "count": "{n} guides",
+      "countOne": "1 guide",
+      "countNone": "No guides match",
+      "featured": "Start here",
+      "minutes": "{n} min read",
+      "read": "Read the guide",
+      "emptyTitle": "Nothing matches “{q}” yet",
+      "emptyBody": "The help centre covers orders, delivery and returns, or you can ask us directly.",
+      "emptyHelp": "Search the help centre",
+      "clear": "Clear search"
+    },
+    "article": {
+      "minutes": "{n} min read",
+      "updated": "Updated {date}",
+      "by": "By the Lit Neon workshop",
+      "copy": "Copy link",
+      "copied": "Link copied",
+      "related": "Keep reading",
+      "ctaEyebrow": "Your turn",
+      "ctaDesign": "Open the designer",
+      "ctaLogo": "Send us a logo",
+      "ctaHelp": "Ask a question",
+      "progress": "Reading progress",
+      "interactive": "Try it",
+      "rendered": "Rendered preview"
+    },
+    "backing": {
+      "label": "Backing",
+      "finish": "Finish",
+      "included": "Included at Medium",
+      "delta": "{delta} at Medium",
+      "quote": "Quoted",
+      "open": "Try this backing in the designer",
+      "sizeNote": "Adds {cm} cm all round"
+    },
+    "checklist": {
+      "yes": "Yes, done",
+      "no": "That fixed it",
+      "back": "Back a step",
+      "restart": "Start again",
+      "progress": "Check {n} of {total}",
+      "fixed": "Lovely. It was the simple thing after all.",
+      "fixedBody": "If it happens again, the same checks will catch it. Nothing to send us.",
+      "still": "Still dark? Time to tell us.",
+      "stillBody": "Send a photo of the sign plugged in, the power supply’s light (on or off) and your order reference. It’s covered by your warranty, so we’ll put it right.",
+      "askText": "Hello, my sign won’t light. I’ve worked through the checklist."
+    },
+    "tiles": {
+      "sizing-guide": { "text": "Measure twice", "font": "shoreditch", "colour": "warm" },
+      "how-led-neon-is-made": { "text": "Bent to the line", "font": "brixton", "colour": "ice" },
+      "led-vs-glass-neon": { "text": "No glass", "font": "camden", "colour": "pink" },
+      "installation": { "text": "Hang it", "font": "brighton", "colour": "yellow" },
+      "care-and-cleaning": { "text": "Soft cloth", "font": "margate", "colour": "warm" },
+      "troubleshooting": { "text": "Still dark?", "font": "hackney", "colour": "red" },
+      "choosing-colours-and-jackets": { "text": "White by day", "font": "soho", "colour": "pink" },
+      "backing-types": { "text": "Cut to shape", "font": "shoreditch", "colour": "cool" },
+      "wedding-neon-guide": { "text": "Mr & Mrs", "font": "notting", "colour": "warm" },
+      "business-signs-guide": { "text": "Open late", "font": "brixton", "colour": "red" }
+    }
+  }
+}

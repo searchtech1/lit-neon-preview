@@ -1,0 +1,23 @@
+{
+ "_about": "QA fixture (brief §7.1 price mapping, owned by WS-INT). `seeds` = basket seeds the P7 matrices name in their `setup` strings (the runner adds them with core/basket.js add()). `priceStates` = designs whose everyday price must be a £5 step within the rules' range or a quote, and agree to the penny on builder (pricing.payable), basket (priceLine) and checkout (subtotal).",
+ "seeds": {
+  "standard": [
+   { "kind": "custom", "state": { "text": "Mr & Mrs Smith", "size": "m", "icon": "heart", "colour": "pink" } },
+   { "kind": "ready", "state": { "text": "Cuppa first", "size": "m" }, "meta": { "design": "cuppa-first" } },
+   { "kind": "ready", "state": { "text": "Sweet dreams", "size": "m" }, "meta": { "design": "sweet-dreams" } }
+  ],
+  "quoteOutdoor": [
+   { "kind": "quote", "state": { "text": "Open late", "size": "m", "use": "out" }, "meta": { "reason": "outdoor" } }
+  ]
+ },
+ "priceStates": [
+  { "id": "default-m", "state": { "text": "After dark", "font": "soho", "colour": "pink", "size": "m" } },
+  { "id": "two-line-l", "state": { "text": "Mr & Mrs\nSmith", "font": "notting", "colour": "warm", "size": "l" } },
+  { "id": "small-shoreditch", "state": { "text": "Lit", "font": "shoreditch", "colour": "ice", "size": "s" } },
+  { "id": "icon-heart", "state": { "text": "Better together", "font": "brighton", "colour": "pink", "size": "m", "icon": "heart" } },
+  { "id": "rect-backing", "state": { "text": "Game on", "font": "hackney", "colour": "blue", "size": "l", "backing": "rect" } },
+  { "id": "two-colour", "state": { "text": "Gin\no'clock", "font": "camden", "colour": "pink", "colours": ["pink", "ice"], "size": "l" } },
+  { "id": "statement", "state": { "text": "Welcome in", "font": "brixton", "colour": "white", "size": "xl" } },
+  { "id": "outdoor-quote", "state": { "text": "Open late", "font": "shoreditch", "colour": "red", "size": "m", "use": "out" } }
+ ]
+}

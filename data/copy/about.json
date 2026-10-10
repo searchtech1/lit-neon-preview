@@ -1,0 +1,71 @@
+{
+  "_meta": {
+    "page": "about",
+    "owner": "P5",
+    "renders": [
+      "about.html"
+    ],
+    "status": "P5 filled. Strings live under the page key. The founder's note, the town, company details and workshop photos render only from confirmed facts (never invented); every gated block collapses when its fact is unconfirmed."
+  },
+  "about": {
+    "meta": {
+      "title": "Our workshop: how Lit Neon signs are made in the UK | Lit Neon",
+      "description": "Every Lit Neon sign is drawn, bent, mounted and tested in our UK workshop, with a drawing you approve first, a 2-year warranty and free mainland-GB delivery.",
+      "ogTitle": "Made in our UK workshop | Lit Neon",
+      "ogDescription": "Drawn, bent, mounted and tested in our UK workshop, with a drawing you approve first."
+    },
+    "eyebrow": "Our workshop",
+    "h1": "Made in our UK workshop",
+    "h1Town": "Made in our workshop in {town}",
+    "lede": "We draw, bend and test LED neon signs to order. You see the drawing before we make anything, and when you get in touch you talk to the people who make it.",
+    "sheetCaption": "This is what you approve: a drawing of your words at the real size, before anything is made.",
+    "sheetCta": "Draw mine",
+    "founderH2": "A note from the workshop",
+    "founderSign": "{name}, founder",
+    "processH2": "From drawing to doorstep",
+    "processLede": "Five chapters, illustrated with your own words. Real workshop film joins them as it is shot.",
+    "photosH2": "At the bench",
+    "makeEyebrow": "What we make, and what we don't",
+    "makeH2": "LED neon, made to order",
+    "makeTitle": "We make",
+    "dontTitle": "We don't make",
+    "make": [
+      "Indoor LED neon signs on cut acrylic, in your words or ours",
+      "Logos and artwork, redrawn as tube by a designer after a free mockup",
+      "Ready-made designs in 12 tube colours and five sizes",
+      "Outdoor signs and anything over 2 metres, quoted by hand"
+    ],
+    "dont": [
+      "Glass neon: it's fragile, high voltage and a specialist's craft",
+      "Imported signs sold on under our name",
+      "Anything we haven't drawn for you to approve first"
+    ],
+    "glassLink": "LED or glass? Our honest comparison",
+    "promisesEyebrow": "What you can hold us to",
+    "promisesH2": "Four promises",
+    "promises": [
+      {
+        "title": "Drawing first",
+        "body": "A designer draws your sign at its real size. Nothing is made until you approve it, and changes before then are free."
+      },
+      {
+        "title": "{warranty}",
+        "body": "LEDs, power supply, dimmer and remote, under normal indoor use. Your statutory rights are not affected."
+      },
+      {
+        "title": "{lead}",
+        "body": "Counted from the day you approve the drawing, skipping weekends and bank holidays."
+      },
+      {
+        "title": "Free delivery",
+        "body": "Tracked, across mainland GB, with the dimmer, remote and a UK plug in the box."
+      }
+    ],
+    "companyH2": "Who you're buying from",
+    "contactCta": "Talk to the people who make it",
+    "finalH2": "Bring us your words",
+    "finalBody": "Type them in the designer and watch the price as you go, or send a logo for a free mockup.",
+    "finalDesign": "Design your sign",
+    "finalMockup": "Get a free mockup"
+  }
+}

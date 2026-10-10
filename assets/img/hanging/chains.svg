@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 864 216" width="864" height="216" role="img" aria-labelledby="t d">
+  <title id="t">Hanging with chains</title>
+  <desc id="d">Four steps: fix two hooks, hang the chains to the sign, level it, plug in and done.</desc>
+  <!-- WS IMG. Illustration, drafting style. Animation hooks: paths with class "draw" carry pathLength="1"
+       (animate stroke-dasharray:1; stroke-dashoffset 1 -> 0); groups with class "step" / "drop" / "slide" /
+       "glow" are the moving parts. Ids starting "slot-" are filled by script (P1b) with the visitor's design.
+       Each step: <g class="step" data-step="N">, 200x200 at x = 8 + (N-1)*216; captions come from copy (ix.json). -->
+  <style>
+    .ink{fill:none;stroke:var(--paper-ink,#180E1F);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .thin{fill:none;stroke:var(--paper-ink,#180E1F);stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+    .draft{fill:none;stroke:var(--draft,#2F5D8A);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+    .dim{fill:none;stroke:var(--draft,#2F5D8A);stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round}
+    .hair{fill:none;stroke:var(--rule,#CFC3B9);stroke-width:1.1;stroke-linecap:round}
+    .dash{fill:none;stroke:var(--draft,#2F5D8A);stroke-width:1.2;stroke-dasharray:3 5;stroke-linecap:round}
+    .hatch{fill:none;stroke:var(--paper-soft,#5A4F5C);stroke-width:1;stroke-linecap:round;opacity:.55}
+    .acrylic{fill:var(--draft-faint,rgba(47,93,138,.14));stroke:var(--draft,#2F5D8A);stroke-width:1.5;stroke-linejoin:round}
+    .tube{fill:none;stroke:var(--room,#C8A04A);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+    .tube-off{fill:none;stroke:var(--paper-soft,#5A4F5C);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;opacity:.55}
+    .glow{fill:none;stroke:var(--room,#C8A04A);stroke-width:16;stroke-linecap:round;stroke-linejoin:round;opacity:.22}
+    .cable{fill:none;stroke:var(--paper-soft,#5A4F5C);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .tint{fill:var(--paper-2,#E9DFD3)}
+    .paperfill{fill:var(--paper,#F2E9DF)}
+    .inkfill{fill:var(--paper-ink,#180E1F)}
+    .ok{fill:none;stroke:var(--draft,#2F5D8A);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+    .num{font:600 13px/1 'Hanken Grotesk',system-ui,sans-serif;fill:var(--paper,#F2E9DF)}
+    .slot{font:500 11px/1 'B612 Mono',ui-monospace,monospace;fill:var(--paper-ink,#180E1F)}
+    .slot-s{font:500 9px/1 'B612 Mono',ui-monospace,monospace;fill:var(--paper-soft,#5A4F5C)}
+  </style>
+  <g class="step" id="step-1" data-step="1" transform="translate(8 8)">
+    <rect class="hair" x="0" y="0" width="200" height="200" rx="14"/>
+    <path class="ink" d="M20 46H180"/><path class="hatch" d="M30 46l-10-10M54 46l-10-10M78 46l-10-10M102 46l-10-10M126 46l-10-10M150 46l-10-10M174 46l-10-10"/>
+    <path class="ink" d="M66 46v14a7 7 0 1 1-7 7"/><path class="thin" d="M60 46h12"/><path class="ink" d="M134 46v14a7 7 0 1 1-7 7"/><path class="thin" d="M128 46h12"/>
+    <path class="dim" d="M66 96v-14M62 88l4-6 4 6M134 96v-14M130 88l4-6 4 6"/>
+    <circle class="inkfill" cx="22" cy="22" r="12"/><text class="num" x="22" y="26.5" text-anchor="middle">1</text>
+  </g>
+  <g class="step" id="step-2" data-step="2" transform="translate(224 8)">
+    <rect class="hair" x="0" y="0" width="200" height="200" rx="14"/>
+    <path class="ink" d="M20 46H180"/>
+    <path class="ink" d="M66 46v14a7 7 0 1 1-7 7"/><path class="thin" d="M60 46h12"/><path class="ink" d="M134 46v14a7 7 0 1 1-7 7"/><path class="thin" d="M128 46h12"/>
+    <g class="chain"><ellipse class="thin chain-link" cx="60.0" cy="73.6" rx="3" ry="6"/><ellipse class="thin chain-link" cx="60.0" cy="80.7" rx="1.5" ry="6"/><ellipse class="thin chain-link" cx="60.0" cy="87.9" rx="3" ry="6"/><ellipse class="thin chain-link" cx="60.0" cy="95.0" rx="1.5" ry="6"/><ellipse class="thin chain-link" cx="60.0" cy="102.1" rx="3" ry="6"/><ellipse class="thin chain-link" cx="60.0" cy="109.3" rx="1.5" ry="6"/><ellipse class="thin chain-link" cx="60.0" cy="116.4" rx="3" ry="6"/><ellipse class="thin chain-link" cx="140.0" cy="73.6" rx="3" ry="6"/><ellipse class="thin chain-link" cx="140.0" cy="80.7" rx="1.5" ry="6"/><ellipse class="thin chain-link" cx="140.0" cy="87.9" rx="3" ry="6"/><ellipse class="thin chain-link" cx="140.0" cy="95.0" rx="1.5" ry="6"/><ellipse class="thin chain-link" cx="140.0" cy="102.1" rx="3" ry="6"/><ellipse class="thin chain-link" cx="140.0" cy="109.3" rx="1.5" ry="6"/><ellipse class="thin chain-link" cx="140.0" cy="116.4" rx="3" ry="6"/></g>
+    <path class="acrylic" d="M100.0 192.0C71.2 171.7 50.5 154.0 54.2 131.8 57.9 111.2 86.0 106.7 100.0 128.1 114.0 106.7 142.1 111.2 145.8 131.8 149.5 154.0 128.8 171.7 100.0 192.0Z"/><path class="tube-off" d="M100.0 177.9C79.7 163.6 65.2 151.1 67.8 135.5 70.4 121.0 90.1 117.8 100.0 132.9 109.9 117.8 129.6 121.0 132.2 135.5 134.8 151.1 120.3 163.6 100.0 177.9Z"/>
+    <circle class="inkfill" cx="22" cy="22" r="12"/><text class="num" x="22" y="26.5" text-anchor="middle">2</text>
+  </g>
+  <g class="step" id="step-3" data-step="3" transform="translate(440 8)">
+    <rect class="hair" x="0" y="0" width="200" height="200" rx="14"/>
+    <path class="ink" d="M20 46H180"/>
+    <path class="ink" d="M66 46v14a7 7 0 1 1-7 7"/><path class="thin" d="M60 46h12"/><path class="ink" d="M134 46v14a7 7 0 1 1-7 7"/><path class="thin" d="M128 46h12"/>
+    <g class="chain"><ellipse class="thin chain-link" cx="60.0" cy="73.3" rx="3" ry="6"/><ellipse class="thin chain-link" cx="60.0" cy="79.9" rx="1.5" ry="6"/><ellipse class="thin chain-link" cx="60.0" cy="86.4" rx="3" ry="6"/><ellipse class="thin chain-link" cx="60.0" cy="93.0" rx="1.5" ry="6"/><ellipse class="thin chain-link" cx="60.0" cy="99.6" rx="3" ry="6"/><ellipse class="thin chain-link" cx="60.0" cy="106.1" rx="1.5" ry="6"/><ellipse class="thin chain-link" cx="60.0" cy="112.7" rx="3" ry="6"/><ellipse class="thin chain-link" cx="140.0" cy="73.3" rx="3" ry="6"/><ellipse class="thin chain-link" cx="140.0" cy="79.9" rx="1.5" ry="6"/><ellipse class="thin chain-link" cx="140.0" cy="86.4" rx="3" ry="6"/><ellipse class="thin chain-link" cx="140.0" cy="93.0" rx="1.5" ry="6"/><ellipse class="thin chain-link" cx="140.0" cy="99.6" rx="3" ry="6"/><ellipse class="thin chain-link" cx="140.0" cy="106.1" rx="1.5" ry="6"/><ellipse class="thin chain-link" cx="140.0" cy="112.7" rx="3" ry="6"/></g>
+    <rect class="tint" x="52" y="112" width="96" height="16" rx="4"/><rect class="ink" x="52" y="112" width="96" height="16" rx="4"/><rect class="paperfill" x="86.0" y="116" width="28" height="8" rx="4"/><rect class="thin" x="86.0" y="116" width="28" height="8" rx="4"/><path class="draft" d="M95.0 116v8M105.0 116v8"/><circle class="draft" cx="100.0" cy="120" r="2.5"/>
+    <path class="acrylic" d="M100.0 195.2C75.6 178.1 58.1 163.1 61.3 144.3 64.4 126.8 88.1 123.1 100.0 141.2 111.9 123.1 135.6 126.8 138.7 144.3 141.9 163.1 124.4 178.1 100.0 195.2Z"/><path class="tube-off" d="M100.0 183.3C82.8 171.2 70.5 160.6 72.7 147.4 74.9 135.1 91.6 132.5 100.0 145.2 108.4 132.5 125.1 135.1 127.3 147.4 129.5 160.6 117.2 171.2 100.0 183.3Z"/>
+    <path class="dim" d="M30 140v-20M26 126l4-6 4 6M170 120v20M166 134l4 6 4-6"/>
+    <circle class="inkfill" cx="22" cy="22" r="12"/><text class="num" x="22" y="26.5" text-anchor="middle">3</text>
+  </g>
+  <g class="step" id="step-4" data-step="4" transform="translate(656 8)">
+    <rect class="hair" x="0" y="0" width="200" height="200" rx="14"/>
+    <path class="ink" d="M20 46H180"/>
+    <path class="ink" d="M66 46v14a7 7 0 1 1-7 7"/><path class="thin" d="M60 46h12"/><path class="ink" d="M134 46v14a7 7 0 1 1-7 7"/><path class="thin" d="M128 46h12"/>
+    <g class="chain"><ellipse class="thin chain-link" cx="60.0" cy="73.6" rx="3" ry="6"/><ellipse class="thin chain-link" cx="60.0" cy="80.7" rx="1.5" ry="6"/><ellipse class="thin chain-link" cx="60.0" cy="87.9" rx="3" ry="6"/><ellipse class="thin chain-link" cx="60.0" cy="95.0" rx="1.5" ry="6"/><ellipse class="thin chain-link" cx="60.0" cy="102.1" rx="3" ry="6"/><ellipse class="thin chain-link" cx="60.0" cy="109.3" rx="1.5" ry="6"/><ellipse class="thin chain-link" cx="60.0" cy="116.4" rx="3" ry="6"/><ellipse class="thin chain-link" cx="140.0" cy="73.6" rx="3" ry="6"/><ellipse class="thin chain-link" cx="140.0" cy="80.7" rx="1.5" ry="6"/><ellipse class="thin chain-link" cx="140.0" cy="87.9" rx="3" ry="6"/><ellipse class="thin chain-link" cx="140.0" cy="95.0" rx="1.5" ry="6"/><ellipse class="thin chain-link" cx="140.0" cy="102.1" rx="3" ry="6"/><ellipse class="thin chain-link" cx="140.0" cy="109.3" rx="1.5" ry="6"/><ellipse class="thin chain-link" cx="140.0" cy="116.4" rx="3" ry="6"/></g>
+    <path class="acrylic" d="M100.0 192.0C71.2 171.7 50.5 154.0 54.2 131.8 57.9 111.2 86.0 106.7 100.0 128.1 114.0 106.7 142.1 111.2 145.8 131.8 149.5 154.0 128.8 171.7 100.0 192.0Z"/><path class="glow" d="M100.0 177.9C79.7 163.6 65.2 151.1 67.8 135.5 70.4 121.0 90.1 117.8 100.0 132.9 109.9 117.8 129.6 121.0 132.2 135.5 134.8 151.1 120.3 163.6 100.0 177.9Z" stroke-width="13"/><path class="tube" d="M100.0 177.9C79.7 163.6 65.2 151.1 67.8 135.5 70.4 121.0 90.1 117.8 100.0 132.9 109.9 117.8 129.6 121.0 132.2 135.5 134.8 151.1 120.3 163.6 100.0 177.9Z"/>
+    <circle class="paperfill" cx="170" cy="172" r="15"/><circle class="ok" cx="170" cy="172" r="15"/><path class="ok draw" pathLength="1" d="M163 172l5 5 9-10"/>
+    <circle class="inkfill" cx="22" cy="22" r="12"/><text class="num" x="22" y="26.5" text-anchor="middle">4</text>
+  </g>
+</svg>

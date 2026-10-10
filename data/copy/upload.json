@@ -1,0 +1,180 @@
+{
+  "_meta": {
+    "page": "upload",
+    "owner": "P3",
+    "renders": [
+      "upload.html"
+    ],
+    "status": "filled by P3. No literal dates, £ amounts or percentages (tools/lint-copy.mjs); prices and times are interpolated by assets/js/pages/upload.js from pricing.js, rules and facts."
+  },
+  "meta": {
+    "title": "Upload your logo: a free neon mockup within 12 hours | Lit Neon",
+    "description": "Send your logo, artwork or a photo. A designer redraws it as LED neon tube and emails a mockup and the price within 12 hours. Made in our UK workshop; nothing is made until you approve the drawing.",
+    "ogTitle": "Your logo, drawn in neon by a person | Lit Neon",
+    "ogDescription": "Upload a logo or a photo for a free neon mockup within 12 hours. You approve the drawing before anything is made."
+  },
+  "hero": {
+    "eyebrow": "Logos, artwork and photos",
+    "h1": "Your logo, drawn in neon by a person",
+    "lede": "Send the file. A designer redraws it as tube, emails a mockup and the price within 12 hours. Nothing is made until you approve the drawing.",
+    "chips": [
+      "Free mockup",
+      "Within 12 hours",
+      "No payment until you approve"
+    ],
+    "ctaUpload": "Upload your file",
+    "ctaPhoto": "Turn a photo into a sign",
+    "compareLabel": "Drag to compare your file with the sign",
+    "compareA": "Your file",
+    "compareB": "Drawn as tube, lit",
+    "compareCaption": "Our own wordmark, as an example of what the designer does",
+    "fileName": "your-logo.svg"
+  },
+  "path": {
+    "label": "What are you sending?",
+    "logo": "Logo or artwork",
+    "logoSub": "A designer redraws it and emails a free mockup",
+    "photo": "A photo (person, pet, place)",
+    "photoSub": "See it as neon now, right here on your device"
+  },
+  "steps": {
+    "file": "Your file",
+    "sign": "About the sign",
+    "you": "Where we send the mockup"
+  },
+  "drop": {
+    "label": "Drop your logo here, or choose a file",
+    "hint": "PNG, JPG, SVG or PDF · up to 20 MB",
+    "aria": "Add your logo or artwork: choose a file or drag it here",
+    "remove": "Remove",
+    "errType": "We can’t read that file. PNG, JPG, SVG or PDF please",
+    "errSize": "That file is over 20 MB. Try a smaller export or a PDF",
+    "errCorrupt": "{name} looks damaged: we couldn’t open it. Try exporting it again",
+    "errMissing": "Add your logo or artwork (PNG, JPG, SVG or PDF)"
+  },
+  "brief": {
+    "width": "Roughly how wide?",
+    "widthHelp": "A guess is fine. The mockup shows the size to scale.",
+    "widthChips": ["40 cm", "60 cm", "80 cm", "100 cm", "120 cm +"],
+    "widthHints": ["About a laptop’s width: a shelf or a counter", "Above a desk or a reception counter", "Above a sofa or a bed", "A feature wall or a shop wall", "Big walls, shopfronts and stages: quoted by a designer"],
+    "notSure": "Not sure",
+    "notSureHint": "No problem. The designer suggests a size that suits the logo",
+    "where": "Where will it hang?",
+    "whereChips": {
+      "indoors": "Indoors",
+      "outdoors": "Outdoors",
+      "window": "Shop window"
+    },
+    "whereHints": {
+      "indoors": "Our standard build: LED neon on clear acrylic",
+      "outdoors": "Sealed for the weather and quoted separately. The mockup email includes it",
+      "window": "Faces the street from inside the glass. We can make it double-sided"
+    },
+    "colours": "Colours you like",
+    "coloursHelp": "Pick as many as you like, or let us match your logo.",
+    "match": "Match my artwork",
+    "deadline": "Need it by? (optional)",
+    "deadlineNote": "Standard is 7–10 working days after you approve the drawing",
+    "deadlineTight": "That’s sooner than our standard time. Send it anyway and the designer will tell you straight away what’s possible.",
+    "notes": "Anything else we should know? (optional)",
+    "notesPlaceholder": "Wording, which part of the logo matters most, a photo of the wall it’s going on…",
+    "fromBuilder": "From my design in the designer: “{words}” in {lettering}, {colour}, {size}.",
+    "name": "Your name",
+    "email": "Email",
+    "emailHelp": "Your mockup and price arrive here.",
+    "whatsapp": "WhatsApp number (optional)",
+    "whatsappHelp": "Only if you’d like a quick message when it’s ready.",
+    "consent": "Also send me the occasional note from the workshop (optional, unsubscribe any time).",
+    "replyNote": "We email your mockup and price to the address above, and use your details for this request only",
+    "privacy": "privacy notice",
+    "rights": "I have the right to use this artwork",
+    "submit": "Request my free mockup",
+    "reassure": "Free, no payment, no obligation."
+  },
+  "getCard": {
+    "eyebrow": "What you’ll get",
+    "title": "A proof drawing, like this",
+    "sampleLabel": "Sample: our own wordmark",
+    "railTitle": "What happens next",
+    "rail": [
+      "You upload your file",
+      "Your mockup and price, within 12 hours",
+      "You approve it, or ask for tweaks (free)",
+      "We make it in 7–10 working days"
+    ],
+    "private": "Your files are used only to draw your mockup. We never share them."
+  },
+  "photo": {
+    "intro": "Drop in a photo of a person, a pet or a place. We trace it into tube right here on your device, so you can see the sign before anyone draws it.",
+    "privacy": "Your photo stays on this device until you choose to send it.",
+    "rendered": "Rendered preview",
+    "waiting": "Add a photo above and the preview appears here, with an honest read on how well it will work as tube.",
+    "gateTitle": "How it reads as tube",
+    "gate": {
+      "ready": "Looks sign-ready",
+      "good": "A good start",
+      "pet": "Simplified — a designer will refine the face",
+      "detailed": "Too detailed for tube; a designer will simplify it",
+      "fallback": "A designer will refine this"
+    },
+    "gateWhy": {
+      "ready": "Clean lines that bend well. A designer still checks every curve before your proof.",
+      "good": "We found the person and traced the outline. The designer tidies the details on your proof.",
+      "pet": "Faces are the hardest part to bend. The designer redraws the eyes and nose by hand.",
+      "detailed": "There’s more going on here than tube can show. A designer picks out the lines that matter.",
+      "fallback": "We traced it without spotting a subject, so a designer will check it closely."
+    },
+    "sizePick": "Size (longest side)",
+    "size": "About {size} · {metres} of LED tube",
+    "sizeNote": "Indicative size, confirmed on your proof",
+    "happy": "Are you happy with this preview?",
+    "buy": "Buy at this price — {price}",
+    "buyLine": "A designer draws your proof before anything is made",
+    "buyAdded": "Added",
+    "buyQuote": "At this size a designer prices it for you. Send it to a designer and the price comes with your mockup.",
+    "buyTwoTone": "Two-colour photo signs are priced by a designer. Send it over and the price comes with your mockup.",
+    "buyGated": "This one needs a designer’s hand before we can price it, so we haven’t shown a buy button.",
+    "designer": "Send this to a designer first",
+    "indicative": "Indicative price {price}, confirmed in your mockup",
+    "notQuite": "Not quite — let a designer draw it from the photo",
+    "formDesignerTitle": "Send your preview to a designer",
+    "formDesignerLede": "We attach the preview and its settings. You get a mockup and a firm price within 12 hours.",
+    "formDrawTitle": "Let a designer draw it from your photo",
+    "formDrawLede": "We attach your original photo. Tell us what matters most and the designer draws it from scratch.",
+    "matters": "What matters most? (optional)",
+    "mattersPlaceholder": "Her smile, the ears, the outline of the house, the dates underneath…",
+    "sizeField": "Roughly how wide?",
+    "attached": "Attached: {what}",
+    "attachedPreview": "your neon preview and its settings",
+    "attachedPhoto": "your original photo",
+    "attachedCamera": "your neon preview (taken with the camera)",
+    "submit": "Send to a designer",
+    "cancel": "Back to the preview",
+    "basketName": "Photo sign"
+  },
+  "faqH2": "Questions about files and logos",
+  "faqEyebrow": "Good to know",
+  "faqMore": "All the answers",
+  "confirm": {
+    "title": "Thanks, {name}. Your mockup is on its way",
+    "titleNoName": "Thanks. Your mockup is on its way",
+    "ref": "Reference",
+    "mockupBy": "Your mockup and price arrive by {when}.",
+    "mockupWithin": "Your mockup and price arrive {within}.",
+    "next": [
+      "A designer redraws your file as tube",
+      "We email the mockup and price to {email}",
+      "You approve it or ask for tweaks (free)",
+      "We make it in 7–10 working days"
+    ],
+    "wait": "Design a text sign while you wait",
+    "again": "Send another file"
+  },
+  "submit": "Request my free mockup",
+  "sending": "Sending",
+  "success": "Request received",
+  "errorTitle": "That didn’t send",
+  "errorBody": "Nothing was lost. Check your connection and try again.",
+  "retry": "Retry",
+  "localSaved": "Saved locally (review build) — nothing was sent."
+}

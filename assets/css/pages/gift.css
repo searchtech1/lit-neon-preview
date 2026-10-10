@@ -1,0 +1,56 @@
+/* Lit Neon v2 — gift preview (brief §4.21, owner P7). Tokens only (tools/lint-tokens.mjs). Prefix gf-.
+   Gift view: a full-screen night stage under the minimal header, the message card in glass over its lower left
+   (desktop) or under the stage (phones, so the card never covers the sign). Explainer: copy + live example stage. */
+
+.gf { background: var(--night); }
+
+/* ---------------------------------------------------------------- gift view ---------------------------------------------------------------- */
+.gf-view { position: relative; height: calc(100svh - var(--header-h-scrolled)); min-height: 560px; overflow: clip; background: var(--night); }
+.gf-view > .gf-stage { position: absolute; inset: 0; width: 100%; max-width: 100%; height: 100%; }
+/* the card sits bottom-right so the stage's "Rendered preview" pill (bottom-left) is never covered */
+.gf-card { position: absolute; right: var(--gutter); bottom: var(--s-6); z-index: 8; width: min(460px, 100% - 2 * var(--gutter)); display: grid; gap: var(--s-3); padding: var(--s-5); border-radius: var(--r-4); background: var(--glass); -webkit-backdrop-filter: blur(var(--glass-blur)); backdrop-filter: blur(var(--glass-blur)); border: 1px solid var(--hair); box-shadow: var(--e-3); }
+.gf-card__eyebrow { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); color: var(--brass); }
+.gf-msg { margin: 0; font-family: var(--f-display); font-weight: 800; font-size: var(--t-display-3); line-height: 1.05; letter-spacing: .005em; color: var(--bone); overflow-wrap: anywhere; max-width: 22ch; text-wrap: balance; }
+.gf-msg--long { font-family: var(--f-ui); font-weight: 500; font-size: var(--t-lead); line-height: var(--lh-lead); max-width: 40ch; }
+.gf-from { margin: 0; font-size: var(--t-body); color: var(--bone-2); font-style: italic; overflow-wrap: anywhere; }
+.gf-from::before { content: "— "; }
+.gf-from[hidden] { display: none; }
+.gf-acts { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.gf-acts .c-btn { background: var(--glass); font-size: var(--t-small); padding-inline: var(--s-3); }
+.gf-acts .c-btn .ic { width: 18px; height: 18px; }
+.gf-acts [aria-pressed="true"] { border-color: var(--bone); }
+.gf-status { margin: 0; font-size: var(--t-small); color: var(--ok); min-height: 0; }
+.gf-status:empty { display: none; }
+.gf-status.is-bad { color: var(--amber); }
+.gf-back .ic { width: 18px; height: 18px; }
+
+@media (max-width: 767px) {
+  .gf-view { height: auto; min-height: 0; overflow: visible; display: grid; grid-template-rows: minmax(0, 62svh) auto; }
+  .gf-view > .gf-stage { position: relative; inset: auto; height: 62svh; min-height: 340px; }
+  .gf-card { position: relative; right: auto; bottom: auto; width: auto; margin: var(--s-4) var(--s-4) var(--s-6); padding: var(--s-4); }
+  .gf-acts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .gf-acts .c-btn { padding-inline: var(--s-2); flex-direction: column; gap: 2px; --h: 60px; font-size: var(--t-caption); }
+}
+
+/* ---------------------------------------------------------------- explainer ---------------------------------------------------------------- */
+.gf-intro { padding-block: var(--s-8) var(--s-9); }
+.gf-intro__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: var(--s-7); align-items: center; }
+@media (max-width: 1023px) { .gf-intro__grid { grid-template-columns: minmax(0, 1fr); gap: var(--s-6); } }
+.gf-intro__copy { display: grid; gap: var(--s-4); justify-items: start; }
+.gf-intro__copy .t-eyebrow { margin: 0; }
+/* display-2 (not display-1): at 1440 the six words then set as two lines, "Send a sign that / switches itself on", instead of a
+   three-line rag ending on a two-word line beside the plate (adversarial R2) */
+.gf-intro__h1 { margin: 0; font-size: var(--t-display-2); line-height: var(--lh-display-2); max-width: 18ch; text-wrap: balance; }
+.gf-intro__lede { margin: 0; color: var(--bone-2); max-width: 46ch; }
+.gf-intro__acts { display: flex; flex-wrap: wrap; gap: var(--s-3); }
+.gf-note { margin: 0; font-size: var(--t-caption); color: var(--smoke); max-width: 46ch; }
+.gf-broken { margin: 0; padding: var(--s-3) var(--s-4); border: 1px solid var(--amber); border-radius: var(--r-2); background: var(--tint-amber); color: var(--amber); font-size: var(--t-small); }
+.gf-broken[hidden] { display: none; }
+.gf-intro__stage { position: relative; width: 100%; max-width: 100%; aspect-ratio: 4 / 3; border-radius: var(--r-4); overflow: clip; border: 1px solid var(--hair); box-shadow: var(--e-3); background: var(--night-2); }
+@media (max-width: 767px) { .gf-intro__stage { aspect-ratio: 4 / 5; } }
+.gf-steps { list-style: none; margin: var(--s-8) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-5); }
+@media (max-width: 767px) { .gf-steps { grid-template-columns: minmax(0, 1fr); margin-top: var(--s-7); } }
+.gf-steps li { display: grid; gap: var(--s-2); align-content: start; padding: var(--s-5); border: 1px solid var(--hair); border-radius: var(--r-3); background: var(--night-2); }
+.gf-steps h2 { margin: 0; }
+.gf-steps p { margin: 0; color: var(--bone-2); font-size: var(--t-small); line-height: var(--lh-small); }
+.gf-steps__n { font-family: var(--f-display); font-weight: 800; font-size: var(--t-display-3); line-height: 1; color: var(--brass); }

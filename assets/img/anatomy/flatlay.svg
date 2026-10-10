@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" role="img" aria-labelledby="t d">
+  <title id="t">What's in the box</title>
+  <desc id="d">Drafting-style flat-lay illustration: the sign on its clear acrylic backing with standoffs, the clear cable coiled, the inline dimmer with its remote, the power supply with a UK 3-pin plug, the fixing kit and the instruction card.</desc>
+  <!--
+    WS IMG — brief §5.2. Illustration (not a photo). Colours resolve to the page tokens when inlined,
+    with token-value fallbacks when used as <img>.
+    Hotspots: every part is a <g id="part-*"> carrying data-hx / data-hy (hotspot centre as a fraction
+    of the viewBox) and data-crop (x y w h in viewBox units, for the popover close-up).
+    Order follows the box contents list: sign, cable, dimmer+remote, psu+plug, fixings, card.
+    The illustration deliberately shows no electrical markings or lengths (unconfirmed facts, §3.9).
+  -->
+  <style>
+    .ink{fill:none;stroke:var(--paper-ink,#180E1F);stroke-width:2.25;stroke-linecap:round;stroke-linejoin:round}
+    .thin{fill:none;stroke:var(--paper-ink,#180E1F);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+    .draft{fill:none;stroke:var(--draft,#2F5D8A);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+    .hair{fill:none;stroke:var(--rule,#CFC3B9);stroke-width:1.2;stroke-linecap:round}
+    .dash{fill:none;stroke:var(--rule,#CFC3B9);stroke-width:1.2;stroke-dasharray:4 6;stroke-linecap:round}
+    .acrylic{fill:var(--draft-faint,rgba(47,93,138,.14));stroke:var(--draft,#2F5D8A);stroke-width:1.8;stroke-linejoin:round}
+    .tube{fill:none;stroke:var(--room,#C8A04A);stroke-width:9;stroke-linecap:round;stroke-linejoin:round}
+    .tube-core{fill:none;stroke:var(--paper,#F2E9DF);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;opacity:.85}
+    .cable{fill:none;stroke:var(--paper-soft,#5A4F5C);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+    .cable-hi{fill:none;stroke:var(--paper,#F2E9DF);stroke-width:.9;stroke-linecap:round;opacity:.9}
+    .paperfill{fill:var(--paper,#F2E9DF)}
+    .inkfill{fill:var(--paper-ink,#180E1F)}
+    .tint{fill:var(--paper-2,#E9DFD3)}
+  </style>
+
+  <!-- faint drafting marks: corner ticks only, never a full frame -->
+  <g class="hair" aria-hidden="true">
+    <path d="M24 44V24h20M1176 44V24h-20M24 756v20h20M1176 756v20h-20"/>
+  </g>
+
+  <!-- 1 · the sign on its acrylic, with standoff caps -->
+  <g id="part-sign" data-part="sign" data-hx="0.275" data-hy="0.3125" data-crop="140 70 380 380">
+    <path class="acrylic" d="M330 412C226 342 158 282 170 194 182 108 292 92 330 148 368 92 478 108 490 194 502 282 434 342 330 412Z"/>
+    <path class="draft" d="M330 400C236 336 176 282 186 198 196 124 292 110 330 164" opacity=".35"/>
+    <!-- the tube: a heart, with its lead-out to the cable exit -->
+    <path class="tube" d="M330 366C252 310 196 262 206 202 216 146 292 134 330 192 368 134 444 146 454 202 464 262 408 310 330 366Z"/>
+    <path class="tube-core" d="M330 366C252 310 196 262 206 202 216 146 292 134 330 192 368 134 444 146 454 202 464 262 408 310 330 366Z"/>
+    <!-- standoff caps: a cylinder seen end-on, cap ring + barrel -->
+    <g class="ink">
+      <circle cx="268" cy="222" r="11"/><circle cx="268" cy="222" r="5"/>
+      <circle cx="392" cy="222" r="11"/><circle cx="392" cy="222" r="5"/>
+      <circle cx="302" cy="298" r="11"/><circle cx="302" cy="298" r="5"/>
+      <circle cx="358" cy="298" r="11"/><circle cx="358" cy="298" r="5"/>
+    </g>
+    <!-- exit wire from the tube's end to the acrylic edge -->
+    <path class="cable" d="M330 368v44"/>
+  </g>
+
+  <!-- 2 · clear cable, coiled -->
+  <g id="part-cable" data-part="cable" data-hx="0.275" data-hy="0.66" data-crop="230 400 260 200">
+    <path class="cable" d="M330 412v34c0 18-6 26-24 30"/>
+    <ellipse class="cable" cx="318" cy="522" rx="78" ry="34"/>
+    <ellipse class="cable" cx="330" cy="528" rx="78" ry="34"/>
+    <ellipse class="cable" cx="342" cy="534" rx="78" ry="34"/>
+    <path class="cable-hi" d="M262 508c14-12 36-18 58-19M276 516c14-12 36-18 58-19M288 522c14-12 36-18 58-19"/>
+    <path class="cable" d="M420 534c40 0 70 4 104 4h36"/>
+  </g>
+
+  <!-- 3 · inline dimmer + remote -->
+  <g id="part-dimmer" data-part="dimmer" data-hx="0.51" data-hy="0.6725" data-crop="460 480 260 280">
+    <rect class="ink" x="560" y="516" width="104" height="44" rx="12"/>
+    <circle class="ink" cx="612" cy="538" r="11"/>
+    <path class="thin" d="M612 532v6"/>
+    <path class="cable" d="M664 538h56"/>
+    <!-- remote -->
+    <rect class="ink" x="486" y="604" width="70" height="136" rx="18"/>
+    <circle class="ink" cx="521" cy="632" r="10"/>
+    <path class="thin" d="M521 625v7M515 628a8 8 0 1 0 12 0"/>
+    <circle class="thin" cx="521" cy="676" r="18"/>
+    <path class="thin" d="M521 664v-4M521 692v-4M509 676h-4M537 676h-4"/>
+    <circle class="thin" cx="506" cy="716" r="5"/><circle class="thin" cx="521" cy="716" r="5"/><circle class="thin" cx="536" cy="716" r="5"/>
+  </g>
+
+  <!-- 4 · power supply + moulded UK 3-pin plug (BS 1363, pin face) -->
+  <g id="part-psu" data-part="psu" data-hx="0.67" data-hy="0.674" data-crop="700 470 440 230">
+    <rect class="ink" x="720" y="500" width="170" height="78" rx="12"/>
+    <path class="hair" d="M744 524h70M744 540h44M744 556h56"/>
+    <rect class="thin" x="836" y="520" width="34" height="38" rx="6"/>
+    <path class="cable" d="M890 540c40 0 60 6 80 26s30 90 70 90c18 0 26-10 26-24v-6"/>
+    <!-- plug lying on its back, pins up: grip body narrowing to the cord boot; earth pin top (vertical),
+         live + neutral below (horizontal), drawn as raised metal blades -->
+    <path class="tint" d="M1012 492h108c8 0 14 6 14 14l-8 74c-2 12-10 20-22 20h-76c-12 0-20-8-22-20l-8-74c0-8 6-14 14-14Z"/>
+    <path class="ink" d="M1012 492h108c8 0 14 6 14 14l-8 74c-2 12-10 20-22 20h-76c-12 0-20-8-22-20l-8-74c0-8 6-14 14-14Z"/>
+    <rect class="ink" x="1052" y="600" width="28" height="26" rx="6"/>
+    <path class="hair" d="M1056 608h20M1056 616h20"/>
+    <g class="ink">
+      <rect class="paperfill" x="1060" y="506" width="12" height="36" rx="1.5"/>
+      <rect class="paperfill" x="1024" y="560" width="30" height="12" rx="1.5"/>
+      <rect class="paperfill" x="1078" y="560" width="30" height="12" rx="1.5"/>
+    </g>
+    <path class="thin" d="M1064 512v24M1029 564h20M1083 564h20" opacity=".45"/>
+  </g>
+
+  <!-- 5 · fixing kit: standoffs (barrel + cap), screws, wall plugs, in a resealable bag -->
+  <g id="part-fixings" data-part="fixings" data-hx="0.64" data-hy="0.28" data-crop="630 100 290 250">
+    <rect class="thin" x="644" y="118" width="262" height="214" rx="12"/>
+    <path class="thin" d="M644 146h262M644 154h262"/>
+    <g class="ink">
+      <!-- 4 standoffs: cap on top, barrel below -->
+      <rect x="668" y="176" width="34" height="12" rx="4"/><rect x="673" y="188" width="24" height="46" rx="3"/>
+      <rect x="722" y="176" width="34" height="12" rx="4"/><rect x="727" y="188" width="24" height="46" rx="3"/>
+      <rect x="776" y="176" width="34" height="12" rx="4"/><rect x="781" y="188" width="24" height="46" rx="3"/>
+      <rect x="830" y="176" width="34" height="12" rx="4"/><rect x="835" y="188" width="24" height="46" rx="3"/>
+    </g>
+    <path class="hair" d="M673 200h24M727 200h24M781 200h24M835 200h24"/>
+    <!-- screws -->
+    <g class="thin">
+      <path d="M668 262h16M676 262v48M672 270l8 4-8 4 8 4-8 4 8 4-8 4"/>
+      <path d="M704 262h16M712 262v48M708 270l8 4-8 4 8 4-8 4 8 4-8 4"/>
+      <path d="M740 262h16M748 262v48M744 270l8 4-8 4 8 4-8 4 8 4-8 4"/>
+      <path d="M776 262h16M784 262v48M780 270l8 4-8 4 8 4-8 4 8 4-8 4"/>
+    </g>
+    <!-- wall plugs -->
+    <g class="thin">
+      <path d="M814 262h14l-2 50h-10Z M816 276h10M816 290h10"/>
+      <path d="M838 262h14l-2 50h-10Z M840 276h10M840 290h10"/>
+      <path d="M862 262h14l-2 50h-10Z M864 276h10M864 290h10"/>
+      <path d="M886 262h14l-2 50h-10Z M888 276h10M888 290h10" transform="translate(-2 0)"/>
+    </g>
+  </g>
+
+  <!-- 6 · instruction card -->
+  <g id="part-card" data-part="card" data-hx="0.86" data-hy="0.29" data-crop="930 110 220 240">
+    <rect class="tint" x="946" y="128" width="186" height="210" rx="8"/>
+    <rect class="ink" x="946" y="128" width="186" height="210" rx="8"/>
+    <path class="draft" d="M972 168c-6-5-10-9-9-14 1-4 6-5 9-1 3-4 8-3 9 1 1 5-3 9-9 14Z"/>
+    <path class="hair" d="M996 160h108M996 174h80"/>
+    <g class="thin">
+      <circle cx="976" cy="214" r="9"/><circle cx="976" cy="250" r="9"/><circle cx="976" cy="286" r="9"/>
+    </g>
+    <path class="hair" d="M996 210h104M996 220h76M996 246h108M996 256h64M996 282h96M996 292h70"/>
+  </g>
+</svg>

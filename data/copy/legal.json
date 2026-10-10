@@ -1,0 +1,26 @@
+{
+  "_meta": {
+    "page": "legal",
+    "owner": "P6",
+    "renders": ["legal/*.html"],
+    "status": "filled by P6. The legal texts themselves are in the HTML (drafted by an agent, not legal advice; data/legal-status.json carries the review flag). This file holds the UI strings, mostly for the cookie settings."
+  },
+  "legal": {
+    "toc": "On this page",
+    "notAdvice": "Draft for the owner: not yet reviewed by a lawyer.",
+    "cookies": {
+      "on": "On",
+      "off": "Off",
+      "always": "Always on",
+      "save": "Save settings",
+      "acceptAll": "Accept all",
+      "rejectAll": "Reject all",
+      "saved": "Saved. Analytics {analytics}, marketing {marketing}.",
+      "savedAt": "Your current choice: analytics {analytics}, marketing {marketing}.",
+      "none": "You haven’t chosen yet, so only essential storage is used.",
+      "stateOn": "on",
+      "stateOff": "off",
+      "unsaved": "You have unsaved changes."
+    }
+  }
+}

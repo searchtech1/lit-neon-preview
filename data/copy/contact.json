@@ -1,0 +1,107 @@
+{
+  "_meta": {
+    "page": "contact",
+    "owner": "P3",
+    "renders": [
+      "contact.html"
+    ],
+    "status": "filled by P3. Channel cards, hours, reply promise and address render only from confirmed facts (§4.17, §3.9.2); the form always works. No literal dates, £ amounts or percentages."
+  },
+  "meta": {
+    "title": "Contact Lit Neon: talk to a person about your sign",
+    "description": "Questions about a design, an order, delivery or a trade account? Send us a message and a real person replies. Custom LED neon signs made in our UK workshop.",
+    "ogTitle": "Contact Lit Neon",
+    "ogDescription": "Questions about a design, an order or delivery? Send a message and a real person replies."
+  },
+  "eyebrow": "Contact",
+  "h1": "Talk to a person",
+  "lede": "Questions about a design, an order, delivery or a trade account? Write to us here and someone from the workshop replies.",
+  "ledeReply": "Questions about a design, an order, delivery or a trade account? Write to us here and someone from the workshop replies. {reply}.",
+  "cards": {
+    "h2": "Other ways to reach us",
+    "whatsapp": "WhatsApp",
+    "whatsappBody": "Quickest for a photo of your wall or a quick question.",
+    "whatsappCta": "Message us",
+    "email": "Email",
+    "emailBody": "Good for files, longer briefs and anything you’d like in writing.",
+    "emailCta": "Email us",
+    "chat": "Live chat",
+    "chatBody": "Chat with us from any page.",
+    "chatReview": "Live chat opens with the store; until then WhatsApp is fastest",
+    "hours": "Hours: {hours}",
+    "reply": "{reply}"
+  },
+  "form": {
+    "h2": "Send us a message",
+    "lede": "Every message is read by a person. Add your order reference if you have one.",
+    "name": "Your name",
+    "email": "Email",
+    "order": "Order reference (optional)",
+    "orderHelp": "It starts LN- and it’s in your confirmation email.",
+    "orderPlaceholder": "LN-…",
+    "topic": "What’s it about?",
+    "topicPlaceholder": "Choose a topic",
+    "topicErr": "Choose a topic, so it reaches the right person",
+    "topics": {
+      "order": "An order I’ve placed",
+      "design": "A design or a mockup",
+      "delivery": "Delivery",
+      "trade": "Trade or bulk",
+      "other": "Something else"
+    },
+    "topicHints": {
+      "order": "Add your order reference above and we’ll find it straight away.",
+      "design": "Got a logo or artwork? The upload page gets you a free mockup within 12 hours.",
+      "delivery": "Free across mainland GB. Our delivery page has the full list of places we deliver to.",
+      "trade": "Ordering three or more? The bulk quote form gets a designer on it faster.",
+      "other": ""
+    },
+    "topicLinks": {
+      "design": "Upload your logo",
+      "delivery": "Delivery details",
+      "trade": "Request a bulk quote"
+    },
+    "message": "Your message",
+    "messagePlaceholder": "How can we help?",
+    "postcodeAsk": "My postcode is {postcode}. Can you deliver a sign here, and how?",
+    "messageErr": "Write a short message so we know how to help",
+    "messageCount": "{n} of {max} characters",
+    "messageKept": "That was longer than {max} characters, so we kept the first {max}. Send the rest in a second message.",
+    "draftRestored": "We kept the message you were writing.",
+    "consent": "Also send me the occasional note from the workshop (optional, unsubscribe any time).",
+    "replyNote": "We reply by email to the address above, and use your details to answer this message only",
+    "submit": "Send message",
+    "reassure": "A person reads every message."
+  },
+  "quick": {
+    "h2": "Quick answers",
+    "lede": "Most questions are answered here already.",
+    "items": {
+      "help": "Help centre",
+      "helpSub": "Answers to the common questions, searchable",
+      "delivery": "Delivery",
+      "deliverySub": "Where, how long, and tracking",
+      "returns": "Returns and warranty",
+      "returnsSub": "Plain-English cover and your rights",
+      "upload": "Free logo mockup",
+      "uploadSub": "Send a file, get a drawing in 12 hours",
+      "bulk": "Bulk and trade",
+      "bulkSub": "Three signs or more"
+    }
+  },
+  "address": "Workshop address",
+  "confirm": {
+    "title": "Thanks, {name}. Your message is with us",
+    "titleNoName": "Thanks. Your message is with us",
+    "body": "We reply by email to {email}.",
+    "bodyReply": "We reply by email to {email}. {reply}.",
+    "again": "Send another message"
+  },
+  "submit": "Send message",
+  "sending": "Sending",
+  "success": "Message sent",
+  "errorTitle": "That didn’t send",
+  "errorBody": "Nothing was lost. Check your connection and try again.",
+  "retry": "Retry",
+  "localSaved": "Saved locally (review build) — nothing was sent."
+}

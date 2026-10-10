@@ -1,0 +1,62 @@
+{
+  "_meta": {
+    "page": "collection",
+    "owner": "P4",
+    "renders": [
+      "collection.html"
+    ],
+    "status": "filled by P4. Collection names, H1s, intros, phrases and size guides live in data/collections.json (WS-DATA). No literal dates, £ amounts or percentages. Keys are namespaced under \"collection\" because copy.js merges every loaded file into one store (collection and product pages load shop.json too)."
+  },
+  "collection": {
+    "meta": {
+      "title": "{name} | Lit Neon",
+      "description": "{description}"
+    },
+    "breadcrumb": "Breadcrumb",
+    "crumbShop": "Shop signs",
+    "heroNote": "Rendered preview · your words, at Medium",
+    "mini": {
+      "title": "Your words, here",
+      "label": "Type your words",
+      "placeholder": "Try “{phrase}”",
+      "colourLabel": "Tube colour",
+      "cta": "Open in the designer",
+      "price": "{price} at Medium · {dims}",
+      "priceWait": "Measuring your lettering…",
+      "quote": "Over 2 m wide: a designer prices this one",
+      "reset": "Back to the sample",
+      "bad": "We can't draw {glyphs} in tube. The designer has symbols you can use instead."
+    },
+    "phrases": "Popular lines",
+    "phrasesHint": "Tap one to open it in the designer, ready to tweak.",
+    "sizeGuide": "Size guide",
+    "sizeGuideLink": "How big should it be?",
+    "gridTitle": "{name} designs, ready to make",
+    "gridLede": "Pick one as it is, or open it in the designer and make it yours.",
+    "facetsLabel": "Narrow it down",
+    "faqH2": "Good to know",
+    "faqMore": "All our answers",
+    "related": "You might also like",
+    "relatedCta": "See the collection",
+    "relatedCount": "{n} designs",
+    "seoTitle": "About {name} signs",
+    "seasonalNotice": "{name} signs are back from {month}. You can still design your own any time, and we'll make it once you've approved the drawing.",
+    "seasonalCta": "Design your own",
+    "notFound": {
+      "title": "We couldn't find that collection",
+      "body": "It may have moved. Every ready-made design is on one page.",
+      "cta": "See all designs"
+    },
+    "quickView": {
+      "on": "On",
+      "off": "Off",
+      "sizes": "Size",
+      "colour": "Colour",
+      "backing": "Backing",
+      "add": "Add to basket",
+      "customise": "Customise this design →",
+      "details": "Full details →",
+      "returns": "{returns} on ready-made designs"
+    }
+  }
+}

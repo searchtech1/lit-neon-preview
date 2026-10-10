@@ -1,0 +1,1703 @@
+{
+  "_about": "WS-DATA seed (brief §4.4, Appendix B). 48 ready-made designs; ids of the 14 shared/catalog.js designs are kept. Schema: CONTRACT.md \"## Data (WS-DATA)\". Edits via INTEGRATION.md only.",
+  "version": 1,
+  "defaults": {
+    "size": "m",
+    "backing": "cut",
+    "finish": "clear",
+    "hang": "screws",
+    "use": "indoor"
+  },
+  "facets": {
+    "room": [
+      {
+        "id": "bedroom",
+        "label": "Bedroom"
+      },
+      {
+        "id": "living",
+        "label": "Living room"
+      },
+      {
+        "id": "kitchen",
+        "label": "Kitchen & hallway"
+      },
+      {
+        "id": "bar",
+        "label": "Home bar"
+      },
+      {
+        "id": "kids",
+        "label": "Kids & nursery"
+      },
+      {
+        "id": "gaming",
+        "label": "Gaming room"
+      },
+      {
+        "id": "office",
+        "label": "Office & studio"
+      }
+    ],
+    "occasion": [
+      {
+        "id": "wedding",
+        "label": "Weddings"
+      },
+      {
+        "id": "party",
+        "label": "Parties & birthdays"
+      },
+      {
+        "id": "baby",
+        "label": "New baby"
+      },
+      {
+        "id": "christmas",
+        "label": "Christmas"
+      },
+      {
+        "id": "halloween",
+        "label": "Halloween"
+      }
+    ],
+    "style": [
+      {
+        "id": "names",
+        "label": "Names & initials"
+      },
+      {
+        "id": "quotes",
+        "label": "Quotes"
+      },
+      {
+        "id": "icons",
+        "label": "Line art & icons"
+      },
+      {
+        "id": "love",
+        "label": "Love"
+      },
+      {
+        "id": "music",
+        "label": "Music"
+      },
+      {
+        "id": "sport",
+        "label": "Sport"
+      },
+      {
+        "id": "food",
+        "label": "Food & drink"
+      }
+    ],
+    "size": [
+      {
+        "id": "s",
+        "label": "Small"
+      },
+      {
+        "id": "m",
+        "label": "Medium"
+      },
+      {
+        "id": "l",
+        "label": "Large"
+      },
+      {
+        "id": "xl",
+        "label": "Extra large"
+      },
+      {
+        "id": "xxl",
+        "label": "Statement"
+      }
+    ],
+    "priceBands": {
+      "_note": "Four bands are computed at runtime from pricing.fromPrice() over the catalogue (quartiles rounded to £10); no £ literals here.",
+      "count": 4
+    },
+    "sort": [
+      {
+        "id": "featured",
+        "label": "Featured"
+      },
+      {
+        "id": "price-asc",
+        "label": "Price, low to high"
+      },
+      {
+        "id": "price-desc",
+        "label": "Price, high to low"
+      },
+      {
+        "id": "newest",
+        "label": "Newest"
+      }
+    ]
+  },
+  "designs": [
+    {
+      "id": "better-together",
+      "kind": "ready",
+      "name": "Better together",
+      "lines": [
+        "Better together"
+      ],
+      "font": "soho",
+      "colour": "warm",
+      "collections": [
+        "wedding"
+      ],
+      "tags": {
+        "room": [
+          "living",
+          "bedroom"
+        ],
+        "occasion": [
+          "wedding"
+        ],
+        "style": [
+          "love",
+          "quotes"
+        ]
+      },
+      "scene": "s06-wedding",
+      "altScenes": [
+        "s01-living",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "bestseller": true,
+      "bestsellerRank": 1,
+      "blurb": "The top-table classic. It moves to the hallway after the honeymoon, which is more than the centrepieces will.",
+      "alt": "Rendered preview of the “Better together” sign in warm white, on a wedding venue wall"
+    },
+    {
+      "id": "mr-and-mrs",
+      "kind": "ready",
+      "name": "Mr & Mrs",
+      "lines": [
+        "Mr & Mrs"
+      ],
+      "font": "notting",
+      "colour": "warm",
+      "collections": [
+        "wedding",
+        "names"
+      ],
+      "tags": {
+        "room": [
+          "bedroom"
+        ],
+        "occasion": [
+          "wedding"
+        ],
+        "style": [
+          "names",
+          "love"
+        ]
+      },
+      "scene": "s06-wedding",
+      "altScenes": [
+        "s02-bedroom",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "bestseller": true,
+      "bestsellerRank": 2,
+      "blurb": "Two words and an ampersand doing a lot of heavy lifting. Add your surname in the designer.",
+      "alt": "Rendered preview of the “Mr & Mrs” sign in warm white, on a wedding venue wall"
+    },
+    {
+      "id": "happily-ever-after",
+      "kind": "ready",
+      "name": "Happily ever after",
+      "lines": [
+        "Happily",
+        "ever after"
+      ],
+      "font": "margate",
+      "colour": "candy",
+      "collections": [
+        "wedding"
+      ],
+      "tags": {
+        "room": [
+          "bedroom"
+        ],
+        "occasion": [
+          "wedding"
+        ],
+        "style": [
+          "love",
+          "quotes"
+        ]
+      },
+      "scene": "s06-wedding",
+      "altScenes": [
+        "s02-bedroom",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "For the backdrop on the day, then the bedroom wall for good. Fairy tale optional.",
+      "alt": "Rendered preview of the “Happily ever after” sign in candy pink, on a wedding venue wall"
+    },
+    {
+      "id": "lets-stay-in",
+      "kind": "ready",
+      "name": "Let's stay in",
+      "lines": [
+        "Let's stay in"
+      ],
+      "font": "soho",
+      "colour": "pink",
+      "collections": [
+        "bedroom"
+      ],
+      "tags": {
+        "room": [
+          "bedroom",
+          "living"
+        ],
+        "occasion": [],
+        "style": [
+          "quotes"
+        ]
+      },
+      "scene": "s02-bedroom",
+      "altScenes": [
+        "s01-living",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "bestseller": true,
+      "bestsellerRank": 3,
+      "blurb": "A sign for people who have already cancelled their plans and feel great about it.",
+      "alt": "Rendered preview of the “Let's stay in” sign in hot pink, on a bedroom wall"
+    },
+    {
+      "id": "sweet-dreams",
+      "kind": "ready",
+      "name": "Sweet dreams",
+      "lines": [
+        "Sweet dreams"
+      ],
+      "font": "brighton",
+      "colour": "ice",
+      "icon": "moon",
+      "iconPos": "above",
+      "collections": [
+        "bedroom",
+        "kids"
+      ],
+      "tags": {
+        "room": [
+          "bedroom",
+          "kids"
+        ],
+        "occasion": [],
+        "style": [
+          "quotes",
+          "icons"
+        ]
+      },
+      "scene": "s02-bedroom",
+      "altScenes": [
+        "s09-kids",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "bestseller": true,
+      "bestsellerRank": 4,
+      "blurb": "A soft ice-blue goodnight, with a crescent moon for company.",
+      "alt": "Rendered preview of the “Sweet dreams” sign in ice blue with a moon symbol, on a bedroom wall"
+    },
+    {
+      "id": "home-sweet-home",
+      "kind": "ready",
+      "name": "Home sweet home",
+      "lines": [
+        "Home",
+        "sweet home"
+      ],
+      "font": "notting",
+      "colour": "warm",
+      "collections": [
+        "kitchen"
+      ],
+      "tags": {
+        "room": [
+          "kitchen",
+          "living"
+        ],
+        "occasion": [],
+        "style": [
+          "quotes"
+        ]
+      },
+      "scene": "s03-kitchen",
+      "altScenes": [
+        "s01-living",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "The hallway welcome that never gets old, in a warm white that suits any wall.",
+      "alt": "Rendered preview of the “Home sweet home” sign in warm white, on a kitchen wall"
+    },
+    {
+      "id": "fancy-a-pint",
+      "kind": "ready",
+      "name": "Fancy a pint?",
+      "lines": [
+        "Fancy a",
+        "pint?"
+      ],
+      "font": "camden",
+      "colour": "warm",
+      "collections": [
+        "bar"
+      ],
+      "tags": {
+        "room": [
+          "bar"
+        ],
+        "occasion": [],
+        "style": [
+          "food",
+          "quotes"
+        ]
+      },
+      "scene": "s04-homebar",
+      "altScenes": [
+        "s05-pub",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "bestseller": true,
+      "bestsellerRank": 5,
+      "blurb": "Asks the only question that matters on a Friday evening.",
+      "alt": "Rendered preview of the “Fancy a pint?” sign in warm white, on a home bar wall"
+    },
+    {
+      "id": "cheers",
+      "kind": "ready",
+      "name": "Cheers",
+      "lines": [
+        "Cheers"
+      ],
+      "font": "brighton",
+      "colour": "violet",
+      "icon": "cocktail",
+      "iconPos": "inline",
+      "collections": [
+        "bar"
+      ],
+      "tags": {
+        "room": [
+          "bar"
+        ],
+        "occasion": [
+          "party"
+        ],
+        "style": [
+          "food"
+        ]
+      },
+      "scene": "s04-homebar",
+      "altScenes": [
+        "s05-pub",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "One word, one cocktail glass and a whole mood for the back bar.",
+      "alt": "Rendered preview of the “Cheers” sign in violet with a cocktail glass symbol, on a home bar wall"
+    },
+    {
+      "id": "cuppa-first",
+      "kind": "ready",
+      "name": "Cuppa first",
+      "lines": [
+        "Cuppa first"
+      ],
+      "font": "margate",
+      "colour": "orange",
+      "collections": [
+        "kitchen"
+      ],
+      "tags": {
+        "room": [
+          "kitchen"
+        ],
+        "occasion": [],
+        "style": [
+          "food",
+          "quotes"
+        ]
+      },
+      "scene": "s03-kitchen",
+      "altScenes": [
+        "s07-cafe",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "bestseller": true,
+      "bestsellerRank": 6,
+      "blurb": "House rules, lit. Nobody speaks until the kettle has.",
+      "alt": "Rendered preview of the “Cuppa first” sign in orange, on a kitchen wall"
+    },
+    {
+      "id": "open-late",
+      "kind": "ready",
+      "name": "Open late",
+      "lines": [
+        "Open late"
+      ],
+      "font": "shoreditch",
+      "colour": "red",
+      "collections": [
+        "business"
+      ],
+      "tags": {
+        "room": [],
+        "occasion": [],
+        "style": [
+          "quotes"
+        ]
+      },
+      "scene": "s11-shopwindow",
+      "altScenes": [
+        "s05-pub",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "Tells the street you are still serving, long after the lights go on.",
+      "alt": "Rendered preview of the “Open late” sign in red, on a shop window wall"
+    },
+    {
+      "id": "oh-baby",
+      "kind": "ready",
+      "name": "Oh baby",
+      "lines": [
+        "Oh baby"
+      ],
+      "font": "brighton",
+      "colour": "candy",
+      "collections": [
+        "kids"
+      ],
+      "tags": {
+        "room": [
+          "kids"
+        ],
+        "occasion": [
+          "baby",
+          "party"
+        ],
+        "style": [
+          "love"
+        ]
+      },
+      "scene": "s09-kids",
+      "altScenes": [
+        "s01-living",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "Baby showers, nursery walls and every photo in between.",
+      "alt": "Rendered preview of the “Oh baby” sign in candy pink, on a nursery wall"
+    },
+    {
+      "id": "game-on",
+      "kind": "ready",
+      "name": "Game on",
+      "lines": [
+        "Game on"
+      ],
+      "font": "brixton",
+      "colour": "blue",
+      "icon": "bolt",
+      "iconPos": "inline",
+      "collections": [
+        "gaming"
+      ],
+      "tags": {
+        "room": [
+          "gaming"
+        ],
+        "occasion": [],
+        "style": [
+          "quotes"
+        ]
+      },
+      "scene": "s12-gaming",
+      "altScenes": [
+        "s02-bedroom",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "bestseller": true,
+      "bestsellerRank": 7,
+      "blurb": "Two words and a lightning bolt. Controllers at the ready.",
+      "alt": "Rendered preview of the “Game on” sign in electric blue with a bolt symbol, on a gaming room wall"
+    },
+    {
+      "id": "heart",
+      "kind": "ready",
+      "name": "Heart",
+      "lines": [],
+      "font": "soho",
+      "colour": "pink",
+      "icon": "heart",
+      "iconPos": "above",
+      "collections": [
+        "wall-art"
+      ],
+      "tags": {
+        "room": [
+          "bedroom",
+          "living"
+        ],
+        "occasion": [
+          "wedding"
+        ],
+        "style": [
+          "icons",
+          "love"
+        ]
+      },
+      "scene": "s00-studio-dark",
+      "altScenes": [
+        "s02-bedroom",
+        "s01-living"
+      ],
+      "fromSize": "s",
+      "bestseller": true,
+      "bestsellerRank": 8,
+      "blurb": "A single line of tube in the shape of a heart. Goes with everything, including you.",
+      "alt": "Rendered preview of the heart sign in hot pink, on a dark studio wall"
+    },
+    {
+      "id": "lit",
+      "kind": "ready",
+      "name": "Lit",
+      "lines": [
+        "Lit"
+      ],
+      "font": "camden",
+      "colour": "pink",
+      "collections": [
+        "wall-art"
+      ],
+      "tags": {
+        "room": [
+          "living",
+          "bar",
+          "office"
+        ],
+        "occasion": [
+          "party"
+        ],
+        "style": [
+          "quotes"
+        ]
+      },
+      "scene": "s00-studio-dark",
+      "altScenes": [
+        "s01-living",
+        "s04-homebar"
+      ],
+      "fromSize": "s",
+      "blurb": "Three letters. Our name. Possibly your mood.",
+      "alt": "Rendered preview of the “Lit” sign in hot pink, on a dark studio wall"
+    },
+    {
+      "id": "the-patels",
+      "kind": "ready",
+      "name": "The Patels",
+      "lines": [
+        "The Patels"
+      ],
+      "font": "notting",
+      "colour": "warm",
+      "collections": [
+        "names"
+      ],
+      "tags": {
+        "room": [
+          "living"
+        ],
+        "occasion": [
+          "wedding"
+        ],
+        "style": [
+          "names"
+        ]
+      },
+      "scene": "s01-living",
+      "altScenes": [
+        "s06-wedding",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "new": true,
+      "blurb": "Your family name over the sofa. Swap ours for yours in the designer.",
+      "alt": "Rendered preview of the “The Patels” sign in warm white, on a living room wall"
+    },
+    {
+      "id": "est-2027",
+      "kind": "ready",
+      "name": "Est. 2027",
+      "lines": [
+        "Est. 2027"
+      ],
+      "font": "shoreditch",
+      "colour": "warm",
+      "collections": [
+        "names",
+        "wedding"
+      ],
+      "tags": {
+        "room": [
+          "living"
+        ],
+        "occasion": [
+          "wedding"
+        ],
+        "style": [
+          "names"
+        ]
+      },
+      "scene": "s01-living",
+      "altScenes": [
+        "s06-wedding",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "new": true,
+      "blurb": "Mark the year it all started. Change the year to yours.",
+      "alt": "Rendered preview of the “Est. 2027” sign in warm white, on a living room wall"
+    },
+    {
+      "id": "a-and-j",
+      "kind": "ready",
+      "name": "A & J",
+      "lines": [
+        "A & J"
+      ],
+      "font": "brighton",
+      "colour": "pink",
+      "collections": [
+        "names"
+      ],
+      "tags": {
+        "room": [
+          "bedroom"
+        ],
+        "occasion": [
+          "wedding"
+        ],
+        "style": [
+          "names",
+          "love"
+        ]
+      },
+      "scene": "s02-bedroom",
+      "altScenes": [
+        "s06-wedding",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "Two initials and an ampersand. Short, sweet and very you.",
+      "alt": "Rendered preview of the “A & J” sign in hot pink, on a bedroom wall"
+    },
+    {
+      "id": "mila",
+      "kind": "ready",
+      "name": "Mila",
+      "lines": [
+        "Mila"
+      ],
+      "font": "margate",
+      "colour": "candy",
+      "collections": [
+        "names",
+        "kids"
+      ],
+      "tags": {
+        "room": [
+          "kids"
+        ],
+        "occasion": [
+          "baby"
+        ],
+        "style": [
+          "names"
+        ]
+      },
+      "scene": "s09-kids",
+      "altScenes": [
+        "s02-bedroom",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "A name for the nursery wall. Type your little one’s name instead.",
+      "alt": "Rendered preview of the “Mila” sign in candy pink, on a nursery wall"
+    },
+    {
+      "id": "stay-in-bed",
+      "kind": "ready",
+      "name": "Stay in bed",
+      "lines": [
+        "Stay in bed"
+      ],
+      "font": "hackney",
+      "colour": "violet",
+      "collections": [
+        "bedroom"
+      ],
+      "tags": {
+        "room": [
+          "bedroom"
+        ],
+        "occasion": [],
+        "style": [
+          "quotes"
+        ]
+      },
+      "scene": "s02-bedroom",
+      "altScenes": [
+        "s01-living",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "Advice we wholeheartedly endorse, in a calm violet.",
+      "alt": "Rendered preview of the “Stay in bed” sign in violet, on a bedroom wall"
+    },
+    {
+      "id": "good-night-love",
+      "kind": "ready",
+      "name": "Good night, love",
+      "lines": [
+        "Good night, love"
+      ],
+      "font": "notting",
+      "colour": "warm",
+      "collections": [
+        "bedroom"
+      ],
+      "tags": {
+        "room": [
+          "bedroom"
+        ],
+        "occasion": [],
+        "style": [
+          "love",
+          "quotes"
+        ]
+      },
+      "scene": "s02-bedroom",
+      "altScenes": [
+        "s01-living",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "The last thing you see before lights out. Well, second last.",
+      "alt": "Rendered preview of the “Good night, love” sign in warm white, on a bedroom wall"
+    },
+    {
+      "id": "last-orders",
+      "kind": "ready",
+      "name": "Last orders",
+      "lines": [
+        "Last orders"
+      ],
+      "font": "shoreditch",
+      "colour": "yellow",
+      "collections": [
+        "bar"
+      ],
+      "tags": {
+        "room": [
+          "bar"
+        ],
+        "occasion": [],
+        "style": [
+          "food"
+        ]
+      },
+      "scene": "s04-homebar",
+      "altScenes": [
+        "s05-pub",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "For the home bar with very relaxed licensing hours.",
+      "alt": "Rendered preview of the “Last orders” sign in golden yellow, on a home bar wall"
+    },
+    {
+      "id": "gin-oclock",
+      "kind": "ready",
+      "name": "Gin o'clock",
+      "lines": [
+        "Gin o'clock"
+      ],
+      "font": "margate",
+      "colour": "ice",
+      "collections": [
+        "bar"
+      ],
+      "tags": {
+        "room": [
+          "bar",
+          "kitchen"
+        ],
+        "occasion": [
+          "party"
+        ],
+        "style": [
+          "food",
+          "quotes"
+        ]
+      },
+      "scene": "s04-homebar",
+      "altScenes": [
+        "s03-kitchen",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "It is always gin o’clock somewhere. Now it is on your wall.",
+      "alt": "Rendered preview of the “Gin o'clock” sign in ice blue, on a home bar wall"
+    },
+    {
+      "id": "the-local",
+      "kind": "ready",
+      "name": "The Local",
+      "lines": [
+        "The Local"
+      ],
+      "font": "camden",
+      "colour": "warm",
+      "collections": [
+        "bar"
+      ],
+      "tags": {
+        "room": [
+          "bar"
+        ],
+        "occasion": [],
+        "style": [
+          "food"
+        ]
+      },
+      "scene": "s04-homebar",
+      "altScenes": [
+        "s05-pub",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "Every home bar deserves a proper name. Put yours in the designer.",
+      "alt": "Rendered preview of the “The Local” sign in warm white, on a home bar wall"
+    },
+    {
+      "id": "till-the-last-dance",
+      "kind": "ready",
+      "name": "Till the last dance",
+      "lines": [
+        "Till the",
+        "last dance"
+      ],
+      "font": "soho",
+      "colour": "pink",
+      "collections": [
+        "wedding"
+      ],
+      "tags": {
+        "room": [],
+        "occasion": [
+          "wedding",
+          "party"
+        ],
+        "style": [
+          "love",
+          "music"
+        ]
+      },
+      "scene": "s06-wedding",
+      "altScenes": [
+        "s01-living",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "new": true,
+      "blurb": "Hang it over the dance floor and watch nobody go home early.",
+      "alt": "Rendered preview of the “Till the last dance” sign in hot pink, on a wedding venue wall"
+    },
+    {
+      "id": "love-you-more",
+      "kind": "ready",
+      "name": "Love you more",
+      "lines": [
+        "Love you more"
+      ],
+      "font": "brighton",
+      "colour": "red",
+      "collections": [
+        "wedding",
+        "bedroom"
+      ],
+      "tags": {
+        "room": [
+          "bedroom"
+        ],
+        "occasion": [
+          "wedding"
+        ],
+        "style": [
+          "love"
+        ]
+      },
+      "scene": "s02-bedroom",
+      "altScenes": [
+        "s06-wedding",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "The last word in every argument worth losing.",
+      "alt": "Rendered preview of the “Love you more” sign in red, on a bedroom wall"
+    },
+    {
+      "id": "eat-drink-repeat",
+      "kind": "ready",
+      "name": "Eat, drink, repeat",
+      "lines": [
+        "Eat, drink, repeat"
+      ],
+      "font": "brixton",
+      "colour": "orange",
+      "collections": [
+        "kitchen"
+      ],
+      "tags": {
+        "room": [
+          "kitchen"
+        ],
+        "occasion": [
+          "party"
+        ],
+        "style": [
+          "food",
+          "quotes"
+        ]
+      },
+      "scene": "s03-kitchen",
+      "altScenes": [
+        "s04-homebar",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "The kitchen’s entire mission statement, in three words.",
+      "alt": "Rendered preview of the “Eat, drink, repeat” sign in orange, on a kitchen wall"
+    },
+    {
+      "id": "kettles-on",
+      "kind": "ready",
+      "name": "Kettle's on",
+      "lines": [
+        "Kettle's on"
+      ],
+      "font": "hackney",
+      "colour": "warm",
+      "collections": [
+        "kitchen"
+      ],
+      "tags": {
+        "room": [
+          "kitchen"
+        ],
+        "occasion": [],
+        "style": [
+          "food",
+          "quotes"
+        ]
+      },
+      "scene": "s03-kitchen",
+      "altScenes": [
+        "s07-cafe",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "new": true,
+      "blurb": "The three most British words there are, glowing above the worktop.",
+      "alt": "Rendered preview of the “Kettle's on” sign in warm white, on a kitchen wall"
+    },
+    {
+      "id": "respawn",
+      "kind": "ready",
+      "name": "Respawn",
+      "lines": [
+        "Respawn"
+      ],
+      "font": "brixton",
+      "colour": "green",
+      "collections": [
+        "gaming"
+      ],
+      "tags": {
+        "room": [
+          "gaming"
+        ],
+        "occasion": [],
+        "style": [
+          "quotes"
+        ]
+      },
+      "scene": "s12-gaming",
+      "altScenes": [
+        "s02-bedroom",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "For the room you keep coming back to.",
+      "alt": "Rendered preview of the “Respawn” sign in green, on a gaming room wall"
+    },
+    {
+      "id": "gg",
+      "kind": "ready",
+      "name": "GG",
+      "lines": [
+        "GG"
+      ],
+      "font": "camden",
+      "colour": "violet",
+      "collections": [
+        "gaming"
+      ],
+      "tags": {
+        "room": [
+          "gaming"
+        ],
+        "occasion": [],
+        "style": [
+          "quotes"
+        ]
+      },
+      "scene": "s12-gaming",
+      "altScenes": [
+        "s02-bedroom",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "Good game. Two letters, maximum respect.",
+      "alt": "Rendered preview of the “GG” sign in violet, on a gaming room wall"
+    },
+    {
+      "id": "level-up",
+      "kind": "ready",
+      "name": "Level up",
+      "lines": [
+        "Level up"
+      ],
+      "font": "shoreditch",
+      "colour": "rgb",
+      "collections": [
+        "gaming"
+      ],
+      "tags": {
+        "room": [
+          "gaming",
+          "bedroom"
+        ],
+        "occasion": [],
+        "style": [
+          "quotes"
+        ]
+      },
+      "scene": "s12-gaming",
+      "altScenes": [
+        "s02-bedroom",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "new": true,
+      "blurb": "Colour changing, because one colour felt a bit level one.",
+      "alt": "Rendered preview of the “Level up” sign in colour changing, on a gaming room wall"
+    },
+    {
+      "id": "welcome-in",
+      "kind": "ready",
+      "name": "Welcome in",
+      "lines": [
+        "Welcome in"
+      ],
+      "font": "margate",
+      "colour": "warm",
+      "collections": [
+        "business"
+      ],
+      "tags": {
+        "room": [
+          "office"
+        ],
+        "occasion": [],
+        "style": [
+          "quotes"
+        ]
+      },
+      "scene": "s07-cafe",
+      "altScenes": [
+        "s10-office",
+        "s11-shopwindow"
+      ],
+      "fromSize": "s",
+      "blurb": "A friendly hello for the shop counter, the café door or reception.",
+      "alt": "Rendered preview of the “Welcome in” sign in warm white, on a café wall"
+    },
+    {
+      "id": "fresh-cuts",
+      "kind": "ready",
+      "name": "Fresh cuts",
+      "lines": [
+        "Fresh cuts"
+      ],
+      "font": "brixton",
+      "colour": "ice",
+      "collections": [
+        "business"
+      ],
+      "tags": {
+        "room": [],
+        "occasion": [],
+        "style": [
+          "quotes"
+        ]
+      },
+      "scene": "s08-salon",
+      "altScenes": [
+        "s11-shopwindow",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "For barbers and salons who want the mirror selfie to have a backdrop.",
+      "alt": "Rendered preview of the “Fresh cuts” sign in ice blue, on a salon wall"
+    },
+    {
+      "id": "coffee-first",
+      "kind": "ready",
+      "name": "Coffee first",
+      "lines": [
+        "Coffee first"
+      ],
+      "font": "brighton",
+      "colour": "warm",
+      "collections": [
+        "business",
+        "kitchen"
+      ],
+      "tags": {
+        "room": [
+          "kitchen",
+          "office"
+        ],
+        "occasion": [],
+        "style": [
+          "food"
+        ]
+      },
+      "scene": "s07-cafe",
+      "altScenes": [
+        "s03-kitchen",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "Café wall or kitchen wall, the urgency is the same.",
+      "alt": "Rendered preview of the “Coffee first” sign in warm white, on a café wall"
+    },
+    {
+      "id": "bolt",
+      "kind": "ready",
+      "name": "Lightning bolt",
+      "lines": [],
+      "font": "soho",
+      "colour": "yellow",
+      "icon": "bolt",
+      "iconPos": "above",
+      "collections": [
+        "wall-art"
+      ],
+      "tags": {
+        "room": [
+          "gaming",
+          "bedroom"
+        ],
+        "occasion": [],
+        "style": [
+          "icons"
+        ]
+      },
+      "scene": "s00-studio-dark",
+      "altScenes": [
+        "s12-gaming",
+        "s02-bedroom"
+      ],
+      "fromSize": "s",
+      "blurb": "A tube lightning bolt. Shocking, in the best way.",
+      "alt": "Rendered preview of the lightning bolt sign in golden yellow, on a dark studio wall"
+    },
+    {
+      "id": "moon",
+      "kind": "ready",
+      "name": "Crescent moon",
+      "lines": [],
+      "font": "soho",
+      "colour": "warm",
+      "icon": "moon",
+      "iconPos": "above",
+      "collections": [
+        "wall-art"
+      ],
+      "tags": {
+        "room": [
+          "bedroom",
+          "kids"
+        ],
+        "occasion": [],
+        "style": [
+          "icons"
+        ]
+      },
+      "scene": "s00-studio-dark",
+      "altScenes": [
+        "s02-bedroom",
+        "s09-kids"
+      ],
+      "fromSize": "s",
+      "blurb": "A crescent moon that is up whenever you want it.",
+      "alt": "Rendered preview of the crescent moon sign in warm white, on a dark studio wall"
+    },
+    {
+      "id": "little-dreamer",
+      "kind": "ready",
+      "name": "Little dreamer",
+      "lines": [
+        "Little dreamer"
+      ],
+      "font": "soho",
+      "colour": "candy",
+      "collections": [
+        "kids"
+      ],
+      "tags": {
+        "room": [
+          "kids"
+        ],
+        "occasion": [
+          "baby"
+        ],
+        "style": [
+          "quotes"
+        ]
+      },
+      "scene": "s09-kids",
+      "altScenes": [
+        "s02-bedroom",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "A soft glow for the nursery, dimmed right down at bedtime.",
+      "alt": "Rendered preview of the “Little dreamer” sign in candy pink, on a nursery wall"
+    },
+    {
+      "id": "sweet-pea",
+      "kind": "ready",
+      "name": "Sweet pea",
+      "lines": [
+        "Sweet pea"
+      ],
+      "font": "hackney",
+      "colour": "green",
+      "collections": [
+        "kids"
+      ],
+      "tags": {
+        "room": [
+          "kids"
+        ],
+        "occasion": [
+          "baby"
+        ],
+        "style": [
+          "love"
+        ]
+      },
+      "scene": "s09-kids",
+      "altScenes": [
+        "s02-bedroom",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "A tiny nickname in a gentle green.",
+      "alt": "Rendered preview of the “Sweet pea” sign in green, on a nursery wall"
+    },
+    {
+      "id": "hello-little-one",
+      "kind": "ready",
+      "name": "Hello, little one",
+      "lines": [
+        "Hello,",
+        "little one"
+      ],
+      "font": "notting",
+      "colour": "warm",
+      "collections": [
+        "kids"
+      ],
+      "tags": {
+        "room": [
+          "kids"
+        ],
+        "occasion": [
+          "baby"
+        ],
+        "style": [
+          "love"
+        ]
+      },
+      "scene": "s09-kids",
+      "altScenes": [
+        "s01-living",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "new": true,
+      "blurb": "The first sign they will ever read. Probably not for a while.",
+      "alt": "Rendered preview of the “Hello, little one” sign in warm white, on a nursery wall"
+    },
+    {
+      "id": "merry-and-bright",
+      "kind": "ready",
+      "name": "Merry & bright",
+      "lines": [
+        "Merry & bright"
+      ],
+      "font": "notting",
+      "colour": "warm",
+      "collections": [
+        "christmas"
+      ],
+      "tags": {
+        "room": [
+          "living"
+        ],
+        "occasion": [
+          "christmas"
+        ],
+        "style": [
+          "quotes"
+        ]
+      },
+      "scene": "s01-living",
+      "altScenes": [
+        "s04-homebar",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "The fairy lights’ more articulate cousin, and nothing to untangle.",
+      "alt": "Rendered preview of the “Merry & bright” sign in warm white, on a living room wall"
+    },
+    {
+      "id": "baby-its-cold",
+      "kind": "ready",
+      "name": "Baby it's cold",
+      "lines": [
+        "Baby it's cold"
+      ],
+      "font": "soho",
+      "colour": "ice",
+      "collections": [
+        "christmas"
+      ],
+      "tags": {
+        "room": [
+          "living"
+        ],
+        "occasion": [
+          "christmas"
+        ],
+        "style": [
+          "music",
+          "quotes"
+        ]
+      },
+      "scene": "s01-living",
+      "altScenes": [
+        "s02-bedroom",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "Ice blue, obviously. Best hung near the radiator.",
+      "alt": "Rendered preview of the “Baby it's cold” sign in ice blue, on a living room wall"
+    },
+    {
+      "id": "ho-ho-ho",
+      "kind": "ready",
+      "name": "Ho ho ho",
+      "lines": [
+        "Ho ho ho"
+      ],
+      "font": "brighton",
+      "colour": "red",
+      "collections": [
+        "christmas"
+      ],
+      "tags": {
+        "room": [
+          "living"
+        ],
+        "occasion": [
+          "christmas",
+          "party"
+        ],
+        "style": [
+          "quotes"
+        ]
+      },
+      "scene": "s01-living",
+      "altScenes": [
+        "s04-homebar",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "Three syllables of festive cheer for the mantelpiece or the shop window.",
+      "alt": "Rendered preview of the “Ho ho ho” sign in red, on a living room wall"
+    },
+    {
+      "id": "let-it-glow",
+      "kind": "ready",
+      "name": "Let it glow",
+      "lines": [
+        "Let it glow"
+      ],
+      "font": "margate",
+      "colour": "cool",
+      "collections": [
+        "christmas"
+      ],
+      "tags": {
+        "room": [
+          "living"
+        ],
+        "occasion": [
+          "christmas"
+        ],
+        "style": [
+          "quotes"
+        ]
+      },
+      "scene": "s01-living",
+      "altScenes": [
+        "s02-bedroom",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "new": true,
+      "blurb": "Snow not guaranteed. Glow very much guaranteed.",
+      "alt": "Rendered preview of the “Let it glow” sign in cool white, on a living room wall"
+    },
+    {
+      "id": "boo",
+      "kind": "ready",
+      "name": "Boo",
+      "lines": [
+        "Boo"
+      ],
+      "font": "camden",
+      "colour": "orange",
+      "collections": [
+        "halloween"
+      ],
+      "tags": {
+        "room": [
+          "living"
+        ],
+        "occasion": [
+          "halloween"
+        ],
+        "style": [
+          "quotes"
+        ]
+      },
+      "scene": "s00-studio-dark",
+      "altScenes": [
+        "s01-living",
+        "s11-shopwindow"
+      ],
+      "fromSize": "s",
+      "blurb": "Short, sharp and just a little bit spooky.",
+      "alt": "Rendered preview of the “Boo” sign in orange, on a dark studio wall"
+    },
+    {
+      "id": "trick-or-treat",
+      "kind": "ready",
+      "name": "Trick or treat",
+      "lines": [
+        "Trick or treat"
+      ],
+      "font": "brixton",
+      "colour": "orange",
+      "collections": [
+        "halloween"
+      ],
+      "tags": {
+        "room": [
+          "living"
+        ],
+        "occasion": [
+          "halloween",
+          "party"
+        ],
+        "style": [
+          "quotes"
+        ]
+      },
+      "scene": "s01-living",
+      "altScenes": [
+        "s11-shopwindow",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "Answers the door so you do not have to. Sweets sold separately.",
+      "alt": "Rendered preview of the “Trick or treat” sign in orange, on a living room wall"
+    },
+    {
+      "id": "spooky-season",
+      "kind": "ready",
+      "name": "Spooky season",
+      "lines": [
+        "Spooky season"
+      ],
+      "font": "shoreditch",
+      "colour": "violet",
+      "collections": [
+        "halloween"
+      ],
+      "tags": {
+        "room": [
+          "living"
+        ],
+        "occasion": [
+          "halloween"
+        ],
+        "style": [
+          "quotes"
+        ]
+      },
+      "scene": "s01-living",
+      "altScenes": [
+        "s04-homebar",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "new": true,
+      "blurb": "Violet and a touch dramatic, like the best Halloween parties.",
+      "alt": "Rendered preview of the “Spooky season” sign in violet, on a living room wall"
+    },
+    {
+      "id": "witching-hour",
+      "kind": "ready",
+      "name": "Witching hour",
+      "lines": [
+        "Witching hour"
+      ],
+      "font": "soho",
+      "colour": "green",
+      "collections": [
+        "halloween"
+      ],
+      "tags": {
+        "room": [
+          "bar"
+        ],
+        "occasion": [
+          "halloween",
+          "party"
+        ],
+        "style": [
+          "quotes"
+        ]
+      },
+      "scene": "s00-studio-dark",
+      "altScenes": [
+        "s04-homebar",
+        "s01-living"
+      ],
+      "fromSize": "s",
+      "blurb": "An eerie green for the bar cart. Cauldron not included.",
+      "alt": "Rendered preview of the “Witching hour” sign in green, on a dark studio wall"
+    },
+    {
+      "id": "turn-it-up",
+      "kind": "ready",
+      "name": "Turn it up",
+      "lines": [
+        "Turn it up"
+      ],
+      "font": "brixton",
+      "colour": "pink",
+      "collections": [
+        "bar"
+      ],
+      "tags": {
+        "room": [
+          "living",
+          "bar"
+        ],
+        "occasion": [
+          "party"
+        ],
+        "style": [
+          "music"
+        ]
+      },
+      "scene": "s04-homebar",
+      "altScenes": [
+        "s01-living",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "For the record player, the speaker or the karaoke corner.",
+      "alt": "Rendered preview of the “Turn it up” sign in hot pink, on a home bar wall"
+    },
+    {
+      "id": "matchday",
+      "kind": "ready",
+      "name": "Matchday",
+      "lines": [
+        "Matchday"
+      ],
+      "font": "shoreditch",
+      "colour": "blue",
+      "collections": [
+        "bar"
+      ],
+      "tags": {
+        "room": [
+          "bar",
+          "living"
+        ],
+        "occasion": [],
+        "style": [
+          "sport"
+        ]
+      },
+      "scene": "s04-homebar",
+      "altScenes": [
+        "s01-living",
+        "s00-studio-dark"
+      ],
+      "fromSize": "s",
+      "blurb": "For the build-up, the half-time and the post-match inquest.",
+      "alt": "Rendered preview of the “Matchday” sign in electric blue, on a home bar wall"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "_about": "WS-DATA seed (brief §4.20, Appendix B). One entry per legal page; drafted by an agent, not legal advice. facts.js counts legalReviewed:false entries in the review badge; qa/launch.mjs fails while any is false. Set legalReviewed:true only with reviewedBy + date (ISO).",
+  "version": 1,
+  "pages": [
+    { "path": "legal/privacy.html", "title": "Privacy notice", "legalReviewed": false, "reviewedBy": null, "date": null },
+    { "path": "legal/terms.html", "title": "Terms of sale", "legalReviewed": false, "reviewedBy": null, "date": null },
+    { "path": "legal/cookies.html", "title": "Cookies", "legalReviewed": false, "reviewedBy": null, "date": null },
+    { "path": "legal/recycling.html", "title": "Recycling your sign", "legalReviewed": false, "reviewedBy": null, "date": null },
+    { "path": "legal/reviews-policy.html", "title": "Reviews policy", "legalReviewed": false, "reviewedBy": null, "date": null }
+  ]
+}

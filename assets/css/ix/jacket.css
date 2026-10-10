@@ -1,0 +1,43 @@
+/* Lit Neon v2 — css/ix/jacket.css (brief §5.1). Two tiles split by one slider; tokens only. */
+.ix-jacket__tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-4); }
+.ix-jacket__tile { --pos: 50%; --skew: 6%; position: relative; aspect-ratio: 4 / 3; min-height: 0; width: 100%; max-width: 100%; overflow: clip; border-radius: var(--r-3); background: var(--night-2); box-shadow: var(--e-1); isolation: isolate; }
+@media (max-width: 767px) { .ix-jacket__tiles { gap: var(--s-3); } .ix-jacket__tile { aspect-ratio: 4 / 5; } }
+.ix-jacket__tile .ix-jacket__stage, .ix-jacket__tile .ln-stage { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ix-jacket__tile .ix-jacket__on { clip-path: polygon(calc(var(--pos) + var(--skew)) 0, 100% 0, 100% 100%, calc(var(--pos) - var(--skew)) 100%); z-index: 2; }
+.ix-jacket__divider { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; overflow: visible; }
+.ix-jacket__divider line { stroke: var(--bone); stroke-width: 2; opacity: .9; }
+.ix-jacket__tile[data-state="on"] .ix-jacket__divider, .ix-jacket__tile[data-state="off"] .ix-jacket__divider { opacity: 0; }
+.ix-jacket__tag { position: absolute; bottom: var(--s-3); z-index: 4; padding: var(--s-1) var(--s-2); border-radius: var(--r-1); background: var(--glass); color: var(--bone); font-size: var(--t-caption); font-weight: 600; pointer-events: none; transition: opacity var(--d-base); }
+.ix-jacket__tag--a { left: var(--s-3); bottom: calc(var(--s-3) + 30px); }
+.ix-jacket__tag--b { right: var(--s-3); }
+.ix-jacket__tile[data-state="on"] .ix-jacket__tag--a, .ix-jacket__tile[data-state="off"] .ix-jacket__tag--b { opacity: 0; }
+/* the jacket pick sits over the top edge of its tile: name, caption, tick when chosen */
+.ix-jacket__pick { position: absolute; left: var(--s-3); top: var(--s-3); max-width: calc(100% - 2 * var(--s-3)); z-index: 4; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: var(--s-1) var(--s-3); min-height: var(--touch); padding: var(--s-2) var(--s-3); border-radius: var(--r-2); background: var(--glass); color: var(--bone); border: 1px solid var(--hair); text-align: left; -webkit-backdrop-filter: blur(var(--glass-blur)); backdrop-filter: blur(var(--glass-blur)); transition: border-color var(--d-base), box-shadow var(--d-base); }
+.ix-jacket__pick:hover:not(:disabled) { border-color: var(--hair-lit); }
+.ix-jacket__pick[aria-pressed="true"] { border-color: var(--amber); box-shadow: var(--glow-ring); }
+.ix-jacket__pick .ix-jacket__name { font-weight: 600; font-size: var(--t-body); grid-column: 1; }
+.ix-jacket__pick .ix-jacket__cap { font-size: var(--t-caption); color: var(--bone-2); grid-column: 1; }
+.ix-jacket__pick .ix-jacket__tick { grid-column: 2; grid-row: 1 / span 2; width: 22px; height: 22px; opacity: 0; color: var(--amber); transition: opacity var(--d-base); }
+.ix-jacket__pick[aria-pressed="true"] .ix-jacket__tick { opacity: 1; }
+.ix-jacket__pick:disabled { color: var(--smoke); cursor: not-allowed; }
+/* a colour with no coloured jacket greys the right tile and explains why */
+.ix-jacket__tile.is-unavailable .ix-jacket__stage { filter: grayscale(1) brightness(.55); }
+.ix-jacket__note { position: absolute; left: var(--s-3); right: var(--s-3); bottom: calc(var(--s-3) + 30px); z-index: 4; padding: var(--s-2) var(--s-3); border-radius: var(--r-2); background: var(--glass); color: var(--bone); font-size: var(--t-small); line-height: var(--lh-small); border: 1px solid var(--hair); }
+.ix-jacket__tile.is-unavailable .ix-jacket__tag { display: none; }
+/* controls */
+.ix-jacket__range label { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-3); }
+.ix-jacket__range .readout { font-family: var(--f-mono); font-size: var(--t-mono); text-transform: none; letter-spacing: 0; color: var(--fg-2); }
+.ix-jacket__swatches { display: flex; flex-wrap: wrap; gap: var(--s-1) var(--s-2); }
+.ix-jacket__swatches .c-swatch .name { opacity: 1; }
+@media (max-width: 767px) { .ix-jacket__swatches { gap: 0 var(--s-1); } }
+/* phones: the jacket pick sits under the sign (bottom of the tile), the tags move to the top, the stage pill gives way to the caption line */
+@media (max-width: 767px) {
+  .ix-jacket__pick { top: auto; bottom: var(--s-2); left: var(--s-2); right: var(--s-2); max-width: none; padding: var(--s-2); gap: 0 var(--s-2); }
+  .ix-jacket__pick .ix-jacket__name { font-size: var(--t-small); }
+  .ix-jacket__pick .ix-jacket__cap { font-size: var(--t-caption); }
+  .ix-jacket__pick .ix-jacket__tick { width: 18px; height: 18px; }
+  .ix-jacket__tag--a { bottom: auto; top: var(--s-2); left: var(--s-2); }
+  .ix-jacket__tag--b { bottom: auto; top: var(--s-2); right: var(--s-2); }
+  .ix-jacket__tile .ln-pill { display: none; }
+  .ix-jacket__note { bottom: auto; top: calc(var(--s-2) + 34px); }
+}

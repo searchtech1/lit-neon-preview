@@ -1,0 +1,9 @@
+{
+ "_about": "Test discount codes for checkout.html (brief §3.7a, §4.18, B41). One code per order; a code never stacks with the launch price — the better of the two applies and the discount row names which. Codes are matched case-insensitively after trimming. type: percent (value = % off the everyday subtotal, rounded to the penny) or fixed (value = £ off, capped at the subtotal). minSubtotal (everyday £) is optional. Owner: P7.",
+ "codes": [
+  { "code": "TESTCODE", "type": "percent", "value": 25, "label": "Test code" },
+  { "code": "WELCOME10", "type": "percent", "value": 10, "label": "Welcome code" },
+  { "code": "FIVER", "type": "fixed", "value": 5, "label": "Fiver off" },
+  { "code": "BIGORDER", "type": "fixed", "value": 50, "minSubtotal": 400, "label": "Big order" }
+ ]
+}

@@ -1,0 +1,17 @@
+{
+  "_meta": {
+    "page": "notfound",
+    "owner": "P6",
+    "renders": ["404.html"],
+    "status": "filled by P6."
+  },
+  "notfound": {
+    "sign": "Not here",
+    "searchLabel": "Search the site",
+    "searchPlaceholder": "Designs, rooms, guides, answers",
+    "designIt": "Design “{q}” as a sign",
+    "noResults": "Nothing found for “{q}”, but we can light it for you.",
+    "groups": { "designs": "Designs", "collections": "Collections", "guides": "Guides", "help": "Help answers" },
+    "replay": "Flick it again"
+  }
+}

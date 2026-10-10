@@ -1,144 +1,221 @@
 <!doctype html>
 <html lang="en-GB">
 <head>
-<meta name="robots" content="noindex, nofollow">
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Design your sign | Lit Neon</title>
-<meta name="description" content="Design a custom LED neon sign. See it lit at real size, watch the proof drawing update as you type, and get an exact price with free mainland GB delivery.">
 <meta name="robots" content="noindex">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Hanken+Grotesk:wght@400;500;600&family=B612+Mono&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Neonderthaw&family=Tilt+Neon&family=Pacifico&family=Sacramento&family=Monoton&family=Yellowtail&family=Great+Vibes&family=Righteous&family=Comfortaa:wght@600&family=Kaushan+Script&display=swap">
-<link rel="stylesheet" href="assets/fused.css">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Custom neon signs, made in the UK — design yours | Lit Neon</title>
+<meta name="description" content="Type your words, pick the lettering and colour, see it lit on a real-looking wall at true size and get an honest price as you go. Custom LED neon signs made in our UK workshop, proof drawing first, free mainland-GB delivery.">
+<link rel="canonical" href="/lit-neon-preview/create.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Design your custom neon sign | Lit Neon">
+<meta property="og:description" content="Your words, lit. Design a custom LED neon sign in minutes and see it on the wall at true size. Made in our UK workshop.">
+<meta property="og:image" content="/lit-neon-preview/assets/img/og/create.jpg">
+<meta property="og:url" content="/lit-neon-preview/create.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#180E1F">
+<link rel="icon" href="/lit-neon-preview/assets/img/brand/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/lit-neon-preview/assets/fonts/big-shoulders-display-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/lit-neon-preview/assets/fonts/hanken-grotesk-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/lit-neon-preview/assets/fonts/neonderthaw-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/lit-neon-preview/assets/fonts/fonts.css">
+<link rel="stylesheet" href="/lit-neon-preview/assets/css/tokens.css">
+<link rel="stylesheet" href="/lit-neon-preview/assets/css/base.css">
+<link rel="stylesheet" href="/lit-neon-preview/assets/css/components.css">
+<link rel="stylesheet" href="/lit-neon-preview/assets/css/chrome.css">
+<link rel="stylesheet" href="/lit-neon-preview/assets/css/pages/builder.css">
+<script src="/lit-neon-preview/assets/js/core/boot.js"></script>
+<!-- modulepreload: tools/modulepreload.mjs -->
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/pages/builder.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/renderer.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/vendor/engines/catalog.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/vendor/engines/neon-core.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/stage.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/money.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/clock.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/pricing.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/vendor/engines/rules.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/sheet.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/basket.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/router.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/share.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/analytics.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/forms.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/qr.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/vendor/qrcode.min.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/ar.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/ar-export.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/drawing-export.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/ui.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/a11y.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/copy.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/facts.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/chrome.js">
+<!-- /modulepreload -->
 </head>
-<body class="create" data-page="create">
-<div id="ln-header"></div>
+<body data-page="builder">
+<div id="chrome-top"></div>
+<main id="main">
+  <section class="builder" id="builder" aria-label="Sign designer" data-qa="builder.shell">
 
-<main class="builder">
-  <section class="stagewrap" id="stagewrap" aria-label="Live preview of your sign">
-    <div id="stage"></div>
-    <div class="sheet" id="stageSheet" role="img" aria-label="Proof drawing of your sign with dimensions"></div>
-    <div class="ctrls" role="toolbar" aria-label="Preview controls">
-      <button class="pill" id="btnPower" aria-pressed="false"><span class="dot" aria-hidden="true"></span><span class="lbl">Sign off</span></button>
-      <button class="pill" id="btnRoom" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></svg><span class="lbl">Evening</span></button>
-      <div class="sseg" role="group" aria-label="View"><button data-view="room" aria-pressed="true">In a room</button><button data-view="fit" aria-pressed="false">Close-up</button><button data-view="spec" aria-pressed="false">Proof drawing</button></div>
-      <button class="pill" id="btnDims" aria-pressed="true"><span class="dot" aria-hidden="true"></span>Measurements</button>
-      <button class="pill ar" id="btnAR" type="button" data-soon="AR in your room" aria-label="See it in your room with AR, interactive in build"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/><path d="m12 7 5 3v5l-5 3-5-3v-5z"/></svg><span class="lbl">In your room (AR)</span><small>Interactive in build</small></button>
+    <!-- ============ stage column ============ -->
+    <div class="b-stagecol" data-qa="builder.stagecol">
+      <div class="b-stage" id="b-stage" aria-label="Preview of your sign on the wall"><picture class="ln-stage__poster" data-scene="s01-living" aria-hidden="true"><source type="image/avif" srcset="/lit-neon-preview/assets/img/scenes/s01-living/night-wall-1000.avif 1000w, /lit-neon-preview/assets/img/scenes/s01-living/night-wall-1600.avif 1600w" sizes="100vw"><source type="image/webp" srcset="/lit-neon-preview/assets/img/scenes/s01-living/night-wall-1000.webp 1000w, /lit-neon-preview/assets/img/scenes/s01-living/night-wall-1600.webp 1600w" sizes="100vw"><img src="/lit-neon-preview/assets/img/scenes/s01-living/night-wall-1000.jpg" srcset="/lit-neon-preview/assets/img/scenes/s01-living/night-wall-1000.jpg 1000w, /lit-neon-preview/assets/img/scenes/s01-living/night-wall-1600.jpg 1600w" sizes="100vw" alt="" width="1000" height="667" fetchpriority="high" decoding="async"></picture></div><script>/* the poster is the default room: drop it before it paints when a link or a saved design names another scene */(function(){try{var p=document.querySelector('#b-stage>.ln-stage__poster');if(!p)return;var r=JSON.parse(localStorage.getItem('design')||'null');var sc=r&&r.state&&r.state.scene;if((location.hash||'').length>1||(sc&&sc!=='s01-living'))p.remove();}catch(e){}})();</script>
+      <div class="b-drawing" id="b-drawing" hidden>
+        <div class="b-drawing__sheet" id="b-drawing-sheet" data-qa="builder.drawing.sheet"></div>
+        <p class="b-drawing__note t-caption" id="b-drawing-note"></p>
+      </div>
+
+      <!-- top toolbar (overlay) -->
+      <div class="b-tools b-tools--top" id="b-tools-top">
+        <div class="b-tools__group">
+          <div class="c-tabs c-tabs--seg b-view" role="tablist" aria-label="View" id="b-view" data-qa="builder.toolbar.view">
+            <button type="button" role="tab" aria-selected="true" data-view="room" data-qa="builder.toolbar.view.room">Room</button>
+            <button type="button" role="tab" aria-selected="false" data-view="fit" data-qa="builder.toolbar.view.closeup">Close-up</button>
+            <button type="button" role="tab" aria-selected="false" data-view="drawing" data-qa="builder.toolbar.view.drawing">Drawing</button>
+          </div>
+          <button type="button" class="c-chip b-realsize" id="b-realsize" aria-pressed="false" data-qa="builder.toolbar.realsize">Real size</button>
+        </div>
+        <div class="b-tools__group b-tools__icons">
+          <button type="button" class="c-btn c-btn--icon b-tool" id="b-light" aria-pressed="true" aria-label="Sign on/off" data-qa="builder.toolbar.light"></button>
+          <button type="button" class="c-btn c-btn--icon b-tool" id="b-daynight" aria-pressed="true" aria-label="Day or night" data-qa="builder.toolbar.daynight"></button>
+          <button type="button" class="c-btn c-btn--icon b-tool" id="b-rulers" aria-label="Measurements" data-qa="builder.toolbar.rulers"></button>
+          <button type="button" class="c-btn c-btn--icon b-tool b-tool--more" id="b-more" aria-label="More" aria-haspopup="dialog" data-qa="builder.toolbar.more"></button>
+        </div>
+      </div>
+
+      <!-- bottom bar (desktop/tablet, below the plate) -->
+      <div class="b-tools b-tools--bar" id="b-tools-bar">
+        <button type="button" class="b-scenebtn" id="b-scenes" aria-haspopup="dialog" data-qa="builder.toolbar.scenes"><span class="b-scenebtn__thumb" aria-hidden="true"></span><span class="b-scenebtn__text"><small>Scene</small><b id="b-scene-name">Living room</b></span></button>
+        <div class="b-wallctl" id="b-wallctl" hidden data-qa="builder.toolbar.wall">
+          <button type="button" class="c-btn c-btn--ghost c-btn--sm" id="b-wall-rotate" data-qa="builder.toolbar.wall.rotate"></button>
+          <button type="button" class="c-btn c-btn--ghost c-btn--sm" id="b-wall-bright" aria-pressed="false" data-qa="builder.toolbar.wall.brighten"></button>
+          <button type="button" class="c-btn c-btn--ghost c-btn--sm" id="b-wall-retake" data-qa="builder.toolbar.wall.retake"></button>
+          <button type="button" class="c-btn c-btn--text" id="b-wall-exit" data-qa="builder.toolbar.wall.exit"><span class="label"></span></button>
+        </div>
+        <div class="b-tools__spacer"></div>
+        <div class="b-tools__group">
+          <button type="button" class="c-btn c-btn--ghost" id="b-share" data-qa="builder.toolbar.share"></button>
+          <button type="button" class="c-btn c-btn--ghost" id="b-gift" data-qa="builder.toolbar.gift"></button>
+          <button type="button" class="c-btn c-btn--ghost" id="b-save" data-qa="builder.toolbar.save"></button>
+          <button type="button" class="c-btn c-btn--ghost" id="b-ar" hidden data-qa="builder.toolbar.ar"><span class="lbl"></span></button>
+        </div>
+      </div>
     </div>
-    <div class="scenes" id="scenes" role="group" aria-label="Wall"></div>
-    <input type="file" id="ownWall" accept="image/*" class="sr" tabindex="-1">
+
+    <!-- ============ mobile step bar ============ -->
+    <div class="b-tabs" id="b-tabs" role="tablist" aria-label="Design steps" data-qa="builder.tabs"></div>
+
+    <!-- ============ panel ============ -->
+    <div class="b-panel" id="b-panel">
+      <header class="b-panel__head">
+        <h1 class="b-h1" data-qa="builder.h1">Design your custom neon sign</h1>
+        <ol class="b-rail" id="b-rail" aria-label="Progress"></ol>
+      </header>
+
+      <div class="b-body" id="b-body" tabindex="-1" aria-label="Design steps">
+        <div class="b-welcome" id="b-welcome" hidden data-qa="builder.welcome"></div>
+        <div class="b-editing" id="b-editing" hidden data-qa="builder.editing"></div>
+
+        <section class="b-step" id="step-words" data-step="words" aria-labelledby="h-words">
+          <p class="t-eyebrow b-step__eyebrow"><span data-stepn>Step 1 of 7</span></p>
+          <h2 class="b-step__title" id="h-words">Your words</h2>
+          <div class="b-step__body" id="body-words"></div>
+        </section>
+
+        <section class="b-step" id="step-lettering" data-step="lettering" aria-labelledby="h-lettering">
+          <p class="t-eyebrow b-step__eyebrow"><span data-stepn>Step 2 of 7</span></p>
+          <h2 class="b-step__title" id="h-lettering">Lettering</h2>
+          <div class="b-step__body" id="body-lettering"></div>
+        </section>
+
+        <section class="b-step" id="step-colour" data-step="colour" aria-labelledby="h-colour">
+          <p class="t-eyebrow b-step__eyebrow"><span data-stepn>Step 3 of 7</span></p>
+          <h2 class="b-step__title" id="h-colour">Colour</h2>
+          <div class="b-step__body" id="body-colour"></div>
+        </section>
+
+        <section class="b-step" id="step-size" data-step="size" aria-labelledby="h-size">
+          <p class="t-eyebrow b-step__eyebrow"><span data-stepn>Step 4 of 7</span></p>
+          <h2 class="b-step__title" id="h-size">Size</h2>
+          <div class="b-step__body" id="body-size"></div>
+        </section>
+
+        <section class="b-step" id="step-backing" data-step="backing" aria-labelledby="h-backing">
+          <p class="t-eyebrow b-step__eyebrow"><span data-stepn>Step 5 of 7</span></p>
+          <h2 class="b-step__title" id="h-backing">Backing</h2>
+          <div class="b-step__body" id="body-backing"></div>
+        </section>
+
+        <section class="b-step" id="step-fitting" data-step="fitting" aria-labelledby="h-fitting">
+          <p class="t-eyebrow b-step__eyebrow"><span data-stepn>Step 6 of 7</span></p>
+          <h2 class="b-step__title" id="h-fitting">Fitting</h2>
+          <div class="b-step__body" id="body-fitting"></div>
+        </section>
+
+        <section class="b-step" id="step-review" data-step="review" aria-labelledby="h-review">
+          <p class="t-eyebrow b-step__eyebrow"><span data-stepn>Step 7 of 7</span></p>
+          <h2 class="b-step__title" id="h-review">Review</h2>
+          <div class="b-step__body" id="body-review"></div>
+        </section>
+      </div>
+
+      <div class="b-dock" id="b-dock" data-qa="builder.dock">
+        <div class="b-dock__row">
+          <button type="button" class="b-dock__price" id="b-price" aria-haspopup="dialog" aria-expanded="false" aria-label="Price breakdown" data-qa="builder.dock.breakdown">
+            <span class="amount" id="b-price-amount" aria-live="polite" data-qa="builder.dock.price">—</span>
+            <span class="b-dock__caption" id="b-price-caption"></span>
+            <span class="reason" id="b-price-reason" aria-live="polite" data-qa="builder.dock.reason"></span>
+          </button>
+          <button type="button" class="c-chip b-dock__deliverto" id="b-deliverto" aria-haspopup="dialog" data-qa="builder.dock.deliverto"><span class="lbl">Deliver to</span></button>
+          <button type="button" class="c-btn c-btn--primary c-btn--lg b-dock__cta" id="b-cta" data-qa="builder.dock.cta">Add to basket</button>
+        </div>
+        <p class="b-dock__ctareason t-caption" id="b-cta-reason" hidden data-qa="builder.dock.ctareason"></p>
+        <!-- desktop: one summary line; the postcode form, need-by date and pay-in-3 lines open beneath it on demand, so the
+             step panel keeps the height (brief §4.2: the dock never eats the panel) -->
+        <button type="button" class="b-dock__sum" id="b-dock-sum" aria-expanded="false" aria-controls="b-dock-row2" data-qa="builder.dock.details"><span class="ic-wrap" id="b-dock-sum-ic"></span><span class="txt" id="b-dock-sum-text"></span><span class="more" id="b-dock-sum-more"></span></button>
+        <div class="b-dock__row2" id="b-dock-row2" hidden>
+          <div class="b-dock__delivery" id="b-delivery" data-qa="builder.dock.delivery"></div>
+          <div class="b-dock__meta">
+            <div class="b-needby" id="b-needby-wrap"></div>
+            <div class="b-bnpl" id="b-bnpl"></div>
+          </div>
+          <p class="b-needby__out t-caption" id="b-needby-out" data-qa="builder.dock.needby.out" hidden></p>
+        </div>
+        <a class="b-dock__more" href="#learn" id="b-more-link" data-qa="builder.dock.more"><span></span></a>
+      </div>
+    </div>
   </section>
 
-  <section class="panel" aria-label="Design your sign">
-    <div class="ptabs" id="ptabs" role="tablist" aria-label="Jump to a step"></div>
-    <div class="scroll" id="scroll">
-      <section class="pstep" id="s-words" aria-labelledby="h1">
-        <h2 id="h1"><span class="n">1</span>Your words</h2>
-        <p class="hint">Up to three lines of 24 characters. Press Enter to start a new line.</p>
-        <div class="body">
-          <label for="words" class="sr">Your words</label>
-          <textarea id="words" maxlength="80" spellcheck="false" autocomplete="off" aria-describedby="wordsWarn"></textarea>
-          <div class="row">
-            <div class="align" role="group" aria-label="Line alignment">
-              <button data-align="left" aria-pressed="false" aria-label="Align left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h10M4 17h13"/></svg></button>
-              <button data-align="center" aria-pressed="true" aria-label="Centre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M7 12h10M5.5 17h13"/></svg></button>
-              <button data-align="right" aria-pressed="false" aria-label="Align right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M10 12h10M7 17h13"/></svg></button>
-            </div>
-            <span class="counter" id="counter"></span>
-          </div>
-          <p class="warn" id="wordsWarn" role="alert" hidden></p>
-          <div class="symbols" id="symbols" role="group" aria-label="Add a symbol above your words"><span class="lbl">Symbol</span></div>
-        </div>
-      </section>
-      <section class="pstep" id="s-font" aria-labelledby="h2">
-        <h2 id="h2"><span class="n">2</span>Lettering</h2>
-        <p class="hint">Each style is shown with your words.</p>
-        <div class="body"><div class="fonts" id="fonts" role="group" aria-label="Lettering style"></div></div>
-      </section>
-      <section class="pstep" id="s-colour" aria-labelledby="h3">
-        <h2 id="h3"><span class="n">3</span>Colour</h2>
-        <p class="hint">The room takes on the colour of your sign.</p>
-        <div class="body">
-          <div class="colours" id="colours" role="group" aria-label="Colour"></div>
-          <div class="cname"><b id="cName"></b><span id="cNote"></span></div>
-          <p class="sublabel">Tube when it's off</p>
-          <div class="sgrp" id="jacket" role="group" aria-label="Tube jacket"></div>
-          <p class="counter" style="margin-top:8px">Which colours come in a coloured jacket <span class="cf">[CONFIRM]</span></p>
-        </div>
-      </section>
-      <section class="pstep" id="s-size" aria-labelledby="h4">
-        <h2 id="h4"><span class="n">4</span>Size</h2>
-        <p class="hint">Worked out from your words and lettering, backing included. Over 2 m wide is a quote.</p>
-        <div class="body"><div class="sizes" id="sizes" role="group" aria-label="Size"></div></div>
-      </section>
-      <section class="pstep" id="s-backing" aria-labelledby="h5">
-        <h2 id="h5"><span class="n">5</span>Backing</h2>
-        <p class="hint">The acrylic your sign is mounted on.</p>
-        <div class="body"><div class="opts" id="backings" role="group" aria-label="Backing shape"></div><p class="sublabel">Acrylic finish</p><div class="boards" id="boards" role="group" aria-label="Acrylic finish"></div></div>
-      </section>
-      <section class="pstep" id="s-extras" aria-labelledby="h6">
-        <h2 id="h6"><span class="n">6</span>Extras</h2>
-        <p class="hint">Where it goes and how it hangs. Nothing paid is pre-selected.</p>
-        <div class="body">
-          <div class="segs">
-            <div><p class="sg-label">Where it will hang</p><div class="sgrp" id="use" role="group" aria-label="Where it will hang"></div></div>
-            <div id="hangWrap"><p class="sg-label">How it hangs</p><div class="sgrp" id="hang" role="group" aria-label="Hanging method"></div><p class="counter" id="hangNote" style="margin-top:8px"></p></div>
-          </div>
-          <div class="included" id="included"></div>
-        </div>
-      </section>
-      <section class="pstep review" id="s-review" aria-labelledby="h7">
-        <h2 id="h7"><span class="n">7</span>Review</h2>
-        <p class="hint">The drawing you'll approve, updating as you type. Choose "Proof drawing" above to see it full size.</p>
-        <div class="body">
-          <div class="sheet compact minisheet" id="miniSheet" role="img" aria-label="Small proof drawing of your sign"></div>
-          <div class="spec-table" id="specTable"></div>
-          <div class="deliv">
-            <p class="when" id="delivWhen"></p>
-            <div class="pcode"><label for="pcode" class="sr">Your postcode</label><input class="input" id="pcode" placeholder="Postcode" autocomplete="postal-code" maxlength="8"><button class="btn ghost sm" id="pcodeBtn" type="button">Check delivery</button></div>
-            <p class="pmsg hint" id="pmsg" aria-live="polite">Free delivery across mainland GB. Check your postcode before you order.</p>
-          </div>
-        </div>
-      </section>
-      <button class="logo-cta" id="logoBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg><span><b>Have a logo or artwork?</b><span>Send it over and a designer draws it in neon, with a free mockup and price within 12 hours.</span></span></button>
-      <div class="mobile-meta"><div class="meta" data-meta></div><div class="links" style="display:flex"><button class="textlink" data-share>Share design</button><button class="textlink" data-email>Email it to me</button><button class="textlink" data-gift>Gift link</button></div></div>
-      <p class="proto-note" id="protoNote"></p>
-    </div>
-    <div class="foot" id="foot">
-      <div class="buyrow" id="buyrow">
-        <div><div class="price" id="price" aria-live="polite"></div><p class="promo" id="promo"></p><p class="klarna" id="klarna"></p></div>
-        <button class="btn primary" id="addBtn">Add to basket</button>
-      </div>
-      <div class="quotebox" id="quoteBox" hidden>
-        <b>This one needs a quote</b>
-        <p id="quoteWhy"></p>
-        <button class="btn primary sm" id="quoteBtn" type="button">Get a free quote (mockup in 12h)</button>
-      </div>
-      <div class="meta" data-meta></div>
-      <div class="links"><button class="textlink" data-share>Share design</button><button class="textlink" data-email>Email it to me</button><button class="textlink" data-gift>Gift link</button></div>
-      <form class="emailform" id="emailForm" hidden><label for="emailIn" class="sr">Email address</label><input id="emailIn" type="email" placeholder="you@example.co.uk" required><button type="submit">Send</button></form>
+  <!-- ============ education block (outside the app shell) ============ -->
+  <section class="b-learn" id="learn" data-qa="builder.learn" aria-labelledby="learn-h">
+    <div class="wrap">
+      <p class="t-eyebrow" id="learn-eyebrow">Good to know</p>
+      <h2 id="learn-h" class="b-learn__h2">What decides the price</h2>
+      <p class="t-lead" id="learn-price-lede"></p>
+      <div class="b-learn__cards" id="learn-price-cards" data-qa="builder.learn.price"></div>
+
+      <h2 class="b-learn__h2" id="learn-size-h">How big for the room</h2>
+      <p class="t-lead" id="learn-size-lede"></p>
+      <ul class="b-learn__lines" id="learn-size-lines" data-qa="builder.learn.size"></ul>
+      <p><a class="c-btn c-btn--ghost" href="/lit-neon-preview/guides/sizing-guide.html" id="learn-size-guide" data-qa="builder.learn.sizeguide">Read the sizing guide</a></p>
+
+      <h2 class="b-learn__h2" id="learn-jacket-h">White jacket or coloured jacket</h2>
+      <p class="t-lead" id="learn-jacket-lede"></p>
+      <div class="b-learn__jackets" id="learn-jackets" data-qa="builder.learn.jacket"></div>
+      <p><a class="c-btn c-btn--ghost" href="/lit-neon-preview/guides/choosing-colours-and-jackets.html" id="learn-jacket-guide" data-qa="builder.learn.jacketguide">Choosing colours and jackets</a></p>
+
+      <h2 class="b-learn__h2" id="learn-compare-h">Made here, not shipped here</h2>
+      <p class="t-lead" id="learn-compare-lede"></p>
+      <div class="b-compare" id="learn-compare" data-qa="builder.learn.compare"></div>
+
+      <h2 class="b-learn__h2" id="learn-faq-h">Questions people ask while designing</h2>
+      <div class="c-acc b-faq" id="learn-faq" data-qa="builder.learn.faq"></div>
+      <p class="b-learn__foot"><a class="c-btn c-btn--ghost" href="/lit-neon-preview/help.html" id="learn-faq-more" data-qa="builder.learn.faqmore">All the answers</a> <a class="c-btn c-btn--text" href="#builder" id="learn-backup" data-qa="builder.learn.backup"><span class="label">Back up to your design</span></a></p>
     </div>
   </section>
 </main>
-
-<div class="modal" id="logoModal" hidden>
-  <div class="scrim" data-close></div>
-  <form class="mcard" id="logoForm" role="dialog" aria-modal="true" aria-labelledby="lTitle">
-    <h2 id="lTitle">Your logo in neon</h2>
-    <p class="muted" id="lLede">Send your logo or artwork. A designer redraws it in neon and emails you a free mockup and price within 12 hours.</p>
-    <label class="drop" for="logoFile"><b>Choose a file</b> or drop it here<br><span id="logoName">PNG, JPG, SVG or PDF</span></label>
-    <input id="logoFile" type="file" accept="image/*,.pdf,.svg" class="sr">
-    <label class="field">Your email<input class="input" type="email" required placeholder="you@example.co.uk"></label>
-    <label class="field">Anything we should know?<textarea class="input" id="lNotes" placeholder="Rough size, where it will hang, colours you like, how many you need"></textarea></label>
-    <div class="mrow"><button type="button" class="btn ghost" data-close>Cancel</button><button class="btn primary" type="submit" id="lSubmit">Request free mockup</button></div>
-  </form>
-</div>
-
-<div id="ln-footer" hidden></div>
-<script src="js/catalog.js"></script>
-<script src="js/rules.js"></script>
-<script src="js/neon-core.js"></script>
-<script src="assets/fused.js"></script>
+<div id="chrome-footer"></div>
+<script type="module" src="/lit-neon-preview/assets/js/pages/builder.js"></script>
 </body>
 </html>

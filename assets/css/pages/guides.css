@@ -1,0 +1,58 @@
+/* Lit Neon v2 — guides hub (brief §4.10). Dark hero with live search and topic chips, a featured strip led by one
+   live stage, the full grid on paper, and a closing link block. Cards themselves live in info.css. Tokens only. */
+
+.gh-hero { padding-block: var(--s-7) var(--s-6); background: radial-gradient(70% 140% at 90% 0%, var(--surface-2), var(--night) 60%); }
+.gh-hero__grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); gap: var(--s-7); align-items: end; }
+.gh-hero h1 { max-width: 13ch; margin-top: var(--s-3); }
+.gh-hero__lede { margin-bottom: var(--s-2); }
+.gh-tools { display: grid; grid-template-columns: minmax(0, 420px) minmax(0, 1fr); gap: var(--s-5); align-items: center; margin-top: var(--s-7); }
+.gh-search .c-input { height: 52px; border-radius: var(--r-pill); padding-left: var(--s-5); }
+.gh-search .c-input--with-icon .ic { right: var(--s-4); }
+.gh-chips { justify-content: flex-end; }
+@media (max-width: 1023px) { .gh-hero__grid { grid-template-columns: 1fr; gap: var(--s-4); } .gh-tools { grid-template-columns: 1fr; } .gh-chips { justify-content: flex-start; } }
+
+/* featured: lead card with a live stage + two side cards */
+.gh-featured { padding-top: var(--s-4); }
+.gh-feat { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: var(--s-5); }
+.gh-feat__side { display: grid; gap: var(--s-5); }
+.gh-feat__side .gh-card { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); grid-template-rows: none; }
+.gh-feat__side .gh-card__media { aspect-ratio: auto; height: 100%; min-height: 180px; }
+.gh-feat__side .gh-card__excerpt { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.gh-hero-card { display: grid; grid-template-rows: auto auto; border-radius: var(--r-4); overflow: clip; background: var(--night-2); border: 1px solid var(--hair); color: var(--bone); box-shadow: var(--e-2); transition: transform var(--d-base) var(--ease-out), border-color var(--d-base); }
+.gh-hero-card:hover { transform: translateY(-2px); border-color: var(--hair-lit); }
+.gh-hero-card__stage { position: relative; display: block; aspect-ratio: 16 / 9; min-height: 0; background: var(--night); overflow: clip; }
+.gh-hero-card__body { display: grid; gap: var(--s-2); padding: var(--s-6); justify-items: start; }
+.gh-hero-card__title { font-family: var(--f-display); font-weight: 900; font-size: var(--t-display-2); line-height: var(--lh-display-2); max-width: 18ch; }
+.gh-hero-card .gh-card__eyebrow { color: var(--brass); }
+.gh-hero-card .gh-card__meta { width: 100%; }
+.gh-hero-card:hover .gh-card__go { background: var(--bone); color: var(--night); transform: translateX(3px); }
+@media (max-width: 1023px) { .gh-feat { grid-template-columns: 1fr; } }
+@media (max-width: 620px) { .gh-feat__side .gh-card { grid-template-columns: 1fr; } .gh-feat__side .gh-card__media { aspect-ratio: 16 / 9; height: auto; min-height: 0; } .gh-hero-card__body { padding: var(--s-5); } }
+
+/* all guides */
+.gh-all { background-image: linear-gradient(var(--draft-faint) 1px, transparent 1px), linear-gradient(90deg, var(--draft-faint) 1px, transparent 1px); background-size: 48px 48px; background-position: -1px -1px; }
+.gh-all__head { display: flex; flex-wrap: wrap; gap: var(--s-4); align-items: end; justify-content: space-between; margin-bottom: var(--s-7); }
+.gh-all__head h2 { margin-top: var(--s-3); }
+.gh-count { font-size: var(--t-small); color: var(--paper-soft); font-variant-numeric: tabular-nums; }
+.gh-empty { display: grid; justify-items: center; gap: var(--s-3); text-align: center; padding: var(--s-8) var(--s-5); border: 1px dashed var(--rule); border-radius: var(--r-4); background: var(--paper); }
+.gh-empty__t { font-family: var(--f-display); font-weight: 800; font-size: var(--t-display-3); line-height: var(--lh-display-3); }
+.gh-empty__btns { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-3); margin-top: var(--s-3); }
+
+/* more */
+.gh-more__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s-8); align-items: center; }
+.gh-more h2 { margin-top: var(--s-3); }
+.gh-more__links { display: grid; gap: var(--s-3); }
+@media (max-width: 900px) { .gh-more__grid { grid-template-columns: 1fr; gap: var(--s-6); } }
+
+/* unfiltered grid at desktop: the first and last cards run wide so ten cards fill four even rows (2+1 · 3 · 3 · 1+2) */
+@media (min-width: 1024px) {
+  .gh-all .gh-grid:not(.is-filtered) > .gh-card:first-child, .gh-all .gh-grid:not(.is-filtered) > .gh-card:last-child { grid-column: span 2; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); grid-template-rows: none; }
+  .gh-all .gh-grid:not(.is-filtered) > .gh-card:first-child .gh-card__media, .gh-all .gh-grid:not(.is-filtered) > .gh-card:last-child .gh-card__media { aspect-ratio: auto; height: 100%; min-height: 260px; }
+  .gh-all .gh-grid:not(.is-filtered) > .gh-card:first-child .gh-card__body, .gh-all .gh-grid:not(.is-filtered) > .gh-card:last-child .gh-card__body { align-content: center; padding: var(--s-6); }
+}
+@media (max-width: 620px) {
+  .gh-feat__side { display: none; }
+  /* compact list rows: the 116 px tile cannot hold "Rendered preview" on one line, so the pill collapses to its image mark
+     (the words stay for screen readers); the full label still rides every wide tile above (adversarial R2) */
+  .gh-all .gh-grid .gh-card__media .ar-tile__pill { width: 10px; height: 10px; min-height: 0; padding: 0; gap: 0; border-radius: 50%; border: 0; background: var(--brass); color: transparent; font-size: 0; line-height: 0; overflow: hidden; left: var(--s-2); bottom: var(--s-2); }
+}

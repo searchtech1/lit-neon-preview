@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Checkout | Lit Neon</title>
+<meta name="description" content="Check your delivery postcode, add a discount code and continue to secure checkout.">
+<link rel="canonical" href="/lit-neon-preview/checkout.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Checkout | Lit Neon">
+<meta property="og:description" content="Custom LED neon signs, made in our UK workshop. You approve a drawing before we make anything.">
+<meta property="og:image" content="/lit-neon-preview/assets/img/og/checkout.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="/lit-neon-preview/checkout.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/lit-neon-preview/assets/img/brand/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/lit-neon-preview/assets/fonts/big-shoulders-display-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/lit-neon-preview/assets/fonts/hanken-grotesk-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/lit-neon-preview/assets/fonts/neonderthaw-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/lit-neon-preview/assets/fonts/fonts.css">
+<link rel="stylesheet" href="/lit-neon-preview/assets/css/tokens.css">
+<link rel="stylesheet" href="/lit-neon-preview/assets/css/base.css">
+<link rel="stylesheet" href="/lit-neon-preview/assets/css/components.css">
+<link rel="stylesheet" href="/lit-neon-preview/assets/css/chrome.css">
+<link rel="stylesheet" href="/lit-neon-preview/assets/css/pages/checkout.css">
+<script src="/lit-neon-preview/assets/js/core/boot.js"></script>
+<!-- modulepreload: tools/modulepreload.mjs -->
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/pages/checkout.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/renderer.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/vendor/engines/catalog.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/vendor/engines/neon-core.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/stage.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/money.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/clock.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/pricing.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/vendor/engines/rules.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/basket.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/ui.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/a11y.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/copy.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/facts.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/chrome.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/pages/basket-page.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/router.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/analytics.js">
+<!-- /modulepreload -->
+</head>
+<body data-page="checkout" class="co">
+<div id="chrome-top"></div>
+<main id="main">
+  <section class="co-head" data-hero aria-labelledby="co-h1">
+    <div class="wrap">
+      <ol class="co-progress" aria-label="Checkout progress" data-qa="checkout.progress">
+        <li class="is-done" data-step="basket"><a href="/lit-neon-preview/basket.html" data-qa="checkout.progress.basket"><span class="dot"><svg class="ic" aria-hidden="true"><use href="#i-check"></use></svg></span><span data-copy="progress.basket">Basket</span></a></li>
+        <li class="is-current" data-step="checkout" aria-current="step"><span class="dot">2</span><span data-copy="progress.checkout">Checkout</span></li>
+        <li data-step="done"><span class="dot">3</span><span data-copy="progress.done">Confirmation</span></li>
+      </ol>
+      <p class="t-eyebrow" id="co-eyebrow" data-copy="eyebrow">Last step before your drawing</p>
+      <h1 id="co-h1" class="t-display-2 co-h1" data-qa="checkout.h1">Checkout</h1>
+    </div>
+  </section>
+
+  <div class="wrap co-grid" id="co-form-view" data-qa="checkout.view" hidden>
+    <details class="co-mob" id="co-mob" data-qa="checkout.mobilesummary">
+      <summary data-qa="checkout.mobilesummary.toggle"><span class="co-mob__label"><svg class="ic" aria-hidden="true"><use href="#i-basket"></use></svg><span data-mob-label>Show order summary</span><svg class="ic co-mob__chev" aria-hidden="true"><use href="#i-chevron-down"></use></svg></span><b class="co-mob__total" data-qa="checkout.mobilesummary.total"></b></summary>
+      <div class="co-mob__body" id="co-mob-body"></div>
+    </details>
+
+    <div class="co-main">
+      <section class="co-card co-express" id="co-express" aria-labelledby="co-express-h" data-qa="checkout.express.block">
+        <h2 id="co-express-h" class="t-eyebrow" data-copy="express.title">Express checkout</h2>
+        <div class="co-express__row" id="co-express-row"></div>
+        <p class="co-note co-express__blocked" id="co-express-blocked" data-qa="checkout.express.blocked" hidden></p>
+        <p class="co-or" id="co-or"><span data-copy="express.or">or continue with your postcode below</span></p>
+      </section>
+
+      <section class="co-card" aria-labelledby="co-del-h">
+        <h2 id="co-del-h" class="t-title co-card__h"><span class="co-num">1</span><span data-copy="deliveryTitle">Delivery</span></h2>
+        <form class="co-pc" id="co-pc" novalidate data-qa="checkout.postcode.form">
+          <label class="co-label" for="co-pc-in"><span data-copy="postcode.label">Delivery postcode</span> <span class="co-req" aria-hidden="true">*</span></label>
+          <div class="co-pc__row">
+            <input id="co-pc-in" class="c-input" name="postcode" required inputmode="text" autocomplete="postal-code" autocapitalize="characters" spellcheck="false" maxlength="10" aria-describedby="co-pc-msg co-pc-help" data-qa="checkout.postcode">
+            <button type="submit" class="c-btn c-btn--ghost" data-qa="checkout.postcode.check" data-copy="postcode.check">Check</button>
+          </div>
+          <p class="co-pc__msg" id="co-pc-msg" data-qa="checkout.postcode.msg" aria-live="polite"></p>
+          <p class="co-note" id="co-pc-help" data-copy="postcode.help">We deliver free across mainland GB.</p>
+        </form>
+      </section>
+
+      <section class="co-card" aria-labelledby="co-code-h">
+        <h2 id="co-code-h" class="t-title co-card__h"><span class="co-num">2</span><span data-copy="code.title">Discount code</span></h2>
+        <form class="co-code" id="co-code" novalidate data-qa="checkout.code.form">
+          <label class="co-label" for="co-code-in" data-copy="code.label">Discount code</label>
+          <div class="co-pc__row">
+            <input id="co-code-in" class="c-input" name="code" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="24" aria-describedby="co-code-msg co-code-help" data-qa="checkout.code">
+            <button type="submit" class="c-btn c-btn--ghost" data-qa="checkout.code.apply" data-copy="code.apply">Apply</button>
+          </div>
+          <p class="co-pc__msg" id="co-code-msg" data-qa="checkout.code.msg" aria-live="polite"></p>
+          <p class="co-note" id="co-code-help" data-copy="code.onlyOne">One code per order.</p>
+        </form>
+      </section>
+
+      <section class="co-card" aria-labelledby="co-before-h">
+        <h2 id="co-before-h" class="t-title co-card__h"><span class="co-num">3</span><span data-copy="before.title">Before you pay</span></h2>
+        <ul class="co-legal" id="co-legal" data-qa="checkout.legal"></ul>
+      </section>
+
+      <div class="co-go">
+        <button type="button" class="c-btn c-btn--primary c-btn--lg c-btn--block" id="co-continue" disabled data-qa="checkout.continue"><svg class="ic" aria-hidden="true"><use href="#i-lock"></use></svg><span data-copy="continue">Continue to secure checkout</span></button>
+        <p class="co-go__why" id="co-why" data-qa="checkout.continue.reason" aria-live="polite"></p>
+        <p class="co-note co-go__note" data-copy="continueNote">You approve a drawing of your sign before we make anything.</p>
+        <div class="co-marks" id="co-marks"></div>
+        <div id="co-debug"></div>
+      </div>
+    </div>
+
+    <aside class="co-summary" id="co-summary" aria-labelledby="co-sum-h" data-qa="checkout.summary">
+      <div class="co-summary__card">
+        <h2 id="co-sum-h" class="t-title" data-copy="summary">Order summary</h2>
+        <div id="co-sum"></div>
+      </div>
+    </aside>
+  </div>
+
+  <section class="wrap co-state" id="co-empty" data-qa="checkout.empty" hidden></section>
+  <section class="co-confirm" id="co-confirm" data-qa="checkout.confirm" aria-live="polite" hidden></section>
+</main>
+<div id="chrome-footer"></div>
+<script type="module" src="/lit-neon-preview/assets/js/pages/checkout.js"></script>
+</body>
+</html>

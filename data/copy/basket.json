@@ -1,0 +1,126 @@
+{
+  "_meta": {
+    "page": "basket",
+    "owner": "P7",
+    "renders": ["basket.html"],
+    "status": "filled by P7. No literal dates, £ amounts or percentages (tools/lint-copy.mjs); prices, dates and fact values arrive as {vars}."
+  },
+  "meta": {
+    "title": "Your basket | Lit Neon",
+    "description": "Your Lit Neon basket: check your signs, change quantities or edit a design before checkout."
+  },
+  "progress": {
+    "label": "Checkout progress",
+    "basket": "Basket",
+    "checkout": "Checkout",
+    "drawing": "Your drawing"
+  },
+  "eyebrow": "Nearly yours",
+  "h1": "Your basket",
+  "count": "{n} {unit}",
+  "unit": { "one": "sign", "many": "signs" },
+  "continue": "Continue shopping",
+  "kind": {
+    "custom": "Custom",
+    "ready": "Ready-made",
+    "photo": "From your photo",
+    "quote": "Quote"
+  },
+  "spec": {
+    "lettering": "Lettering",
+    "colour": "Colour",
+    "size": "Size",
+    "backing": "Backing",
+    "hangs": "Hangs",
+    "symbol": "Symbol",
+    "where": "Where",
+    "proof": "Proof",
+    "plug": "UK plug",
+    "stand": "On its stand",
+    "inline": "inline",
+    "outdoors": "Outdoors",
+    "photoProof": "A designer draws your proof before anything is made",
+    "made": "Made from",
+    "madeFromPhoto": "Your photo, traced in neon",
+    "about": "About",
+    "ledMetres": "{m} m of LED"
+  },
+  "symbols": {
+    "heart": "Heart",
+    "twohearts": "Two hearts",
+    "ring": "Ring",
+    "champagne": "Champagne",
+    "moon": "Moon",
+    "bolt": "Lightning bolt",
+    "cocktail": "Cocktail",
+    "star": "Star"
+  },
+  "line": {
+    "each": "{price} each",
+    "quote": "Quote",
+    "quoteNote": "A designer prices this one by hand, usually within {hours}.",
+    "edit": "Edit design",
+    "remove": "Remove",
+    "removed": "Removed “{name}”",
+    "undo": "Undo",
+    "qty": "Quantity",
+    "fewer": "One fewer",
+    "more": "One more",
+    "bulk": "Need more? Bulk quote",
+    "preview": "Rendered preview",
+    "fallbackName": "Your sign",
+    "symbolOnly": "{symbol} symbol",
+    "photoName": "Your photo, traced in neon"
+  },
+  "summary": {
+    "title": "Order summary",
+    "signs": "Signs ({n})",
+    "subtotal": "Subtotal",
+    "delivery": "Delivery",
+    "free": "Free",
+    "quoted": "{n} quoted separately",
+    "quotedOne": "One sign is quoted separately — a designer prices it, usually within {hours}.",
+    "quotedMany": "{n} signs are quoted separately — a designer prices them, usually within {hours}.",
+    "onlyQuotes": "Quoted signs are priced by a designer, so there's nothing to pay yet. We'll be in touch with a mockup and a price.",
+    "checkout": "Go to checkout",
+    "invoice": "Every order comes with an invoice for your records."
+  },
+  "postcode": {
+    "label": "Delivery postcode",
+    "placeholder": "e.g. E1 6AN",
+    "check": "Check",
+    "change": "Change",
+    "hint": "Free delivery across mainland GB.",
+    "ask": "Ask us about delivery"
+  },
+  "assure": {
+    "title": "Before anything is made",
+    "drawing": "You approve a drawing of your sign first. Tweaks are free.",
+    "warranty": "{warranty} on every sign.",
+    "delivery": "Free tracked delivery across mainland GB.",
+    "kit": "Dimmer, remote and UK plug in the box."
+  },
+  "next": {
+    "eyebrow": "After you order",
+    "title": "What happens next",
+    "s1t": "Your drawing",
+    "s1": "A designer draws your sign to scale and emails it within {hours}.",
+    "s2t": "You approve it",
+    "s2": "Change the words, size or colour until it's right. Nothing is made before you say yes.",
+    "s3t": "We make it",
+    "s3": "Bent, mounted and tested in our UK workshop, {min}–{max} working days after you approve.",
+    "s4t": "It arrives",
+    "s4": "Packed to travel and sent free with tracking."
+  },
+  "empty": {
+    "title": "Nothing in here yet",
+    "text": "Design a sign in a couple of minutes, or start from one of ours.",
+    "design": "Design a sign",
+    "shop": "Browse ready-made",
+    "picks": "Start from a favourite",
+    "from": "from {price}"
+  },
+  "bar": {
+    "checkout": "Checkout"
+  }
+}

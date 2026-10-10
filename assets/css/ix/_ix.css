@@ -1,0 +1,39 @@
+/* Lit Neon v2 — css/ix/_ix.css: layout primitives every §5 interactive shares (P1b). Tokens only (tools/lint-tokens.mjs).
+   Load after components.css; each ix/<name>.css adds its own rules on top. */
+
+.ix { position: relative; width: 100%; max-width: 100%; min-width: 0; contain: inline-size; }  /* a nowrap tab row inside never widens the page: the module's intrinsic width is its container's */
+.ix [role="tablist"] { max-width: 100%; min-width: 0; }
+.ix * { box-sizing: border-box; }
+.ix__head { display: grid; gap: var(--s-3); margin-bottom: var(--s-6); }
+.ix__head .t-lead { margin-top: var(--s-1); }
+.ix__caption { display: flex; align-items: center; gap: var(--s-2); margin-top: var(--s-3); font-size: var(--t-caption); line-height: var(--lh-caption); color: var(--fg-3); }
+.ix__caption .ic { width: 16px; height: 16px; flex: 0 0 auto; }
+.ix__stage { position: relative; width: 100%; max-width: 100%; overflow: clip; border-radius: var(--r-3); background: var(--night-2); box-shadow: var(--e-1); }
+.ix__stage > .ln-stage, .ix__stage .ln-stage { width: 100%; height: 100%; position: absolute; inset: 0; }
+.ix__controls { display: grid; gap: var(--s-4); margin-top: var(--s-4); }
+.ix__row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3); }
+.ix__row--between { justify-content: space-between; }
+.ix__label { font-size: var(--t-eyebrow); line-height: var(--lh-eyebrow); font-weight: 600; text-transform: uppercase; letter-spacing: var(--track-eyebrow); color: var(--fg-3); }
+.ix__readout { display: grid; gap: var(--s-1); font-variant-numeric: tabular-nums; }
+.ix__readout .big { font-family: var(--f-display); font-weight: 800; font-size: var(--t-display-3); line-height: var(--lh-display-3); color: var(--fg); }
+.ix__readout .sub { font-size: var(--t-small); color: var(--fg-2); }
+.ix__readout .verdict { font-size: var(--t-small); color: var(--ok); }
+.ix__readout .verdict.is-quote { color: var(--amber); }
+.ix__cta { display: flex; flex-wrap: wrap; gap: var(--s-3); align-items: center; }
+.ix-pause { gap: var(--s-2); }
+.ix-pause .ic { width: 18px; height: 18px; }
+/* a pill that marks a drawing as an illustration (rule 4 sibling of "Rendered preview") */
+.ix__pill { position: absolute; left: var(--s-3); bottom: var(--s-3); z-index: 5; }
+/* a 2-up at ≥ 768, stacked under */
+.ix__2up { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-5); align-items: start; }
+@media (max-width: 767px) { .ix__2up { grid-template-columns: 1fr; gap: var(--s-5); } }
+/* a sticky control strip on phones (stays attached under its tiles) */
+@media (max-width: 767px) { .ix__sticky { position: sticky; bottom: calc(var(--toast-offset, 0px) + var(--s-2)); z-index: 3; background: var(--bg); padding-block: var(--s-3); box-shadow: var(--e-2); } }
+/* segmented chip rows wrap; the active chip is scrolled into view by the tabs helper */
+.ix__chips { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+/* headless-Chrome software compositing: an inline clip-path on the screen-blended wall bounce hides the plate images once the
+   sign (and so the bounce) is large. Inside ix stages the bounce is left unclipped (the wall box clip is a nicety; the spill
+   reads as light on the furniture). Reported to WS0-B in INTEGRATION.md with the repro. */
+.ix .ln-stage .ln-bounce { clip-path: none !important; }
+/* reduced motion: nothing moves */
+@media (prefers-reduced-motion: reduce) { .ix *, .ix *::before, .ix *::after { animation: none !important; transition: none !important; } }

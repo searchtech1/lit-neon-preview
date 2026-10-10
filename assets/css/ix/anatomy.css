@@ -1,0 +1,53 @@
+/* Lit Neon v2 — css/ix/anatomy.css (brief §5.2). A paper section: the drawing left, the numbered list right; tokens only. */
+.ix-anatomy { --fg: var(--paper-ink); --fg-2: var(--paper-soft); --fg-3: var(--paper-soft); --line: var(--rule); color: var(--paper-ink); }
+.ix-anatomy__grid { display: grid; grid-template-columns: minmax(0, 3fr) minmax(260px, 2fr); gap: var(--s-6); align-items: start; }
+@media (max-width: 1023px) { .ix-anatomy__grid { grid-template-columns: 1fr; gap: var(--s-5); } }
+.ix-anatomy__fig { position: relative; margin: 0; }
+.ix-anatomy__art { position: relative; aspect-ratio: 3 / 2; min-height: 0; width: 100%; max-width: 100%; border-radius: var(--r-3); background: var(--paper-2); border: 1px solid var(--rule); overflow: visible; }
+.ix-anatomy__svg, .ix-anatomy__photo { position: absolute; inset: 0; width: 100%; height: 100%; display: block; border-radius: var(--r-3); }
+.ix-anatomy__photo { object-fit: cover; }
+.ix-anatomy__art .ix__pill { left: auto; right: var(--s-3); }
+/* numbered hotspots: 44 px targets, a drafting ring that pulses when its row is hovered */
+.ix-anatomy__hot { position: absolute; width: var(--touch); height: var(--touch); transform: translate(-50%, -50%); border-radius: 50%; display: grid; place-items: center; z-index: 3; color: var(--paper); }
+.ix-anatomy__hot span { width: 28px; height: 28px; border-radius: 50%; background: var(--draft); color: var(--paper); font-family: var(--f-mono); font-size: var(--t-mono); font-weight: 600; display: grid; place-items: center; box-shadow: var(--e-1); transition: transform var(--d-base) var(--ease-out), background var(--d-base); }
+.ix-anatomy__hot::before { content: ""; position: absolute; inset: 4px; border-radius: 50%; border: 1.5px solid var(--draft); opacity: .5; transition: transform var(--d-base), opacity var(--d-base); }
+.ix-anatomy__hot:hover span, .ix-anatomy__hot[aria-expanded="true"] span { transform: scale(1.12); background: var(--paper-ink); }
+.ix-anatomy__hot:hover::before, .ix-anatomy__hot[aria-expanded="true"]::before, .ix-anatomy__hot.is-pulse::before { transform: scale(1.35); opacity: .9; }
+.ix-anatomy__hot.is-pulse span { animation: ix-pulse .9s var(--ease-out) 2; }
+@keyframes ix-pulse { 0% { transform: scale(1); } 40% { transform: scale(1.25); } 100% { transform: scale(1); } }
+.ix-anatomy__hot:focus-visible { outline: var(--focus-ring) solid var(--draft); outline-offset: 0; }
+/* popover: a paper card anchored to the hotspot, flips to the left near the right edge */
+.ix-anatomy__pop { position: absolute; left: var(--hx, 50%); top: var(--hy, 50%); transform: translate(var(--s-5), calc(-50% + 0px)); width: min(300px, 90%); z-index: 7; padding: var(--s-4); border-radius: var(--r-3); background: var(--paper); border: 1px solid var(--rule); box-shadow: var(--e-2); display: grid; gap: var(--s-2); color: var(--paper-ink); animation: rise var(--d-base) var(--ease-out); }
+.ix-anatomy__pop.is-right { transform: translate(calc(-100% - var(--s-5)), -50%); }
+.ix-anatomy__pop.is-low { transform: translate(var(--s-5), calc(-100% + var(--s-5))); }
+.ix-anatomy__pop.is-right.is-low { transform: translate(calc(-100% - var(--s-5)), calc(-100% + var(--s-5))); }
+.ix-anatomy__crop { aspect-ratio: 4 / 3; min-height: 0; border-radius: var(--r-2); background: var(--paper-2); border: 1px solid var(--rule); overflow: clip; }
+.ix-anatomy__crop svg { width: 100%; height: 100%; display: block; }
+.ix-anatomy__popname { font-family: var(--f-ui); font-weight: 600; font-size: var(--t-title); line-height: var(--lh-title); color: var(--paper-ink); padding-right: var(--touch); }
+.ix-anatomy__popspec { font-size: var(--t-small); line-height: var(--lh-small); color: var(--paper-soft); }
+.ix-anatomy__close { position: absolute; right: var(--s-2); top: var(--s-2); color: var(--paper-ink); }
+.ix-anatomy__sheetbody { display: grid; gap: var(--s-3); }
+.ix-anatomy__sheetbody .ix-anatomy__crop { background: var(--paper); }
+.ix-anatomy__sheetbody .ix-anatomy__popname { color: var(--bone); }
+.ix-anatomy__sheetbody .ix-anatomy__popspec { color: var(--bone-2); }
+/* the list */
+.ix-anatomy__list { display: grid; gap: var(--s-1); margin: 0; padding: 0; list-style: none; counter-reset: none; }
+.ix-anatomy__row { display: grid; grid-template-columns: 28px 1fr auto; align-items: center; gap: var(--s-3); width: 100%; min-height: var(--touch); padding: var(--s-3); border-radius: var(--r-2); text-align: left; color: var(--paper-ink); border: 1px solid transparent; transition: background var(--d-base), border-color var(--d-base); }
+.ix-anatomy__row:hover { background: var(--paper-2); }
+.ix-anatomy__row[aria-pressed="true"] { border-color: var(--draft); background: var(--paper-2); }
+.ix-anatomy__row .num { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--draft); color: var(--draft); font-family: var(--f-mono); font-size: var(--t-mono); display: grid; place-items: center; }
+.ix-anatomy__row[aria-pressed="true"] .num { background: var(--draft); color: var(--paper); }
+.ix-anatomy__row .txt { display: grid; gap: 2px; min-width: 0; }
+.ix-anatomy__row .txt b { font-weight: 600; }
+.ix-anatomy__row .spec { font-size: var(--t-small); line-height: var(--lh-small); color: var(--paper-soft); }
+.ix-anatomy__row .ic { color: var(--paper-soft); }
+/* how it connects */
+.ix-anatomy__connect { margin-top: var(--s-6); padding-top: var(--s-5); border-top: 1px solid var(--rule); display: grid; gap: var(--s-3); }
+.ix-anatomy__chain { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-3); margin: 0; padding: 0; list-style: none; }
+.ix-anatomy__chain li { display: flex; align-items: center; gap: var(--s-2); min-height: var(--touch); padding: var(--s-2) var(--s-3); border-radius: var(--r-pill); border: 1px solid var(--rule); background: var(--paper); font-size: var(--t-small); font-weight: 500; }
+.ix-anatomy__chain li .ic { color: var(--draft); }
+.ix-anatomy__chain li.arrow { border: 0; padding: 0; min-height: 0; color: var(--paper-soft); }
+.ix-anatomy__ruler { display: flex; align-items: center; gap: var(--s-2); color: var(--draft); font-family: var(--f-mono); font-size: var(--t-mono); }
+.ix-anatomy__ruler .line { flex: 1; height: 9px; border-left: 1px solid currentColor; border-right: 1px solid currentColor; position: relative; max-width: 320px; }
+.ix-anatomy__ruler .line::before { content: ""; position: absolute; left: 0; right: 0; top: 4px; border-top: 1px solid currentColor; }
+@media (max-width: 767px) { .ix-anatomy__pop { display: none; } }

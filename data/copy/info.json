@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "page": "info",
+    "owner": "P6",
+    "renders": ["delivery.html", "returns.html", "and the shared P6 strings (common.*) every guide, help, legal and 404 page loads"],
+    "status": "filled by P6. Keys are namespaced (common, deliveryPage, returnsPage) so they never collide with the delivery.* keys pricing.js reads from the copy store. No literal dates, £ amounts or percentages: dates, prices, cutoffs and exclusion lists are interpolated from rules, facts and pricing.js."
+  },
+  "common": {
+    "whatsapp": "Message us on WhatsApp",
+    "form": "Send us a message",
+    "stuckTitle": "Still stuck?",
+    "stuckBody": "Ask the people who make the signs. A person reads every message and writes back.",
+    "copyLink": "Copy link to this answer",
+    "copied": "Link copied",
+    "onThisPage": "On this page",
+    "home": "Home"
+  },
+  "deliveryPage": {
+    "h1short": "Delivery",
+    "lede": "Free, tracked delivery across mainland GB. Your sign arrives {lead} {from}, and you can check your postcode right here.",
+    "checker": {
+      "empty": "Type a postcode, for example SW1A 1AA.",
+      "excludedBody": "We’re working on it. Tell us where it’s going and we’ll be straight with you about what’s possible.",
+      "askText": "Hello, could you deliver a sign to {postcode}?"
+    },
+    "ask": "Ask us — we're working on it",
+    "askText": "Hello, could you deliver a sign to my postcode?",
+    "calc": {
+      "counts": "Approve on {day} before {cutoff} and that day counts.",
+      "next": "{day} isn’t a working day, or it’s past the cutoff, so the clock starts on {next}."
+    },
+    "holsNone": "No more bank holidays are listed for this year yet.",
+    "also": "Also excluded",
+    "cra": "This doesn't affect your rights under the Consumer Rights Act 2015."
+  },
+  "returnsPage": {
+    "h1short": "Returns and warranty",
+    "finder": {
+      "more": "Read the full details",
+      "ready": { "eyebrow": "Ready-made design", "big": "{days}-day change-of-mind returns", "body": "Bought one of our designs as it is? Tell us within the window after it arrives and send it back in its box for a refund.", "anchor": "ready-made" },
+      "custom": { "eyebrow": "Custom sign", "big": "Free to cancel until you approve your drawing", "body": "Your words make it yours, so it can’t go back for a change of mind once we start making it. Before you approve the drawing you can cancel at no cost.", "anchor": "custom" },
+      "fault": { "eyebrow": "Something’s wrong", "big": "{years}-year warranty, plus your statutory rights", "body": "Faulty, damaged or not what you approved? We repair or remake it. Send us a photo and we’ll take it from there.", "anchor": "claim" }
+    },
+    "contactTitle": "Need to start a return or a claim?",
+    "contactBody": "Send us your order reference and a photo or two. A person reads every message and sorts it out with you.",
+    "contactText": "Hello, I need help with a return or a fault on my order.",
+    "statutory": "Your statutory rights are not affected"
+  }
+}

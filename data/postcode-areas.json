@@ -1,0 +1,297 @@
+{
+  "_about": "WS-DATA (brief §4.13, Appendix B). Plain-English names used by pricing.describeExclusions() and the postcode checker. The runtime exclusion list is config/delivery-rules.json excludedPostcodes; this file only names it. ownerBoundary mirrors owner answer D11 so tests can assert the rules match it.",
+  "version": 1,
+  "ownerBoundary": {
+    "decidedBy": "owner",
+    "decidedOn": "2026-10-09",
+    "ref": "brief §0.6 D11",
+    "summary": "Free delivery across mainland GB, including the Highlands mainland and the Isle of Wight. Excluded: Northern Ireland, the Scottish islands, the Isles of Scilly, the Channel Islands and the Isle of Man.",
+    "excludedPostcodes": [
+      "BT",
+      "HS",
+      "ZE",
+      "KW15-17",
+      "IV41-49",
+      "IV51",
+      "IV55-56",
+      "KA27-28",
+      "PA20",
+      "PA41",
+      "PA42-49",
+      "PA60-78",
+      "PH42-44",
+      "TR21-25",
+      "GY",
+      "JE",
+      "IM"
+    ],
+    "granularity": "District-level codes cannot separate a few small islands that share a mainland district (e.g. Raasay in IV40, Lismore, Kerrera, Seil and Luing in PA34, Lundy in EX39). Those addresses are treated as mainland; the checker cannot tell them apart."
+  },
+  "exclusionGroups": [
+    {
+      "id": "ni",
+      "name": "Northern Ireland",
+      "entries": [
+        {
+          "code": "BT",
+          "place": "Northern Ireland"
+        }
+      ]
+    },
+    {
+      "id": "scottish-islands",
+      "name": "the Scottish islands",
+      "entries": [
+        {
+          "code": "HS",
+          "place": "the Outer Hebrides"
+        },
+        {
+          "code": "ZE",
+          "place": "Shetland"
+        },
+        {
+          "code": "KW15-17",
+          "place": "Orkney"
+        },
+        {
+          "code": "IV41-49",
+          "place": "Skye"
+        },
+        {
+          "code": "IV51",
+          "place": "Skye (Portree)"
+        },
+        {
+          "code": "IV55-56",
+          "place": "Skye (Dunvegan and Struan)"
+        },
+        {
+          "code": "KA27-28",
+          "place": "Arran and Cumbrae"
+        },
+        {
+          "code": "PA20",
+          "place": "Bute"
+        },
+        {
+          "code": "PA41",
+          "place": "Gigha"
+        },
+        {
+          "code": "PA42-49",
+          "place": "Islay"
+        },
+        {
+          "code": "PA60-78",
+          "place": "Jura, Colonsay, Mull, Iona, Tiree and Coll"
+        },
+        {
+          "code": "PH42-44",
+          "place": "the Small Isles (Eigg, Muck, Rùm and Canna)"
+        }
+      ]
+    },
+    {
+      "id": "scilly",
+      "name": "the Isles of Scilly",
+      "entries": [
+        {
+          "code": "TR21-25",
+          "place": "the Isles of Scilly"
+        }
+      ]
+    },
+    {
+      "id": "channel-islands",
+      "name": "the Channel Islands",
+      "entries": [
+        {
+          "code": "GY",
+          "place": "Guernsey"
+        },
+        {
+          "code": "JE",
+          "place": "Jersey"
+        }
+      ]
+    },
+    {
+      "id": "isle-of-man",
+      "name": "the Isle of Man",
+      "entries": [
+        {
+          "code": "IM",
+          "place": "the Isle of Man"
+        }
+      ]
+    }
+  ],
+  "otherExclusionGroups": [
+    {
+      "id": "bfpo",
+      "name": "British Forces (BFPO) addresses",
+      "ownerListed": false,
+      "entries": [
+        {
+          "code": "BF",
+          "place": "British Forces Post Office addresses (routed overseas)"
+        }
+      ]
+    }
+  ],
+  "alsoIncluded": [
+    {
+      "id": "highlands",
+      "name": "the Highlands mainland",
+      "codes": [
+        "IV",
+        "KW1-14",
+        "PH17-41",
+        "PH49-50",
+        "PA21-40"
+      ],
+      "note": "Included per owner D11."
+    },
+    {
+      "id": "isle-of-wight",
+      "name": "the Isle of Wight",
+      "codes": [
+        "PO30-41"
+      ],
+      "note": "Included per owner D11."
+    }
+  ],
+  "areas": {
+    "AB": "Aberdeen",
+    "AL": "St Albans",
+    "B": "Birmingham",
+    "BA": "Bath",
+    "BB": "Blackburn",
+    "BD": "Bradford",
+    "BF": "British Forces (BFPO)",
+    "BH": "Bournemouth",
+    "BL": "Bolton",
+    "BN": "Brighton",
+    "BR": "Bromley",
+    "BS": "Bristol",
+    "BT": "Northern Ireland",
+    "CA": "Carlisle",
+    "CB": "Cambridge",
+    "CF": "Cardiff",
+    "CH": "Chester",
+    "CM": "Chelmsford",
+    "CO": "Colchester",
+    "CR": "Croydon",
+    "CT": "Canterbury",
+    "CV": "Coventry",
+    "CW": "Crewe",
+    "DA": "Dartford",
+    "DD": "Dundee",
+    "DE": "Derby",
+    "DG": "Dumfries and Galloway",
+    "DH": "Durham",
+    "DL": "Darlington",
+    "DN": "Doncaster",
+    "DT": "Dorchester",
+    "DY": "Dudley",
+    "E": "East London",
+    "EC": "Central London",
+    "EH": "Edinburgh",
+    "EN": "Enfield",
+    "EX": "Exeter",
+    "FK": "Falkirk and Stirling",
+    "FY": "Blackpool",
+    "G": "Glasgow",
+    "GL": "Gloucester",
+    "GU": "Guildford",
+    "GY": "Guernsey",
+    "HA": "Harrow",
+    "HD": "Huddersfield",
+    "HG": "Harrogate",
+    "HP": "Hemel Hempstead",
+    "HR": "Hereford",
+    "HS": "the Outer Hebrides",
+    "HU": "Hull",
+    "HX": "Halifax",
+    "IG": "Ilford",
+    "IM": "the Isle of Man",
+    "IP": "Ipswich",
+    "IV": "Inverness and the Highlands",
+    "JE": "Jersey",
+    "KA": "Kilmarnock and Ayrshire",
+    "KT": "Kingston upon Thames",
+    "KW": "Caithness and Orkney",
+    "KY": "Kirkcaldy and Fife",
+    "L": "Liverpool",
+    "LA": "Lancaster",
+    "LD": "Llandrindod Wells",
+    "LE": "Leicester",
+    "LL": "North Wales",
+    "LN": "Lincoln",
+    "LS": "Leeds",
+    "LU": "Luton",
+    "M": "Manchester",
+    "ME": "Medway",
+    "MK": "Milton Keynes",
+    "ML": "Motherwell",
+    "N": "North London",
+    "NE": "Newcastle upon Tyne",
+    "NG": "Nottingham",
+    "NN": "Northampton",
+    "NP": "Newport",
+    "NR": "Norwich",
+    "NW": "North West London",
+    "OL": "Oldham",
+    "OX": "Oxford",
+    "PA": "Paisley and Argyll",
+    "PE": "Peterborough",
+    "PH": "Perth and the Highlands",
+    "PL": "Plymouth",
+    "PO": "Portsmouth and the Isle of Wight",
+    "PR": "Preston",
+    "RG": "Reading",
+    "RH": "Redhill",
+    "RM": "Romford",
+    "S": "Sheffield",
+    "SA": "Swansea",
+    "SE": "South East London",
+    "SG": "Stevenage",
+    "SK": "Stockport",
+    "SL": "Slough",
+    "SM": "Sutton",
+    "SN": "Swindon",
+    "SO": "Southampton",
+    "SP": "Salisbury",
+    "SR": "Sunderland",
+    "SS": "Southend-on-Sea",
+    "ST": "Stoke-on-Trent",
+    "SW": "South West London",
+    "SY": "Shrewsbury",
+    "TA": "Taunton",
+    "TD": "the Scottish Borders",
+    "TF": "Telford",
+    "TN": "Tonbridge",
+    "TQ": "Torquay",
+    "TR": "Truro",
+    "TS": "Teesside",
+    "TW": "Twickenham",
+    "UB": "Uxbridge",
+    "W": "West London",
+    "WA": "Warrington",
+    "WC": "Central London",
+    "WD": "Watford",
+    "WF": "Wakefield",
+    "WN": "Wigan",
+    "WR": "Worcester",
+    "WS": "Walsall",
+    "WV": "Wolverhampton",
+    "YO": "York",
+    "ZE": "Shetland"
+  },
+  "phrasing": {
+    "_note": "describeExclusions() joins exclusionGroups[].name in order with commas and a final \"and\" (e.g. \"Northern Ireland, the Scottish islands, the Isles of Scilly, the Channel Islands and the Isle of Man\"); the long form appends each group with its places and codes for the delivery page.",
+    "listJoiner": ", ",
+    "lastJoiner": " and "
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "_about": "WS-DATA seed (brief §5.6, Appendix B). Three questions; result = 3 picks. Pick i takes words[room][mood][i], fonts[mood] (first enabled face, in order, starting at index i) and colours[mood][i]. Size: the size whose width (renderer + neon-core.dimsFor) is closest to walls[].targetCm without going over 200 cm; if that cannot be measured, walls[].size. Hash: #quiz=<room>.<mood>.<wall>, e.g. bed.cheeky.above. Sign lines obey neon-core: max 3 lines, 24 characters each, allowed characters only. Edits via INTEGRATION.md only.",
+  "version": 1,
+  "steps": [
+    {
+      "id": "room",
+      "question": "Where's it going?",
+      "options": [
+        { "id": "bed", "label": "Bedroom", "scene": "s02-bedroom", "sample": ["Sweet dreams"] },
+        { "id": "living", "label": "Living room", "scene": "s01-living", "sample": ["Home"] },
+        { "id": "kitchen", "label": "Kitchen", "scene": "s03-kitchen", "sample": ["Kettle's on"] },
+        { "id": "bar", "label": "Home bar", "scene": "s04-homebar", "sample": ["The Local"] },
+        { "id": "kids", "label": "Kids room", "scene": "s09-kids", "sample": ["Oh baby"] },
+        { "id": "shop", "label": "Shop or café", "scene": "s07-cafe", "sample": ["Open"] },
+        { "id": "wedding", "label": "Wedding or party", "scene": "s06-wedding", "sample": ["Mr & Mrs"] },
+        { "id": "gaming", "label": "Gaming room", "scene": "s12-gaming", "sample": ["GG"] }
+      ]
+    },
+    {
+      "id": "mood",
+      "question": "What's the mood?",
+      "options": [
+        { "id": "cosy", "label": "Cosy", "sample": ["Snug"] },
+        { "id": "cheeky", "label": "Cheeky", "sample": ["Oi oi"] },
+        { "id": "romantic", "label": "Romantic", "sample": ["Us"] },
+        { "id": "loud", "label": "Loud", "sample": ["Wow"] },
+        { "id": "calm", "label": "Calm", "sample": ["Breathe"] }
+      ]
+    },
+    {
+      "id": "wall",
+      "question": "How much wall?",
+      "options": [
+        { "id": "shelf", "label": "A shelf", "hint": "about 40 cm", "targetCm": 40, "size": "s" },
+        { "id": "above", "label": "Above the bed or sofa", "hint": "about 100 cm", "targetCm": 100, "size": "l" },
+        { "id": "wall", "label": "A whole wall", "hint": "150 cm or more", "targetCm": 150, "size": "xl" }
+      ]
+    }
+  ],
+  "fonts": {
+    "_note": "Ordered preferences; quiz.js skips any face with catalog enabled:false.",
+    "cosy": ["notting", "soho", "margate", "brighton"],
+    "cheeky": ["brighton", "brixton", "margate", "soho"],
+    "romantic": ["notting", "soho", "margate", "brighton"],
+    "loud": ["camden", "brixton", "shoreditch", "hackney"],
+    "calm": ["hackney", "shoreditch", "soho", "notting"]
+  },
+  "colours": {
+    "cosy": ["warm", "orange", "candy"],
+    "cheeky": ["pink", "yellow", "green"],
+    "romantic": ["candy", "red", "warm"],
+    "loud": ["pink", "ice", "violet"],
+    "calm": ["cool", "ice", "green"]
+  },
+  "words": {
+    "bed": {
+      "cosy": [["Sweet dreams"], ["Stay in bed"], ["Good night, love"]],
+      "cheeky": [["Five more minutes"], ["Do not disturb"], ["Not a morning person"]],
+      "romantic": [["Love you more"], ["You & me"], ["Always yours"]],
+      "loud": [["Big dreams"], ["Main character"], ["Lights out? Never"]],
+      "calm": [["Breathe"], ["Slow mornings"], ["Rest here"]]
+    },
+    "living": {
+      "cosy": [["Home sweet home"], ["Let's stay in"], ["Our happy place"]],
+      "cheeky": [["Sofa so good"], ["Shoes off, please"], ["Not today"]],
+      "romantic": [["Better together"], ["Love lives here"], ["Always & forever"]],
+      "loud": [["Lit"], ["Good vibes only"], ["Party at ours"]],
+      "calm": [["Just breathe"], ["Home"], ["Slow down"]]
+    },
+    "kitchen": {
+      "cosy": [["Kettle's on"], ["Cuppa first"], ["Home sweet home"]],
+      "cheeky": [["Kiss the cook"], ["Wine o'clock"], ["Snacks?"]],
+      "romantic": [["Made with love"], ["Love at first bite"], ["Breakfast for two"]],
+      "loud": [["Eat, drink, repeat"], ["Feed me"], ["Open kitchen"]],
+      "calm": [["Slow food"], ["Gather here"], ["Bread & butter"]]
+    },
+    "bar": {
+      "cosy": [["The Local"], ["Pull up a stool"], ["The Snug"]],
+      "cheeky": [["Fancy a", "pint?"], ["Gin o'clock"], ["Last orders"]],
+      "romantic": [["Cheers to us"], ["Here's to us"], ["Love & cocktails"]],
+      "loud": [["Bar open"], ["Party starts here"], ["Cheers"]],
+      "calm": [["Happy hour"], ["Sip slowly"], ["Unwind"]]
+    },
+    "kids": {
+      "cosy": [["Little dreamer"], ["Sweet pea"], ["Night night"]],
+      "cheeky": [["Tiny boss"], ["Nap queen"], ["Little monster"]],
+      "romantic": [["Hello,", "little one"], ["Our little star"], ["Love you to the moon"]],
+      "loud": [["Oh baby"], ["Dream big"], ["Wild one"]],
+      "calm": [["Hush now"], ["Sleep tight"], ["Shine bright"]]
+    },
+    "shop": {
+      "cosy": [["Welcome in"], ["Coffee first"], ["Come on in"]],
+      "cheeky": [["Yes, we're open"], ["Treat yourself"], ["Fresh cuts"]],
+      "romantic": [["Made with love"], ["Baked with love"], ["Love local"]],
+      "loud": [["Open late"], ["Open"], ["Now open"]],
+      "calm": [["Take a seat"], ["Slow coffee"], ["Stay a while"]]
+    },
+    "wedding": {
+      "cosy": [["Better together"], ["Mr & Mrs"], ["Happily", "ever after"]],
+      "cheeky": [["Eat, drink", "& be married"], ["Finally"], ["Let's party"]],
+      "romantic": [["Love you more"], ["Always & forever"], ["Till the", "last dance"]],
+      "loud": [["Let's dance"], ["Just married"], ["Party on"]],
+      "calm": [["Two hearts"], ["Forever"], ["And so it begins"]]
+    },
+    "gaming": {
+      "cosy": [["Player two"], ["Co-op mode"], ["Just one more game"]],
+      "cheeky": [["GG"], ["Rage quit"], ["Respawn"]],
+      "romantic": [["Player one", "& player two"], ["My player two"], ["Co-op forever"]],
+      "loud": [["Game on"], ["Level up"], ["Boss mode"]],
+      "calm": [["Pause"], ["Save point"], ["Do not disturb"]]
+    }
+  },
+  "fallback": {
+    "_note": "Generic picks when a bucket is missing or every phrase fails validation.",
+    "words": [["Lit"], ["Good vibes only"], ["Hello"]],
+    "fonts": ["soho", "brighton", "shoreditch"],
+    "colours": ["pink", "warm", "ice"],
+    "scene": "s01-living"
+  }
+}
