@@ -25,10 +25,14 @@
   .sh-h1 { font-size: var(--t-display-2); line-height: var(--lh-display-2); margin-bottom: var(--s-3); }
   .sh-lede { font-size: var(--t-body); line-height: var(--lh-body); }
   .sh-collections { margin-top: var(--s-5); }
+  /* phones: the chips run straight into the count/filter bar — the head's bottom padding plus the body's top padding
+     left an empty ~60 px band between them (the sticky toolbar carries its own padding) */
+  .sh-head { padding-bottom: var(--s-3); }
 }
 
 /* ============================================================ browse layout ============================================================ */
 .sh-body { padding-block: var(--s-5) var(--s-9); }
+@media (max-width: 767px) { .sh-body { padding-top: 0; } }
 .sh-toolbar { display: flex; align-items: center; justify-content: space-between; gap: var(--s-4); padding-block: var(--s-3); border-bottom: 1px solid var(--hair); margin-bottom: var(--s-5); }
 .sh-count { margin: 0; color: var(--bone-2); font-weight: 600; font-variant-numeric: tabular-nums; }
 .sh-tools { display: flex; align-items: center; gap: var(--s-3); }
@@ -78,6 +82,11 @@
 .sh-swatches .c-swatch, .sh-compact .c-swatch { padding: var(--s-2) var(--s-1); }
 .sh-swatches .c-swatch .name, .sh-compact .c-swatch .name { opacity: 1; white-space: normal; text-align: center; }
 .sh-swatches .c-swatch .n { color: var(--smoke); }
+/* the selected colour is marked on the tube itself (a ring) and its label, not with a box around the whole grid cell —
+   the cell-sized amber box read as oversized next to the bare unselected swatches */
+.sh-swatches .c-swatch[aria-pressed="true"] { border-color: transparent; box-shadow: none; }
+.sh-swatches .c-swatch[aria-pressed="true"] .tube { outline: 2px solid var(--amber); outline-offset: 3px; }
+.sh-swatches .c-swatch[aria-pressed="true"] .name { color: var(--bone); font-weight: 600; }
 .sh-clear-group { margin: calc(var(--s-2) * -1) 0 var(--s-3); font-size: var(--t-small); }
 .sh-facets .c-chip[data-reason]:hover::after { display: none; }
 

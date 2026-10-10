@@ -66,6 +66,11 @@
   .in-masonry { gap: var(--s-5) var(--s-3); }
   .in-card { gap: var(--s-2); }
   .in-card .hub-tile__pill { bottom: var(--s-2); left: var(--s-2); max-width: calc(100% - 2 * var(--s-2)); }
+  /* phones: square tiles (48 cards, two columns) and the icon-only 'rendered' pill — the header disclaimer says it in
+     words once, so each card no longer repeats "Rendered preview" (the label stays in the DOM for screen readers) */
+  .in-card__tile.hub-tile { aspect-ratio: 1 / 1; }
+  .in-card .hub-tile__pill .c-pill { font-size: 0; gap: 0; padding: 4px 6px; min-height: 24px; }
+  .in-card .hub-tile__pill .c-pill .ic { width: 14px; height: 14px; }
   .in-card__name { font-size: var(--t-body); }
   .in-card__meta { font-size: var(--t-caption); }
   /* phones: one action per card. "Apply this style" stays (its form's primary button opens the designer); the second
