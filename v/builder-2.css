@@ -1,0 +1,37 @@
+/* Built-round builder, version 2 — D2 A "bottom tabs + bottom sheets": the sign fills the screen; a tab bar
+   (Words · Style · Colour · Size · More) opens one panel at a time with Done; the price + Add to basket live in a slim
+   bar that is always visible above the tabs. The stage is a grid row, so an open panel SHRINKS the stage (the sign
+   is re-framed into the smaller box) instead of covering it. */
+.v2 { grid-template-rows: var(--v-hdr) minmax(0, 1fr) auto auto auto; grid-template-areas: "hdr" "stage" "panel" "bar" "tabs"; }
+.v2 .v-hdr { grid-area: hdr; }
+.v2 .v-stagewrap { grid-area: stage; }
+.t-panel { grid-area: panel; display: grid; grid-template-rows: auto minmax(0, 1fr); max-height: max(160px, calc(var(--vvh, 100dvh) - var(--v-hdr) - 112px - 1.12 * 100vw)); /* the stage keeps a portrait box (> 1.1 : 1), so opening a panel never flips the room to the landscape plates */ background: var(--night-2); border-top: 1px solid var(--hair); }
+.t-panel[hidden] { display: none; }
+.t-panel__head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); padding: var(--s-1) var(--s-2) var(--s-1) var(--s-4); min-height: 40px; }
+.t-panel__title { margin: 0; font-family: var(--f-ui); font-weight: 600; font-size: var(--t-small); color: var(--bone-2); max-width: none; outline: none; }
+.t-panel__done { min-height: 32px; padding: 0 var(--s-4); border-radius: var(--r-pill); background: var(--bone); color: var(--night); font-weight: 600; font-size: var(--t-caption); }
+.t-panel__body { overflow-y: auto; overscroll-behavior: contain; padding: 0 var(--s-4) var(--s-3); }
+.t-pane { display: grid; gap: var(--s-3); align-content: start; }
+.t-pane[hidden] { display: none; }
+.v-bar { grid-area: bar; display: grid; grid-template-columns: minmax(96px, 1fr) auto; align-items: center; gap: var(--s-2); min-height: 56px; padding: var(--s-1) var(--s-4); border-top: 1px solid var(--hair); background: var(--night); }
+.v-bar__cta { min-width: 160px; min-height: var(--btn-md); }
+.v-tabs { grid-area: tabs; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid var(--hair); background: var(--night-2); padding-bottom: env(safe-area-inset-bottom); }
+.v-tabs [role="tab"] { display: grid; justify-items: center; align-content: center; gap: 2px; height: 56px; color: var(--smoke); font-size: 11px; font-weight: 600; border-top: 2px solid transparent; }
+.v-tabs [role="tab"] .ic { width: 22px; height: 22px; }
+.v-tabs [role="tab"][aria-selected="true"] { color: var(--bone); border-top-color: var(--room); }
+.v-tabs [role="tab"].is-done:not([aria-selected="true"]) { color: var(--bone-2); }
+/* keyboard open: the tab bar steps aside, the panel keeps the field, the sign keeps the top */
+.v2.kbd .v-tabs, .v2.kbd .t-panel__head { display: none; }
+.v2.kbd .t-panel { max-height: calc(var(--vvh, 100dvh) * .55); }
+.v2.kbd .v-stagewrap { min-height: 150px; }
+.v2 .v-tools { bottom: var(--s-3); }
+@media (max-width: 360px) { .v-bar__cta { min-width: 148px; padding-inline: var(--s-3); } .v-price__amount { font-size: 22px; } }
+
+/* ≥ 900: the same stack, the bars and panel sit in a 560 px column over the full-width room */
+@media (min-width: 900px) {
+  /* a phone-shaped column in the middle: the compositor frames a 560-wide box well; a 1280 × 400 letterbox pushed the sign out of the crop */
+  .v2 .v-stagewrap, .t-panel, .v-bar, .v-tabs { width: min(100%, 560px); justify-self: center; border-left: 1px solid var(--hair); border-right: 1px solid var(--hair); }
+  .v2 { background: var(--night-2); }
+  .t-panel { max-height: calc(var(--vvh, 100dvh) * .5); }
+  .v-tools { left: var(--s-4); right: var(--s-4); bottom: var(--s-4); }
+}

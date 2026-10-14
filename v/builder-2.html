@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
+<title>Design your sign · version 2 | Lit Neon</title>
+<meta name="description" content="Built round, builder 2 of 2: the sign fills the screen, bottom tabs open one sheet at a time, the price and Add to basket never leave the screen.">
+<meta name="theme-color" content="#180E1F">
+<link rel="icon" href="/lit-neon-preview/assets/img/brand/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/lit-neon-preview/assets/fonts/neonderthaw-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/lit-neon-preview/assets/fonts/hanken-grotesk-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/lit-neon-preview/assets/fonts/big-shoulders-display-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/lit-neon-preview/assets/fonts/fonts.css">
+<link rel="stylesheet" href="/lit-neon-preview/assets/css/tokens.css">
+<link rel="stylesheet" href="/lit-neon-preview/assets/css/base.css">
+<link rel="stylesheet" href="/lit-neon-preview/v/builder-shared.css">
+<link rel="stylesheet" href="/lit-neon-preview/v/builder-2.css">
+<script src="/lit-neon-preview/assets/js/core/boot.js"></script>
+<link rel="modulepreload" href="/lit-neon-preview/v/builder-core.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/renderer.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/vendor/engines/catalog.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/vendor/engines/neon-core.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/vendor/engines/rules.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/stage.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/money.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/clock.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/pricing.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/router.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/facts.js">
+<link rel="modulepreload" href="/lit-neon-preview/assets/js/core/copy.js">
+</head>
+<body data-page="builder">
+<div class="v-shell v2" id="shell">
+  <header class="v-hdr">
+    <a class="v-hdr__back" href="/lit-neon-preview/index.html" aria-label="Back to Lit Neon"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a>
+    <a class="v-hdr__brand" href="/lit-neon-preview/index.html">Lit Neon</a>
+    <span class="v-pill" data-pill><a href="/lit-neon-preview/v/index.html">Version 2 of 2 · switch</a><button type="button" aria-label="Hide this" data-pill-x><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></span>
+    <a class="v-hdr__basket" href="/lit-neon-preview/basket.html" aria-label="Basket"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h2l2.4 11h11.2L21 8H7M9 20h.01M17 20h.01"/></svg><b data-basket-count hidden>0</b></a>
+  </header>
+
+  <!-- the sign fills the screen: the baked poster (night plate + lit default words) paints first; the live stage cross-fades in under it -->
+  <div class="v-stagewrap" id="stagewrap" aria-label="Preview of your sign on the wall" style="--pl:-23.8%;--pt:-12.97%;--pw:146.83%;--ph:162.55%;--sx:49.92%;--sy:40.42%;--sem:10.4">
+    <div class="v-poster" aria-hidden="true">
+      <picture><source type="image/avif" srcset="/lit-neon-preview/assets/img/scenes/s01-living/night-portrait-wall-1000.avif 1000w" sizes="100vw"><source type="image/webp" srcset="/lit-neon-preview/assets/img/scenes/s01-living/night-portrait-wall-1000.webp 1000w" sizes="100vw"><img src="/lit-neon-preview/assets/img/scenes/s01-living/night-portrait-wall-1000.jpg" width="1000" height="1250" alt="" fetchpriority="high" decoding="async"></picture>
+      <p class="v-poster__sign" data-poster-text style="--v-core:#ffc9ea;--v-glow-full:0 0 .02em #ffc9ea,0 0 .05em #ff3db4,0 0 .11em #ff3db4,0 0 .24em #ff3db4,0 0 .5em rgba(255,61,180,.75),0 0 1em rgba(255,61,180,.45)">After dark</p>
+    </div>
+    <script>/* a saved design or ?t= words: the poster shows them, in their colour, before any module runs (hidden for another face) */(function(){try{var p=document.querySelector('[data-poster-text]');var q=new URLSearchParams(location.search);var t=q.get('t')||q.get('text')||'';var rec=null;if(!/(^|&)d=/.test(location.hash.slice(1))){rec=JSON.parse(localStorage.getItem('design')||'null');if(!(rec&&rec.state&&Date.now()-(rec.updatedAt||0)<18e5))rec=null;}else{p.hidden=true;return;}var st=rec&&rec.state||{};if(st.font&&st.font!=='soho'){p.hidden=true;return;}t=t||st.text||'';if(t)p.textContent=t.slice(0,80);var H={warm:'#ffc77a',ice:'#4fd2ff',blue:'#2f6bff',violet:'#9b4dff',pink:'#ff3db4',candy:'#ff8ccf',red:'#ff2b3d',orange:'#ff7a1a',yellow:'#ffc23a',green:'#2dff7a',rgb:'#ff5fa2'};var h=H[st.colour]||'#ff3db4';if(h!=='#ff3db4'){var n=parseInt(h.slice(1),16),r=n>>16,g=n>>8&255,b=n&255;var m=function(v){return Math.round(v+(255-v)*.72)};var core='rgb('+m(r)+','+m(g)+','+m(b)+')';var a=function(o){return 'rgba('+r+','+g+','+b+','+o+')'};p.style.setProperty('--v-core',core);p.style.setProperty('--v-glow-full','0 0 .02em '+core+',0 0 .05em '+h+',0 0 .11em '+h+',0 0 .24em '+h+',0 0 .5em '+a(.75)+',0 0 1em '+a(.45));}}catch(e){}})();</script>
+    <div class="v-stage" data-stage></div>
+  </div>
+
+  <!-- one panel at a time, opened by the tabs; Done closes it and the sign gets the room back -->
+  <div class="t-panel" id="tpanel" role="region" aria-labelledby="tpanel-title">
+    <div class="t-panel__head"><h2 class="t-panel__title" id="tpanel-title" tabindex="-1">Your words</h2><button type="button" class="t-panel__done">Done</button></div>
+    <div class="t-panel__body">
+      <div class="t-pane" id="pane-words" data-pane="words">
+        <div class="v-field"><label class="v-label" for="v-words">What should it say?<span class="v-label__sub">Up to 3 lines of 24 characters</span></label>
+          <div class="v-words"><textarea class="v-input" id="v-words" rows="2" autocomplete="off" autocapitalize="sentences" spellcheck="true" placeholder="After dark" aria-describedby="v-words-note" data-qa="v.words"></textarea><button type="button" class="v-words__clear" data-clear hidden aria-label="Clear the words"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+          <div class="v-words__meta"><span class="v-counters" aria-live="polite"></span><span class="v-note" id="v-words-note" hidden role="status"></span></div></div>
+        <div class="v-rowchips">
+          <button type="button" class="v-chip" data-open="symbol" data-qa="v.words.symbol"><span class="v-chip__plus">+</span><span data-symbol-label>Add a symbol</span></button>
+          <a class="v-chip v-chip--ghost" href="/lit-neon-preview/upload.html?from=builder" data-qa="v.words.logo">Have a logo?</a>
+        </div>
+      </div>
+      <div class="t-pane" id="pane-style" data-pane="style" hidden></div>
+      <div class="t-pane" id="pane-colour" data-pane="colour" hidden></div>
+      <div class="t-pane" id="pane-size" data-pane="size" hidden></div>
+      <div class="t-pane" id="pane-more" data-pane="more" hidden></div>
+    </div>
+  </div>
+
+  <div class="v-bar" data-qa="v.bar">
+    <button type="button" class="v-price" data-price aria-haspopup="dialog" aria-label="Price breakdown"><span class="v-price__amount" data-amount><span class="v-skel v-skel--price"></span></span><span class="v-price__cap" data-cap>Measuring your lettering…</span></button>
+    <button type="button" class="v-btn v-btn--primary v-bar__cta" data-cta>Add to basket</button>
+  </div>
+
+  <nav class="v-tabs" role="tablist" aria-label="Design">
+    <button type="button" role="tab" data-tab="words" aria-selected="true"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l4-1 10.5-10.5a2 2 0 0 0-3-3L5 16l-1 4z"/></svg>Words</button>
+    <button type="button" role="tab" data-tab="style" aria-selected="false"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18l5-12 5 12M5.5 13h5M14 18l3.5-8 3.5 8M15.5 15h4"/></svg>Style</button>
+    <button type="button" role="tab" data-tab="colour" aria-selected="false"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg>Colour</button>
+    <button type="button" role="tab" data-tab="size" aria-selected="false"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l14-14 4 4L7 21zM7 13l2 2M10 10l2 2M13 7l2 2"/></svg>Size</button>
+    <button type="button" role="tab" data-tab="more" aria-selected="false"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h.01M12 12h.01M19 12h.01"/></svg>More</button>
+  </nav>
+</div>
+<script type="module" src="/lit-neon-preview/v/builder-2.js"></script>
+</body>
+</html>
