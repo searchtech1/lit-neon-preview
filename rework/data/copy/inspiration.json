@@ -1,0 +1,58 @@
+{
+  "_meta": {
+    "page": "inspiration",
+    "owner": "P5",
+    "renders": [
+      "inspiration.html"
+    ],
+    "status": "P5 filled. Strings live under the page key. The gallery is renders of catalogue designs on our scenes, labelled; no customer, town or date captions (rule 4)."
+  },
+  "inspiration": {
+    "meta": {
+      "title": "Neon sign ideas, rendered on real rooms | Lit Neon",
+      "description": "Ideas for LED neon signs by room, occasion and colour, rendered on our scenes. Borrow a style and open it in the designer with your own words.",
+      "ogTitle": "Neon sign ideas | Lit Neon",
+      "ogDescription": "Borrow a style from our rendered ideas and put your own words in it."
+    },
+    "eyebrow": "Inspiration",
+    "h1": "Ideas, rendered",
+    "disclaimer": "These are previews of designs we make, rendered on our scenes. Real photos take their place as the first signs go up.",
+    "count": "{n} ideas",
+    "countOne": "1 idea",
+    "filters": {
+      "label": "Filter ideas",
+      "room": "Room",
+      "use": "Occasion",
+      "colour": "Colour",
+      "all": "All",
+      "clear": "Clear filters",
+      "business": "Business"
+    },
+    "apply": "Apply this style to my words",
+    "applyLabel": "Your words in {font}, {colour}",
+    "applyPlaceholder": "Type your words",
+    "applyGo": "Open with my words",
+    "applyCancel": "Cancel",
+    "applyBad": "We can't draw {glyphs} in tube; we've left it out.",
+    "open": "Open in the designer",
+    "view": "View {name} larger",
+    "openNamed": "Open {name} in the designer",
+    "meta": "{colour} · {font}",
+    "day": "Day",
+    "night": "Night",
+    "dayLabel": "Show {name} by day, switched off",
+    "nightLabel": "Show {name} by night, lit",
+    "lightbox": {
+      "prev": "Previous idea",
+      "next": "Next idea",
+      "of": "{i} of {n}",
+      "shop": "Buy it as it is"
+    },
+    "empty": "Nothing matches all of those.",
+    "emptyCta": "Clear filters",
+    "endH2": "Have your own idea?",
+    "endBody": "Type it in the designer and see the price as you go, or send a sketch or a logo for a free mockup.",
+    "endDesign": "Design your sign",
+    "endMockup": "Get a free mockup"
+  }
+}

@@ -1,0 +1,52 @@
+/* Lit Neon v2 — legal pages (brief §4.20). Paper template with the shared TOC layout (info.css), readable tables,
+   and the cookie settings panel with real switches (44 px targets; the visual track is drawn inside). Tokens only. */
+
+.lg-hero { padding-block: var(--s-7) var(--s-7); border-bottom: 1px solid var(--rule);
+  background-image: linear-gradient(var(--draft-faint) 1px, transparent 1px), linear-gradient(90deg, var(--draft-faint) 1px, transparent 1px); background-size: 48px 48px; background-position: -1px -1px; }
+.lg-hero h1 { margin-top: var(--s-3); max-width: 18ch; }
+.lg-hero__lede { margin-top: var(--s-5); color: var(--paper-soft); }
+.lg-meta { display: flex; flex-wrap: wrap; gap: var(--s-3); align-items: center; margin-top: var(--s-5); font-size: var(--t-small); color: var(--paper-soft); }
+.lg-body h3 { font-size: var(--t-title); font-family: var(--f-ui); font-weight: 600; line-height: var(--lh-title); }
+.lg-sep:not(:empty)::before { content: " "; }
+.lg-table-wrap { margin: var(--s-5) 0; overflow-x: auto; max-width: 100%; border: 1px solid var(--rule); border-radius: var(--r-3); background: var(--paper); scrollbar-width: thin; scrollbar-color: var(--rule) transparent; }
+/* phones: the 520 px table scrolls sideways inside its frame; a right-edge fade says so instead of a hard cut mid-column */
+@media (max-width: 599px) { .lg-table-wrap { -webkit-mask-image: linear-gradient(90deg, var(--paper) calc(100% - var(--s-6)), transparent); mask-image: linear-gradient(90deg, var(--paper) calc(100% - var(--s-6)), transparent); } .lg-table tr > :last-child { padding-right: var(--s-7); } }
+.lg-table { width: 100%; border-collapse: collapse; font-size: var(--t-small); min-width: 520px; }
+.lg-table th, .lg-table td { padding: var(--s-3) var(--s-4); text-align: left; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.lg-table thead th { font-size: var(--t-eyebrow); text-transform: uppercase; letter-spacing: var(--track-eyebrow); color: var(--draft); background: var(--paper-2); font-weight: 600; }
+.lg-table tbody tr:last-child td { border-bottom: 0; }
+.lg-table code, .lg-body code { font-family: var(--f-mono); font-size: var(--t-mono); background: var(--paper-2); padding: 1px var(--s-1); border-radius: var(--r-1); }
+.lg-shell { display: flow-root; padding-bottom: var(--s-8); }  /* flow-root: the TOC's top margin stays inside the paper instead of collapsing out as a night band under the hero (adversarial R2, 390) */
+.lg-others { border-top: 1px solid var(--rule); padding-top: var(--s-6); }
+.lg-others__row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--s-3); margin-top: var(--s-3); }
+
+/* crossed-out bin */
+.lg-bin { display: grid; grid-template-columns: 96px 1fr; gap: var(--s-5); align-items: center; margin: var(--s-5) 0; padding: var(--s-5); border: 1px solid var(--rule); border-radius: var(--r-3); background: var(--paper-2); }
+.lg-bin__svg { width: 96px; height: auto; color: var(--paper-ink); }
+@media (max-width: 480px) { .lg-bin { grid-template-columns: 1fr; } .lg-bin__svg { width: 72px; } }
+
+/* cookie settings */
+.lg-consent { margin: var(--s-6) 0 var(--s-4); border: 1px solid var(--rule); border-radius: var(--r-4); background: var(--paper); overflow: clip; box-shadow: var(--e-1); }
+.lg-cat { display: grid; grid-template-columns: 1fr auto; gap: var(--s-5); align-items: center; padding: var(--s-5) var(--s-6); border-bottom: 1px solid var(--rule); }
+.lg-cat__text h3 { margin: 0 !important; }
+.lg-cat__text p { margin-top: var(--s-2) !important; color: var(--paper-soft); font-size: var(--t-small); line-height: var(--lh-small); max-width: 56ch; }
+.lg-cat__always { font-size: var(--t-small); font-weight: 600; color: var(--draft); padding: var(--s-2) var(--s-3); border-radius: var(--r-pill); background: var(--draft-faint); white-space: nowrap; }
+.lg-toggle { display: inline-flex; align-items: center; gap: var(--s-3); min-height: var(--touch); min-width: 104px; padding: 0 var(--s-2); border-radius: var(--r-pill); cursor: pointer; color: var(--paper-ink); font-weight: 600; font-size: var(--t-small); }
+.lg-toggle__track { position: relative; width: 48px; height: 28px; border-radius: var(--r-pill); background: var(--rule); border: 1px solid var(--paper-soft); transition: background var(--d-base), border-color var(--d-base); flex: 0 0 auto; }
+.lg-toggle__track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: var(--r-pill); background: var(--paper); box-shadow: var(--e-1); transition: transform var(--d-base) var(--ease-out); }
+.lg-toggle[aria-checked="true"] .lg-toggle__track { background: var(--draft); border-color: var(--draft); }
+.lg-toggle[aria-checked="true"] .lg-toggle__track::after { transform: translateX(20px); }
+.lg-toggle:hover .lg-toggle__track { border-color: var(--draft); }
+.lg-toggle__state { min-width: 2.5ch; }
+.lg-consent__foot { display: flex; flex-wrap: wrap; gap: var(--s-4); align-items: center; justify-content: space-between; padding: var(--s-5) var(--s-6); background: var(--paper-2); }
+.lg-consent__status { font-size: var(--t-small); color: var(--paper-soft); max-width: 40ch; }
+.lg-consent__status[data-state="dirty"] { color: var(--paper-ink); font-weight: 600; }
+.lg-consent__status[data-state="just-saved"] { color: var(--draft); font-weight: 600; }
+.lg-consent__btns { display: flex; flex-wrap: wrap; gap: var(--s-3); }
+.lg-consent.is-dirty .lg-consent__foot { border-top: 2px solid var(--amber); }
+@media (max-width: 640px) {
+  .lg-cat { grid-template-columns: 1fr; gap: var(--s-3); padding: var(--s-5); }
+  .lg-cat__always { justify-self: start; }
+  .lg-consent__foot { padding: var(--s-5); }
+  .lg-consent__btns { width: 100%; } .lg-consent__btns .c-btn { flex: 1 1 100%; }
+}

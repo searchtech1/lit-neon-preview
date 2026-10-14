@@ -1,0 +1,109 @@
+{
+  "_meta": {
+    "page": "shop",
+    "owner": "P4",
+    "renders": [
+      "shop.html",
+      "collection.html (grid, cards, facets, quick view)",
+      "product.html (related rail, quick view)"
+    ],
+    "status": "filled by P4. No literal dates, £ amounts or percentages (tools/lint-copy.mjs); prices arrive as {price} from pricing.js. Keys are namespaced under \"shop\" because copy.js merges every loaded file into one store (collection and product pages load shop.json too)."
+  },
+  "shop": {
+    "meta": {
+      "title": "Ready-made neon signs, made in the UK | Lit Neon",
+      "description": "Ready-made LED neon signs for bedrooms, home bars, weddings, kitchens and kids' rooms. Every design comes in 12 tube colours and 5 sizes, made to order in our UK workshop.",
+      "ogTitle": "Ready-made neon signs from Lit Neon",
+      "ogDescription": "Signs we've already drawn, in any of our 12 tube colours, made to order in our UK workshop."
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "shop": "Ready-made designs",
+      "label": "Breadcrumb"
+    },
+    "eyebrow": "Shop signs",
+    "h1": "Ready-made designs",
+    "lede": "Signs we've already drawn, ready to make in any of our 12 tube colours and five sizes. Each one is bent to order in our UK workshop, and ready-made designs come with {returns}.",
+    "lede2": "Every design comes in any of the 12 colours.",
+    "collectionsLabel": "Shop by collection",
+    "count": "{n} designs",
+    "countOne": "1 design",
+    "countNone": "No designs",
+    "sort": "Sort by",
+    "filter": "Filters",
+    "filterOpen": "Filter",
+    "filterOpenCount": "Filter ({n})",
+    "filtersTitle": "Filter designs",
+    "clearAll": "Clear all",
+    "clearGroup": "Clear",
+    "removeFilter": "Remove filter: {label}",
+    "show": "Show {n} designs",
+    "showOne": "Show 1 design",
+    "showNone": "Nothing matches yet",
+    "emptyTitle": "Nothing matches all of those.",
+    "emptyCta": "Clear {facet}",
+    "emptyClearAll": "Clear all filters",
+    "emptyCustom": "Or type your own words",
+    "quickView": "Quick view",
+    "seoTitle": "About our ready-made signs",
+    "seoBody": [
+      "Every sign on this page is a design we've already drawn and priced. You still pick the tube colour, the size, the backing and how it hangs, and the picture updates as you choose.",
+      "Each one is made to order in our UK workshop from silicone LED flex on cut acrylic, then boxed and sent free across mainland GB. A dimmer and remote come in the box, and every sign carries a {warranty}.",
+      "Because these designs aren't personalised, you can return one within the change-of-mind window if it isn't right for your wall. Want your own words instead? The designer prices any text in seconds."
+    ],
+    "facets": {
+      "room": "Room",
+      "occasion": "Occasion",
+      "style": "Style",
+      "colour": "Colour",
+      "size": "Size",
+      "price": "Price"
+    },
+    "facetHelp": {
+      "size": "Shows designs we can make at that size, priced at it.",
+      "colour": "Filters by the colour shown. Every design comes in all 12."
+    },
+    "bands": {
+      "under": "Under {b}",
+      "between": "{a} to {b}",
+      "over": "{a} and up"
+    },
+    "card": {
+      "from": "from {price}",
+      "fromSize": "{size} · {price}",
+      "quote": "Priced by a designer",
+      "lightOff": "Show {name} switched off",
+      "lightOn": "Show {name} switched on",
+      "quickLabel": "Quick view: {name}",
+      "colours": "12 colours"
+    },
+    "custom": {
+      "eyebrow": "Your own words",
+      "title": "Not quite it? Type your own.",
+      "body": "Any words, any of our eight lettering styles, priced as you type. A designer draws your proof before anything is made.",
+      "cta": "Design your own",
+      "ghost": "Send us a logo"
+    },
+    "quick": {
+      "title": "Quick view",
+      "on": "On",
+      "off": "Off",
+      "light": "Preview",
+      "sizes": "Size",
+      "colour": "Colour",
+      "backing": "Backing",
+      "add": "Add to basket",
+      "update": "Update basket",
+      "quoteCta": "Get a quote in the designer",
+      "customise": "Customise this design",
+      "details": "Full details",
+      "returns": "{returns} on ready-made designs · {delivery}",
+      "unavailable": "Not available at this size",
+      "dims": "{dims} · letters {letter}"
+    },
+    "faq": {
+      "helpLink": "Open in Help",
+      "selfLink": "Link to this answer"
+    }
+  }
+}

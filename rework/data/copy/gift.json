@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "page": "gift",
+    "owner": "P7",
+    "renders": ["gift.html"],
+    "status": "filled by P7. No prices anywhere on this page (brief §4.21); no literal dates, £ amounts or percentages (tools/lint-copy.mjs)."
+  },
+  "meta": {
+    "title": "A sign, designed for you | Lit Neon",
+    "description": "Someone designed a neon sign for you. Open the link to watch it light up."
+  },
+  "eyebrow": "A sign, designed for you",
+  "defaultMessage": "Someone designed this sign for you.",
+  "from": "from {name}",
+  "replay": "Replay",
+  "light": "Sign on/off",
+  "share": "Share",
+  "copied": "Link copied",
+  "copyFail": "Copy didn't work — press and hold the address bar to copy it.",
+  "designOwn": "Design your own",
+  "designBack": "Design one back",
+  "example": "Example gift",
+  "intro": {
+    "eyebrow": "Gift a sign",
+    "h1": "Send a sign that switches itself on",
+    "lede": "Design a sign, add a message, and send a link. When they open it, the sign lights up in a room, with your note beneath it. No prices, ever.",
+    "s1t": "Design it",
+    "s1": "Type their name, a date or a line only the two of you get. Pick the lettering and colour.",
+    "s2t": "Make it a gift",
+    "s2": "Open Share, choose Gift link and add a message of up to 140 characters and your name.",
+    "s3t": "Send the link",
+    "s3": "WhatsApp, email or a QR code. They watch it light up; the link carries no prices.",
+    "cta": "Design a sign to gift",
+    "example": "See an example",
+    "note": "The link holds the design itself, so nothing is stored or sent until you share it.",
+    "broken": "That gift link looks incomplete, so we couldn't draw the sign. Ask the sender to copy it again.",
+    "exampleMessage": "Happy birthday. Thirty looks good on you.",
+    "exampleFrom": "Sam",
+    "exampleWords": "Happy birthday\nAlex"
+  }
+}

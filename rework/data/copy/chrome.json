@@ -1,0 +1,167 @@
+{
+  "_about": "Customer-facing strings for the global chrome (brief §4.0, §4.22, Appendix C). No literal dates, prices or percentages: promo lines are templated and filled from facts + clock + pricing at render time. Owned by WS0-A.",
+  "brand": { "name": "Lit Neon", "tagline": "Your words, lit." },
+  "announce": {
+    "promo": "Launch prices until {promoEnd}",
+    "free": "Free delivery across mainland GB",
+    "proof": "You approve a drawing before we make anything",
+    "pause": "Pause announcements",
+    "play": "Resume announcements",
+    "bulk": "Bulk quotes",
+    "help": "Help"
+  },
+  "nav": {
+    "design": "Design your sign",
+    "logo": "Logo & business",
+    "shop": "Shop signs",
+    "weddings": "Weddings & events",
+    "inspire": "Inspiration & guides",
+    "help": "Help",
+    "pill": "Free mockup in 12h",
+    "search": "Search",
+    "searchPlaceholder": "Search designs, rooms, guides",
+    "basket": "Basket",
+    "menu": "Menu",
+    "close": "Close",
+    "whatsapp": "Message us on WhatsApp",
+    "email": "Email us",
+    "contact": "Contact us",
+    "skip": "Skip to content"
+  },
+  "mega": {
+    "room": "By room",
+    "occasion": "By occasion",
+    "style": "By style",
+    "best": "Bestsellers",
+    "all": "All designs",
+    "gallery": "Gallery",
+    "guides": "Guides",
+    "allGuides": "All guides",
+    "seasonalBack": "Back from {month}",
+    "rooms": {
+      "bedroom": "Bedroom", "kitchen": "Kitchen & hallway", "living": "Living room", "bar": "Home bar", "kids": "Kids & nursery", "gaming": "Gaming"
+    },
+    "occasions": {
+      "wedding": "Weddings", "party": "Parties & birthdays", "baby": "New baby", "christmas": "Christmas", "halloween": "Halloween"
+    },
+    "styles": {
+      "names": "Names & initials", "quotes": "Quotes", "wall-art": "Line art & icons", "love": "Love"
+    },
+    "galleryTiles": { "rooms": "Rooms", "weddings": "Weddings", "business": "Shops & bars" }
+  },
+  "search": {
+    "designs": "Designs",
+    "collections": "Collections",
+    "guides": "Guides",
+    "help": "Help answers",
+    "designIt": "Design “{query}” as a sign",
+    "empty": "Nothing matches that yet. Try a room, an occasion or a word you’d like in neon.",
+    "hint": "Try “bedroom”, “wedding” or your own words",
+    "title": "Search",
+    "close": "Close search",
+    "popularLabel": "Popular searches",
+    "popular": ["Bedroom", "Wedding", "Name signs", "Business logo", "Bar"]
+  },
+  "drawer": {
+    "title": "Menu",
+    "bulk": "Bulk quotes",
+    "help": "Help",
+    "free": "Free delivery across mainland GB, {leadTime}",
+    "hours": "Replies {hours}",
+    "design": "Design your sign",
+    "mockup": "Get a free mockup"
+  },
+  "stickycta": { "label": "Design your sign" },
+  "consent": {
+    "text": "We use essential cookies to run the site and, only if you agree, analytics cookies to see which pages help. Your design lives in your browser either way.",
+    "learn": "How we use cookies",
+    "accept": "Accept all",
+    "reject": "Reject all",
+    "settings": "Settings"
+  },
+  "footer": {
+    "makerEyebrow": "Made here",
+    "maker": "Made in our UK workshop",
+    "makerIn": "Made in our UK workshop, in {town}",
+    "makerNote": "Every sign is drawn, bent, mounted and bench-tested by the people you can message. You approve the drawing; we make exactly that.",
+    "saveTitle": "Email me my design",
+    "saveHelp": "We send the link to your design and its price. Nothing else, unless you tick the box.",
+    "saveEmail": "Your email",
+    "saveConsent": "Also send me occasional ideas and offers (unsubscribe any time).",
+    "saveButton": "Email my design",
+    "saveSent": "Sent to {email}",
+    "saveLocal": "Saved locally (review build) — nothing was sent.",
+    "saveError": "We couldn’t send that just now.",
+    "retry": "Retry",
+    "emailInvalid": "That email doesn’t look complete — check the part after the @.",
+    "cols": {
+      "shop": "Shop",
+      "help": "Help",
+      "company": "Company",
+      "contact": "Contact",
+      "trust": "Trust"
+    },
+    "links": {
+      "design": "Design your sign", "logo": "Logo & business", "ready": "Ready-made designs", "weddings": "Weddings & events", "bulk": "Bulk quotes", "gift": "Gift a sign",
+      "helpCentre": "Help centre", "delivery": "Delivery", "returns": "Returns & warranty", "install": "Installation guide", "recycling": "Recycling", "contact": "Contact",
+      "about": "Our workshop", "guides": "Guides", "privacy": "Privacy", "terms": "Terms of sale", "cookies": "Cookies", "reviewsPolicy": "How we handle reviews"
+    },
+    "whatsapp": "WhatsApp",
+    "email": "Email",
+    "replies": "Replies within {hours}",
+    "contactForm": "Send us a message",
+    "reviews": "Reviews via Judge.me and Trustpilot from our first orders",
+    "payWith": "Pay with",
+    "legal": "{company}{number}{address}Prices in £. Custom signs are made to order and can’t be returned for a change of mind; your statutory rights are not affected.",
+    "legalNumber": ", company no. {number}",
+    "legalAddress": ", registered office {address}",
+    "copyright": "© {year} Lit Neon"
+  },
+  "pills": {
+    "launch": "Launch price",
+    "included": "Included",
+    "quote": "Quote",
+    "new": "New",
+    "rendered": "Rendered preview",
+    "illustration": "Illustration",
+    "review": "Review-only"
+  },
+  "promo": {
+    "line": "Launch price · everyday {everyday} from {date}",
+    "basketLine": "Launch price · everyday {everyday} from {date}",
+    "checkoutRow": "Launch price (−{pct}%)",
+    "codeWins": "Your code beats the launch price, so we applied the code.",
+    "codeLoses": "The launch price beats that code, so we kept the launch price."
+  },
+  "price": {
+    "quote": "Quote",
+    "quoteWhy": "We price this one by hand",
+    "breakdown": "Price breakdown",
+    "hide": "Hide breakdown",
+    "edit": "Edit",
+    "total": "Total"
+  },
+  "ui": {
+    "close": "Close",
+    "back": "Back",
+    "done": "Done",
+    "undo": "Undo",
+    "removed": "Removed",
+    "added": "Added ✓",
+    "loading": "One moment",
+    "more": "Need more? Bulk quote",
+    "prev": "Previous",
+    "next": "Next",
+    "zoom": "Pinch or scroll to zoom",
+    "dragHint": "Drag to move",
+    "before": "Before",
+    "after": "After"
+  },
+  "basket": {
+    "title": "Your basket",
+    "continue": "Continue shopping",
+    "empty": "Nothing in here yet",
+    "emptyDesign": "Design a sign",
+    "emptyBrowse": "Browse ready-made"
+  }
+}

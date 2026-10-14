@@ -1,0 +1,44 @@
+/* Lit Neon v2 — css/ix/effects.css (brief §5.4). Two or three cards of the same sign; tokens only. */
+.ix-effects__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--s-4); align-items: stretch; }
+.ix-effects__card { display: grid; grid-template-rows: auto 1fr; border-radius: var(--r-3); background: var(--night-2); border: 1px solid var(--hair); overflow: clip; box-shadow: var(--e-1); }
+.ix-effects__stage { aspect-ratio: 4 / 3; min-height: 0; border-radius: 0; box-shadow: none; }
+.ix-effects__mount { position: absolute; inset: 0; }
+.ix-effects__body { display: grid; gap: var(--s-3); padding: var(--s-4) var(--s-4) var(--s-5); align-content: start; }
+.ix-effects__top { display: grid; grid-template-columns: 1fr auto; gap: var(--s-3); align-items: start; }
+.ix-effects__top h3 { font-family: var(--f-ui); font-weight: 600; font-size: var(--t-title); line-height: var(--lh-title); }
+.ix-effects__bullets { display: grid; gap: var(--s-1); padding-left: 1.1em; margin: 0; color: var(--bone-2); font-size: var(--t-small); line-height: var(--lh-small); list-style: disc; }
+.ix-effects__price { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--bone); }
+.ix-effects__price:empty::before { content: "—"; color: var(--smoke); }
+.ix-effects__card .c-btn { justify-self: start; }
+.ix-effects__foot { margin-top: var(--s-4); }
+/* the schematic remote */
+.ix-effects__remote { width: 40px; height: 78px; flex: 0 0 auto; }
+.ix-effects__remote .body { fill: var(--night-3); stroke: var(--hair-lit); stroke-width: 1.5; }
+.ix-effects__remote .pwr, .ix-effects__remote .dim, .ix-effects__remote .cycle { fill: var(--night); stroke: var(--hair); stroke-width: 1.2; transition: fill var(--d-base), stroke var(--d-base); }
+.ix-effects__remote .pwr-glyph, .ix-effects__remote .glyph { fill: none; stroke: var(--bone-2); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.ix-effects__remote .dots circle { fill: var(--soot); stroke: var(--hair); transition: fill var(--d-base); }
+.ix-effects__remote .dots circle:nth-child(1) { fill: var(--bad); } .ix-effects__remote .dots circle:nth-child(2) { fill: var(--ok); } .ix-effects__remote .dots circle:nth-child(3) { fill: var(--info); } .ix-effects__remote .dots circle:nth-child(4) { fill: var(--amber); }
+.ix-effects__remote .dots circle.is-active { stroke: var(--bone); stroke-width: 2; }
+.ix-effects__remote .dim.is-active, .ix-effects__remote .cycle.is-active { fill: var(--amber); stroke: var(--amber); }
+.ix-effects__remote .dim.is-active + .glyph { stroke: var(--night); }
+.ix-effects__remote .dim-track { fill: var(--soot); }
+.ix-effects__remote .dim-level { fill: var(--room); transform-origin: 14px 67px; transition: transform var(--d-slow) var(--ease-in-out); }
+.ix-effects__card.is-dimmed .dim-level { transform: scaleX(.5); }
+/* static card: the sign dims to half with the remote */
+.ix-effects__card[data-kind="static"] .ln-tube, .ix-effects__card[data-kind="static"] .ln-bounce, .ix-effects__card[data-kind="static"] .ln-floorbounce { transition: opacity var(--d-slow) var(--ease-in-out); }
+.ix-effects__card[data-kind="static"].is-dimmed .ln-tube { opacity: .55; }
+.ix-effects__card[data-kind="static"].is-dimmed .ln-bounce, .ix-effects__card[data-kind="static"].is-dimmed .ln-floorbounce { opacity: .25 !important; }
+/* changing card: the colour-changing remote cycles */
+.ix-effects.is-running .ix-effects__card[data-kind="changing"] .cycle { fill: var(--amber); stroke: var(--amber); }
+.ix-effects.is-running .ix-effects__card[data-kind="changing"] .cycle + .glyph { stroke: var(--night); }
+/* gradient card: a travelling spectrum along the stroke (only rendered when facts.rgbGradient is confirmed) */
+.ix-effects__card[data-kind="gradient"] .ln-tube:not(.off) p .ln-line { background: var(--rgb-spectrum); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent !important; animation: ix-spectrum var(--d-hue) linear infinite; }
+.ix-effects__card[data-kind="gradient"] .ln-stage.is-rgb .ln-tube:not(.off) { animation: none; }
+@keyframes ix-spectrum { from { background-position: 0 0; } to { background-position: 300% 0; } }
+/* reduced motion: the seven-swatch strip replaces the cycle */
+.ix-effects__strip { display: flex; flex-wrap: wrap; gap: var(--s-1); }
+.ix-effects__strip .c-swatch { min-width: 0; min-height: 0; padding: var(--s-1); cursor: default; }
+.ix-effects__strip .c-swatch .tube { width: 28px; height: 11px; }
+.ix-effects__strip .c-swatch .name { font-size: var(--t-caption); opacity: 1; }
+.ix-effects:not(.is-running) .ix-effects__card[data-kind="static"] .ln-tube { opacity: 1; }
+@media (max-width: 767px) { .ix-effects__grid { grid-template-columns: 1fr; } .ix-effects__stage { aspect-ratio: 4 / 5; } }

@@ -1,0 +1,1731 @@
+{
+  "_schema": {
+    "_doc": "Scene metadata for the stage compositor (brief \u00a73.8.3). WS0-B owns the schema and these placeholder entries; WS-IMG overwrites `plates`, `calib`, `wallBox`, `anchor`, `portrait`, `wall` and `floorY` with measured values from tools/calibrate.html when the Higgsfield plates land. Fractions are of the plate's own width/height. `calib.px` are the two x-pixels of the calibration object's ends on the LANDSCAPE plate at `aspect.landscape[0]` width; `calib.topY` is the object's top edge as a fraction of plate height (keeps part of it in every cropped frame). `plates.*` are path stems under /lit-neon-preview/rework/assets/img/; the stage appends `-{w}.{fmt}` using `sizes`/`formats` (`wall.*.sizes`/`formats` for the wall crops). Placeholder plates are PNG at one size; real plates ship avif+webp+jpg at 600/1000/1600/2400 and wall crops at 1000/1600/3000/6000. Delivered (IMG) scenes use plates.portrait{day,night}, plates.wall.{landscape,portrait}.{day,night}, plates.widths.{plate,portrait,wall,portraitWall} and plates.formats[avif,webp,jpg]; placeholder scenes use the short form (plates.sizes/portraitSizes + implicit -portrait/-wall suffixes). The stage reads both (stage.js plateSource).",
+    "id": "string",
+    "name": "string",
+    "tags": [
+      "string"
+    ],
+    "collection": "string|null",
+    "plates": {
+      "day": "stem",
+      "night": "stem",
+      "sizes": [1600],
+      "formats": [
+        "png"
+      ]
+    },
+    "aspect": {
+      "landscape": [3072, 2048],
+      "portrait": [2048, 2560]
+    },
+    "calib": {
+      "object": "sofa",
+      "cm": 210,
+      "px": [812, 2290],
+      "topY": 0.62
+    },
+    "wallBox": {
+      "x": 0.18,
+      "y": 0.08,
+      "w": 0.64,
+      "h": 0.52
+    },
+    "anchor": {
+      "x": 0.5,
+      "y": 0.3
+    },
+    "portrait": {
+      "calibPx": [410, 1640],
+      "calibTopY": 0.66,
+      "wallBox": {},
+      "anchor": {}
+    },
+    "wall": {
+      "landscape": {
+        "crop": {
+          "x": 0.14,
+          "y": 0.02,
+          "w": 0.72,
+          "h": 0.66
+        },
+        "px": [3000, 2750],
+        "stem": "\u2026/day-wall",
+        "sizes": [3000],
+        "formats": [
+          "png"
+        ]
+      },
+      "portrait": {
+        "crop": {},
+        "px": [2000, 2500]
+      }
+    },
+    "light": "warm|cool|neutral",
+    "floorY": 0.78,
+    "mobileDefault": true,
+    "placeholder": true
+  },
+  "scenes": [
+    {
+      "id": "s01-living",
+      "name": "Living room",
+      "tags": [
+        "bestsellers",
+        "default",
+        "home",
+        "living"
+      ],
+      "plates": {
+        "day": "scenes/s01-living/day",
+        "night": "scenes/s01-living/night",
+        "portrait": {
+          "day": "scenes/s01-living/day-portrait",
+          "night": "scenes/s01-living/night-portrait"
+        },
+        "wall": {
+          "landscape": {
+            "day": "scenes/s01-living/day-wall",
+            "night": "scenes/s01-living/night-wall"
+          },
+          "portrait": {
+            "day": "scenes/s01-living/day-portrait-wall",
+            "night": "scenes/s01-living/night-portrait-wall"
+          }
+        },
+        "widths": {
+          "plate": [600, 1000, 1600, 2400],
+          "portrait": [600, 1000, 1600, 2048],
+          "wall": [1000, 1600, 3000, 6000],
+          "portraitWall": [1000, 1600, 3000, 4000]
+        },
+        "formats": [
+          "avif",
+          "webp",
+          "jpg"
+        ]
+      },
+      "aspect": {
+        "landscape": [3072, 2048],
+        "portrait": [2048, 2560]
+      },
+      "calib": {
+        "object": "sofa",
+        "cm": 230,
+        "px": [532, 2510],
+        "topY": 0.536
+      },
+      "wallBox": {
+        "x": 0.2483,
+        "y": 0.0385,
+        "w": 0.5009,
+        "h": 0.4923
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.3176
+      },
+      "portrait": {
+        "crop": {
+          "x": 0.2333,
+          "y": 0,
+          "w": 0.5333,
+          "h": 1
+        },
+        "calibPx": [-231, 2242],
+        "wallBox": {
+          "x": 0.028,
+          "y": 0.0385,
+          "w": 0.9391,
+          "h": 0.4923
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.3176
+        },
+        "calibInFrame": false,
+        "calibTopY": 0.536
+      },
+      "wall": {
+        "landscape": {
+          "crop": {
+            "x": 0.21,
+            "y": 0.0385,
+            "w": 0.5774,
+            "h": 0.5774
+          },
+          "px": [6000, 4000]
+        },
+        "portrait": {
+          "crop": {
+            "x": 0.028,
+            "y": 0,
+            "w": 0.9391,
+            "h": 0.9391
+          },
+          "px": [4000, 5000]
+        }
+      },
+      "light": "warm",
+      "floorY": 0.7628,
+      "mobileDefault": true,
+      "source": {
+        "generator": "Higgsfield gpt_image_2_5 (4k, medium)",
+        "jobs": {
+          "day": "f7238eef-9105-493e-9fa7-a61440572c53",
+          "night": "79fe7bdc-947b-402b-a046-9cd3026bab07",
+          "replaced": [
+            "9da07ca3-ff75-473a-b3db-6f9e6375a6c2",
+            "e1fd7f4d-a60d-443c-9e3c-b7d73cd660b2"
+          ]
+        },
+        "night": "edit of the day image",
+        "generatedPx": [3504, 2336],
+        "wallCropUpscale": 2.9654
+      },
+      "label": "Rendered preview",
+      "placeholder": false,
+      "collection": "home"
+    },
+    {
+      "id": "s02-bedroom",
+      "name": "Bedroom",
+      "tags": [
+        "bedroom",
+        "daynight",
+        "home"
+      ],
+      "plates": {
+        "day": "scenes/s02-bedroom/day",
+        "night": "scenes/s02-bedroom/night",
+        "portrait": {
+          "day": "scenes/s02-bedroom/day-portrait",
+          "night": "scenes/s02-bedroom/night-portrait"
+        },
+        "wall": {
+          "landscape": {
+            "day": "scenes/s02-bedroom/day-wall",
+            "night": "scenes/s02-bedroom/night-wall"
+          },
+          "portrait": {
+            "day": "scenes/s02-bedroom/day-portrait-wall",
+            "night": "scenes/s02-bedroom/night-portrait-wall"
+          }
+        },
+        "widths": {
+          "plate": [600, 1000, 1600, 2400],
+          "portrait": [600, 1000, 1600, 2048],
+          "wall": [1000, 1600, 3000, 6000],
+          "portraitWall": [1000, 1600, 3000, 4000]
+        },
+        "formats": [
+          "avif",
+          "webp",
+          "jpg"
+        ]
+      },
+      "aspect": {
+        "landscape": [3072, 2048],
+        "portrait": [2048, 2560]
+      },
+      "calib": {
+        "object": "bed (headboard)",
+        "cm": 150,
+        "px": [853, 2150]
+      },
+      "wallBox": {
+        "x": 0.1598,
+        "y": 0.03,
+        "w": 0.6807,
+        "h": 0.3647
+      },
+      "anchor": {
+        "x": 0.4886,
+        "y": 0.274
+      },
+      "portrait": {
+        "crop": {
+          "x": 0.2219,
+          "y": 0,
+          "w": 0.5333,
+          "h": 1
+        },
+        "calibPx": [214, 1835],
+        "wallBox": {
+          "x": 0,
+          "y": 0.03,
+          "w": 1,
+          "h": 0.3647
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.274
+        },
+        "calibInFrame": true
+      },
+      "wall": {
+        "landscape": {
+          "crop": {
+            "x": 0.1598,
+            "y": 0,
+            "w": 0.6807,
+            "h": 0.6807
+          },
+          "px": [6000, 4000]
+        },
+        "portrait": {
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1
+          },
+          "px": [4000, 5000]
+        }
+      },
+      "light": "warm",
+      "floorY": 0.75,
+      "mobileDefault": false,
+      "source": {
+        "generator": "Higgsfield gpt_image_2_5 (4k, medium)",
+        "jobs": {
+          "day": "feea3dab-a6c0-4028-bf1a-f4e72576338c",
+          "night": "21509b1c-9c34-4df0-ac17-67fe5ea9b14b"
+        },
+        "night": "edit of the day image",
+        "generatedPx": [3504, 2336],
+        "wallCropUpscale": 2.5157
+      },
+      "label": "Rendered preview",
+      "placeholder": false,
+      "collection": "bedroom"
+    },
+    {
+      "id": "s03-kitchen",
+      "name": "Kitchen",
+      "tags": [
+        "home",
+        "kitchen"
+      ],
+      "plates": {
+        "day": "scenes/s03-kitchen/day",
+        "night": "scenes/s03-kitchen/night",
+        "portrait": {
+          "day": "scenes/s03-kitchen/day-portrait",
+          "night": "scenes/s03-kitchen/night-portrait"
+        },
+        "wall": {
+          "landscape": {
+            "day": "scenes/s03-kitchen/day-wall",
+            "night": "scenes/s03-kitchen/night-wall"
+          },
+          "portrait": {
+            "day": "scenes/s03-kitchen/day-portrait-wall",
+            "night": "scenes/s03-kitchen/night-portrait-wall"
+          }
+        },
+        "widths": {
+          "plate": [600, 1000, 1600, 2400],
+          "portrait": [600, 1000, 1600, 2048],
+          "wall": [1000, 1600, 3000, 6000],
+          "portraitWall": [1000, 1600, 3000, 4000]
+        },
+        "formats": [
+          "avif",
+          "webp",
+          "jpg"
+        ]
+      },
+      "aspect": {
+        "landscape": [3072, 2048],
+        "portrait": [2048, 2560]
+      },
+      "calib": {
+        "object": "run of units (worktop)",
+        "cm": 285,
+        "px": [518, 2538],
+        "topY": 0.5158
+      },
+      "wallBox": {
+        "x": 0.1998,
+        "y": 0.0385,
+        "w": 0.5936,
+        "h": 0.4024
+      },
+      "anchor": {
+        "x": 0.4974,
+        "y": 0.2397
+      },
+      "portrait": {
+        "crop": {
+          "x": 0.2308,
+          "y": 0,
+          "w": 0.5333,
+          "h": 1
+        },
+        "calibPx": [-238, 2286],
+        "wallBox": {
+          "x": 0,
+          "y": 0.0385,
+          "w": 1,
+          "h": 0.4024
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.2397
+        },
+        "calibInFrame": false,
+        "calibTopY": 0.5158
+      },
+      "wall": {
+        "landscape": {
+          "crop": {
+            "x": 0.1998,
+            "y": 0.0204,
+            "w": 0.5936,
+            "h": 0.5936
+          },
+          "px": [6000, 4000]
+        },
+        "portrait": {
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1
+          },
+          "px": [4000, 5000]
+        }
+      },
+      "light": "neutral",
+      "floorY": 0.8271,
+      "mobileDefault": false,
+      "source": {
+        "generator": "Higgsfield gpt_image_2_5 (4k, medium)",
+        "jobs": {
+          "day": "2cc95938-8fac-4f7b-93a9-29a2ef18e205",
+          "night": "8313d52a-629a-4796-8e6b-5acc97557a1f"
+        },
+        "night": "edit of the day image",
+        "generatedPx": [3504, 2336],
+        "wallCropUpscale": 2.8846
+      },
+      "label": "Rendered preview",
+      "placeholder": false,
+      "collection": "kitchen"
+    },
+    {
+      "id": "s04-homebar",
+      "name": "Home bar",
+      "tags": [
+        "bar",
+        "home",
+        "sizeguide"
+      ],
+      "plates": {
+        "day": "scenes/s04-homebar/day",
+        "night": "scenes/s04-homebar/night",
+        "portrait": {
+          "day": "scenes/s04-homebar/day-portrait",
+          "night": "scenes/s04-homebar/night-portrait"
+        },
+        "wall": {
+          "landscape": {
+            "day": "scenes/s04-homebar/day-wall",
+            "night": "scenes/s04-homebar/night-wall"
+          },
+          "portrait": {
+            "day": "scenes/s04-homebar/day-portrait-wall",
+            "night": "scenes/s04-homebar/night-portrait-wall"
+          }
+        },
+        "widths": {
+          "plate": [600, 1000, 1600, 2400],
+          "portrait": [600, 1000, 1600, 2048],
+          "wall": [1000, 1600, 3000, 6000],
+          "portraitWall": [1000, 1600, 3000, 4000]
+        },
+        "formats": [
+          "avif",
+          "webp",
+          "jpg"
+        ]
+      },
+      "aspect": {
+        "landscape": [3072, 2048],
+        "portrait": [2048, 2560]
+      },
+      "calib": {
+        "object": "bar counter",
+        "cm": 370,
+        "px": [176, 2764]
+      },
+      "wallBox": {
+        "x": 0.1084,
+        "y": 0.0942,
+        "w": 0.7334,
+        "h": 0.2226
+      },
+      "anchor": {
+        "x": 0.49,
+        "y": 0.2055
+      },
+      "portrait": {
+        "crop": {
+          "x": 0.2233,
+          "y": 0,
+          "w": 0.5333,
+          "h": 1
+        },
+        "calibPx": [-637, 2598],
+        "wallBox": {
+          "x": 0,
+          "y": 0.0942,
+          "w": 1,
+          "h": 0.2226
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.2055
+        },
+        "calibInFrame": false
+      },
+      "wall": {
+        "landscape": {
+          "crop": {
+            "x": 0.1084,
+            "y": 0,
+            "w": 0.7334,
+            "h": 0.7334
+          },
+          "px": [6000, 4000]
+        },
+        "portrait": {
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1
+          },
+          "px": [4000, 5000]
+        }
+      },
+      "light": "warm",
+      "floorY": 0.7598,
+      "mobileDefault": false,
+      "source": {
+        "generator": "Higgsfield gpt_image_2_5 (4k, medium)",
+        "jobs": {
+          "day": "d7b1fdd1-a703-4669-b337-9f2bfc2338a7",
+          "night": "5c840695-17cb-4937-92df-50912f780765"
+        },
+        "night": "edit of the day image",
+        "generatedPx": [3504, 2336],
+        "wallCropUpscale": 2.3346
+      },
+      "label": "Rendered preview",
+      "placeholder": false,
+      "collection": "bar"
+    },
+    {
+      "id": "s05-pub",
+      "name": "Pub",
+      "tags": [
+        "bar",
+        "business",
+        "pub"
+      ],
+      "plates": {
+        "day": "scenes/s05-pub/day",
+        "night": "scenes/s05-pub/night",
+        "portrait": {
+          "day": "scenes/s05-pub/day-portrait",
+          "night": "scenes/s05-pub/night-portrait"
+        },
+        "wall": {
+          "landscape": {
+            "day": "scenes/s05-pub/day-wall",
+            "night": "scenes/s05-pub/night-wall"
+          },
+          "portrait": {
+            "day": "scenes/s05-pub/day-portrait-wall",
+            "night": "scenes/s05-pub/night-portrait-wall"
+          }
+        },
+        "widths": {
+          "plate": [600, 1000, 1600, 2400],
+          "portrait": [600, 1000, 1600, 2048],
+          "wall": [1000, 1600, 3000, 6000],
+          "portraitWall": [1000, 1600, 3000, 4000]
+        },
+        "formats": [
+          "avif",
+          "webp",
+          "jpg"
+        ]
+      },
+      "aspect": {
+        "landscape": [3072, 2048],
+        "portrait": [2048, 2560]
+      },
+      "calib": {
+        "object": "brick wall span (scaled from the 198 cm door)",
+        "cm": 359,
+        "px": [455, 2554]
+      },
+      "wallBox": {
+        "x": 0.1598,
+        "y": 0.0856,
+        "w": 0.6621,
+        "h": 0.4666
+      },
+      "anchor": {
+        "x": 0.4897,
+        "y": 0.3853
+      },
+      "portrait": {
+        "crop": {
+          "x": 0.2231,
+          "y": 0,
+          "w": 0.5333,
+          "h": 1
+        },
+        "calibPx": [-288, 2336],
+        "wallBox": {
+          "x": 0,
+          "y": 0.0856,
+          "w": 1,
+          "h": 0.4666
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.3853
+        },
+        "calibInFrame": false
+      },
+      "wall": {
+        "landscape": {
+          "crop": {
+            "x": 0.1598,
+            "y": 0.0621,
+            "w": 0.6621,
+            "h": 0.6621
+          },
+          "px": [6000, 4000]
+        },
+        "portrait": {
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1
+          },
+          "px": [4000, 5000]
+        }
+      },
+      "light": "warm",
+      "floorY": 0.8669,
+      "mobileDefault": false,
+      "source": {
+        "generator": "Higgsfield gpt_image_2_5 (4k, medium)",
+        "jobs": {
+          "day": "2e8c2c93-0116-44f7-b148-7ff658a8db47",
+          "night": "a85650c0-b2c9-41bf-81b4-5c3b9b7f3538"
+        },
+        "night": "edit of the day image",
+        "generatedPx": [3504, 2336],
+        "wallCropUpscale": 2.5862
+      },
+      "label": "Rendered preview",
+      "placeholder": false,
+      "collection": "business"
+    },
+    {
+      "id": "s06-wedding",
+      "name": "Wedding barn",
+      "tags": [
+        "daynight",
+        "events",
+        "wedding"
+      ],
+      "plates": {
+        "day": "scenes/s06-wedding/day",
+        "night": "scenes/s06-wedding/night",
+        "portrait": {
+          "day": "scenes/s06-wedding/day-portrait",
+          "night": "scenes/s06-wedding/night-portrait"
+        },
+        "wall": {
+          "landscape": {
+            "day": "scenes/s06-wedding/day-wall",
+            "night": "scenes/s06-wedding/night-wall"
+          },
+          "portrait": {
+            "day": "scenes/s06-wedding/day-portrait-wall",
+            "night": "scenes/s06-wedding/night-portrait-wall"
+          }
+        },
+        "widths": {
+          "plate": [600, 1000, 1600, 2400],
+          "portrait": [600, 1000, 1600, 2048],
+          "wall": [1000, 1600, 3000, 6000],
+          "portraitWall": [1000, 1600, 3000, 4000]
+        },
+        "formats": [
+          "avif",
+          "webp",
+          "jpg"
+        ]
+      },
+      "aspect": {
+        "landscape": [3072, 2048],
+        "portrait": [2048, 2560]
+      },
+      "calib": {
+        "object": "backdrop frame",
+        "cm": 244,
+        "px": [626, 2435]
+      },
+      "wallBox": {
+        "x": 0.2283,
+        "y": 0.2568,
+        "w": 0.5437,
+        "h": 0.2697
+      },
+      "anchor": {
+        "x": 0.498,
+        "y": 0.3917
+      },
+      "portrait": {
+        "crop": {
+          "x": 0.2313,
+          "y": 0,
+          "w": 0.5333,
+          "h": 1
+        },
+        "calibPx": [-106, 2155],
+        "wallBox": {
+          "x": 0,
+          "y": 0.2568,
+          "w": 1,
+          "h": 0.2697
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.3917
+        },
+        "calibInFrame": false
+      },
+      "wall": {
+        "landscape": {
+          "crop": {
+            "x": 0.2283,
+            "y": 0.1199,
+            "w": 0.5437,
+            "h": 0.5437
+          },
+          "px": [6000, 4000]
+        },
+        "portrait": {
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1
+          },
+          "px": [4000, 5000]
+        }
+      },
+      "light": "warm",
+      "floorY": 0.8108,
+      "mobileDefault": false,
+      "source": {
+        "generator": "Higgsfield gpt_image_2_5 (4k, medium)",
+        "jobs": {
+          "day": "f1289c5b-595e-464e-9890-76112a7de9eb",
+          "night": "5a95527f-7386-4f28-90c9-215907fee387"
+        },
+        "night": "edit of the day image",
+        "generatedPx": [3504, 2336],
+        "wallCropUpscale": 3.1496
+      },
+      "label": "Rendered preview",
+      "placeholder": false,
+      "collection": "wedding"
+    },
+    {
+      "id": "s07-cafe",
+      "name": "Caf\u00e9",
+      "tags": [
+        "business",
+        "cafe"
+      ],
+      "plates": {
+        "day": "scenes/s07-cafe/day",
+        "night": "scenes/s07-cafe/night",
+        "portrait": {
+          "day": "scenes/s07-cafe/day-portrait",
+          "night": "scenes/s07-cafe/night-portrait"
+        },
+        "wall": {
+          "landscape": {
+            "day": "scenes/s07-cafe/day-wall",
+            "night": "scenes/s07-cafe/night-wall"
+          },
+          "portrait": {
+            "day": "scenes/s07-cafe/day-portrait-wall",
+            "night": "scenes/s07-cafe/night-portrait-wall"
+          }
+        },
+        "widths": {
+          "plate": [600, 1000, 1600, 2400],
+          "portrait": [600, 1000, 1600, 2048],
+          "wall": [1000, 1600, 3000, 6000],
+          "portraitWall": [1000, 1600, 3000, 4000]
+        },
+        "formats": [
+          "avif",
+          "webp",
+          "jpg"
+        ]
+      },
+      "aspect": {
+        "landscape": [3072, 2048],
+        "portrait": [2048, 2560]
+      },
+      "calib": {
+        "object": "counter",
+        "cm": 287,
+        "px": [568, 2488]
+      },
+      "wallBox": {
+        "x": 0.1826,
+        "y": 0.0342,
+        "w": 0.645,
+        "h": 0.2911
+      },
+      "anchor": {
+        "x": 0.4963,
+        "y": 0.1798
+      },
+      "portrait": {
+        "crop": {
+          "x": 0.2296,
+          "y": 0,
+          "w": 0.5333,
+          "h": 1
+        },
+        "calibPx": [-172, 2228],
+        "wallBox": {
+          "x": 0,
+          "y": 0.0342,
+          "w": 1,
+          "h": 0.2911
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.1798
+        },
+        "calibInFrame": false
+      },
+      "wall": {
+        "landscape": {
+          "crop": {
+            "x": 0.1826,
+            "y": 0.0065,
+            "w": 0.645,
+            "h": 0.645
+          },
+          "px": [6000, 4000]
+        },
+        "portrait": {
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1
+          },
+          "px": [4000, 5000]
+        }
+      },
+      "light": "warm",
+      "floorY": 0.7406,
+      "mobileDefault": false,
+      "source": {
+        "generator": "Higgsfield gpt_image_2_5 (4k, medium)",
+        "jobs": {
+          "day": "a922ebfc-8fc3-4f24-b090-ee1006eb94ef",
+          "night": "6b64982d-4487-408b-b533-3d5c3b14e811"
+        },
+        "night": "edit of the day image",
+        "generatedPx": [3504, 2336],
+        "wallCropUpscale": 2.6549
+      },
+      "label": "Rendered preview",
+      "placeholder": false,
+      "collection": "business"
+    },
+    {
+      "id": "s08-salon",
+      "name": "Salon",
+      "tags": [
+        "barber",
+        "business",
+        "salon"
+      ],
+      "plates": {
+        "day": "scenes/s08-salon/day",
+        "night": "scenes/s08-salon/night",
+        "portrait": {
+          "day": "scenes/s08-salon/day-portrait",
+          "night": "scenes/s08-salon/night-portrait"
+        },
+        "wall": {
+          "landscape": {
+            "day": "scenes/s08-salon/day-wall",
+            "night": "scenes/s08-salon/night-wall"
+          },
+          "portrait": {
+            "day": "scenes/s08-salon/day-portrait-wall",
+            "night": "scenes/s08-salon/night-portrait-wall"
+          }
+        },
+        "widths": {
+          "plate": [600, 1000, 1600, 2400],
+          "portrait": [600, 1000, 1600, 2048],
+          "wall": [1000, 1600, 3000, 6000],
+          "portraitWall": [1000, 1600, 3000, 4000]
+        },
+        "formats": [
+          "avif",
+          "webp",
+          "jpg"
+        ]
+      },
+      "aspect": {
+        "landscape": [3072, 2048],
+        "portrait": [2048, 2560]
+      },
+      "calib": {
+        "object": "mirror",
+        "cm": 110,
+        "px": [399, 1060]
+      },
+      "wallBox": {
+        "x": 0.3938,
+        "y": 0.0385,
+        "w": 0.4966,
+        "h": 0.5822
+      },
+      "anchor": {
+        "x": 0.5565,
+        "y": 0.2997
+      },
+      "portrait": {
+        "crop": {
+          "x": 0.2898,
+          "y": 0,
+          "w": 0.5333,
+          "h": 1
+        },
+        "calibPx": [-614, 212],
+        "wallBox": {
+          "x": 0.195,
+          "y": 0.0385,
+          "w": 0.805,
+          "h": 0.5822
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.2997
+        },
+        "calibInFrame": false
+      },
+      "wall": {
+        "landscape": {
+          "crop": {
+            "x": 0.351,
+            "y": 0.0385,
+            "w": 0.5822,
+            "h": 0.5822
+          },
+          "px": [6000, 4000]
+        },
+        "portrait": {
+          "crop": {
+            "x": 0.195,
+            "y": 0,
+            "w": 0.805,
+            "h": 0.805
+          },
+          "px": [4000, 5000]
+        }
+      },
+      "light": "warm",
+      "floorY": 0.7547,
+      "mobileDefault": false,
+      "source": {
+        "generator": "Higgsfield gpt_image_2_5 (4k, medium)",
+        "jobs": {
+          "day": "58537a29-3179-4b04-952c-d75ee8a73286",
+          "night": "3435f23a-203b-4b58-ad81-dcf617da6a65"
+        },
+        "night": "edit of the day image",
+        "generatedPx": [3504, 2336],
+        "wallCropUpscale": 2.9412
+      },
+      "label": "Rendered preview",
+      "placeholder": false,
+      "collection": "business"
+    },
+    {
+      "id": "s09-kids",
+      "name": "Nursery",
+      "tags": [
+        "home",
+        "kids",
+        "nursery"
+      ],
+      "plates": {
+        "day": "scenes/s09-kids/day",
+        "night": "scenes/s09-kids/night",
+        "portrait": {
+          "day": "scenes/s09-kids/day-portrait",
+          "night": "scenes/s09-kids/night-portrait"
+        },
+        "wall": {
+          "landscape": {
+            "day": "scenes/s09-kids/day-wall",
+            "night": "scenes/s09-kids/night-wall"
+          },
+          "portrait": {
+            "day": "scenes/s09-kids/day-portrait-wall",
+            "night": "scenes/s09-kids/night-portrait-wall"
+          }
+        },
+        "widths": {
+          "plate": [600, 1000, 1600, 2400],
+          "portrait": [600, 1000, 1600, 2048],
+          "wall": [1000, 1600, 3000, 6000],
+          "portraitWall": [1000, 1600, 3000, 4000]
+        },
+        "formats": [
+          "avif",
+          "webp",
+          "jpg"
+        ]
+      },
+      "aspect": {
+        "landscape": [3072, 2048],
+        "portrait": [2048, 2560]
+      },
+      "calib": {
+        "object": "cot",
+        "cm": 154,
+        "px": [847, 2210]
+      },
+      "wallBox": {
+        "x": 0.1998,
+        "y": 0.0342,
+        "w": 0.6107,
+        "h": 0.4281
+      },
+      "anchor": {
+        "x": 0.4974,
+        "y": 0.2568
+      },
+      "portrait": {
+        "crop": {
+          "x": 0.2308,
+          "y": 0,
+          "w": 0.5333,
+          "h": 1
+        },
+        "calibPx": [172, 1877],
+        "wallBox": {
+          "x": 0,
+          "y": 0.0342,
+          "w": 1,
+          "h": 0.4281
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.2568
+        },
+        "calibInFrame": true
+      },
+      "wall": {
+        "landscape": {
+          "crop": {
+            "x": 0.1998,
+            "y": 0,
+            "w": 0.6107,
+            "h": 0.6107
+          },
+          "px": [6000, 4000]
+        },
+        "portrait": {
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1
+          },
+          "px": [4000, 5000]
+        }
+      },
+      "light": "warm",
+      "floorY": 0.7705,
+      "mobileDefault": false,
+      "source": {
+        "generator": "Higgsfield gpt_image_2_5 (4k, medium)",
+        "jobs": {
+          "day": "56fc400a-da5d-4554-a5ee-8f88266a6b00",
+          "night": "9720f3da-2c21-4ce0-a7ac-54b67f108efb"
+        },
+        "night": "edit of the day image",
+        "generatedPx": [3504, 2336],
+        "wallCropUpscale": 2.8037
+      },
+      "label": "Rendered preview",
+      "placeholder": false,
+      "collection": "kids"
+    },
+    {
+      "id": "s10-office",
+      "name": "Office reception",
+      "tags": [
+        "bulk",
+        "business",
+        "office"
+      ],
+      "plates": {
+        "day": "scenes/s10-office/day",
+        "night": "scenes/s10-office/night",
+        "portrait": {
+          "day": "scenes/s10-office/day-portrait",
+          "night": "scenes/s10-office/night-portrait"
+        },
+        "wall": {
+          "landscape": {
+            "day": "scenes/s10-office/day-wall",
+            "night": "scenes/s10-office/night-wall"
+          },
+          "portrait": {
+            "day": "scenes/s10-office/day-portrait-wall",
+            "night": "scenes/s10-office/night-portrait-wall"
+          }
+        },
+        "widths": {
+          "plate": [600, 1000, 1600, 2400],
+          "portrait": [600, 1000, 1600, 2048],
+          "wall": [1000, 1600, 3000, 6000],
+          "portraitWall": [1000, 1600, 3000, 4000]
+        },
+        "formats": [
+          "avif",
+          "webp",
+          "jpg"
+        ]
+      },
+      "aspect": {
+        "landscape": [3072, 2048],
+        "portrait": [2048, 2560]
+      },
+      "calib": {
+        "object": "desk",
+        "cm": 176,
+        "px": [752, 2280]
+      },
+      "wallBox": {
+        "x": 0.1941,
+        "y": 0.0514,
+        "w": 0.6136,
+        "h": 0.4709
+      },
+      "anchor": {
+        "x": 0.4937,
+        "y": 0.274
+      },
+      "portrait": {
+        "crop": {
+          "x": 0.2271,
+          "y": 0,
+          "w": 0.5333,
+          "h": 1
+        },
+        "calibPx": [68, 1979],
+        "wallBox": {
+          "x": 0,
+          "y": 0.0514,
+          "w": 1,
+          "h": 0.4709
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.274
+        },
+        "calibInFrame": true
+      },
+      "wall": {
+        "landscape": {
+          "crop": {
+            "x": 0.1941,
+            "y": 0.0299,
+            "w": 0.6136,
+            "h": 0.6136
+          },
+          "px": [6000, 4000]
+        },
+        "portrait": {
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1
+          },
+          "px": [4000, 5000]
+        }
+      },
+      "light": "neutral",
+      "floorY": 0.6892,
+      "mobileDefault": false,
+      "source": {
+        "generator": "Higgsfield gpt_image_2_5 (4k, medium)",
+        "jobs": {
+          "day": "3e78bff1-ad12-4323-a59b-25062fc6070a",
+          "night": "142b6b47-d887-4cbe-8151-d260315ecb4e"
+        },
+        "night": "edit of the day image",
+        "generatedPx": [3504, 2336],
+        "wallCropUpscale": 2.7907
+      },
+      "label": "Rendered preview",
+      "placeholder": false,
+      "collection": "business"
+    },
+    {
+      "id": "s11-shopwindow",
+      "name": "Shop window",
+      "tags": [
+        "business",
+        "outdoor",
+        "shopfront"
+      ],
+      "plates": {
+        "day": "scenes/s11-shopwindow/day",
+        "night": "scenes/s11-shopwindow/night",
+        "portrait": {
+          "day": "scenes/s11-shopwindow/day-portrait",
+          "night": "scenes/s11-shopwindow/night-portrait"
+        },
+        "wall": {
+          "landscape": {
+            "day": "scenes/s11-shopwindow/day-wall",
+            "night": "scenes/s11-shopwindow/night-wall"
+          },
+          "portrait": {
+            "day": "scenes/s11-shopwindow/day-portrait-wall",
+            "night": "scenes/s11-shopwindow/night-portrait-wall"
+          }
+        },
+        "widths": {
+          "plate": [600, 1000, 1600, 2400],
+          "portrait": [600, 1000, 1600, 2048],
+          "wall": [1000, 1600, 3000, 6000],
+          "portraitWall": [1000, 1600, 3000, 4000]
+        },
+        "formats": [
+          "avif",
+          "webp",
+          "jpg"
+        ]
+      },
+      "aspect": {
+        "landscape": [3072, 2048],
+        "portrait": [2048, 2560]
+      },
+      "calib": {
+        "object": "door (leaf width, scaled from its 198 cm height)",
+        "cm": 88,
+        "px": [2165, 2684]
+      },
+      "wallBox": {
+        "x": 0.1541,
+        "y": 0.2397,
+        "w": 0.5223,
+        "h": 0.2654
+      },
+      "anchor": {
+        "x": 0.4167,
+        "y": 0.3425
+      },
+      "portrait": {
+        "crop": {
+          "x": 0.15,
+          "y": 0,
+          "w": 0.5333,
+          "h": 1
+        },
+        "calibPx": [2131, 2780],
+        "wallBox": {
+          "x": 0.0077,
+          "y": 0.2397,
+          "w": 0.9792,
+          "h": 0.2654
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.3425
+        },
+        "calibInFrame": false
+      },
+      "wall": {
+        "landscape": {
+          "crop": {
+            "x": 0.1541,
+            "y": 0.1113,
+            "w": 0.5223,
+            "h": 0.5223
+          },
+          "px": [6000, 4000]
+        },
+        "portrait": {
+          "crop": {
+            "x": 0.0077,
+            "y": 0,
+            "w": 0.9792,
+            "h": 0.9792
+          },
+          "px": [4000, 5000]
+        }
+      },
+      "light": "cool",
+      "floorY": 0.8904,
+      "mobileDefault": false,
+      "source": {
+        "generator": "Higgsfield gpt_image_2_5 (4k, medium)",
+        "jobs": {
+          "day": "8b059d72-f205-405a-85f4-5e859d480934",
+          "night": "5d023c99-b848-4a20-9534-15d27eec9b40"
+        },
+        "night": "edit of the day image",
+        "generatedPx": [3504, 2336],
+        "wallCropUpscale": 3.2787
+      },
+      "label": "Rendered preview",
+      "placeholder": false,
+      "collection": "business"
+    },
+    {
+      "id": "s12-gaming",
+      "name": "Gaming room",
+      "tags": [
+        "gaming",
+        "home",
+        "rgb"
+      ],
+      "plates": {
+        "day": "scenes/s12-gaming/day",
+        "night": "scenes/s12-gaming/night",
+        "portrait": {
+          "day": "scenes/s12-gaming/day-portrait",
+          "night": "scenes/s12-gaming/night-portrait"
+        },
+        "wall": {
+          "landscape": {
+            "day": "scenes/s12-gaming/day-wall",
+            "night": "scenes/s12-gaming/night-wall"
+          },
+          "portrait": {
+            "day": "scenes/s12-gaming/day-portrait-wall",
+            "night": "scenes/s12-gaming/night-portrait-wall"
+          }
+        },
+        "widths": {
+          "plate": [600, 1000, 1600, 2400],
+          "portrait": [600, 1000, 1600, 2048],
+          "wall": [1000, 1600, 3000, 6000],
+          "portraitWall": [1000, 1600, 3000, 4000]
+        },
+        "formats": [
+          "avif",
+          "webp",
+          "jpg"
+        ]
+      },
+      "aspect": {
+        "landscape": [3072, 2048],
+        "portrait": [2048, 2560]
+      },
+      "calib": {
+        "object": "desk",
+        "cm": 200,
+        "px": [716, 2343]
+      },
+      "wallBox": {
+        "x": 0.1826,
+        "y": 0.0257,
+        "w": 0.6364,
+        "h": 0.2697
+      },
+      "anchor": {
+        "x": 0.5006,
+        "y": 0.167
+      },
+      "portrait": {
+        "crop": {
+          "x": 0.2339,
+          "y": 0,
+          "w": 0.5333,
+          "h": 1
+        },
+        "calibPx": [-3, 2030],
+        "wallBox": {
+          "x": 0,
+          "y": 0.0257,
+          "w": 1,
+          "h": 0.2697
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.167
+        },
+        "calibInFrame": false
+      },
+      "wall": {
+        "landscape": {
+          "crop": {
+            "x": 0.1826,
+            "y": 0,
+            "w": 0.6364,
+            "h": 0.6364
+          },
+          "px": [6000, 4000]
+        },
+        "portrait": {
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1
+          },
+          "px": [4000, 5000]
+        }
+      },
+      "light": "cool",
+      "floorY": 0.7594,
+      "mobileDefault": false,
+      "source": {
+        "generator": "Higgsfield gpt_image_2_5 (4k, medium)",
+        "jobs": {
+          "day": "23d29a82-9943-4c74-8ef2-052970a5459f",
+          "night": "cb97e7e7-58c0-48d6-9915-c379ab9ab0ac"
+        },
+        "night": "edit of the day image",
+        "generatedPx": [3504, 2336],
+        "wallCropUpscale": 2.6906
+      },
+      "label": "Rendered preview",
+      "placeholder": false,
+      "collection": "gaming"
+    },
+    {
+      "id": "s00-studio-dark",
+      "name": "Studio, dark wall",
+      "tags": [
+        "cards",
+        "closeup",
+        "studio"
+      ],
+      "plates": {
+        "day": "scenes/s00-studio-dark/day",
+        "night": "scenes/s00-studio-dark/night",
+        "portrait": {
+          "day": "scenes/s00-studio-dark/day-portrait",
+          "night": "scenes/s00-studio-dark/night-portrait"
+        },
+        "wall": {
+          "landscape": {
+            "day": "scenes/s00-studio-dark/day-wall",
+            "night": "scenes/s00-studio-dark/night-wall"
+          },
+          "portrait": {
+            "day": "scenes/s00-studio-dark/day-portrait-wall",
+            "night": "scenes/s00-studio-dark/night-portrait-wall"
+          }
+        },
+        "widths": {
+          "plate": [600, 1000, 1600, 2400],
+          "portrait": [600, 1000, 1600, 2048],
+          "wall": [1000, 1600, 3000, 6000],
+          "portraitWall": [1000, 1600, 3000, 4000]
+        },
+        "formats": [
+          "avif",
+          "webp",
+          "jpg"
+        ]
+      },
+      "aspect": {
+        "landscape": [3072, 2048],
+        "portrait": [2048, 2560]
+      },
+      "calib": {
+        "object": "frame width (nominal)",
+        "cm": 300,
+        "px": [0, 3072]
+      },
+      "wallBox": {
+        "x": 0.1084,
+        "y": 0.0599,
+        "w": 0.7334,
+        "h": 0.732
+      },
+      "anchor": {
+        "x": 0.4752,
+        "y": 0.4024
+      },
+      "portrait": {
+        "crop": {
+          "x": 0.2085,
+          "y": 0,
+          "w": 0.5333,
+          "h": 1
+        },
+        "calibPx": [-801, 3039],
+        "wallBox": {
+          "x": 0,
+          "y": 0.0599,
+          "w": 1,
+          "h": 0.732
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.4024
+        },
+        "calibInFrame": false
+      },
+      "wall": {
+        "landscape": {
+          "crop": {
+            "x": 0.1084,
+            "y": 0.0592,
+            "w": 0.7334,
+            "h": 0.7334
+          },
+          "px": [6000, 4000]
+        },
+        "portrait": {
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1
+          },
+          "px": [4000, 5000]
+        }
+      },
+      "light": "neutral",
+      "floorY": 0.8626,
+      "mobileDefault": false,
+      "source": {
+        "generator": "Higgsfield gpt_image_2_5 (4k, medium)",
+        "jobs": {
+          "day": "d031416b-82b2-496f-8d27-3e70e66b9e86",
+          "replaced": "d04ddce7-c183-4547-b28d-94032c4960ab"
+        },
+        "night": "tone grade of the day image (same pixels)",
+        "generatedPx": [3504, 2336],
+        "wallCropUpscale": 2.3346
+      },
+      "label": "Rendered preview",
+      "placeholder": false,
+      "collection": null,
+      "studio": true
+    },
+    {
+      "id": "s00-studio-light",
+      "name": "Studio, light wall",
+      "tags": [
+        "drawing",
+        "jacket",
+        "offstate",
+        "studio"
+      ],
+      "plates": {
+        "day": "scenes/s00-studio-light/day",
+        "night": "scenes/s00-studio-light/night",
+        "portrait": {
+          "day": "scenes/s00-studio-light/day-portrait",
+          "night": "scenes/s00-studio-light/night-portrait"
+        },
+        "wall": {
+          "landscape": {
+            "day": "scenes/s00-studio-light/day-wall",
+            "night": "scenes/s00-studio-light/night-wall"
+          },
+          "portrait": {
+            "day": "scenes/s00-studio-light/day-portrait-wall",
+            "night": "scenes/s00-studio-light/night-portrait-wall"
+          }
+        },
+        "widths": {
+          "plate": [600, 1000, 1600, 2400],
+          "portrait": [600, 1000, 1600, 2048],
+          "wall": [1000, 1600, 3000, 6000],
+          "portraitWall": [1000, 1600, 3000, 4000]
+        },
+        "formats": [
+          "avif",
+          "webp",
+          "jpg"
+        ]
+      },
+      "aspect": {
+        "landscape": [3072, 2048],
+        "portrait": [2048, 2560]
+      },
+      "calib": {
+        "object": "frame width (nominal)",
+        "cm": 300,
+        "px": [0, 3072]
+      },
+      "wallBox": {
+        "x": 0.0999,
+        "y": 0.0599,
+        "w": 0.8002,
+        "h": 0.792
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.4281
+      },
+      "portrait": {
+        "crop": {
+          "x": 0.2333,
+          "y": 0,
+          "w": 0.5333,
+          "h": 1
+        },
+        "calibPx": [-896, 2944],
+        "wallBox": {
+          "x": 0,
+          "y": 0.0599,
+          "w": 1,
+          "h": 0.792
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.4281
+        },
+        "calibInFrame": false
+      },
+      "wall": {
+        "landscape": {
+          "crop": {
+            "x": 0.0999,
+            "y": 0.0558,
+            "w": 0.8002,
+            "h": 0.8002
+          },
+          "px": [6000, 4000]
+        },
+        "portrait": {
+          "crop": {
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1
+          },
+          "px": [4000, 5000]
+        }
+      },
+      "light": "neutral",
+      "floorY": 0.9178,
+      "mobileDefault": false,
+      "source": {
+        "generator": "Higgsfield gpt_image_2_5 (4k, medium)",
+        "jobs": {
+          "day": "9e537d3e-059f-4d22-9687-3465a6d98990"
+        },
+        "night": "tone grade of the day image (same pixels)",
+        "generatedPx": [3504, 2336],
+        "wallCropUpscale": 2.1398
+      },
+      "label": "Rendered preview",
+      "placeholder": false,
+      "collection": null,
+      "studio": true
+    },
+    {
+      "id": "wall",
+      "name": "Your wall",
+      "tags": [
+        "own"
+      ],
+      "collection": null,
+      "own": true,
+      "_doc": "The own-wall scene (\u00a75.9): the plate is the visitor's photo; `calib` is set by the scale bar at runtime (ppc from the bar). Never uploaded.",
+      "plates": null,
+      "aspect": null,
+      "calib": null,
+      "wallBox": {
+        "x": 0.02,
+        "y": 0.02,
+        "w": 0.96,
+        "h": 0.96
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.4
+      },
+      "light": "neutral",
+      "floorY": 1,
+      "presets": [
+        {
+          "id": "door",
+          "name": "Door",
+          "cm": 80
+        },
+        {
+          "id": "sofa",
+          "name": "Sofa",
+          "cm": 210
+        },
+        {
+          "id": "bed",
+          "name": "Double bed",
+          "cm": 150
+        },
+        {
+          "id": "a4",
+          "name": "A4 sheet",
+          "cm": 30
+        },
+        {
+          "id": "custom",
+          "name": "Custom",
+          "cm": null
+        }
+      ]
+    }
+  ],
+  "_delivered": [
+    "s01-living",
+    "s02-bedroom",
+    "s00-studio-dark",
+    "s00-studio-light",
+    "s04-homebar",
+    "s06-wedding",
+    "s11-shopwindow",
+    "s12-gaming",
+    "s03-kitchen",
+    "s07-cafe",
+    "s05-pub",
+    "s08-salon",
+    "s09-kids",
+    "s10-office"
+  ],
+  "_missing": []
+}

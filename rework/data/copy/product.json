@@ -1,0 +1,169 @@
+{
+  "_meta": {
+    "page": "product",
+    "owner": "P4",
+    "renders": [
+      "product.html"
+    ],
+    "status": "filled by P4. Design names, blurbs and alt text live in data/designs.json (WS-DATA). No literal dates, £ amounts or percentages. Keys are namespaced under \"product\" because copy.js merges every loaded file into one store (collection and product pages load shop.json too)."
+  },
+  "product": {
+    "meta": {
+      "title": "{name} LED neon sign | Lit Neon",
+      "description": "{blurb} Made to order in our UK workshop, in any of 12 tube colours and five sizes, with free mainland-GB delivery."
+    },
+    "breadcrumb": "Breadcrumb",
+    "crumbShop": "Shop signs",
+    "kind": "LED neon sign · made to order",
+    "gallery": {
+      "label": "Preview of {name}",
+      "scenes": "Rooms",
+      "scene": "Show it in the {scene}",
+      "studio": "Close-up",
+      "drawing": "Drawing",
+      "drawingLabel": "Show the proof drawing",
+      "on": "Sign on",
+      "off": "Sign off",
+      "light": "Switch the sign on or off",
+      "day": "Daytime",
+      "night": "Evening",
+      "dayNight": "Switch between day and evening",
+      "rulers": "Rulers",
+      "rulersLabel": "Rulers: {unit}",
+      "units": {
+        "cm": "cm",
+        "in": "inches",
+        "off": "off"
+      },
+      "real": "Real size",
+      "realOff": "Close in",
+      "realLabel": "Show the whole room at true scale",
+      "drawingNote": "This is the drawing we work from, at the size you've picked.",
+      "back": "Back to the room",
+      "wall": {
+        "fallback": "Room view (AR) isn't available on this device. Try it on a photo of your wall instead.",
+        "title": "See it on your wall",
+        "private": "Your photo stays on this device. We never upload it.",
+        "take": "Take a photo",
+        "choose": "Choose a photo",
+        "close": "Close See it on your wall",
+        "loaded": "Your wall is in. Set the bar across something you know, like a door.",
+        "failed": "We couldn't open that photo. Try a JPG or PNG."
+      }
+    },
+    "buy": {
+      "tabs": {
+        "size": "01 Size",
+        "colour": "02 Colour",
+        "backing": "03 Backing",
+        "extras": "04 Extras"
+      },
+      "tabsLabel": "Options",
+      "sizeHelp": "Measured from your lettering. Letter height in brackets.",
+      "letter": "letters {cm} cm",
+      "colourName": "Tube: {name}",
+      "jacket": "Tube colour when it's off",
+      "rgbJacket": "Colour-changing tubes come in a white jacket. The remote picks the colour and effect.",
+      "finish": "Acrylic finish",
+      "hang": "How it hangs",
+      "standNote": "The table stand holds it up, so there's nothing to hang.",
+      "where": "Where it goes",
+      "outdoorNote": "Outdoor signs are sealed and built by hand, so a designer prices them.",
+      "included": "In the box, free",
+      "includedItems": {
+        "dimmer": "Dimmer and remote",
+        "plug": "UK plug",
+        "warranty": "{warranty}",
+        "delivery": "Free mainland-GB delivery"
+      },
+      "qty": "Quantity",
+      "add": "Add to basket",
+      "update": "Update basket",
+      "quoteCta": "Request a free quote",
+      "returns": "{returns} on ready-made designs. If it's faulty, we always put it right.",
+      "customise": "Customise this design",
+      "customiseSub": "Change the words, add a name, two colours or a symbol",
+      "express": "Or pay with",
+      "sticky": "Add to basket",
+      "editing": "You're editing a sign in your basket.",
+      "updated": "Basket updated",
+      "summary": {
+        "size": "{name}",
+        "colour": "{name}",
+        "backing": "{backing}, {finish}",
+        "extras": "{hang}"
+      }
+    },
+    "delivery": {
+      "label": "Deliver to",
+      "placeholder": "Postcode, e.g. SW1A 1AA",
+      "placeholderShort": "e.g. SW1A 1AA",
+      "check": "Check",
+      "change": "Change",
+      "invalid": "Try the format SW1A 1AA.",
+      "excludedCta": "Ask us about delivery there",
+      "hint": "Free across mainland GB."
+    },
+    "quote": {
+      "title": "Request a free quote",
+      "lede": "A designer checks the build and sends a mockup and a price within {hours} hours. Nothing is made until you approve it.",
+      "name": "Your name",
+      "email": "Email",
+      "notes": "Anything we should know?",
+      "notesHint": "Where it will hang, a deadline, a colour you love.",
+      "consent": "Also send me the occasional note from the workshop (optional, unsubscribe any time). We email your quote either way.",
+      "submit": "Send my quote request",
+      "spec": "We'll quote for",
+      "doneTitle": "Quote request sent",
+      "doneBody": "We'll email a mockup and a price within {hours} hours. Your reference is below.",
+      "next": "Keep browsing",
+      "indoor": "Indoor price {price} for reference"
+    },
+    "tabs": {
+      "label": "About this sign",
+      "drawing": "Drawing",
+      "box": "What's in the box",
+      "hang": "How it hangs",
+      "built": "Built to last",
+      "arrives": "How it arrives",
+      "faq": "FAQ"
+    },
+    "drawingTab": {
+      "title": "The drawing you'd approve",
+      "body": "Before anything is bent, we draw your sign at full size with its measurements, tube length and power. This is that drawing for the options you've picked, live.",
+      "pdf": "Download as PDF",
+      "builder": "Open it in the designer"
+    },
+    "built": {
+      "eyebrow": "Quality is in the details",
+      "title": "Built to last",
+      "warranty": "Every sign carries a {warranty}, and if anything goes wrong we put it right.",
+      "workshop": "Drawn, bent and mounted in our UK workshop, not shipped in from overseas.",
+      "proof": "You approve a drawing before we make anything, so what arrives is what you saw.",
+      "guide": "How LED neon is made",
+      "cards": {
+        "tube": "Tube",
+        "backing": "Backing",
+        "power": "Power",
+        "tested": "Tested"
+      }
+    },
+    "arrives": {
+      "title": "Arrives safe",
+      "lede": "Boxed in our UK workshop and sent by tracked courier, free across mainland GB.",
+      "tracked": "Tracked delivery to your door.",
+      "illustration": "Illustration",
+      "crs": "Consumer Rights Act 2015"
+    },
+    "faqMore": "All our answers",
+    "related": "You might also like",
+    "relatedPrev": "Previous designs",
+    "relatedNext": "More designs",
+    "notFound": {
+      "title": "We couldn't find that design",
+      "body": "It may have been renamed. Every ready-made design is on one page, or you can type your own words.",
+      "cta": "See all designs",
+      "ghost": "Design your own"
+    }
+  }
+}

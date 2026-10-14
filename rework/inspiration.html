@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Neon sign ideas, rendered on real rooms | Lit Neon</title>
+<meta name="description" content="Ideas for LED neon signs by room, occasion and colour, rendered on our scenes. Borrow a style and open it in the designer with your own words.">
+<link rel="canonical" href="/lit-neon-preview/rework/inspiration.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Neon sign ideas | Lit Neon">
+<meta property="og:description" content="Borrow a style from our rendered ideas and put your own words in it.">
+<meta property="og:image" content="/lit-neon-preview/rework/assets/img/og/inspiration.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="/lit-neon-preview/rework/inspiration.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#180E1F">
+<link rel="icon" href="/lit-neon-preview/rework/assets/img/brand/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/lit-neon-preview/rework/assets/fonts/big-shoulders-display-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/lit-neon-preview/rework/assets/fonts/hanken-grotesk-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/lit-neon-preview/rework/data/designs.json" as="fetch" crossorigin>
+<link rel="preload" href="/lit-neon-preview/rework/data/scenes.json" as="fetch" crossorigin>
+<link rel="preload" href="/lit-neon-preview/rework/assets/img/scenes/s06-wedding/night-portrait-600.avif" as="image" type="image/avif" fetchpriority="high"><!-- the first card's plate (perf audit: LCP on phones) -->
+<link rel="stylesheet" href="/lit-neon-preview/rework/assets/fonts/fonts.css">
+<link rel="stylesheet" href="/lit-neon-preview/rework/assets/css/tokens.css">
+<link rel="stylesheet" href="/lit-neon-preview/rework/assets/css/base.css">
+<link rel="stylesheet" href="/lit-neon-preview/rework/assets/css/components.css">
+<link rel="stylesheet" href="/lit-neon-preview/rework/assets/css/chrome.css">
+<link rel="stylesheet" href="/lit-neon-preview/rework/assets/css/pages/business.css">
+<link rel="stylesheet" href="/lit-neon-preview/rework/assets/css/pages/inspiration.css">
+<script src="/lit-neon-preview/rework/assets/js/core/boot.js"></script>
+<!-- modulepreload: tools/modulepreload.mjs -->
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/pages/inspiration.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/renderer.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/vendor/engines/catalog.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/vendor/engines/neon-core.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/stage.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/money.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/clock.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/router.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/ui.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/a11y.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/copy.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/pages/shop.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/pricing.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/vendor/engines/rules.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/basket.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/facts.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/chrome.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/analytics.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/pages/business.js">
+<!-- /modulepreload -->
+</head>
+<body data-page="inspiration" class="hub hub--inspiration">
+<div id="chrome-top"></div>
+<main id="main">
+
+  <section class="in-head" data-hero aria-labelledby="in-h1">
+    <div class="wrap-wide in-head__in">
+      <div class="in-head__title">
+        <p class="t-eyebrow" data-copy="inspiration.eyebrow">Inspiration</p>
+        <h1 id="in-h1" data-copy="inspiration.h1">Ideas, rendered</h1>
+      </div>
+      <p class="in-head__disclaimer" data-caption="rendered" data-qa="inspiration.disclaimer"><svg class="ic" aria-hidden="true"><use href="#i-image"></use></svg><span data-copy="inspiration.disclaimer">These are previews of designs we make, rendered on our scenes. Real photos take their place as the first signs go up.</span></p>
+    </div>
+  </section>
+
+  <section class="in-filters" aria-label="Filter ideas" data-qa="inspiration.filters">
+    <div class="wrap-wide in-filters__in">
+      <div class="in-fgroup" id="in-f-room" role="group"></div>
+      <div class="in-fgroup" id="in-f-use" role="group"></div>
+      <div class="in-fgroup in-fgroup--colour" id="in-f-colour" role="group"></div>
+      <div class="in-filters__foot">
+        <p class="in-count" id="in-count" data-qa="inspiration.count" aria-live="polite"></p>
+        <button type="button" class="c-btn c-btn--text" id="in-clear" data-qa="inspiration.clear" hidden><span class="label" data-copy="inspiration.filters.clear">Clear filters</span></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="in-gallery" aria-labelledby="in-h1">
+    <div class="wrap-wide">
+      <div class="in-masonry" id="in-grid" data-qa="inspiration.grid"></div>
+      <div id="in-empty" hidden></div>
+    </div>
+  </section>
+
+  <section class="in-end paper" aria-labelledby="in-end-h">
+    <div class="wrap in-end__in">
+      <h2 id="in-end-h" data-copy="inspiration.endH2">Have your own idea?</h2>
+      <p class="t-lead" data-copy="inspiration.endBody"></p>
+      <div class="cluster">
+        <a class="c-btn c-btn--primary c-btn--lg" href="/lit-neon-preview/rework/create.html" id="in-end-design" data-qa="inspiration.end.design"><span data-copy="inspiration.endDesign">Design your sign</span></a>
+        <a class="c-btn c-btn--ghost c-btn--lg" href="/lit-neon-preview/rework/upload.html" data-qa="inspiration.end.mockup"><span data-copy="inspiration.endMockup">Get a free mockup</span></a>
+      </div>
+    </div>
+  </section>
+
+</main>
+<div id="chrome-footer"></div>
+<script type="module" src="/lit-neon-preview/rework/assets/js/pages/inspiration.js"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+/* Lit Neon v2 — css/ix/quiz.css (brief §5.6). Entry card, the question sheet, the three-pick result; tokens only. */
+.ix-quiz { border-radius: var(--r-3); background: var(--night-2); border: 1px solid var(--hair); padding: var(--s-6); box-shadow: var(--e-1); }
+@media (max-width: 767px) { .ix-quiz { padding: var(--s-5) var(--s-4); } }
+/* entry card ≤ 360 px tall */
+.ix-quiz__entry { display: grid; grid-template-columns: minmax(0, 3fr) minmax(240px, 2fr); gap: var(--s-6); align-items: center; }
+@media (max-width: 767px) { .ix-quiz__entry { grid-template-columns: 1fr; gap: var(--s-4); } }
+.ix-quiz__copy { display: grid; gap: var(--s-3); justify-items: start; }
+.ix-quiz__copy h2 { font-size: var(--t-display-3); }
+.ix-quiz__copy .t-lead { font-size: var(--t-body); }
+.ix-quiz__copy .c-btn { margin-top: var(--s-2); }
+.ix-quiz__examples { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-2); }
+.ix-quiz__examples .c-mini { aspect-ratio: 1; width: 100%; }
+.ix-quiz__examples .c-mini .txt { font-size: var(--t-title); white-space: normal; overflow: visible; text-overflow: clip; }  /* no clipped glow box */
+@media (min-width: 768px) and (max-width: 1199px) { .ix-quiz__examples .c-mini .txt { font-size: var(--t-body); padding: 0 var(--s-1); } }
+/* phones: the card stays ≤ 360 px (§4.1 §11) — one column in reading order (eyebrow, H2, line, three tiny renders,
+   full-width CTA), the renders a short strip rather than squares */
+@media (max-width: 767px) {
+  .ix-quiz:has(> .ix-quiz__entry) { padding: var(--s-4); }
+  .ix-quiz__entry { gap: var(--s-2); }
+  .ix-quiz__entry .ix-quiz__copy { display: contents; }
+  .ix-quiz__entry .t-eyebrow { order: 1; }
+  .ix-quiz__entry h2 { order: 2; margin-top: var(--s-1); }
+  .ix-quiz__entry .t-lead { order: 3; margin-top: var(--s-1); }
+  .ix-quiz__entry .ix-quiz__examples { order: 4; margin-block: var(--s-2); }
+  .ix-quiz__entry .ix-quiz__copy .c-btn { order: 5; margin-top: 0; width: 100%; justify-content: center; }
+  .ix-quiz__examples .c-mini { aspect-ratio: auto; height: 56px; }
+  .ix-quiz__examples .c-mini .txt { font-size: var(--t-small); white-space: nowrap; padding: 0 var(--s-1); overflow: visible; text-overflow: clip; }
+}
+/* the sheet */
+.ix-quiz__step { display: grid; gap: var(--s-4); }
+.ix-quiz__stepof { font-size: var(--t-eyebrow); line-height: var(--lh-eyebrow); font-weight: 600; text-transform: uppercase; letter-spacing: var(--track-eyebrow); color: var(--brass); }
+.ix-quiz__q { font-family: var(--f-display); font-weight: 800; font-size: var(--t-display-3); line-height: var(--lh-display-3); }
+.ix-quiz__opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-2); }
+.ix-quiz__opt { display: grid; grid-template-columns: 72px 1fr; gap: var(--s-3); align-items: center; min-height: 64px; padding: var(--s-2) var(--s-3) var(--s-2) var(--s-2); border-radius: var(--r-3); border: 1px solid var(--hair); background: var(--night-3); color: var(--bone); text-align: left; transition: border-color var(--d-base), background var(--d-base), box-shadow var(--d-base); }
+.ix-quiz__opt:hover { background: var(--night-2); border-color: var(--hair-lit); }
+.ix-quiz__opt[aria-pressed="true"] { border-color: var(--room); box-shadow: var(--glow-ring); }
+.ix-quiz__opt .c-mini { width: 72px; aspect-ratio: 4 / 3; }
+.ix-quiz__opt .c-mini .txt { font-size: var(--t-small); }
+.ix-quiz__opt .lbl { display: grid; gap: 2px; min-width: 0; }
+.ix-quiz__opt .lbl b { font-weight: 600; }
+.ix-quiz__opt .lbl span { font-size: var(--t-caption); color: var(--smoke); }
+.ix-quiz__wall { width: 72px; height: 54px; border-radius: var(--r-2); background: var(--night); border: 1px solid var(--hair); display: grid; align-items: end; padding: var(--s-2); }
+.ix-quiz__wall i { display: block; height: 10px; width: var(--w, 50%); margin: 0 auto; border-radius: var(--r-pill); background: var(--room); box-shadow: var(--glow-ring); }
+.ix-quiz__nav { display: flex; justify-content: space-between; gap: var(--s-3); align-items: center; }
+/* result */
+.ix-quiz__result { display: grid; gap: var(--s-5); }
+.ix-quiz__rhead { display: flex; justify-content: space-between; gap: var(--s-4); align-items: flex-start; flex-wrap: wrap; }
+.ix-quiz__rhead h2 { font-size: var(--t-display-3); margin-top: var(--s-2); }
+.ix-quiz__rhead .t-lead { font-size: var(--t-body); margin-top: var(--s-2); }
+.ix-quiz__ractions { display: flex; gap: var(--s-2); align-items: center; flex-wrap: wrap; }
+.ix-quiz__picks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4); }
+@media (max-width: 1023px) { .ix-quiz__picks { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 767px) { .ix-quiz__picks { grid-template-columns: 1fr; } }
+.ix-quiz__pick { display: grid; border-radius: var(--r-3); border: 1px solid var(--hair); background: var(--night-3); overflow: clip; }
+.ix-quiz__stage { aspect-ratio: 4 / 3; min-height: 0; border-radius: 0; box-shadow: none; }
+.ix-quiz__mount { position: absolute; inset: 0; }
+.ix-quiz__pbody { display: grid; gap: var(--s-2); padding: var(--s-4); }
+.ix-quiz__pbody h3 { font-family: var(--f-ui); font-weight: 600; font-size: var(--t-title); line-height: var(--lh-title); }
+.ix-quiz__pbody .t-small { color: var(--bone-2); }
+.ix-quiz__price .amount { font-family: var(--f-display); font-weight: 800; font-size: var(--t-display-3); line-height: var(--lh-display-3); color: var(--bone); }
+.ix-quiz__pbody .c-btn { justify-self: start; margin-top: var(--s-1); }
+/* email capture */
+.ix-quiz__email { padding-top: var(--s-4); border-top: 1px solid var(--hair); }
+.ix-quiz__form { display: grid; gap: var(--s-2); }
+.ix-quiz__formrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--s-3); align-items: end; }
+@media (max-width: 767px) { .ix-quiz__formrow { grid-template-columns: 1fr; } .ix-quiz__pbody .c-btn, .ix-quiz__ractions .c-btn--ghost { width: 100%; justify-content: center; } }
+.ix-quiz__form .c-check a { color: var(--bone); text-decoration: underline; padding-block: var(--s-3); margin-block: calc(var(--s-3) * -1); }  /* a 44 px tall target without moving the line */
+.ix-quiz__form .c-check input { font-size: var(--t-body); }
+.ix-quiz__price { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s-1) var(--s-3); }
+.ix-quiz__qnote { color: var(--bone-2); }

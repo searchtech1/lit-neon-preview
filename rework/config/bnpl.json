@@ -1,0 +1,17 @@
+{
+  "_about": "BNPL messaging for c-bnpl (brief §3.7). One line per provider with its mark, shown only when the order total is inside [minTotal, maxTotal]. Templates are the provider's own approved wording; approvedBy/approvedOn stay blank until the current wording is checked against the provider's rules (UK BNPL became FCA-regulated in 2026 — verify the commencement date before launch). {instalment} is computed by ui.bnpl from `parts` (the provider's own split), formatted to the penny. No hand-written instalment maths in copy.",
+  "providers": [
+    {
+      "id": "klarna", "name": "Klarna", "mark": "payment/klarna.svg", "enabled": true,
+      "minTotal": 35, "maxTotal": 1000, "parts": 3,
+      "template": "Pay in 3 interest-free payments of {instalment} with Klarna.",
+      "approvedBy": "", "approvedOn": ""
+    },
+    {
+      "id": "clearpay", "name": "Clearpay", "mark": "payment/clearpay.svg", "enabled": true,
+      "minTotal": 1, "maxTotal": 1200, "parts": 4,
+      "template": "4 interest-free payments of {instalment} with Clearpay.",
+      "approvedBy": "", "approvedOn": ""
+    }
+  ]
+}

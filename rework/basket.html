@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Your basket | Lit Neon</title>
+<meta name="description" content="Your Lit Neon basket: check your signs, change quantities or edit a design before checkout.">
+<link rel="canonical" href="/lit-neon-preview/rework/basket.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Your basket | Lit Neon">
+<meta property="og:description" content="Custom LED neon signs, made in our UK workshop. You approve a drawing before we make anything.">
+<meta property="og:image" content="/lit-neon-preview/rework/assets/img/og/basket.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="/lit-neon-preview/rework/basket.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/lit-neon-preview/rework/assets/img/brand/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/lit-neon-preview/rework/assets/fonts/big-shoulders-display-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/lit-neon-preview/rework/assets/fonts/hanken-grotesk-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/lit-neon-preview/rework/assets/fonts/neonderthaw-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/lit-neon-preview/rework/assets/fonts/fonts.css">
+<link rel="stylesheet" href="/lit-neon-preview/rework/assets/css/tokens.css">
+<link rel="stylesheet" href="/lit-neon-preview/rework/assets/css/base.css">
+<link rel="stylesheet" href="/lit-neon-preview/rework/assets/css/components.css">
+<link rel="stylesheet" href="/lit-neon-preview/rework/assets/css/chrome.css">
+<link rel="stylesheet" href="/lit-neon-preview/rework/assets/css/pages/basket.css">
+<script src="/lit-neon-preview/rework/assets/js/core/boot.js"></script>
+<!-- modulepreload: tools/modulepreload.mjs -->
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/pages/basket-page.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/renderer.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/vendor/engines/catalog.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/vendor/engines/neon-core.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/stage.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/money.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/clock.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/pricing.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/vendor/engines/rules.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/basket.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/router.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/ui.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/a11y.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/copy.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/facts.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/chrome.js">
+<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/analytics.js">
+<!-- /modulepreload -->
+</head>
+<body data-page="basket" class="bk">
+<div id="chrome-top"></div>
+<main id="main">
+  <section class="bk-head" data-hero aria-labelledby="bk-h1">
+    <div class="wrap">
+      <ol class="bk-progress" aria-label="Checkout progress" data-qa="basket.page.progress">
+        <li class="is-current" aria-current="step"><span class="dot">1</span><span data-copy="progress.basket">Basket</span></li>
+        <li><span class="dot">2</span><span data-copy="progress.checkout">Checkout</span></li>
+        <li><span class="dot">3</span><span data-copy="progress.drawing">Your drawing</span></li>
+      </ol>
+      <div class="bk-head__row">
+        <div>
+          <p class="t-eyebrow" data-copy="eyebrow">Nearly yours</p>
+          <h1 id="bk-h1" class="t-display-2 bk-h1"><span data-copy="h1">Your basket</span> <span class="bk-count" data-qa="basket.page.count"></span></h1>
+        </div>
+        <a class="c-btn c-btn--text bk-continue" href="/lit-neon-preview/rework/shop.html" data-qa="basket.page.continue"><svg class="ic" aria-hidden="true"><use href="#i-arrow-left"></use></svg><span class="label" data-copy="continue">Continue shopping</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bk-body" aria-label="Basket">
+    <div class="wrap bk-grid" id="bk-grid">
+      <div class="bk-lines" id="bk-lines" data-qa="basket.page.lines" aria-live="polite">
+        <div class="c-skel c-skel--card bk-skel" aria-hidden="true"></div>
+      </div>
+      <aside class="bk-summary" id="bk-summary" data-qa="basket.page.summary" aria-labelledby="bk-sum-h" hidden>
+        <div class="bk-summary__card">
+          <h2 id="bk-sum-h" class="t-title" data-copy="summary.title">Order summary</h2>
+          <div class="bk-sum" id="bk-sum"></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="bk-next paper" aria-labelledby="bk-next-h" id="bk-next" hidden>
+    <div class="wrap">
+      <p class="t-eyebrow" data-copy="next.eyebrow">After you order</p>
+      <h2 id="bk-next-h" class="t-display-2 bk-next__h" data-copy="next.title">What happens next</h2>
+      <ol class="bk-next__steps" id="bk-next-steps" data-qa="basket.page.next"></ol>
+    </div>
+  </section>
+</main>
+<div class="bk-bar" id="bk-bar" data-qa="basket.page.bar" hidden>
+  <div class="bk-bar__price"><span class="bk-bar__label" data-copy="summary.subtotal">Subtotal</span><b data-qa="basket.page.bar.total"></b></div>
+  <a class="c-btn c-btn--primary" href="/lit-neon-preview/rework/checkout.html" data-qa="basket.page.bar.checkout"><span data-copy="bar.checkout">Checkout</span><svg class="ic" aria-hidden="true"><use href="#i-arrow-right"></use></svg></a>
+</div>
+<div id="chrome-footer"></div>
+<script type="module" src="/lit-neon-preview/rework/assets/js/pages/basket-page.js"></script>
+</body>
+</html>

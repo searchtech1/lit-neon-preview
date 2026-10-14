@@ -1,0 +1,108 @@
+{
+  "preload": [
+    "big-shoulders-display-var.woff2",
+    "hanken-grotesk-var.woff2",
+    "neonderthaw-400.woff2"
+  ],
+  "faces": [
+    {
+      "role": "display",
+      "family": "Big Shoulders Display",
+      "weights": [
+        800,
+        900
+      ],
+      "stem": "big-shoulders-display"
+    },
+    {
+      "role": "ui",
+      "family": "Hanken Grotesk",
+      "weights": [
+        400,
+        500,
+        600
+      ],
+      "stem": "hanken-grotesk"
+    },
+    {
+      "role": "mono",
+      "family": "B612 Mono",
+      "weights": [
+        400
+      ],
+      "stem": "b612-mono"
+    },
+    {
+      "role": "lettering",
+      "id": "soho",
+      "family": "Neonderthaw",
+      "weights": [
+        400
+      ],
+      "stem": "neonderthaw"
+    },
+    {
+      "role": "lettering",
+      "id": "shoreditch",
+      "family": "Tilt Neon",
+      "weights": [
+        400
+      ],
+      "stem": "tilt-neon"
+    },
+    {
+      "role": "lettering",
+      "id": "brighton",
+      "family": "Pacifico",
+      "weights": [
+        400
+      ],
+      "stem": "pacifico"
+    },
+    {
+      "role": "lettering",
+      "id": "camden",
+      "family": "Monoton",
+      "weights": [
+        400
+      ],
+      "stem": "monoton"
+    },
+    {
+      "role": "lettering",
+      "id": "margate",
+      "family": "Yellowtail",
+      "weights": [
+        400
+      ],
+      "stem": "yellowtail"
+    },
+    {
+      "role": "lettering",
+      "id": "notting",
+      "family": "Great Vibes",
+      "weights": [
+        400
+      ],
+      "stem": "great-vibes"
+    },
+    {
+      "role": "lettering",
+      "id": "brixton",
+      "family": "Righteous",
+      "weights": [
+        400
+      ],
+      "stem": "righteous"
+    },
+    {
+      "role": "lettering",
+      "id": "hackney",
+      "family": "Comfortaa",
+      "weights": [
+        600
+      ],
+      "stem": "comfortaa"
+    }
+  ]
+}

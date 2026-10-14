@@ -1,0 +1,110 @@
+{
+  "_meta": {
+    "page": "checkout",
+    "owner": "P7",
+    "renders": [
+      "checkout.html"
+    ],
+    "status": "filled by P7. No literal dates, £ amounts or percentages (tools/lint-copy.mjs); prices, dates and fact values arrive as {vars}."
+  },
+  "meta": {
+    "title": "Checkout | Lit Neon",
+    "description": "Check your delivery postcode, add a discount code and continue to secure checkout."
+  },
+  "h1": "Checkout",
+  "eyebrow": "Last step before your drawing",
+  "summary": "Order summary",
+  "showSummary": "Show order summary",
+  "hideSummary": "Hide order summary",
+  "subtotal": "Subtotal",
+  "discount": "Launch price (−{pct}%)",
+  "codeRow": "Code {code} (−{pct}%)",
+  "codeRowFixed": "Code {code}",
+  "code": {
+    "title": "Discount code",
+    "label": "Discount code",
+    "placeholder": "Enter a code",
+    "apply": "Apply",
+    "remove": "Remove code",
+    "invalid": "That code isn't one of ours. Check the spelling and try again.",
+    "empty": "Type a code first.",
+    "min": "That code works on orders of {min} or more.",
+    "applied": "{code} applied.",
+    "onlyOne": "One code per order. A code never stacks with the launch price — you get whichever saves more.",
+    "loses": "{code} is valid, but the launch price is the better deal, so we kept it."
+  },
+  "delivery": "Delivery",
+  "deliveryFree": "Free",
+  "deliveryTitle": "Delivery",
+  "postcode": {
+    "label": "Delivery postcode",
+    "placeholder": "e.g. E1 6AN",
+    "check": "Check",
+    "help": "We deliver free across mainland GB. You'll add the full address on the secure payment step.",
+    "excludedRoute": "Ask us about delivery",
+    "required": "Add a mainland-GB postcode to continue."
+  },
+  "postcodeRequired": "Add a delivery postcode above to continue.",
+  "excludedBlock": "We can't take payment for this postcode yet — ask us and we'll see what's possible.",
+  "total": "Total",
+  "items": "{n} {unit}",
+  "unit": {
+    "one": "sign",
+    "many": "signs"
+  },
+  "qty": "Quantity {n}",
+  "quoted": "Quoted separately",
+  "quotedNote": "Not in this total. A designer emails a mockup and a price, usually within {hours}.",
+  "onlyQuotes": "Everything in your basket is quoted by a designer, so there's nothing to pay yet.",
+  "express": {
+    "title": "Express checkout",
+    "or": "or continue with your postcode below",
+    "blocked": "Express checkout isn't available while a quoted sign is in your basket."
+  },
+  "before": {
+    "title": "Before you pay"
+  },
+  "ccr": "Custom signs are made to your words, so they can't be returned for a change of mind once production starts. Faults are always put right. Your statutory rights are not affected.",
+  "readyReturns": "Ready-made designs come with {returns} for a change of mind, as long as the sign comes back unused.",
+  "photoProof": "Signs from your photo: a designer draws your proof before anything is made.",
+  "invoice": "Every order comes with an invoice for your records.",
+  "continue": "Continue to secure checkout",
+  "continueNote": "You approve a drawing of your sign before we make anything.",
+  "debug": "What the store receives",
+  "preview": "Signs shown as rendered previews.",
+  "empty": {
+    "title": "Your basket is empty",
+    "text": "There's nothing to check out yet. Design a sign, or start from one of ours.",
+    "design": "Design a sign",
+    "shop": "Browse ready-made"
+  },
+  "progress": {
+    "label": "Checkout progress",
+    "basket": "Basket",
+    "checkout": "Checkout",
+    "done": "Confirmation"
+  },
+  "confirm": {
+    "eyebrow": "Test order placed",
+    "title": "Test order {ref} — no payment taken",
+    "via": " · via {provider}",
+    "lede": "This is a test confirmation, so nothing was charged and nothing will be made. Below is the order exactly as the store would receive it.",
+    "mapping": "everyday {everyday} → launch {payable}",
+    "deliverTo": "Delivering to {postcode}",
+    "deliverExpress": "Delivery address from {provider}",
+    "next": "What happens next",
+    "s1t": "Your drawing",
+    "s1": "We email a scale drawing of your sign within {hours}.",
+    "s2t": "You approve it",
+    "s2": "Tweaks are free. Nothing is made until you say yes.",
+    "s3t": "We make it",
+    "s3": "Made in our UK workshop, {min}–{max} working days after you approve.",
+    "s4t": "Dispatched",
+    "s4": "Sent free with tracking, so you can see it coming.",
+    "recap": "Your order",
+    "back": "Back to the shop",
+    "another": "Design another sign",
+    "none": "There's no test order to show here.",
+    "noneText": "Orders appear here straight after checkout. Your basket is waiting where you left it."
+  }
+}

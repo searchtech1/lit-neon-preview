@@ -1,0 +1,210 @@
+{
+  "_meta": {
+    "page": "business",
+    "owner": "P5",
+    "renders": [
+      "business.html"
+    ],
+    "status": "P5 filled. Strings live under the page key (copy.js merges every loaded file into one store). No literal dates, £ amounts or percentages: prices come from pricing.js at runtime, facts from data/facts.json. No VAT wording anywhere (rule 5)."
+  },
+  "business": {
+    "meta": {
+      "title": "Neon signs for business: bars, cafés, salons and shops | Lit Neon",
+      "description": "LED neon signs for bars, cafés, salons, gyms, offices and shopfronts, made in our UK workshop. Send your logo for a free mockup and price within 12 hours.",
+      "ogTitle": "Neon signs for business | Lit Neon",
+      "ogDescription": "Your logo or your words in LED neon, made in our UK workshop. Free mockup and price within 12 hours."
+    },
+    "hero": {
+      "eyebrow": "For business",
+      "h1": "Signs for the shop, the bar and the back office",
+      "lede": "Send the logo and a designer redraws it as tube, with a mockup and a price within 12 hours. Or type your name on the wall below and see it lit now.",
+      "nameLabel": "Your business name",
+      "namePlaceholder": "Type your business name",
+      "nameHelp": "Every sign on this page relights with it.",
+      "nameBad": "We can't draw {glyphs} in tube. Logos and symbols go through a free mockup instead.",
+      "namePrice": "{price} at Medium · {dims}",
+      "nameQuote": "This one is quoted by a designer",
+      "nameWait": "Measuring your lettering…",
+      "nameOpen": "Open in the designer",
+      "ctaMockup": "Get a free mockup",
+      "ctaBulk": "Bulk quote",
+      "trust": [
+        "Free mockup and price within 12 hours",
+        "An invoice with every order",
+        "Made in our UK workshop",
+        "Nothing is made until you approve the drawing"
+      ]
+    },
+    "subnav": {
+      "label": "Jump to a business type",
+      "price": "Pricing",
+      "bulk": "Bulk"
+    },
+    "verticals": {
+      "eyebrow": "Pick your trade",
+      "h2": "Made for the room it hangs in",
+      "lede": "Seven kinds of business, the sizes that work in each, and a sign you can open in the designer with your own words.",
+      "design": "Design it",
+      "logo": "Send our logo",
+      "items": {
+        "bar-pub": {
+          "bullets": [
+            "Behind the bar, 100 to 150 cm wide reads from the door without shouting over the room.",
+            "Classics that earn their keep: Last orders, Bar open, the pub's own name above the optics.",
+            "Brick and dark panelling eat light, so warm white and amber look richest at night."
+          ]
+        },
+        "cafe": {
+          "bullets": [
+            "Above the machine or the counter, 60 to 100 cm keeps it friendly rather than corporate.",
+            "Your name, a menu favourite, or a line customers photograph: Coffee first, Fresh today.",
+            "Cafés are bright by day, so pick a coloured jacket: the tube keeps its colour when it is off."
+          ]
+        },
+        "salon-barber": {
+          "bullets": [
+            "Beside the mirrors, 60 to 80 cm frames the selfie without filling the shot.",
+            "Your salon name or a one-liner clients share: Fresh cuts, Hair goals, Book in.",
+            "Ice blue and soft pink flatter skin tones under ring lights better than red."
+          ]
+        },
+        "gym": {
+          "bullets": [
+            "On the training wall, 100 to 150 cm can be read from the far end of the room.",
+            "Short and loud works best: the gym name, No excuses, One more rep.",
+            "Red, orange and electric blue hold up against bright overhead lighting."
+          ]
+        },
+        "office": {
+          "bullets": [
+            "In reception, 80 to 120 cm behind the desk is the size visitors remember.",
+            "Your logo, redrawn from your artwork as a free mockup, or the company line in clean type.",
+            "Warm white on oak or charcoal looks considered; brand colours come from the 12 tube colours."
+          ]
+        },
+        "shopfront": {
+          "bullets": [
+            "Inside the window, 60 to 100 cm, hung from chains in the top third, reads from across the street.",
+            "Open, Open late, the shop name, or your opening hours on a second line.",
+            "Facing daylight, choose a coloured jacket so the sign still reads when it is switched off."
+          ]
+        },
+        "events": {
+          "bullets": [
+            "Several signs for one venue or a run of events, quoted together with one proof per design.",
+            "Backdrops at 150 to 200 cm, table signs at 40 to 60 cm, and everything in between.",
+            "Staged delivery is possible when signs are needed at different venues or dates."
+          ]
+        }
+      }
+    },
+    "price": {
+      "eyebrow": "What changes the price",
+      "h2": "Four things decide the price",
+      "lede": "Every price is worked out from the same rules the designer uses, so these examples move with them. Your mockup carries the exact figure.",
+      "sample": "Example: “{words}”",
+      "cards": [
+        {
+          "title": "Size",
+          "body": "The width and letter height set how much tube and acrylic go in.",
+          "line": "Small {a} · Large {b}"
+        },
+        {
+          "title": "Letters and tube length",
+          "body": "Longer words and joined script use more tube than a short, bold name.",
+          "line": "“{short}” {a} · “{long}” {b}"
+        },
+        {
+          "title": "Colours and RGB",
+          "body": "One colour is included. Each extra line colour and colour-changing RGB tube add to it.",
+          "line": "Extra colour {a} · RGB {b}"
+        },
+        {
+          "title": "Backing and finish",
+          "body": "Cut to shape in clear acrylic is included. Rectangles, stands and mirror finishes cost more.",
+          "line": "Rectangle {a} · Gold mirror {b}"
+        }
+      ],
+      "bandsH3": "What most businesses spend",
+      "bands": [
+        {
+          "range": "Under {a}",
+          "use": "A small logo or wordmark for a counter or a shelf"
+        },
+        {
+          "range": "{a} to {b}",
+          "use": "Most shop, café and salon signs"
+        },
+        {
+          "range": "{b} and up",
+          "use": "Large, multi-colour or outdoor builds, quoted by hand"
+        }
+      ],
+      "bandsNote": "Indicative; your mockup carries the exact price.",
+      "included": "Included",
+      "quote": "Quoted"
+    },
+    "compare": {
+      "eyebrow": "Made here, not shipped here",
+      "h2": "What buying from the workshop changes",
+      "lede": "A plain comparison. The right-hand column is what the category typically offers, not a claim about any named brand.",
+      "colUs": "Lit Neon",
+      "colThem": "Typically, for imported signs",
+      "rows": [
+        {
+          "label": "Where it's made",
+          "us": "Our UK workshop",
+          "them": "Typically overseas"
+        },
+        {
+          "label": "Lead time",
+          "us": "7–10 working days after you approve the drawing",
+          "them": "Typically 2–4 weeks for imports"
+        },
+        {
+          "label": "Proof drawing before making",
+          "us": "Always",
+          "them": "Varies"
+        },
+        {
+          "label": "Warranty",
+          "us": "{warranty}",
+          "them": "Varies"
+        },
+        {
+          "label": "Dimmer and remote",
+          "us": "Included",
+          "them": "Often extra"
+        },
+        {
+          "label": "Plug",
+          "us": "Moulded UK plug",
+          "them": "Adaptor"
+        },
+        {
+          "label": "Who you talk to",
+          "us": "The people who make it",
+          "them": "A reseller"
+        }
+      ]
+    },
+    "bulk": {
+      "eyebrow": "Three signs or more",
+      "h2": "Several sites, one quote",
+      "body": "Branches, venues, staff gifts or a run of shop windows: send the brief once and a designer prices the lot.",
+      "points": [
+        "A designer replies within 12 hours",
+        "One proof drawing per design",
+        "Staged delivery when sites open at different times"
+      ],
+      "cta": "Start a bulk quote"
+    },
+    "faq": {
+      "eyebrow": "Business questions",
+      "h2": "Good to know before you order",
+      "more": "All our answers",
+      "selfLink": "Link to this answer",
+      "copied": "Link copied"
+    }
+  }
+}

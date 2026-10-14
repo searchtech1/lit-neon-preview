@@ -1,0 +1,151 @@
+{
+  "_meta": {
+    "page": "weddings",
+    "owner": "P5",
+    "renders": [
+      "weddings.html"
+    ],
+    "status": "P5 filled. Strings live under the page key. No literal dates, £ amounts or percentages: dates come from pricing.needBy()/clock, prices from pricing.js."
+  },
+  "weddings": {
+    "meta": {
+      "title": "Wedding neon signs with your names, made in the UK | Lit Neon",
+      "description": "Custom LED neon wedding signs with your names or your line, sized for the top table or the backdrop. Made in our UK workshop, free mainland-GB delivery, and you approve a drawing first.",
+      "ogTitle": "Wedding neon signs | Lit Neon",
+      "ogDescription": "Your names in LED neon for the backdrop or the top table, made in our UK workshop."
+    },
+    "hero": {
+      "eyebrow": "Weddings & events",
+      "h1": "Your names, in lights",
+      "lede": "A sign for the backdrop or the top table, drawn for you first and made in our UK workshop. After the day it comes home with you.",
+      "sample": "Better together",
+      "ctaDesign": "Design yours",
+      "ctaDate": "Check your date",
+      "trust": [
+        "You approve a drawing before we make anything",
+        "Made in our UK workshop",
+        "7–10 working days after you approve",
+        "Free mainland-GB delivery"
+      ]
+    },
+    "phrases": {
+      "eyebrow": "Start with your surname",
+      "h2": "Three ways to say it",
+      "lede": "Type your surname. Each idea opens in the designer with your words already in.",
+      "surname": "Your surname",
+      "placeholder": "Smith",
+      "couple": "You are",
+      "pairs": {
+        "mrmrs": "Mr & Mrs",
+        "mrmr": "Mr & Mr",
+        "mrsmrs": "Mrs & Mrs"
+      },
+      "chipThe": "The {plural}",
+      "chipPair": "{pair} {name}",
+      "chipEst": "{name} est. {year}",
+      "previewNote": "Hover or focus an idea to see it here.",
+      "bad": "We can't draw {glyphs} in tube; we've left it out.",
+      "price": "{price} at Medium · {dims}",
+      "priceQuote": "This one is quoted by a designer",
+      "open": "Open this one in the designer"
+    },
+    "sizes": {
+      "eyebrow": "How big for the day",
+      "h2": "Sized for where it stands",
+      "lede": "Worked out for “{words}” in our script. Change the words above and these redraw.",
+      "drawnTo": "Drawn to scale",
+      "cards": [
+        {
+          "title": "Table sign",
+          "where": "On the cake or the gift table, on a stand",
+          "range": "60–80 cm"
+        },
+        {
+          "title": "Above the top table",
+          "where": "On chains from a beam, or on the wall behind you",
+          "range": "100–120 cm"
+        },
+        {
+          "title": "The backdrop",
+          "where": "On a flower wall or an 8 ft backdrop frame",
+          "range": "150–200 cm"
+        }
+      ],
+      "card": "{w} × {h} cm",
+      "price": "{price}",
+      "quote": "Quoted by a designer",
+      "open": "Design at this size",
+      "scale": "Table 180 cm",
+      "scaleTop": "Top table 240 cm",
+      "scaleBackdrop": "Backdrop frame 244 cm"
+    },
+    "timeline": {
+      "eyebrow": "When to order",
+      "h2": "Order four weeks before the day",
+      "body": "The drawing takes a day, making takes 7–10 working days after you approve it, and a week spare covers the post and a change of heart about the colour.",
+      "steps": [
+        {
+          "t": "Order and approve",
+          "d": "Your drawing comes back within 12 hours"
+        },
+        {
+          "t": "We make it",
+          "d": "7–10 working days after you approve"
+        },
+        {
+          "t": "It arrives",
+          "d": "Free tracked delivery"
+        },
+        {
+          "t": "A week spare",
+          "d": "Time to test it and plan where it hangs"
+        },
+        {
+          "t": "Your day",
+          "d": ""
+        }
+      ],
+      "needBy": "Need it by?",
+      "needByLabel": "Your wedding or event date",
+      "check": "Check",
+      "answerYes": "Order and approve your drawing by {date}. That leaves a week spare before {day}.",
+      "answerTight": "Order and approve your drawing by {date}. It arrives in time, though without a spare week, so don't leave it later.",
+      "answerRush": "That's sooner than our standard making time. Ask us about a rush job and we'll tell you honestly what's possible.",
+      "rushCta": "Ask about a rush job",
+      "rushMessage": "Hello Lit Neon, our wedding is on {date} and we'd love a sign. Is a rush job possible? Our design: {link}",
+      "invalid": "Pick a date to check.",
+      "past": "That date has already been.",
+      "approveBy": "Approve by {date}",
+      "arrivesBy": "Arrives {range}",
+      "spare": "Spare week",
+      "dayOf": "{date}"
+    },
+    "after": {
+      "eyebrow": "After the day",
+      "h2": "It doesn't go back in the box",
+      "body": "The sign from the backdrop becomes the one above the bed or along the hallway. Drag across to see it by day, switched off, and by night.",
+      "scenes": {
+        "bedroom": "Bedroom",
+        "living": "Living room"
+      }
+    },
+    "grid": {
+      "eyebrow": "Ready-made for the day",
+      "h2": "The wedding collection",
+      "lede": "Lines couples ask for most, each in any of our 12 tube colours and five sizes."
+    },
+    "events": {
+      "eyebrow": "Venues and planners",
+      "h2": "Signs for every wedding you host",
+      "body": "Several signs for a venue, a run of events or a hire stock, quoted together with one proof per design and staged delivery when you need it.",
+      "cta": "Get a bulk quote"
+    },
+    "faq": {
+      "eyebrow": "Wedding questions",
+      "h2": "Before you book the sign",
+      "more": "All our answers",
+      "selfLink": "Link to this answer",
+      "copied": "Link copied"
+    }
+  }
+}

@@ -1,0 +1,317 @@
+{
+  "_meta": {
+    "page": "home",
+    "owner": "P1a",
+    "renders": ["index.html"],
+    "status": "filled by P1a (brief §4.1, Appendix C). No literal dates, £ amounts or percentages: prices and dates are interpolated at render time from pricing.js, facts.json and clock.js. Call-site tokens ({from}, {price}, {n}, {size}, {cm}, {glyph}, {symbol}, {words}) are filled by pages/home.js."
+  },
+  "meta": {
+    "title": "Custom LED neon signs, made in the UK | Lit Neon",
+    "description": "Type your words, see them lit in a real room and priced live. Custom LED neon signs drawn to order in our UK workshop: free proof drawing, two-year warranty, free mainland-GB delivery.",
+    "ogTitle": "Your words, lit. Custom LED neon, made in our UK workshop",
+    "ogDescription": "Type anything and see it as a neon sign, at true size, with a real price. Free proof drawing before we make it."
+  },
+  "hero": {
+    "eyebrow": "Custom LED neon, made in our UK workshop",
+    "h1": "Your words, lit.",
+    "promise": "Free proof drawing in 12h · 2-year warranty · Free mainland-GB delivery in 7–10 working days",
+    "fromPrice": "Signs from {from}",
+    "defaultWords": "After dark",
+    "inputLabel": "Your words",
+    "inputPlaceholder": "Type your words",
+    "inputHint": "Shift + Enter for a second line",
+    "counter": "{n} of {max}",
+    "lettering": "Lettering",
+    "letteringSheet": "Pick a lettering",
+    "colour": "Tube colour",
+    "priceAt": "{price} at {size} · {dims}",
+    "priceMeasuring": "Measuring your lettering…",
+    "priceEmpty": "Type a word to see its price",
+    "ctaDesign": "Open in the designer →",
+    "ctaUpload": "Upload a logo",
+    "trust": [
+      "Free proof drawing in 12h",
+      "Made in our UK workshop",
+      "2-year warranty",
+      "Free mainland-GB delivery, 7–10 working days"
+    ],
+    "noteUnsupported": "We can't draw {glyph} in tube, but we have a {symbol} symbol",
+    "noteUnsupportedPlain": "We can't draw {glyph} in tube",
+    "noteUseSymbol": "Use it",
+    "noteRemove": "Remove it",
+    "noteTooLong": "That's a long line for one piece of tube",
+    "noteSplit": "Split into two lines",
+    "noteFitsSmaller": "Over two metres wide at {size}. Fits at Small ({cm}, {price})",
+    "noteUseSmall": "Use Small",
+    "sheetDone": "Done"
+  },
+  "ways": {
+    "eyebrow": "Three ways to buy",
+    "h2": "Words, a logo, or a sign we drew",
+    "cards": [
+      { "title": "Design your words", "line": "Type anything. The price updates as you go, and you approve a drawing before we make it.", "cta": "Design your sign", "words": "After dark" },
+      { "title": "Send a logo", "line": "A designer redraws your artwork as tube and sends a mockup with the price within 12 hours. Free.", "cta": "Get a free mockup", "words": "Open late" },
+      { "title": "Shop ready-made", "line": "Forty-eight signs we already drew, in your colour and size, with 14-day returns.", "cta": "Browse the designs", "words": "Sweet dreams" }
+    ]
+  },
+  "shop": {
+    "eyebrow": "Where's it going?",
+    "h2": "Pick the room, we'll start the drawing",
+    "lede": "Every collection opens the designer with the right scene and a sign that already fits the wall.",
+    "tabs": { "room": "Room", "occasion": "Occasion", "business": "Business" },
+    "tileMeta": "from {from} · {n} designs",
+    "tileMetaOne": "from {from} · {n} design",
+    "tileBusiness": "Quoted from your logo",
+    "all": "All designs →"
+  },
+  "how": {
+    "eyebrow": "How it works",
+    "h2": "Approve the drawing. We make exactly that.",
+    "steps": [
+      { "title": "Design it", "line": "Type your words, pick the lettering, colour and size. The price is live, and nothing is hidden until checkout." },
+      { "title": "Approve the drawing", "line": "Within 12 hours you get a proof drawing like the one here: exact words, letter height, overall size. Tweaks are free." },
+      { "title": "We make it", "line": "Your tube is bent, mounted on acrylic and tested in our UK workshop. Dimmer and remote come in the box." },
+      { "title": "Hang it", "line": "Screws and standoffs, chains, adhesive strips or a stand. Most people are done before the kettle boils." }
+    ],
+    "sheetCaption": "Drawn live from your words, at Medium",
+    "cta": "Start designing",
+    "pdf": "Download as PDF"
+  },
+  "size": {
+    "eyebrow": "How big is big?",
+    "h2": "Real size, on a real wall",
+    "lede": "Your words, drawn to scale on a rendered room, with a real price for every size. Slide to see how much wall each one takes."
+  },
+  "colour": {
+    "eyebrow": "Colour and tube",
+    "h2": "Twelve colours. Two jackets. One honest off-state.",
+    "lede": "The jacket is the silicone sleeve around the LEDs. White looks white when it's off; a coloured one keeps your colour by day. Both are rendered here with your words."
+  },
+  "best": {
+    "eyebrow": "Already lit",
+    "h2": "Bestsellers, drawn and ready",
+    "lede": "Our most-ordered designs. Change the colour or size, or open one in the designer and make it yours.",
+    "all": "All designs →",
+    "prev": "Previous designs",
+    "next": "Next designs",
+    "quick": "Quick view",
+    "from": "from {from}",
+    "quickAdd": "Add to basket",
+    "quickAdded": "Added ✓",
+    "quickOpen": "See the full page",
+    "quickCustom": "Make it custom",
+    "quickSize": "Size",
+    "quickColour": "Colour",
+    "quickReturns": "Ready-made signs can be returned within 14 days of delivery."
+  },
+  "built": {
+    "eyebrow": "Quality is in the details",
+    "h2": "Built to last",
+    "lede": "The parts that matter, named plainly. We only print a number once the workshop has measured it.",
+    "cards": {
+      "tube": { "title": "Tube", "body": "Flexible silicone LED neon with a dense LED pitch, so the line reads as one unbroken glow. {fact}" },
+      "backing": { "title": "Backing", "body": "{fact} Cut to the shape of your words or to a clean rectangle, with polished edges." },
+      "power": { "title": "Power", "body": "{psuVoltage}, {psuMarking} {psuFuseA}. No travel adaptor, ever." },
+      "tested": { "title": "Tested", "body": "{fact} Every sign carries a two-year warranty, and it was made in our UK workshop." }
+    },
+    "paragraph": "Every sign is made in our UK workshop, from a drawing you approved, and carries a two-year warranty. The workshop is measuring the rest, so the numbers arrive as facts, not guesses.",
+    "link": "How LED neon is made →"
+  },
+  "logo": {
+    "eyebrow": "Your logo, in neon",
+    "h2": "Send the logo. Get a mockup and a price.",
+    "body": "Send the logo, get a mockup and a price within 12 hours. Nothing is made until you approve the drawing.",
+    "bandsNote": "Indicative; your mockup carries the exact price",
+    "bands": [
+      { "range": "Under {a}", "use": "A small logo or wordmark for a counter or a shelf" },
+      { "range": "{a} to {b}", "use": "Most shop, café and salon signs" },
+      { "range": "{b} and up", "use": "Large, multi-colour or outdoor builds, quoted by hand" }
+    ],
+    "ctaMockup": "Get a free mockup",
+    "ctaBulk": "Bulk quote"
+  },
+  "daynight": {
+    "eyebrow": "By day, by night",
+    "h2": "The same sign, both ways",
+    "lede": "Drag the line. By day you see the honest off-state; at night the room relights around your words."
+  },
+  "quiz": {
+    "eyebrow": "Not sure what to say?",
+    "h2": "Not sure what to say?",
+    "line": "Three questions, and we draw three signs with real prices. Open any of them in the designer.",
+    "start": "Find my sign · 3 questions",
+    "examples": [
+      { "words": "Five more minutes", "font": "brighton", "colour": "pink" },
+      { "words": "Last orders", "font": "camden", "colour": "warm" },
+      { "words": "Love you more", "font": "notting", "colour": "candy" }
+    ]
+  },
+  "made": {
+    "eyebrow": "Made here, not shipped here",
+    "h2": "Bent, mounted and tested in our UK workshop",
+    "lede": "How your sign is made, illustrated with your own words. Real workshop photos follow with the first orders.",
+    "compare": {
+      "h3": "What that changes for you",
+      "lede": "A plain comparison. The right-hand column is what the category typically offers, not a claim about any named brand.",
+      "colUs": "Lit Neon",
+      "colThem": "Typically, for imported signs",
+      "rows": [
+        { "label": "Where it's made", "us": "Our UK workshop", "them": "Typically overseas" },
+        { "label": "Lead time", "us": "7–10 working days after you approve the drawing", "them": "Typically 2–4 weeks for imports" },
+        { "label": "Proof drawing before making", "us": "Always", "them": "Varies" },
+        { "label": "Warranty", "us": "2 years", "them": "Varies" },
+        { "label": "Dimmer and remote", "us": "Included", "them": "Often extra" },
+        { "label": "Plug", "us": "Moulded UK plug", "them": "Adaptor" },
+        { "label": "Who you talk to", "us": "The people who make it", "them": "A reseller" }
+      ]
+    },
+    "ledGlass": {
+      "h3": "LED or glass?",
+      "led": { "title": "LED neon (what we make)", "body": "Silicone tube around LEDs. Low voltage, cool to the touch, bends into script, survives the post and a toddler." },
+      "glass": { "title": "Glass neon", "body": "Gas in hand-blown glass. Beautiful, fragile, high voltage, and best left to a specialist installer." },
+      "link": "We make LED neon; here's why →"
+    }
+  },
+  "kit": {
+    "eyebrow": "What you get, how it hangs, what it costs, how it arrives",
+    "h2": "In the box, on the wall",
+    "tabs": { "box": "What you get", "hang": "How it hangs", "cost": "What it costs", "arrives": "How it arrives" },
+    "arrives": {
+      "title": "Arrives safe",
+      "body": "Your sign travels in a rigid box with foam corners around the acrylic, the power supply and remote packed beside it, and the fixings in a labelled bag. {tested} {weight} {packaging}",
+      "tracked": "Delivery is tracked, and we send the tracking link the day it leaves.",
+      "damage": "{damage}",
+      "illustration": "Illustration"
+    }
+  },
+  "faq": {
+    "eyebrow": "Good to know",
+    "h2": "The questions people ask before they order",
+    "lede": "Straight answers. Every one links to its full version in the help centre.",
+    "searchLabel": "Search the answers",
+    "searchPlaceholder": "Try “returns”, “outside” or “two colours”",
+    "empty": "Nothing matches that yet. Try another word, or ask us.",
+    "askTitle": "Still stuck?",
+    "askBody": "Ask a person who makes the signs. We reply to every message.",
+    "askCta": "Contact us",
+    "copyLink": "Link to this answer",
+    "copied": "Link copied",
+    "allHelp": "All help answers →"
+  },
+  "guides": {
+    "eyebrow": "Read before you buy",
+    "h2": "Three short guides",
+    "all": "All guides",
+    "minutes": "{n} min read"
+  },
+  "save": {
+    "eyebrow": "Still thinking?",
+    "h2": "Still thinking? Email me my design",
+    "lede": "We send you a link to exactly what you typed, with its price. It reopens in the designer whenever you're ready.",
+    "emailLabel": "Your email",
+    "emailPlaceholder": "you@example.co.uk",
+    "consent": "Also send me occasional ideas and offers (unsubscribe any time)",
+    "cta": "Email my design",
+    "alt": "Or open it in the designer",
+    "sending": "Sending",
+    "successTitle": "Sent to {email}",
+    "success": "Your design and its price are on their way. The link reopens the designer exactly as you left it.",
+    "errorTitle": "We couldn't send that just now",
+    "errorBody": "Nothing was lost. Try again, or open the design in the designer and save it from there.",
+    "retry": "Retry",
+    "localSaved": "Saved locally (review build) — nothing was sent.",
+    "emailInvalid": "That email doesn't look complete — check the part after the @."
+  },
+  "fallback": {
+    "jacketWhite": "White jacket",
+    "jacketColour": "Coloured jacket",
+    "lightsOff": "Lights off",
+    "lightsOn": "Lights on",
+    "whiteOnly": "White jacket only",
+    "offCaption": "Looks white when off",
+    "onCaption": "Keeps its colour by day",
+    "jacketCta": "Pick this colour in the designer",
+    "effectsStatic": "One colour",
+    "effectsChanging": "Colour changing",
+    "effectsGradient": "Gradient",
+    "effectsStaticLine": "Your colour, dimmable from the remote.",
+    "effectsChangingLine": "Steps through seven colours, or fix any one of them.",
+    "effectsGradientLine": "A travelling hue along the stroke.",
+    "effectsOffNote": "Colour-changing tubes are white when off",
+    "effectsDelta": "{delta} at {size}",
+    "effectsChoose": "Choose this",
+    "effectsPause": "Pause animations",
+    "effectsPlay": "Play animations",
+    "sizeScene": "Scene",
+    "sizeSlider": "Size",
+    "sizeDay": "Day",
+    "sizeNight": "Night",
+    "sizeFigure": "Show a person (175 cm)",
+    "sizeReadout": "{name} · {dims}",
+    "sizeQuote": "Over two metres wide here, so we'd quote it. Try Large.",
+    "sizeUseLarge": "Use Large",
+    "sizeCta": "Design at this size",
+    "sizeFigureLabel": "175 cm",
+    "dayTag": "Day",
+    "nightTag": "Night",
+    "dayNightCta": "See it in your room",
+    "dayNightCaption": "Rendered preview — real photos take their place as the first signs go up",
+    "quizStep": "{n} of 3",
+    "quizBack": "Back",
+    "quizNext": "Next",
+    "quizResult": "Three signs for you",
+    "quizReshuffle": "Try different words",
+    "quizOpen": "Open in the designer",
+    "quizEmail": "Email me these three",
+    "quizEmailSent": "Sent to {email}",
+    "quizClose": "Close",
+    "processLabel": "How your sign is made — illustrated",
+    "processPlay": "Play",
+    "processPause": "Pause",
+    "processFacts": {
+      "drawn": "You approve this before anything is made.",
+      "bent": "Bent by hand along your lettering.",
+      "mounted": "Mounted on acrylic with standoffs.",
+      "tested": "Switched on and checked before it's boxed. {fact}",
+      "boxed": "Dimmer, remote and a UK plug go in the box."
+    },
+    "anatomyTitle": "What's in the box",
+    "anatomyConnects": "How it connects",
+    "anatomyParts": {
+      "sign": { "name": "Your sign", "sub": "On its acrylic backing, standoffs fitted" },
+      "psu": { "name": "Power supply", "sub": "Moulded UK plug" },
+      "dimmer": { "name": "Dimmer and remote", "sub": "Included free" },
+      "cable": { "name": "Clear cable", "sub": "From the sign to the power supply" },
+      "fixings": { "name": "Fixing kit", "sub": "For the hanging method you chose" },
+      "card": { "name": "Instruction card", "sub": "Hanging, care and the warranty" }
+    },
+    "anatomyChain": ["Plug", "Power supply", "Dimmer", "Sign"],
+    "hangBestFor": "Best for",
+    "hangKit": "In the kit",
+    "hangHelper": "Not sure which?",
+    "hangDrill": "Can you drill?",
+    "hangBig": "How big is the sign?",
+    "hangYes": "Yes",
+    "hangNo": "No",
+    "hangSmall": "Small",
+    "hangLarge": "Large",
+    "hangRecommend": "We'd go with {method}: {why}",
+    "hangCta": "Choose this in the designer",
+    "hangIllustration": "Illustration",
+    "hangMethods": {
+      "screws": { "name": "Wall screws & standoffs", "bestFor": "Plaster or brick", "kit": "Standoffs, screws, wall plugs", "why": "the most secure fixing, and it holds any size" },
+      "chains": { "name": "Hanging chains", "bestFor": "Renters and picture rails", "kit": "Two chains, two hooks", "why": "two small hooks and no holes in the sign" },
+      "strips": { "name": "Adhesive strips", "bestFor": "Under 3 kg on smooth walls", "kit": "Strips, cleaning wipe", "why": "no drill, and it comes off clean" },
+      "stand": { "name": "Table stand", "bestFor": "Shelves, bars and desks", "kit": "Stand backing, nothing to fix", "why": "it just stands there, which is the point" }
+    },
+    "costSize": "Size",
+    "costHours": "Hours a day",
+    "costDimmed": "Dimmed to half",
+    "costTariff": "Your tariff",
+    "costEvening": "Per evening",
+    "costMonth": "Per month",
+    "costYear": "Per year",
+    "costComparison": "About the same as a {w} W bulb",
+    "costAssumptions": "Based on {wpm} W measured per metre at {tariff} per kWh; your tariff may differ."
+  }
+}

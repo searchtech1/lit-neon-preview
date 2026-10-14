@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" width="480" height="360" role="img" aria-labelledby="t d">
+  <title id="t">How your sign is made: 3 Mounted</title>
+  <desc id="d">The tube is fixed to its clear acrylic backing, cut to shape, and the standoffs drop into their holes. A section shows wall, standoff, acrylic and cap.</desc>
+  <!-- WS IMG. Illustration, drafting style. Animation hooks: paths with class "draw" carry pathLength="1"
+       (animate stroke-dasharray:1; stroke-dashoffset 1 -> 0); groups with class "step" / "drop" / "slide" /
+       "glow" are the moving parts. Ids starting "slot-" are filled by script (P1b) with the visitor's design. -->
+  <style>
+    .ink{fill:none;stroke:var(--paper-ink,#180E1F);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .thin{fill:none;stroke:var(--paper-ink,#180E1F);stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+    .draft{fill:none;stroke:var(--draft,#2F5D8A);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+    .dim{fill:none;stroke:var(--draft,#2F5D8A);stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round}
+    .hair{fill:none;stroke:var(--rule,#CFC3B9);stroke-width:1.1;stroke-linecap:round}
+    .dash{fill:none;stroke:var(--draft,#2F5D8A);stroke-width:1.2;stroke-dasharray:3 5;stroke-linecap:round}
+    .hatch{fill:none;stroke:var(--paper-soft,#5A4F5C);stroke-width:1;stroke-linecap:round;opacity:.55}
+    .acrylic{fill:var(--draft-faint,rgba(47,93,138,.14));stroke:var(--draft,#2F5D8A);stroke-width:1.5;stroke-linejoin:round}
+    .tube{fill:none;stroke:var(--room,#C8A04A);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+    .tube-off{fill:none;stroke:var(--paper-soft,#5A4F5C);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;opacity:.55}
+    .glow{fill:none;stroke:var(--room,#C8A04A);stroke-width:16;stroke-linecap:round;stroke-linejoin:round;opacity:.22}
+    .cable{fill:none;stroke:var(--paper-soft,#5A4F5C);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .tint{fill:var(--paper-2,#E9DFD3)}
+    .paperfill{fill:var(--paper,#F2E9DF)}
+    .inkfill{fill:var(--paper-ink,#180E1F)}
+    .ok{fill:none;stroke:var(--draft,#2F5D8A);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+    .num{font:600 13px/1 'Hanken Grotesk',system-ui,sans-serif;fill:var(--paper,#F2E9DF)}
+    .slot{font:500 11px/1 'B612 Mono',ui-monospace,monospace;fill:var(--paper-ink,#180E1F)}
+    .slot-s{font:500 9px/1 'B612 Mono',ui-monospace,monospace;fill:var(--paper-soft,#5A4F5C)}
+  </style>
+
+  <path class="acrylic draw" pathLength="1" d="M190.0 263.2C132.3 222.5 90.8 187.0 98.2 142.6 105.6 101.2 161.9 92.3 190.0 135.2 218.1 92.3 274.4 101.2 281.8 142.6 289.2 187.0 247.7 222.5 190.0 263.2Z"/>
+  <g id="slot-tube-mounted"><path class="tube" d="M190.0 234.8C149.4 206.2 120.3 181.2 125.5 150.0 130.7 120.9 170.2 114.7 190.0 144.8 209.8 114.7 249.3 120.9 254.5 150.0 259.7 181.2 230.6 206.2 190.0 234.8Z"/></g>
+  <g class="drop" transform="translate(162 166)"><circle class="paperfill" r="8"/><circle class="ink" r="8"/><circle class="thin" r="3.5"/><path class="dim" d="M0 -30v-14M-4 -36l4 6 4-6"/></g><g class="drop" transform="translate(218 166)"><circle class="paperfill" r="8"/><circle class="ink" r="8"/><circle class="thin" r="3.5"/><path class="dim" d="M0 -30v-14M-4 -36l4 6 4-6"/></g><g class="drop" transform="translate(178 206)"><circle class="paperfill" r="8"/><circle class="ink" r="8"/><circle class="thin" r="3.5"/><path class="dim" d="M0 -30v-14M-4 -36l4 6 4-6"/></g><g class="drop" transform="translate(202 206)"><circle class="paperfill" r="8"/><circle class="ink" r="8"/><circle class="thin" r="3.5"/><path class="dim" d="M0 -30v-14M-4 -36l4 6 4-6"/></g>
+  <!-- section detail: wall | barrel | acrylic | cap -->
+  <g id="section" transform="translate(330 84)">
+    <rect class="hair" x="0" y="0" width="120" height="176" rx="3"/>
+    <path class="ink" d="M24 18V158"/>
+    <path class="hatch" d="M24 26l-12 12M24 46l-12 12M24 66l-12 12M24 86l-12 12M24 106l-12 12M24 126l-12 12M24 146l-12 12"/>
+    <rect class="ink" x="24" y="76" width="34" height="24" rx="2"/>
+    <path class="thin" d="M24 88h-16"/>
+    <path class="acrylic" d="M58 48h8v80h-8Z"/>
+    <rect class="ink" x="66" y="74" width="12" height="28" rx="3"/>
+    <path class="tube" d="M58 58v-0M58 118v0" />
+    <path class="dim" d="M58 140v12M66 140v12M50 148h24"/>
+  </g>
+</svg>
