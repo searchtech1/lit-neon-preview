@@ -7,12 +7,12 @@
   },
   "meta": {
     "title": "Custom LED neon signs, made in the UK | Lit Neon",
-    "description": "Type your words, see them lit in a real room and priced live. Custom LED neon signs drawn to order in our UK workshop: free proof drawing, two-year warranty, free mainland-GB delivery.",
-    "ogTitle": "Your words, lit. Custom LED neon, made in our UK workshop",
+    "description": "Type your words, see them lit in a real room and priced live. Custom LED neon signs drawn to order in a UK workshop: free proof drawing, two-year warranty, free mainland-GB delivery.",
+    "ogTitle": "Your words, lit. Custom LED neon, made in a UK workshop",
     "ogDescription": "Type anything and see it as a neon sign, at true size, with a real price. Free proof drawing before we make it."
   },
   "hero": {
-    "eyebrow": "Custom LED neon, made in our UK workshop",
+    "eyebrow": "Custom LED neon, made in a UK workshop",
     "h1": "Your words, lit.",
     "promise": "Free proof drawing in 12h · 2-year warranty · Free mainland-GB delivery in 7–10 working days",
     "fromPrice": "Signs from {from}",
@@ -31,7 +31,7 @@
     "ctaUpload": "Upload a logo",
     "trust": [
       "Free proof drawing in 12h",
-      "Made in our UK workshop",
+      "Made in a UK workshop",
       "2-year warranty",
       "Free mainland-GB delivery, 7–10 working days"
     ],
@@ -70,7 +70,7 @@
     "steps": [
       { "title": "Design it", "line": "Type your words, pick the lettering, colour and size. The price is live, and nothing is hidden until checkout." },
       { "title": "Approve the drawing", "line": "Within 12 hours you get a proof drawing like the one here: exact words, letter height, overall size. Tweaks are free." },
-      { "title": "We make it", "line": "Your tube is bent, mounted on acrylic and tested in our UK workshop. Dimmer and remote come in the box." },
+      { "title": "We make it", "line": "Your tube is bent, mounted on acrylic and tested in a UK workshop. Dimmer and remote come in the box." },
       { "title": "Hang it", "line": "Screws and standoffs, chains, adhesive strips or a stand. Most people are done before the kettle boils." }
     ],
     "sheetCaption": "Drawn live from your words, at Medium",
@@ -112,9 +112,9 @@
       "tube": { "title": "Tube", "body": "Flexible silicone LED neon with a dense LED pitch, so the line reads as one unbroken glow. {fact}" },
       "backing": { "title": "Backing", "body": "{fact} Cut to the shape of your words or to a clean rectangle, with polished edges." },
       "power": { "title": "Power", "body": "{psuVoltage}, {psuMarking} {psuFuseA}. No travel adaptor, ever." },
-      "tested": { "title": "Tested", "body": "{fact} Every sign carries a two-year warranty, and it was made in our UK workshop." }
+      "tested": { "title": "Tested", "body": "{fact} Every sign carries a two-year warranty, and it was made in a UK workshop." }
     },
-    "paragraph": "Every sign is made in our UK workshop, from a drawing you approved, and carries a two-year warranty. The workshop is measuring the rest, so the numbers arrive as facts, not guesses.",
+    "paragraph": "Every sign is made in a UK workshop, from a drawing you approved, and carries a two-year warranty. The workshop is measuring the rest, so the numbers arrive as facts, not guesses.",
     "link": "How LED neon is made →"
   },
   "logo": {
@@ -148,7 +148,7 @@
   },
   "made": {
     "eyebrow": "Made here, not shipped here",
-    "h2": "Bent, mounted and tested in our UK workshop",
+    "h2": "Bent, mounted and tested in a UK workshop",
     "lede": "How your sign is made, illustrated with your own words. Real workshop photos follow with the first orders.",
     "compare": {
       "h3": "What that changes for you",
@@ -156,7 +156,7 @@
       "colUs": "Lit Neon",
       "colThem": "Typically, for imported signs",
       "rows": [
-        { "label": "Where it's made", "us": "Our UK workshop", "them": "Typically overseas" },
+        { "label": "Where it's made", "us": "The UK workshop", "them": "Typically overseas" },
         { "label": "Lead time", "us": "7–10 working days after you approve the drawing", "them": "Typically 2–4 weeks for imports" },
         { "label": "Proof drawing before making", "us": "Always", "them": "Varies" },
         { "label": "Warranty", "us": "2 years", "them": "Varies" },

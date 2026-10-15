@@ -1,4 +1,4 @@
-/* Lit Neon v2 — about / our workshop (brief §4.15, owner P5). A paper page: H1 (with the town only when
+/* Lit Neon v2 — about / the workshop (brief §4.15, owner P5). A paper page: H1 (with the town only when
    facts.workshopTown is confirmed) beside the live proof drawing of the visitor's own words ("this is what you
    approve") · the founder's note, rendered only from confirmed facts (never invented; the block is removed otherwise)
    · the §5.12 process strip in full (ix/process.js, illustrated, no AI workshop footage) · real workshop photos only

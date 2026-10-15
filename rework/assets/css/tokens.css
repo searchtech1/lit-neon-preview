@@ -3,19 +3,19 @@
 
 :root {
   /* ---- night (page) ---- */
-  --night:        #180E1F;
-  --night-2:      #1F1328;
-  --night-3:      #27192F;
+  --night:        #0B0A15;
+  --night-2:      #12101F;
+  --night-3:      #1A172B;
   --ink:          #0E1430;
-  --oxblood:      #3B1222;
-  --soot:         #2A1D2E;
+  --oxblood:      #1C1733;
+  --soot:         #221E35;
   /* ---- text on night ---- */
-  --bone:         #F2E9DF;
-  --bone-2:       #D9CFC6;
-  --smoke:        #A79DA7;
+  --bone:         #F4F2FA;
+  --bone-2:       #CFC9DE;
+  --smoke:        #9A93B0;
   /* ---- brand metals ---- */
-  --brass:        #C8A04A;
-  --amber:        #F0B56A;
+  --brass:        #4FD2FF;
+  --amber:        #9FE7FF;
   /* ---- workshop paper ---- */
   --paper:        #F2E9DF;
   --paper-2:      #E9DFD3;
@@ -30,29 +30,29 @@
   --bad:          #FF6B6B;
   --info:         #8FB7FF;
   /* ---- dynamic: the hex of the sign in view; default brass ---- */
-  --room:         #C8A04A;
+  --room:         #4FD2FF;
   /* the colour-changing tube's spectrum (mirrors catalog.js rgb colours; the 12 sign colours themselves are product data) */
   --rgb-spectrum: linear-gradient(90deg, #FF2D55, #FFC23A, #2DFF7A, #4FD2FF, #9B4DFF, #FF2D55);
 
   /* Static fallbacks at the brass default (Safari < 16.2, old Firefox). The dynamic versions are
      redeclared inside @supports below. */
-  --surface:      #2E2320;
-  --surface-2:    #3E3022;
-  --hair:         rgba(200,160,74,.38);
-  --hair-lit:     rgba(200,160,74,.55);
-  --glow-ring:    0 0 0 1px rgba(200,160,74,.70), 0 0 28px rgba(200,160,74,.45);
+  --surface:      #15192B;
+  --surface-2:    #1C2238;
+  --hair:         rgba(79,210,255,.30);
+  --hair-lit:     rgba(79,210,255,.55);
+  --glow-ring:    0 0 0 1px rgba(79,210,255,.70), 0 0 28px rgba(79,210,255,.45);
 
   /* ---- scrims, overlays and glass (named so pages never write an rgba) ---- */
-  --scrim:        rgba(10,6,14,.62);
-  --glass:        rgba(24,14,31,.55);
+  --scrim:        rgba(6,5,14,.62);
+  --glass:        rgba(11,10,21,.62);
   --glass-blur:   18px;
   --tint-ok:      rgba(123,216,143,.14);
   --tint-bad:     rgba(255,107,107,.14);
   --tint-info:    rgba(143,183,255,.14);
-  --tint-amber:   rgba(240,181,106,.16);
-  --tint-bone:    rgba(242,233,223,.06);
-  --tint-bone-2:  rgba(242,233,223,.12);
-  --edge-lit:     rgba(242,233,223,.45);
+  --tint-amber:   rgba(159,231,255,.16);
+  --tint-bone:    rgba(244,242,250,.06);
+  --tint-bone-2:  rgba(244,242,250,.12);
+  --edge-lit:     rgba(244,242,250,.45);
   --shadow-ink:   rgba(0,0,0,.55);
 
   /* ---- type ---- */
@@ -124,15 +124,17 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :root { --room: #C8A04A; --d-fast: 0ms; --d-base: 0ms; --d-slow: 0ms; --d-strike: 0ms; --d-relight: 0ms; }
+  :root { --room: #4FD2FF; --d-fast: 0ms; --d-base: 0ms; --d-slow: 0ms; --d-strike: 0ms; --d-relight: 0ms; }
 }
 
 /* Paper surfaces invert the text tokens so components can be written once. */
-.paper, .c-paper {
+.c-paper {
   --fg: var(--paper-ink); --fg-2: var(--paper-soft); --fg-3: var(--paper-soft);
   --bg: var(--paper); --bg-2: var(--paper-2); --line: var(--rule); --link: var(--draft); --drawing: var(--draft);
   background: var(--bg); color: var(--fg);
 }
+/* world 2026-10-15: one dark world. .paper sections were re-classed to .night in the HTML; the class is kept as an alias. */
+.paper { --fg: var(--bone); --fg-2: var(--bone-2); --fg-3: var(--smoke); --bg: var(--night-2); --bg-2: var(--night-3); --line: var(--hair); --link: var(--bone); --drawing: var(--draft-lit); background: var(--bg); color: var(--fg); }
 :root, .night, .c-night {
   --fg: var(--bone); --fg-2: var(--bone-2); --fg-3: var(--smoke);
   --bg: var(--night); --bg-2: var(--night-2); --line: var(--hair); --link: var(--bone); --drawing: var(--draft-lit);

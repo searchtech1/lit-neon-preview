@@ -10,9 +10,9 @@
   "business": {
     "meta": {
       "title": "Neon signs for business: bars, cafés, salons and shops | Lit Neon",
-      "description": "LED neon signs for bars, cafés, salons, gyms, offices and shopfronts, made in our UK workshop. Send your logo for a free mockup and price within 12 hours.",
+      "description": "LED neon signs for bars, cafés, salons, gyms, offices and shopfronts, made in a UK workshop. Send your logo for a free mockup and price within 12 hours.",
       "ogTitle": "Neon signs for business | Lit Neon",
-      "ogDescription": "Your logo or your words in LED neon, made in our UK workshop. Free mockup and price within 12 hours."
+      "ogDescription": "Your logo or your words in LED neon, made in a UK workshop. Free mockup and price within 12 hours."
     },
     "hero": {
       "eyebrow": "For business",
@@ -31,7 +31,7 @@
       "trust": [
         "Free mockup and price within 12 hours",
         "An invoice with every order",
-        "Made in our UK workshop",
+        "Made in a UK workshop",
         "Nothing is made until you approve the drawing"
       ]
     },
@@ -153,7 +153,7 @@
       "rows": [
         {
           "label": "Where it's made",
-          "us": "Our UK workshop",
+          "us": "The UK workshop",
           "them": "Typically overseas"
         },
         {

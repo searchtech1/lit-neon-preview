@@ -5,10 +5,10 @@
 <meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Custom LED neon signs, made in the UK | Lit Neon</title>
-<meta name="description" content="Type your words, see them lit in a real room and priced live. Custom LED neon signs drawn to order in our UK workshop: free proof drawing, two-year warranty, free mainland-GB delivery.">
+<meta name="description" content="Type your words, see them lit in a real room and priced live. Custom LED neon signs made in the UK: free proof drawing, three-year warranty, free mainland-GB delivery.">
 <link rel="canonical" href="/lit-neon-preview/rework/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Your words, lit. Custom LED neon, made in our UK workshop">
+<meta property="og:title" content="Your words, lit. Custom LED neon, made in a UK workshop">
 <meta property="og:description" content="Type anything and see it as a neon sign, at true size, with a real price. Free proof drawing before we make it.">
 <meta property="og:image" content="/lit-neon-preview/rework/assets/img/og/index.jpg">
 <meta property="og:image:width" content="1200">
@@ -24,6 +24,7 @@
 <link rel="stylesheet" href="/lit-neon-preview/rework/assets/css/base.css">
 <link rel="stylesheet" href="/lit-neon-preview/rework/assets/css/components.css">
 <link rel="stylesheet" href="/lit-neon-preview/rework/assets/css/chrome.css">
+<link rel="stylesheet" href="/lit-neon-preview/rework/assets/css/world.css">
 <link rel="stylesheet" href="/lit-neon-preview/rework/assets/css/pages/home.css">
 <script src="/lit-neon-preview/rework/assets/js/core/boot.js"></script>
 <!-- modulepreload: tools/modulepreload.mjs -->
@@ -53,50 +54,58 @@
 <div id="chrome-top"></div>
 <main id="main">
 
-  <!-- 1 · Hero: type into the room (full viewport, s01-living) -->
-  <section class="hero" data-hero data-section="hero" aria-labelledby="hero-h1">
-    <div class="hero__stage" id="hero-stage" aria-hidden="false"><picture class="ln-stage__poster" data-scene="s01-living" aria-hidden="true"><source media="(max-width: 767px)" type="image/avif" srcset="/lit-neon-preview/rework/assets/img/scenes/s01-living/night-portrait-wall-1000.avif 1000w, /lit-neon-preview/rework/assets/img/scenes/s01-living/night-portrait-wall-1600.avif 1600w" sizes="100vw"><source media="(max-width: 767px)" type="image/webp" srcset="/lit-neon-preview/rework/assets/img/scenes/s01-living/night-portrait-wall-1000.webp 1000w, /lit-neon-preview/rework/assets/img/scenes/s01-living/night-portrait-wall-1600.webp 1600w" sizes="100vw"><source media="(max-width: 767px)" srcset="/lit-neon-preview/rework/assets/img/scenes/s01-living/night-portrait-wall-1000.jpg 1000w, /lit-neon-preview/rework/assets/img/scenes/s01-living/night-portrait-wall-1600.jpg 1600w" sizes="100vw"><source type="image/avif" srcset="/lit-neon-preview/rework/assets/img/scenes/s01-living/night-wall-1000.avif 1000w, /lit-neon-preview/rework/assets/img/scenes/s01-living/night-wall-1600.avif 1600w" sizes="100vw"><source type="image/webp" srcset="/lit-neon-preview/rework/assets/img/scenes/s01-living/night-wall-1000.webp 1000w, /lit-neon-preview/rework/assets/img/scenes/s01-living/night-wall-1600.webp 1600w" sizes="100vw"><img src="/lit-neon-preview/rework/assets/img/scenes/s01-living/night-wall-1000.jpg" srcset="/lit-neon-preview/rework/assets/img/scenes/s01-living/night-wall-1000.jpg 1000w, /lit-neon-preview/rework/assets/img/scenes/s01-living/night-wall-1600.jpg 1600w" sizes="100vw" alt="" width="1000" height="667" fetchpriority="high" decoding="async"></picture></div>
-    <div class="hero__scrim" aria-hidden="true"></div>
+  <!-- 1 · Hero: photo hero (world 2026-10-15). The words form stays in the DOM (hidden) so the quiz, the designer link and the saved design keep working. -->
+  <section class="hero hero--photo" data-hero="photo" data-section="hero" aria-labelledby="hero-h1">
     <div class="hero__copy">
-      <p class="t-eyebrow hero__eyebrow" data-copy="hero.eyebrow">Custom LED neon, made in our UK workshop</p>
-      <h1 id="hero-h1" class="hero__h1" data-copy="hero.h1">Your words, lit.</h1>
-      <p class="hero__from" data-qa="home.hero.from" aria-live="polite"></p>
+      <p class="t-eyebrow hero__eyebrow" data-copy="hero.eyebrow">Custom LED neon, made in the UK</p>
+      <h1 id="hero-h1" class="hero__h1"><span class="w-glow">Your words.</span><span>In neon.</span></h1>
+      <p class="hero__sub" data-qa="home.hero.sub">Custom LED neon signs made in the UK. <b>5000+ signs made.</b> You approve a drawing before we make a thing.</p>
+      <form class="hero__panel" id="hero-panel" data-qa="home.hero.panel" novalidate>
+        <div class="hero__field">
+          <label class="sr-only" for="hero-input" data-copy="hero.inputLabel">Your words</label>
+          <textarea id="hero-input" class="hero__input" rows="1" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="go" placeholder="Type your words" data-qa="home.hero.input"></textarea>
+          <span class="hero__counter" id="hero-counter" data-qa="home.hero.counter" aria-live="polite"></span>
+        </div>
+        <p class="hero__note" id="hero-note" data-qa="home.hero.note" hidden aria-live="polite"></p>
+        <div class="hero__row">
+          <div class="hero__swatches c-swatches" id="hero-swatches" role="group" aria-label="Tube colour"></div>
+          <div class="hero__chips c-chips" id="hero-chips" role="group" aria-label="Lettering"></div>
+          <button type="button" class="c-chip hero__lettering" id="hero-lettering" data-qa="home.hero.lettering" aria-haspopup="dialog">Lettering <span class="ic-wrap"></span></button>
+        </div>
+        <div class="hero__price c-price c-price--inline" id="hero-price" data-qa="home.hero.price" aria-live="polite"></div>
+        <p class="hero__from" data-qa="home.hero.from" aria-live="polite"></p>
+        <div class="hero__ctas">
+          <a class="c-btn c-btn--primary c-btn--lg" id="hero-cta" href="/lit-neon-preview/rework/create.html" data-qa="home.hero.cta.design">Open in the designer →</a>
+          <a class="c-btn c-btn--ghost c-btn--lg" href="/lit-neon-preview/rework/upload.html" data-qa="home.hero.cta.upload">Upload a logo</a>
+        </div>
+        <div class="hero__doors">
+          <a class="hero__door" id="hero-door-design" href="/lit-neon-preview/rework/create.html" data-qa="home.hero.door.design"><span class="sq"><span class="ic-slot" data-icon="pencil"></span></span><span><b>Design your own sign</b><small>Type it, pick a font and colour, see the price live</small></span></a>
+          <a class="hero__door" href="/lit-neon-preview/rework/upload.html" data-qa="home.hero.door.upload"><span class="sq"><span class="ic-slot" data-icon="upload"></span></span><span><b>Upload your logo or design</b><small>Free neon mockup within 12 hours</small></span></a>
+        </div>
+        <button type="button" class="c-btn c-btn--text hero__quiz" id="quiz-start" data-qa="home.quiz.start"><span class="label" data-copy="hero.quizLink">Not sure what to write? 3 quick questions</span></button>
+      </form>
+      <ul class="w-badges hero__trust" data-qa="home.hero.trust" aria-label="What you get with every sign">
+        <li><span class="ic-slot" data-icon="shield"></span><span>Made in the UK</span></li>
+        <li><span class="ic-slot" data-icon="check"></span><span>3-year warranty</span></li>
+        <li><span class="ic-slot" data-icon="truck"></span><span>Free GB delivery</span></li>
+        <li><span class="ic-slot" data-icon="clock"></span><span>10–14 working days</span></li>
+        <li><span class="ic-slot" data-icon="drawing"></span><span>Drawing in 12h</span></li>
+      </ul>
     </div>
-    <form class="hero__panel" id="hero-panel" data-qa="home.hero.panel" novalidate>
-      <div class="hero__field">
-        <label class="sr-only" for="hero-input" data-copy="hero.inputLabel">Your words</label>
-        <textarea id="hero-input" class="hero__input" rows="1" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="go" placeholder="Type your words" data-qa="home.hero.input"></textarea>
-        <span class="hero__counter" id="hero-counter" data-qa="home.hero.counter" aria-live="polite"></span>
-      </div>
-      <p class="hero__note" id="hero-note" data-qa="home.hero.note" hidden aria-live="polite"></p>
-      <div class="hero__row">
-        <div class="hero__swatches c-swatches" id="hero-swatches" role="group" aria-label="Tube colour"></div>
-        <div class="hero__chips c-chips" id="hero-chips" role="group" aria-label="Lettering"></div>
-        <button type="button" class="c-chip hero__lettering" id="hero-lettering" data-qa="home.hero.lettering" aria-haspopup="dialog">Lettering <span class="ic-wrap"></span></button>
-      </div>
-      <div class="hero__price c-price c-price--inline" id="hero-price" data-qa="home.hero.price" aria-live="polite"></div>
-      <div class="hero__ctas">
-        <a class="c-btn c-btn--primary c-btn--lg" id="hero-cta" href="/lit-neon-preview/rework/create.html" data-qa="home.hero.cta.design">Open in the designer →</a>
-        <a class="c-btn c-btn--ghost c-btn--lg" href="/lit-neon-preview/rework/upload.html" data-qa="home.hero.cta.upload">Upload a logo</a>
-      </div>
-      <button type="button" class="c-btn c-btn--text hero__quiz" id="quiz-start" data-qa="home.quiz.start"><span class="label" data-copy="hero.quizLink">Not sure what to write? 3 quick questions</span></button>
-    </form>
-    <ul class="hero__trust" data-qa="home.hero.trust" aria-label="What you get with every sign">
-      <li><span class="ic-slot" data-icon="drawing"></span><span>Free proof drawing in 12h</span></li>
-      <li><span class="ic-slot" data-icon="shield"></span><span>Made in our UK workshop</span></li>
-      <li><span class="ic-slot" data-icon="check"></span><span>2-year warranty</span></li>
-      <li><span class="ic-slot" data-icon="truck"></span><span>Free mainland-GB delivery, 7–10 working days</span></li>
-    </ul>
+    <div class="hero__media" data-qa="home.hero.media">
+      <img src="/lit-neon-preview/rework/assets/img/photos/hero-1600.jpg" srcset="/lit-neon-preview/rework/assets/img/photos/hero-800.jpg 800w, /lit-neon-preview/rework/assets/img/photos/hero-1600.jpg 1600w" sizes="(max-width: 1023px) 100vw, 50vw" width="1600" height="1200" alt="A custom ice-blue LED neon sign reading after dark, lit on a living room wall" fetchpriority="high" decoding="async">
+      <div class="hero__tag"><span>“after dark”</span> · 60 cm · ice blue · <em data-qa="home.hero.tagprice" data-price></em></div>
+    </div>
   </section>
 
   <!-- 2 · Three ways to buy -->
   <section class="section night ways" data-section="ways" aria-labelledby="ways-h2">
     <div class="wrap">
       <header class="sec-head">
-        <p class="t-eyebrow" data-copy="ways.eyebrow">Three ways to buy</p>
+        <p class="t-eyebrow" data-copy="ways.eyebrow">Three ways in</p>
         <h2 id="ways-h2" data-copy="ways.h2">Words, a logo, or a sign we drew</h2>
       </header>
-      <div class="ways__grid" id="ways-grid"></div>
+      <div class="ways__grid w-ways" id="ways-grid"></div>
     </div>
   </section>
 
@@ -123,7 +132,7 @@
   </section>
 
   <!-- 4 · How it works (paper) -->
-  <section class="section section--a paper how" data-section="how" aria-labelledby="how-h2">
+  <section class="section section--a night how" data-section="how" aria-labelledby="how-h2">
     <div class="wrap how__grid">
       <div class="how__steps">
         <p class="t-eyebrow" data-copy="how.eyebrow">How it works</p>
@@ -167,6 +176,24 @@
   </section>
 
 
+
+  <!-- 7b · By day, by night (world 2026-10-15) -->
+  <section class="section night daynight" data-section="daynight" aria-labelledby="dn-h2">
+    <div class="wrap">
+      <header class="sec-head sec-head--split">
+        <div>
+          <p class="t-eyebrow">By day, by night</p>
+          <h2 id="dn-h2">Looks good switched off too</h2>
+        </div>
+        <p class="t-lead" style="max-width:36ch">Clear acrylic, tidy wiring and a dimmer in the box, so it suits the room at 11am and at 11pm.</p>
+      </header>
+      <div class="w-dn" data-qa="home.daynight">
+        <div class="w-dn__half"><picture><source type="image/avif" srcset="/lit-neon-preview/rework/assets/img/scenes/s04-homebar/day-1600.avif"><source type="image/webp" srcset="/lit-neon-preview/rework/assets/img/scenes/s04-homebar/day-1600.webp"><img src="/lit-neon-preview/rework/assets/img/scenes/s04-homebar/day-1600.jpg" alt="" loading="lazy" decoding="async"></picture><span class="w-dn__sign is-off" aria-hidden="true">Cheers</span><span class="w-dn__lab">Day · off</span></div>
+        <div class="w-dn__half"><picture><source type="image/avif" srcset="/lit-neon-preview/rework/assets/img/scenes/s04-homebar/night-1600.avif"><source type="image/webp" srcset="/lit-neon-preview/rework/assets/img/scenes/s04-homebar/night-1600.webp"><img src="/lit-neon-preview/rework/assets/img/scenes/s04-homebar/night-1600.jpg" alt="" loading="lazy" decoding="async"></picture><span class="w-dn__sign is-on" aria-hidden="true">Cheers</span><span class="w-dn__lab">Night · on</span></div>
+      </div>
+    </div>
+  </section>
+
   <!-- 9 · Your logo, in neon (photo band, s11-shopwindow) -->
   <section class="section logo" data-section="logo" aria-labelledby="logo-h2">
     <div class="logo__plate" id="logo-plate" aria-hidden="true"></div>
@@ -180,6 +207,7 @@
           <a class="c-btn c-btn--ghost c-btn--lg" href="/lit-neon-preview/rework/bulk-quote.html" data-qa="home.logo.cta.bulk">Bulk quote</a>
         </div>
       </div>
+      <div class="w-logo"><div class="w-photo"><img src="/lit-neon-preview/rework/assets/img/photos/p10-800.jpg" alt="A warm white neon sign reading coffee first in a café window" loading="lazy" decoding="async"><span class="lb">Café<small>Window sign, warm white</small></span></div><div class="w-photo"><img src="/lit-neon-preview/rework/assets/img/photos/p11-800.jpg" alt="An ice white neon sign reading fresh cuts in a barbershop" loading="lazy" decoding="async"><span class="lb">Barbershop<small>Logo in neon, ice white</small></span></div></div>
       <div class="logo__bands" id="logo-bands" data-qa="home.logo.bands"></div>
     </div>
   </section>
@@ -187,13 +215,15 @@
 
 
   <!-- 12 · Made here, not shipped here (paper, tier A) -->
-  <section class="section section--a paper made" data-section="made" aria-labelledby="made-h2">
+  <section class="section section--a night made" data-section="made" aria-labelledby="made-h2">
     <div class="wrap">
       <header class="sec-head">
         <p class="t-eyebrow" data-copy="made.eyebrow">Made here, not shipped here</p>
-        <h2 id="made-h2" data-copy="made.h2">Bent, mounted and tested in our UK workshop</h2>
+        <h2 id="made-h2" data-copy="made.h2">Bent, mounted and tested in a UK workshop</h2>
         <p class="t-lead made__lede" data-copy="made.lede"></p>
       </header>
+      <div class="w-made"><div class="w-photo"><img src="/lit-neon-preview/rework/assets/img/photos/p5-800.jpg" alt="Hands bending LED neon on a workbench" loading="lazy" decoding="async"><span class="lb">Bent by hand<small>LED neon flex on cut acrylic</small></span></div><div class="w-photo"><img src="/lit-neon-preview/rework/assets/img/photos/p6-800.jpg" alt="A finished sign packed with its dimmer and remote" loading="lazy" decoding="async"><span class="lb">Tested, then boxed<small>Dimmer and remote in the box</small></span></div></div>
+      <div class="w-nums" data-qa="home.made.nums"><div><b>5000+</b><span>signs made</span></div><div><b>3 yrs</b><span>warranty</span></div><div><b>12 hrs</b><span>to your drawing</span></div><div><b>10–14</b><span>working days</span></div></div>
       <div class="made__process" id="ix-process" data-ix="process"></div>
       <div class="made__grid">
         <div class="made__compare" id="home-compare" data-qa="home.compare">
@@ -205,6 +235,29 @@
     </div>
   </section>
 
+
+
+  <!-- 13 · What you get (world 2026-10-15) -->
+  <section class="section night kit" data-section="kit" aria-labelledby="kit-h2">
+    <div class="wrap">
+      <header class="sec-head"><p class="t-eyebrow">What you get</p><h2 id="kit-h2">Everything in the box</h2></header>
+      <div class="w-kit" data-qa="home.kit">
+        <div><span class="ic-slot" data-icon="drawing"></span><b>Your sign</b><small>LED neon on clear acrylic</small></div>
+        <div><span class="ic-slot" data-icon="power"></span><b>Dimmer + remote</b><small>Brightness and modes</small></div>
+        <div><span class="ic-slot" data-icon="shield"></span><b>UK plug adapter</b><small>Low voltage, cool to touch</small></div>
+        <div><span class="ic-slot" data-icon="ruler"></span><b>Hanging kit</b><small>Screws, standoffs or chain</small></div>
+        <div><span class="ic-slot" data-icon="mail"></span><b>Your drawing</b><small>PDF with sizes, kept on file</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14a · Quiz card (world 2026-10-15) -->
+  <section class="section night quizcard" data-section="quizcard" aria-labelledby="quiz-h2">
+    <div class="wrap w-quiz" data-qa="home.quizcard">
+      <div><p class="t-eyebrow">Not sure what to say?</p><h2 id="quiz-h2">Three questions, ten ideas</h2><p class="t-lead" style="margin:var(--s-3) 0 var(--s-4)">Who is it for, where is it going, what is the mood. We suggest words that fit, you pick one and it lands in the designer.</p><button type="button" class="c-btn c-btn--primary c-btn--lg" id="quiz-start-2" data-qa="home.quizcard.start">Start the quiz</button></div>
+      <div class="c-chips" aria-hidden="true"><span class="c-chip">Good night, love</span><span class="c-chip">Fancy a pint</span><span class="c-chip">Kettle's on</span><span class="c-chip">Better together</span><span class="c-chip">Game on</span><span class="c-chip">Little dreamer</span><span class="c-chip">Last orders</span><span class="c-chip">Home sweet home</span></div>
+    </div>
+  </section>
 
   <!-- 14 · Reviews (renders nothing until reviews exist) -->
   <section class="reviews" data-section="reviews" id="home-reviews" data-qa="home.reviews" hidden aria-label="Reviews"></section>

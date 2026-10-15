@@ -141,8 +141,8 @@
       "tags": [],
       "pages": ["help"],
       "q": "Where are you based?",
-      "a": "{fact:workshopTown} Every sign is drawn, bent and mounted in our UK workshop, then sent out with free delivery across mainland GB.",
-      "links": [{ "label": "Our workshop", "href": "about.html" }, { "label": "Contact us", "href": "contact.html" }],
+      "a": "{fact:workshopTown} Every sign is drawn, bent and mounted in a UK workshop, then sent out with free delivery across mainland GB.",
+      "links": [{ "label": "The workshop", "href": "about.html" }, { "label": "Contact us", "href": "contact.html" }],
       "keywords": ["based", "where", "workshop", "uk", "made"]
     },
     {

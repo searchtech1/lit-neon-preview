@@ -115,11 +115,12 @@ function tile(el, { scene, text, font, colour, lit = true, variant = 'night', w 
 
 /* ================================================================ 1 · HERO ================================================================ */
 const hero = $('.hero'), heroInput = $('#hero-input'), heroCounter = $('#hero-counter'), heroNote = $('#hero-note'), heroPrice = $('#hero-price'), heroCta = $('#hero-cta');
-const heroStage = stage.mount($('#hero-stage'), { frame: 'hero', scene: 's01-living', design, qa: 'home.hero', priority: 'high', interactive: true, pill: false });
-$('#hero-stage').insertAdjacentHTML('afterend', `<span class="c-pill c-pill--rendered hero__pill" data-caption="rendered">${esc(t('pills.rendered', {}, 'Rendered preview'))}</span>`);
+/* world 2026-10-15: the photo hero has no stage; every stage call below is guarded so the words form, quiz and links keep working */
+const heroStage = $('#hero-stage') ? stage.mount($('#hero-stage'), { frame: 'hero', scene: 's01-living', design, qa: 'home.hero', priority: 'high', interactive: true, pill: false }) : null;
+if (heroStage) $('#hero-stage').insertAdjacentHTML('afterend', `<span class="c-pill c-pill--rendered hero__pill" data-caption="rendered">${esc(t('pills.rendered', {}, 'Rendered preview'))}</span>`);
 if (!router.design.get()) router.design.set(design, 'hero');   /* first visit: the chrome's footer capture and the sticky CTA read the store */
 if (isMobile()) $('#hero-input').closest('.hero__field').appendChild($('#hero-lettering'));   /* phone: the lettering sheet button sits beside the input, swatches get the row */
-heroStage.on('change', e => { design.pos = e.pos; router.design.setDebounced(design, 'hero', 300); });
+heroStage && heroStage.on('change', e => { design.pos = e.pos; router.design.setDebounced(design, 'hero', 300); });
 /* s01's measured entry has no calib.topY, so the stage cannot keep the sofa in frame by itself on a tall landscape
    stage; anchoring the sign 33 cm above the sofa back keeps the furniture in the bottom quarter (§3.8.6). */
 /* Stacked hero (phones/tablets): a long sign (a typed line, or the quiz's first pick) frames wider, the crop pins to the plate
@@ -127,7 +128,7 @@ heroStage.on('change', e => { design.pos = e.pos; router.design.setDebounced(des
    with transitions off; the result is cached per words/size/viewport so the 'frame' event that each move fires cannot loop. */
 let anchorKey = '', anchorY = null;
 const heroAnchor = () => {
-  const fi = heroStage.frameInfo(); if (!fi || hero.classList.contains('kbd')) return;
+  if (!heroStage) return; const fi = heroStage.frameInfo(); if (!fi || hero.classList.contains('kbd')) return;
   const want = fi.orientation === 'landscape' ? .38 : .36;   /* portrait: a little lower than the measured anchor so the H1 block clears the sign at 390/360 */
   const stacked = !hero.classList.contains('is-split') && innerWidth < 1024;
   const signEl = heroStage.el.querySelector('[data-qa="home.hero.sign"]'), copyEl = $('.hero__copy');
@@ -156,6 +157,7 @@ const heroAnchor = () => {
 const HERO_GAP = 40, HERO_RULER = 88, HERO_EDGE = 24, HERO_BAR = 56;
 const heroVar = n => parseFloat(hero.style.getPropertyValue(n)) || 0;
 function heroLayout() {
+  if (!heroStage) return;
   if (isTablet() || hero.classList.contains('kbd')) { if (hero.classList.contains('is-split')) { hero.classList.remove('is-split'); ['--stage-l', '--stage-w', '--stage-t', '--stage-fade'].forEach(p => hero.style.removeProperty(p)); } return; }
   const H = hero.getBoundingClientRect(); const SW = H.width; if (!SW) return;
   const panel = $('#hero-panel').getBoundingClientRect(), copy = $('.hero__copy').getBoundingClientRect();
@@ -184,7 +186,7 @@ function heroLayout() {
 heroLayout();
 addEventListener('resize', debounce(heroLayout, 80));
 window.__home = { heroStage, heroAnchor, get design() { return design; } };   /* QA hook */
-heroStage.ready.then(() => { heroLayout(); heroAnchor(); heroStage.on('frame', debounce(() => { heroLayout(); heroAnchor(); }, 50)); });
+heroStage && heroStage.ready.then(() => { heroLayout(); heroAnchor(); heroStage.on('frame', debounce(() => { heroLayout(); heroAnchor(); }, 50)); });
 heroInput.value = design.text;
 $('#hero-swatches').innerHTML = SIX.map(id => { const c = R.colourOf(id); return `<button type="button" class="c-swatch" data-id="${id}" data-qa="home.hero.swatch" aria-pressed="${design.colour === id}" aria-label="${esc(c.name)}, ${design.jacket === 'colour' ? 'coloured' : 'white'} jacket" style="--tube:${c.hex};--core:${c.core || '#fff'}"><span class="tube"></span><span class="name">${esc(c.name)}</span></button>`; }).join('');
 $('#hero-chips').innerHTML = CHIP_FONTS.map(id => { const f = R.fontOf(id); return `<button type="button" class="c-chip" data-id="${id}" data-qa="home.hero.chip" aria-pressed="${design.font === id}" aria-label="${esc(f.name)} lettering" style="font-family:'${f.family}',cursive;${f.weight ? `font-weight:${f.weight}` : ''}">${esc(f.name)}</button>`; }).join('');
@@ -197,7 +199,7 @@ $('#hero-chips').addEventListener('click', e => { const b = e.target.closest('[d
 const GLYPH_SYMBOL = [[/💍/u, 'ring', 'ring'], [/💕|💞|💑/u, 'twohearts', 'two hearts'], [/❤|♥|💗|💖|🩷|💓|💘/u, 'heart', 'heart'], [/⭐|🌟|✨|★|☆/u, 'star', 'star'], [/🌙|☾|🌛/u, 'moon', 'moon'], [/⚡/u, 'bolt', 'bolt'], [/🍸|🍹/u, 'cocktail', 'cocktail'], [/🥂|🍾/u, 'champagne', 'champagne'], [/→|➡/u, 'arrow', 'arrow']];
 function autosize() { heroInput.style.height = 'auto'; heroInput.style.height = Math.min(96, heroInput.scrollHeight) + 'px'; }
 function heroRender({ strike = false } = {}) {
-  heroStage.setDesign(design); if (strike) heroStage.strike();
+  if (heroStage) { heroStage.setDesign(design); if (strike) heroStage.strike(); }
   const res = R.resolve(design); const p = pricing.price(design);
   // counter: longest line vs the limit
   const max = R.OPTIONS.limits.maxChars; const longest = (design.text || '').split('\n').reduce((m, l) => Math.max(m, l.length), 0);
@@ -220,10 +222,10 @@ function heroRender({ strike = false } = {}) {
   else if (p.kind === 'quote') heroPrice.innerHTML = `<span class="amount is-quote" data-qa="home.hero.price.amount">${esc(t('price.quote', {}, 'Quote'))}</span> <span class="reason">${esc(pricing.quoteReason(p))}</span>`;
   else if (p.kind === 'wait') heroPrice.innerHTML = `<span class="reason">${esc(t('hero.priceMeasuring'))}</span>`;
   else heroPrice.innerHTML = `<span class="reason">${esc(t('hero.priceEmpty'))}</span>`;
-  heroCta.href = builderLink();
+  heroCta.href = builderLink(); const door = $('#hero-door-design'); if (door) door.href = builderLink();
   $$('#hero-swatches [data-id]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === design.colour)));
   $$('#hero-chips [data-id]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.id === design.font)));
-  const fp = fromPrice(); $('[data-qa="home.hero.from"]').textContent = fp != null ? t('hero.fromPrice', { from: gbp(fp) }) : '';
+  const fp = fromPrice(); $('[data-qa="home.hero.from"]').textContent = fp != null ? t('hero.fromPrice', { from: gbp(fp) }) : ''; const tag = $('[data-qa="home.hero.tagprice"]'); if (tag) tag.textContent = fp != null ? t('hero.fromPrice', { from: gbp(fp) }).toLowerCase() : '';
 }
 heroNote.addEventListener('click', e => {
   const b = e.target.closest('[data-fix]'); if (!b) return;
@@ -248,8 +250,8 @@ $('#hero-panel').addEventListener('submit', e => { e.preventDefault(); location.
     hero.style.setProperty('--vv-h', h + 'px'); hero.style.setProperty('--kbd-panel-h', (ph + 24) + 'px'); hero.style.setProperty('--kbd-panel-top', (top + h - ph - 12) + 'px');
     window.scrollTo({ top: hero.offsetTop, behavior: 'instant' });
   }
-  function enter() { if (on || !isTablet()) return; on = true; hero.classList.add('kbd'); heroStage.setFrame('room'); layout(); requestAnimationFrame(layout); vv && (vv.addEventListener('resize', layout), vv.addEventListener('scroll', layout)); }
-  function exit() { if (!on) return; on = false; hero.classList.remove('kbd'); hero.style.removeProperty('--vv-h'); hero.style.removeProperty('--kbd-panel-h'); hero.style.removeProperty('--kbd-panel-top'); heroStage.setFrame('hero'); vv && (vv.removeEventListener('resize', layout), vv.removeEventListener('scroll', layout)); }
+  function enter() { if (on || !isTablet() || !heroStage) return; on = true; hero.classList.add('kbd'); heroStage.setFrame('room'); layout(); requestAnimationFrame(layout); vv && (vv.addEventListener('resize', layout), vv.addEventListener('scroll', layout)); }
+  function exit() { if (!on) return; on = false; hero.classList.remove('kbd'); hero.style.removeProperty('--vv-h'); hero.style.removeProperty('--kbd-panel-h'); hero.style.removeProperty('--kbd-panel-top'); heroStage && heroStage.setFrame('hero'); vv && (vv.removeEventListener('resize', layout), vv.removeEventListener('scroll', layout)); }
   heroInput.addEventListener('focusin', enter); heroInput.addEventListener('focusout', () => setTimeout(() => { if (!hero.contains(document.activeElement) || document.activeElement === document.body) exit(); else if (document.activeElement !== heroInput) exit(); }, 50));
   hero.addEventListener('focusout', e => { if (on && !e.relatedTarget) setTimeout(exit, 30); });
   document.addEventListener('ln:overlay', e => { if (e.detail && e.detail.open) exit(); });
@@ -270,9 +272,10 @@ fontsLoading.then(() => { heroRender(); refreshAll(); });
 /* ============================================================ 2 · THREE WAYS ============================================================ */
 const ways = copy.get('ways.cards') || [];
 const WAYS = [{ scene: 's01-living', href: '/lit-neon-preview/rework/create.html', qa: 'home.ways.design', font: 'soho', colour: 'pink', live: true }, { scene: 's11-shopwindow', href: '/lit-neon-preview/rework/upload.html', qa: 'home.ways.upload', font: 'shoreditch', colour: 'red' }, { scene: 's02-bedroom', href: '/lit-neon-preview/rework/shop.html', qa: 'home.ways.shop', font: 'brighton', colour: 'ice' }];
-$('#ways-grid').innerHTML = WAYS.map((w, i) => `<article class="way"><div class="way__tile" data-i="${i}"></div><h3 class="way__title">${esc(ways[i]?.title || '')}</h3><p class="way__line">${esc(ways[i]?.line || '')}</p><a class="c-btn c-btn--ghost" href="${w.href}" data-qa="${w.qa}">${esc(ways[i]?.cta || '')}</a></article>`).join('');
-const wayTiles = WAYS.map((w, i) => { const el = $(`.way__tile[data-i="${i}"]`); const n = tile(el, { scene: w.scene, text: ways[i]?.words || design.text, font: w.font, colour: w.colour, lit: !hoverable() }); const art = el.closest('.way'); art.addEventListener('pointerenter', () => n.setLit(true)); art.addEventListener('pointerleave', () => { if (hoverable()) n.setLit(false); }); art.addEventListener('focusin', () => n.setLit(true)); art.addEventListener('focusout', () => { if (hoverable()) n.setLit(false); }); return { ...w, neon: n }; });
-onState(s => { const w = wayTiles[0]; w.neon.update(withState({ text: s.text, font: s.font, colour: s.colour, scene: 's01-living' })); $('[data-qa="home.ways.design"]').href = builderLink(); });
+/* world 2026-10-15: the three doors carry photos from the generated set instead of rendered tiles */
+const WAY_PHOTOS = [['p8', 'Friends laughing under a pink neon sign reading last orders'], ['p10', 'A warm white neon sign reading coffee first in a café window'], ['p9', 'A pastel pink neon sign reading little dreamer above a cot']];
+$('#ways-grid').innerHTML = WAYS.map((w, i) => `<article class="way"><div class="w-photo way__tile" data-i="${i}"><img src="/lit-neon-preview/rework/assets/img/photos/${WAY_PHOTOS[i][0]}-800.jpg" alt="${esc(WAY_PHOTOS[i][1])}" loading="lazy" decoding="async"></div><h3 class="way__title">${esc(ways[i]?.title || '')}</h3><p class="way__line">${esc(ways[i]?.line || '')}</p><a class="c-btn c-btn--ghost" href="${w.href}" data-qa="${w.qa}">${esc(ways[i]?.cta || '')}</a></article>`).join('');
+onState(s => { $('[data-qa="home.ways.design"]').href = builderLink(); });
 $('[data-qa="home.ways.design"]').href = builderLink();
 
 /* ========================================================== 3 · WHERE'S IT GOING ========================================================== */
@@ -362,7 +365,7 @@ const FALLBACK = {
       if (!result) {   /* the quiz lives in the hero now: the first pick lights the hero wall, no separate result card */
         const f = p[0].state; heroInput.value = f.text; autosize(); setDesign({ text: f.text, font: f.font, colour: f.colour, colours: null, size: f.size }, { strike: true });
         analytics.track('quiz_complete', { room: answers.room, mood: answers.mood, wall: answers.wall });
-        hero.scrollIntoView({ block: 'start', behavior: R.reducedMotion() ? 'auto' : 'smooth' }); return;
+        if (heroStage) hero.scrollIntoView({ block: 'start', behavior: R.reducedMotion() ? 'auto' : 'smooth' }); else location.href = builderLink(); return;
       }
       result.hidden = false; result.innerHTML = `<div class="hx-quiz__picks">${p.map((x, k) => `<article class="hx-quiz__pick" data-qa="ix.quiz.pick"><span class="tile__media" data-k="${k}"></span><b>${esc(x.state.text.replace(/\n/g, ' / '))}</b><span class="from">${x.price.kind === 'price' ? `${gbp(x.price.payable)} · ${esc(R.sizeOf(x.state.size).name)}` : esc(t('price.quote', {}, 'Quote'))}</span><a class="c-btn c-btn--primary" href="${router.builderLink(x.state)}" data-qa="ix.quiz.open">${esc(t('fallback.quizOpen', {}, 'Open in the designer'))}</a></article>`).join('')}</div>
         <div class="hx-quiz__actions"><button type="button" class="c-btn c-btn--ghost" data-qa="ix.quiz.reshuffle">${esc(t('fallback.quizReshuffle', {}, 'Try different words'))}</button><button type="button" class="c-btn c-btn--ghost" data-qa="ix.quiz.restart">${esc(t('quiz.start', {}, 'Find my sign · 3 questions'))}</button>
@@ -374,6 +377,7 @@ const FALLBACK = {
     }
     result && result.addEventListener('click', e => { if (e.target.closest('[data-qa="ix.quiz.reshuffle"]')) { shuffle++; showResult(); } if (e.target.closest('[data-qa="ix.quiz.restart"]')) { stepI = 0; renderStep(); sheet.open(e.target); } });
     $('#quiz-start').addEventListener('click', e => { stepI = 0; renderStep(); sheet.open(e.currentTarget); });
+    const q2 = $('#quiz-start-2'); if (q2) q2.addEventListener('click', e => { stepI = 0; renderStep(); sheet.open(e.currentTarget); });
     const fromHash = () => { const m = location.hash.match(/#quiz=([a-z]+)\.([a-z]+)\.([a-z]+)/); if (m) { answers.room = m[1]; answers.mood = m[2]; answers.wall = m[3]; if (steps[0].options.some(o => o.id === m[1]) && steps[1].options.some(o => o.id === m[2]) && steps[2].options.some(o => o.id === m[3])) showResult(); } };
     fromHash(); window.addEventListener('hashchange', fromHash);
     return { __fallback: true, destroy() {}, setState() {} };

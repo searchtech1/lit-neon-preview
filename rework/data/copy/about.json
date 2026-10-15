@@ -9,14 +9,14 @@
   },
   "about": {
     "meta": {
-      "title": "Our workshop: how Lit Neon signs are made in the UK | Lit Neon",
-      "description": "Every Lit Neon sign is drawn, bent, mounted and tested in our UK workshop, with a drawing you approve first, a 2-year warranty and free mainland-GB delivery.",
-      "ogTitle": "Made in our UK workshop | Lit Neon",
-      "ogDescription": "Drawn, bent, mounted and tested in our UK workshop, with a drawing you approve first."
+      "title": "The workshop: how Lit Neon signs are made in the UK | Lit Neon",
+      "description": "Every Lit Neon sign is drawn, bent, mounted and tested in a UK workshop, with a drawing you approve first, a 2-year warranty and free mainland-GB delivery.",
+      "ogTitle": "Made in a UK workshop | Lit Neon",
+      "ogDescription": "Drawn, bent, mounted and tested in a UK workshop, with a drawing you approve first."
     },
-    "eyebrow": "Our workshop",
-    "h1": "Made in our UK workshop",
-    "h1Town": "Made in our workshop in {town}",
+    "eyebrow": "The workshop",
+    "h1": "Made in a UK workshop",
+    "h1Town": "Made in the workshop in {town}",
     "lede": "We draw, bend and test LED neon signs to order. You see the drawing before we make anything, and when you get in touch you talk to the people who make it.",
     "sheetCaption": "This is what you approve: a drawing of your words at the real size, before anything is made.",
     "sheetCta": "Draw mine",

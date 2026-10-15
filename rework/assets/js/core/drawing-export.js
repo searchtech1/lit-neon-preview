@@ -318,7 +318,7 @@ export async function build(state, opts = {}) {
     res.backing.id === 'cut' ? `Acrylic cut ${res.backing.margin} cm outside the lettering (dashed line).` : res.backing.id === 'stand' ? `Acrylic panel with ${res.backing.margin} cm clearance, slotted into its base (shown below the panel).` : `Acrylic panel with ${res.backing.margin} cm clearance, four brass standoffs.`,
     `Lines ${res.state.align === 'center' ? 'centred' : 'aligned ' + res.state.align}. Cable exits bottom right${F.has('cableLengthM') ? `, ${F.get('cableLengthM')} m clear` : ''}.`,
     'All dimensions in centimetres; LED flex length is an estimate.',
-    'Made in our UK workshop. You approve this drawing before anything is made.'];
+    'Made in a UK workshop. You approve this drawing before anything is made.'];
   g.text('Construction notes', RC.x, ry, { font: 'bold', size: 8.5 }); ry += 12;
   notes.forEach((t, i) => { const wrapped = wrap(t, 'reg', 7.5, RC.w - 14); wrapped.forEach((ln, j) => { if (ry > TB.y - 10) return; if (!j) g.text(`${i + 1}.`, RC.x, ry, { size: 7.5, rgb: C.soft }); g.text(ln, RC.x + 12, ry, { size: 7.5, rgb: C.soft }); ry += 10; }); ry += 2; });
 

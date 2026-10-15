@@ -111,7 +111,7 @@ export function render(container, state, opts = {}) {
     <li>Tube path follows the centreline of each letter${res.icon ? ' and the symbol' : ''}.</li>
     <li>${res.backing.id === 'cut' ? `Acrylic cut ${res.backing.margin} cm outside the lettering.` : `Acrylic panel with ${res.backing.margin} cm clearance, four brass standoffs.`}</li>
     <li>Lines ${res.state.align === 'center' ? 'centred' : 'aligned ' + res.state.align}. Cable exits bottom right${F.has('cableLengthM') ? `, ${F.get('cableLengthM')} m clear` : ''}.</li>
-    <li>Made in our UK workshop. You approve this drawing before anything is made.</li></ol>`;
+    <li>Made in a UK workshop. You approve this drawing before anything is made.</li></ol>`;
   /* title block: Title · Acrylic W×H · LED flex · Power (if confirmed) · Date · Drawn by */
   const tb = container.querySelector('.tb');
   const cells = compact ? [['Acrylic', `${d.W} × ${d.H} cm`, 'mono'], ['LED flex', fmtMetres(flex), 'mono'], ['Date', today, 'mono']] : narrow ? [['Title', esc(words.slice(0, 24)) || '—'], ['Acrylic', `${d.W} × ${d.H} cm`, 'mono'], ['LED flex', fmtMetres(flex), 'mono'], ['Date', today, 'mono']] : [['Title', esc(words.slice(0, 40)) || '—'], ['Acrylic', `${d.W} × ${d.H} cm`, 'mono'], ['LED flex', fmtMetres(flex), 'mono']];

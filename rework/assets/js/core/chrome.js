@@ -77,12 +77,12 @@ function contactHref(text) {
   if (facts.has('supportEmail')) return { href: `mailto:${facts.value('supportEmail')}${text ? `?subject=${encodeURIComponent(text)}` : ''}`, kind: 'email', label: copy.t('nav.email', {}, 'Email us'), icon: 'mail' };
   return { href: url('contact.html'), kind: 'contact', label: copy.t('nav.contact', {}, 'Contact us'), icon: 'chat' };
 }
-let markP = null; const wordmark = () => markP || (markP = (async () => { try { const r = await fetch(url('assets/img/brand/litneon-wordmark.svg')); return r.ok ? (await r.text()).replace(/<\?xml[^>]*>/, '').replace(/ width="128" height="30"/, '') : ''; } catch { return '<span>Lit Neon</span>'; } })()); /* one fetch, started at mount */
+let markP = null; const wordmark = () => markP || (markP = Promise.resolve(`<img src="${url('assets/img/brand/litneon-logo.png')}" alt="Lit Neon" width="480" height="187" decoding="async" fetchpriority="high">`)); /* world 2026-10-15: the lit tube wordmark (option 6) as a PNG */
 
 /* =========================== announcement =========================== */
 function announceBar(live) {
   const msgs = [];
-  if (live && facts.has('promoEnd')) msgs.push(copy.t('announce.promo', { promoEnd: clock.format(new Date(facts.value('promoEnd'))) }));
+  msgs.push(copy.t('announce.promo', { pct: 10, code: 'LIT10' }, '10% off your first sign · code LIT10'));   /* world 2026-10-15: the first-order code leads the bar */
   msgs.push(copy.t('announce.free', {}, 'Free delivery across mainland GB'), copy.t('announce.proof', {}, 'You approve a drawing before we make anything'));
   const el = document.createElement('div'); el.className = 'ch-announce'; el.setAttribute('data-qa', 'chrome.announce'); el.setAttribute('role', 'region'); el.setAttribute('aria-label', 'Announcements');
   el.innerHTML = `<div class="wrap"><div class="ch-announce__rot"><p class="ch-announce__msg" data-qa="chrome.announce.msg" aria-live="polite">${esc(msgs[0])}</p><button type="button" class="ch-announce__pause" data-qa="chrome.announce.pause" aria-pressed="false" aria-label="${esc(copy.t('announce.pause', {}, 'Pause announcements'))}">${icon('pause')}</button></div><nav class="ch-announce__util" aria-label="Utility"><a href="${url('bulk-quote.html')}" data-qa="chrome.announce.bulk">${esc(copy.t('announce.bulk', {}, 'Bulk quotes'))}</a><a href="${url('help.html')}" data-qa="chrome.announce.help">${esc(copy.t('announce.help', {}, 'Help'))}</a></nav></div>`;
@@ -359,12 +359,12 @@ function stickyCta() {
 }
 
 /* =========================== footer =========================== */
-let paperP = null; const paperMarkSvg = () => paperP || (paperP = (async () => { try { const r = await fetch(url('assets/img/brand/litneon-wordmark-paper.svg')); return r.ok ? (await r.text()).replace(/ width="128" height="30"/, '') : ''; } catch { return ''; } })());
+let paperP = null; const paperMarkSvg = () => paperP || (paperP = Promise.resolve(`<img src="${url('assets/img/brand/litneon-logo.png')}" alt="" width="480" height="187" loading="lazy" decoding="async">`));
 async function footer() {
   const el = document.createElement('footer'); el.className = 'ch-footer'; el.setAttribute('data-qa', 'chrome.footer'); el.setAttribute('role', 'contentinfo');
   const paperMark = await paperMarkSvg();
   const town = facts.has('workshopTown') ? facts.value('workshopTown') : null;
-  const makerLine = town ? copy.t('footer.makerIn', { town }) : copy.t('footer.maker', {}, 'Made in our UK workshop');
+  const makerLine = town ? copy.t('footer.makerIn', { town }) : copy.t('footer.maker', {}, 'Made in a UK workshop');
   const note = facts.has('founderNote') ? facts.get('founderNote') : '';
   const contact = contactHref();
   const L = (href, key, qa) => `<li><a href="${url(href)}" data-qa="chrome.footer.link" data-id="${qa || key}">${esc(copy.t(`footer.links.${key}`))}</a></li>`;
@@ -373,7 +373,7 @@ async function footer() {
   let legal = copy.t('footer.legal', legalParts); if (legalParts.company) legal = legal.replace(/^([^.]+?)(Prices in £)/, '$1. $2');
   const year = clock.now().getFullYear();
   el.innerHTML = `
-<section class="ch-footer__maker paper" aria-labelledby="ch-maker-h">
+<section class="ch-footer__maker night" aria-labelledby="ch-maker-h">
   <div class="wrap">
     <div><div class="brand" aria-hidden="true">${paperMark}</div><p class="t-eyebrow">${esc(copy.t('footer.makerEyebrow', {}, 'Made here'))}</p><h2 id="ch-maker-h">${esc(makerLine)}${facts.chip('workshopTown')}</h2>${note ? `<p>${esc(note)}${facts.chip('founderNote')}</p>` : ''}<ul class="facts" data-qa="chrome.footer.facts">${facts.has('madeInUK') ? `<li>${icon('drawing')}${esc(copy.t('announce.proof', {}, 'You approve a drawing before we make anything'))}</li>` : ''}${facts.has('warrantyYears') ? `<li>${icon('shield')}${esc(facts.get('warrantyYears'))}</li>` : ''}${facts.has('deliveryFree') ? `<li>${icon('truck')}${esc(copy.t('announce.free', {}, 'Free delivery across mainland GB'))}</li>` : ''}</ul></div>
     <div class="ch-footer__save" data-qa="chrome.footer.save">
@@ -544,11 +544,40 @@ export async function mount(opts = {}) {
       bottom.innerHTML = ''; bottom.appendChild(await footer());
       stickyCta();
       consentBanner();
+      waFloat(); firstOrderPop();
     }
     facts.renderBadge();
     document.dispatchEvent(new CustomEvent('ln:chrome', { detail: { page: pageOf(), promoLive: state.promoLive } }));
   })().catch(e => console.error('chrome: footer failed', e));
   return { state, ready: state.ready, builderHref, contactHref, consentState, setConsent, refreshBasket: () => document.dispatchEvent(new CustomEvent('ln:basket')) };
+}
+
+/* =========================== world 2026-10-15: WhatsApp float + first-order popup =========================== */
+function waFloat() {
+  if (document.querySelector('.w-wa')) return;
+  const c = contactHref();
+  const a = document.createElement('a'); a.className = 'w-wa'; a.href = c.href; a.setAttribute('data-qa', 'chrome.wa'); a.setAttribute('aria-label', c.kind === 'whatsapp' ? copy.t('nav.whatsapp', {}, 'Message us on WhatsApp') : copy.t('footer.contactForm', {}, 'Contact us'));
+  if (c.external) { a.target = '_blank'; a.rel = 'noopener'; }
+  a.innerHTML = icon(c.kind === 'whatsapp' ? 'whatsapp' : 'chat');
+  document.body.appendChild(a);
+}
+function firstOrderPop() {
+  let seen = false; try { seen = localStorage.getItem('ln.pop.lit10') === '1'; } catch {}
+  if (seen || document.querySelector('.w-pop') || pageOf() === 'checkout' || pageOf() === 'basket') return;
+  const show = () => {
+    if (document.querySelector('.w-pop') || document.body.classList.contains('has-overlay')) return;
+    const el = document.createElement('div'); el.className = 'w-pop'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'w-pop-h'); el.setAttribute('data-qa', 'chrome.pop');
+    el.innerHTML = `<div class="w-pop__card"><button type="button" class="c-btn c-btn--icon c-btn--ghost w-pop__close" aria-label="Close" data-qa="chrome.pop.close">${icon('close')}</button><p class="t-eyebrow">${esc(copy.t('pop.eyebrow', {}, 'First sign?'))}</p><h2 id="w-pop-h">${esc(copy.t('pop.title', {}, '10% off your first sign'))}</h2><p>${esc(copy.t('pop.body', {}, 'Use the code at checkout. Free GB delivery and a 3-year warranty come as standard.'))}</p><span class="w-pop__code" data-qa="chrome.pop.code">LIT10</span><a class="c-btn c-btn--primary c-btn--lg" href="${builderHref()}" data-qa="chrome.pop.cta">${esc(copy.t('pop.cta', {}, 'Design my sign'))}</a></div>`;
+    const done = () => { el.remove(); try { localStorage.setItem('ln.pop.lit10', '1'); } catch {} };
+    el.addEventListener('click', e => { if (e.target === el || e.target.closest('.w-pop__close') || e.target.closest('.w-pop__cta')) done(); });
+    el.querySelector('[data-qa="chrome.pop.cta"]').addEventListener('click', done);
+    document.addEventListener('keydown', function onKey(e) { if (e.key === 'Escape') { done(); document.removeEventListener('keydown', onKey); } });
+    document.body.appendChild(el); el.querySelector('.w-pop__close').focus({ preventScroll: true });
+  };
+  let fired = false; const fire = () => { if (fired) return; fired = true; show(); };
+  setTimeout(fire, 8000);
+  const onScroll = () => { if (window.scrollY > innerHeight * 1.2) { fire(); window.removeEventListener('scroll', onScroll); } };
+  window.addEventListener('scroll', onScroll, { passive: true });
 }
 
 export const chrome = { mount, consentState, setConsent, builderHref, contactHref };

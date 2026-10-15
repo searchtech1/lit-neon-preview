@@ -2,9 +2,9 @@
   "_about": "Customer-facing strings for the global chrome (brief §4.0, §4.22, Appendix C). No literal dates, prices or percentages: promo lines are templated and filled from facts + clock + pricing at render time. Owned by WS0-A.",
   "brand": { "name": "Lit Neon", "tagline": "Your words, lit." },
   "announce": {
-    "promo": "Launch prices until {promoEnd}",
+    "promo": "{pct}% off your first sign · code {code}",
     "free": "Free delivery across mainland GB",
-    "proof": "You approve a drawing before we make anything",
+    "proof": "Made in the UK · 3-year warranty · you approve a drawing first",
     "pause": "Pause announcements",
     "play": "Resume announcements",
     "bulk": "Bulk quotes",
@@ -81,8 +81,8 @@
   },
   "footer": {
     "makerEyebrow": "Made here",
-    "maker": "Made in our UK workshop",
-    "makerIn": "Made in our UK workshop, in {town}",
+    "maker": "Made in a UK workshop",
+    "makerIn": "Made in a UK workshop, in {town}",
     "makerNote": "Every sign is drawn, bent, mounted and bench-tested by the people you can message. You approve the drawing; we make exactly that.",
     "saveTitle": "Email me my design",
     "saveHelp": "We send the link to your design and its price. Nothing else, unless you tick the box.",
@@ -104,7 +104,7 @@
     "links": {
       "design": "Design your sign", "logo": "Logo & business", "ready": "Ready-made designs", "weddings": "Weddings & events", "bulk": "Bulk quotes", "gift": "Gift a sign",
       "helpCentre": "Help centre", "delivery": "Delivery", "returns": "Returns & warranty", "install": "Installation guide", "recycling": "Recycling", "contact": "Contact",
-      "about": "Our workshop", "guides": "Guides", "privacy": "Privacy", "terms": "Terms of sale", "cookies": "Cookies", "reviewsPolicy": "How we handle reviews"
+      "about": "The workshop", "guides": "Guides", "privacy": "Privacy", "terms": "Terms of sale", "cookies": "Cookies", "reviewsPolicy": "How we handle reviews"
     },
     "whatsapp": "WhatsApp",
     "email": "Email",

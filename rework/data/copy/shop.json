@@ -12,9 +12,9 @@
   "shop": {
     "meta": {
       "title": "Ready-made neon signs, made in the UK | Lit Neon",
-      "description": "Ready-made LED neon signs for bedrooms, home bars, weddings, kitchens and kids' rooms. Every design comes in 12 tube colours and 5 sizes, made to order in our UK workshop.",
+      "description": "Ready-made LED neon signs for bedrooms, home bars, weddings, kitchens and kids' rooms. Every design comes in 12 tube colours and 5 sizes, made to order in a UK workshop.",
       "ogTitle": "Ready-made neon signs from Lit Neon",
-      "ogDescription": "Signs we've already drawn, in any of our 12 tube colours, made to order in our UK workshop."
+      "ogDescription": "Signs we've already drawn, in any of our 12 tube colours, made to order in a UK workshop."
     },
     "breadcrumb": {
       "home": "Home",
@@ -23,7 +23,7 @@
     },
     "eyebrow": "Shop signs",
     "h1": "Ready-made designs",
-    "lede": "Signs we've already drawn, ready to make in any of our 12 tube colours and five sizes. Each one is bent to order in our UK workshop, and ready-made designs come with {returns}.",
+    "lede": "Signs we've already drawn, ready to make in any of our 12 tube colours and five sizes. Each one is bent to order in a UK workshop, and ready-made designs come with {returns}.",
     "lede2": "Every design comes in any of the 12 colours.",
     "collectionsLabel": "Shop by collection",
     "count": "{n} designs",
@@ -48,7 +48,7 @@
     "seoTitle": "About our ready-made signs",
     "seoBody": [
       "Every sign on this page is a design we've already drawn and priced. You still pick the tube colour, the size, the backing and how it hangs, and the picture updates as you choose.",
-      "Each one is made to order in our UK workshop from silicone LED flex on cut acrylic, then boxed and sent free across mainland GB. A dimmer and remote come in the box, and every sign carries a {warranty}.",
+      "Each one is made to order in a UK workshop from silicone LED flex on cut acrylic, then boxed and sent free across mainland GB. A dimmer and remote come in the box, and every sign carries a {warranty}.",
       "Because these designs aren't personalised, you can return one within the change-of-mind window if it isn't right for your wall. Want your own words instead? The designer prices any text in seconds."
     ],
     "facets": {

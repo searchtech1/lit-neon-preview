@@ -10,7 +10,7 @@
   "product": {
     "meta": {
       "title": "{name} LED neon sign | Lit Neon",
-      "description": "{blurb} Made to order in our UK workshop, in any of 12 tube colours and five sizes, with free mainland-GB delivery."
+      "description": "{blurb} Made to order in a UK workshop, in any of 12 tube colours and five sizes, with free mainland-GB delivery."
     },
     "breadcrumb": "Breadcrumb",
     "crumbShop": "Shop signs",
@@ -138,7 +138,7 @@
       "eyebrow": "Quality is in the details",
       "title": "Built to last",
       "warranty": "Every sign carries a {warranty}, and if anything goes wrong we put it right.",
-      "workshop": "Drawn, bent and mounted in our UK workshop, not shipped in from overseas.",
+      "workshop": "Drawn, bent and mounted in a UK workshop, not shipped in from overseas.",
       "proof": "You approve a drawing before we make anything, so what arrives is what you saw.",
       "guide": "How LED neon is made",
       "cards": {
@@ -150,7 +150,7 @@
     },
     "arrives": {
       "title": "Arrives safe",
-      "lede": "Boxed in our UK workshop and sent by tracked courier, free across mainland GB.",
+      "lede": "Boxed in a UK workshop and sent by tracked courier, free across mainland GB.",
       "tracked": "Tracked delivery to your door.",
       "illustration": "Illustration",
       "crs": "Consumer Rights Act 2015"
