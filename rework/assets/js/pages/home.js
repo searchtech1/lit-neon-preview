@@ -411,7 +411,7 @@ const FALLBACK = {
 };
 
 /* ============================================================ 5 · 6 · 10 mounts ============================================================ */
-const ixMounts = Promise.all([FALLBACK.quiz($('#hero-panel')).then(api => { IX.quiz = api; }), new Promise(r => inView($('#ix-process'), () => mountIx('process', $('#ix-process')).then(r), 0))]);
+const ixMounts = Promise.all([FALLBACK.quiz($('#hero-panel')).then(api => { IX.quiz = api; })]);   /* world 2026-10-15: the illustrated process strip is gone */
 
 /* ============================================================== 7 · BESTSELLERS ============================================================== */
 const best = data.designs.designs.filter(d => d.bestseller).sort((a, b) => (a.bestsellerRank || 99) - (b.bestsellerRank || 99)).slice(0, 8);
@@ -465,6 +465,7 @@ logoBand();
 /* ============================================================== 12 · MADE HERE ============================================================== */
 (function made() {
   const cmp = copy.get('made.compare') || {}; const rows = cmp.rows || [];
+  if (!$('#compare-table')) return;
   $('#compare-table').innerHTML = `<thead><tr><th scope="col"></th><th scope="col">${esc(cmp.colUs || 'Lit Neon')}</th><th scope="col">${esc(cmp.colThem || 'Typically')}</th></tr></thead><tbody>${rows.map(r => `<tr data-qa="home.compare.row"><td>${esc(r.label)}</td><td class="us">${esc(fillD2(r.us))}</td><td class="them">${esc(r.them)}</td></tr>`).join('')}</tbody>`;
 })();
 

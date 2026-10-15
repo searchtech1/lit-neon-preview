@@ -1,19 +1,60 @@
 {
-  "_about": "Express payment providers for c-btn--express rows (brief §3.7, §4.6, §4.18, §4.19) and the payment-mark rows. Marks are prototype placeholders in img/payment/; the live theme swaps in each provider's approved asset. In the prototype each express button adds the line and navigates to checkout.html#express=<id>.",
+  "_about": "Express payment providers for c-btn--express rows (brief \u00a73.7, \u00a74.6, \u00a74.18, \u00a74.19) and the payment-mark rows. Marks are prototype placeholders in img/payment/; the live theme swaps in each provider's approved asset. In the prototype each express button adds the line and navigates to checkout.html#express=<id>.",
   "express": [
-    { "id": "applepay",  "name": "Apple Pay",  "mark": "payment/applepay.svg",  "enabled": true },
-    { "id": "googlepay", "name": "Google Pay", "mark": "payment/googlepay.svg", "enabled": true },
-    { "id": "shoppay",   "name": "Shop Pay",   "mark": "payment/shoppay.svg",   "enabled": true },
-    { "id": "paypal",    "name": "PayPal",     "mark": "payment/paypal.svg",    "enabled": true }
+    {
+      "id": "applepay",
+      "name": "Apple Pay",
+      "mark": "payment/applepay.svg",
+      "enabled": true
+    },
+    {
+      "id": "googlepay",
+      "name": "Google Pay",
+      "mark": "payment/googlepay.svg",
+      "enabled": true
+    },
+    {
+      "id": "shoppay",
+      "name": "Shop Pay",
+      "mark": "payment/shoppay.svg",
+      "enabled": true
+    }
   ],
   "marks": [
-    { "id": "visa",       "name": "Visa",       "mark": "payment/visa.svg" },
-    { "id": "mastercard", "name": "Mastercard", "mark": "payment/mastercard.svg" },
-    { "id": "amex",       "name": "American Express", "mark": "payment/amex.svg" },
-    { "id": "applepay",   "name": "Apple Pay",  "mark": "payment/applepay.svg" },
-    { "id": "googlepay",  "name": "Google Pay", "mark": "payment/googlepay.svg" },
-    { "id": "paypal",     "name": "PayPal",     "mark": "payment/paypal.svg" },
-    { "id": "klarna",     "name": "Klarna",     "mark": "payment/klarna.svg" },
-    { "id": "clearpay",   "name": "Clearpay",   "mark": "payment/clearpay.svg" }
+    {
+      "id": "visa",
+      "name": "Visa",
+      "mark": "payment/visa.svg"
+    },
+    {
+      "id": "mastercard",
+      "name": "Mastercard",
+      "mark": "payment/mastercard.svg"
+    },
+    {
+      "id": "amex",
+      "name": "American Express",
+      "mark": "payment/amex.svg"
+    },
+    {
+      "id": "applepay",
+      "name": "Apple Pay",
+      "mark": "payment/applepay.svg"
+    },
+    {
+      "id": "googlepay",
+      "name": "Google Pay",
+      "mark": "payment/googlepay.svg"
+    },
+    {
+      "id": "klarna",
+      "name": "Klarna",
+      "mark": "payment/klarna.svg"
+    },
+    {
+      "id": "clearpay",
+      "name": "Clearpay",
+      "mark": "payment/clearpay.svg"
+    }
   ]
 }

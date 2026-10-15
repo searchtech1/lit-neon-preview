@@ -77,7 +77,7 @@ function contactHref(text) {
   if (facts.has('supportEmail')) return { href: `mailto:${facts.value('supportEmail')}${text ? `?subject=${encodeURIComponent(text)}` : ''}`, kind: 'email', label: copy.t('nav.email', {}, 'Email us'), icon: 'mail' };
   return { href: url('contact.html'), kind: 'contact', label: copy.t('nav.contact', {}, 'Contact us'), icon: 'chat' };
 }
-let markP = null; const wordmark = () => markP || (markP = Promise.resolve(`<img src="${url('assets/img/brand/litneon-logo.png')}" alt="Lit Neon" width="480" height="187" decoding="async" fetchpriority="high">`)); /* world 2026-10-15: the lit tube wordmark (option 6) as a PNG */
+let markP = null; const wordmark = () => markP || (markP = Promise.resolve(`<img src="${url('assets/img/brand/litneon-logo.svg')}" alt="Lit Neon" width="390" height="152" decoding="async" fetchpriority="high">`)); /* world 2026-10-15: the lit tube wordmark (option 6), drawn on from both ends then lit (SVG, animates once per page view) */
 
 /* =========================== announcement =========================== */
 function announceBar(live) {
@@ -359,7 +359,7 @@ function stickyCta() {
 }
 
 /* =========================== footer =========================== */
-let paperP = null; const paperMarkSvg = () => paperP || (paperP = Promise.resolve(`<img src="${url('assets/img/brand/litneon-logo.png')}" alt="" width="480" height="187" loading="lazy" decoding="async">`));
+let paperP = null; const paperMarkSvg = () => paperP || (paperP = Promise.resolve(`<img src="${url('assets/img/brand/litneon-logo-static.svg')}" alt="" width="390" height="152" loading="lazy" decoding="async">`));
 async function footer() {
   const el = document.createElement('footer'); el.className = 'ch-footer'; el.setAttribute('data-qa', 'chrome.footer'); el.setAttribute('role', 'contentinfo');
   const paperMark = await paperMarkSvg();
