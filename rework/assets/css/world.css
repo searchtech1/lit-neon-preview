@@ -254,3 +254,6 @@ body.has-stickycta .w-wa { bottom: calc(var(--stickycta-h) + 16px + env(safe-are
 .w-faq summary { padding-block: var(--s-4); }
 .w-ways .way__tile { padding: 0; background: none; }
 .w-ways .way__tile img { border-radius: 0; }
+/* round 5: the hero badges line up in two equal columns on phones; the mark's glow is now an SVG filter (Safari ignored the CSS one) */
+@media (max-width: 767px) { .hero--photo .hero__trust.w-badges { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-2); } .hero--photo .hero__trust.w-badges li { width: 100%; justify-content: flex-start; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; padding: 8px 10px; } .hero--photo .hero__trust.w-badges li span:last-child { overflow: hidden; text-overflow: ellipsis; } }
+.ch-brand svg { overflow: visible; }
