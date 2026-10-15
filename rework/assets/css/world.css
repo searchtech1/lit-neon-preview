@@ -241,3 +241,16 @@ body.has-stickycta .w-wa { bottom: calc(var(--stickycta-h) + 16px + env(safe-are
 .how__list.w-steps > li::before { counter-increment: none; border: 0; font-family: var(--f-ui); }
 .how__list.w-steps p { color: var(--bone-2); max-width: none; }
 .how__list.w-steps h3 { font-family: var(--f-display); font-weight: 800; }
+/* round 4: no boxes hugging text. Steps are separated by a rule and a number, not wrapped in a card; the three doors keep one border (the photo's), not two */
+.b-step, .b-step:first-of-type { border: 0; border-top: 1px solid var(--hair); border-radius: 0; background: none; padding: var(--s-6) 0 var(--s-5); margin: 0; }
+.b-step:first-of-type, #b-editing + .b-step, #b-welcome + .b-step { border-top: 0; padding-top: var(--s-4); }
+.b-step__title { margin-bottom: var(--s-4); }
+@media (max-width: 767px) { .b-step { padding: var(--s-5) 0 var(--s-4); } .b-body { padding-inline: var(--gutter); } }
+.w-ways .way { border: 0; background: none; padding: 0; box-shadow: none; }
+.w-ways .way:hover { transform: none; box-shadow: none; }
+.w-ways .way:hover .w-photo { box-shadow: 0 0 0 1px var(--hair-lit), 0 0 36px -8px var(--hair-lit); }
+.hero--photo .hero__door { padding: var(--s-4) var(--s-5); }
+.w-kit div, .w-nums div, .w-steps > li, .w-faq details { padding-inline: var(--s-5); }
+.w-faq summary { padding-block: var(--s-4); }
+.w-ways .way__tile { padding: 0; background: none; }
+.w-ways .way__tile img { border-radius: 0; }
