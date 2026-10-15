@@ -77,7 +77,7 @@ function contactHref(text) {
   if (facts.has('supportEmail')) return { href: `mailto:${facts.value('supportEmail')}${text ? `?subject=${encodeURIComponent(text)}` : ''}`, kind: 'email', label: copy.t('nav.email', {}, 'Email us'), icon: 'mail' };
   return { href: url('contact.html'), kind: 'contact', label: copy.t('nav.contact', {}, 'Contact us'), icon: 'chat' };
 }
-let markP = null; const wordmark = () => markP || (markP = (async () => { try { const r = await fetch(url('assets/img/brand/litneon-logo.svg')); if (r.ok) return (await r.text()).replace(/<\?xml[^>]*>/, '').replace(/ width="390" height="152"/, ''); } catch {} return `<img src="${url('assets/img/brand/litneon-logo-static.svg')}" alt="Lit Neon" width="390" height="152" decoding="async">`; })()); /* world round 3: the wordmark is inlined so its glow filter and draw-on animation run on every browser (an <img> SVG loses both on iOS) */
+let markP = null; const wordmark = () => markP || (markP = (async () => { try { const r = await fetch(url('assets/img/brand/litneon-logo.svg') + '?v=5', { cache: 'no-cache' });   /* versioned: phones held the old mark for 10 min behind the CDN cache */ if (r.ok) return (await r.text()).replace(/<\?xml[^>]*>/, '').replace(/ width="390" height="152"/, ''); } catch {} return `<img src="${url('assets/img/brand/litneon-logo-static.svg')}" alt="Lit Neon" width="390" height="152" decoding="async">`; })()); /* world round 3: the wordmark is inlined so its glow filter and draw-on animation run on every browser (an <img> SVG loses both on iOS) */
 
 /* =========================== announcement =========================== */
 function announceBar(live) {
