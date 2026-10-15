@@ -286,22 +286,22 @@ function tileRow(kind, id) {
   return { href: `/lit-neon-preview/rework/collection.html?c=${encodeURIComponent(c.id)}`, scene: c.scene, words: c.tile.words, font: c.defaults.font, colour: c.defaults.colour, title: c.name, line: c.tile.line, meta: from != null ? t(n === 1 ? 'shop.tileMetaOne' : 'shop.tileMeta', { from: gbp(from), n }) : '', collection: c.id };
 }
 const shopNeons = []; const shopRows = {};
-for (const kind of ['room', 'occasion', 'business']) {
+for (const kind of ($('#shop-panel-room') ? ['room', 'occasion', 'business'] : [])) {   /* world round 3: photo tiles, no rendered panels */
   const rows = shopRows[kind] = (C.homeTiles[kind] || []).map(id => tileRow(kind, id)).filter(Boolean);
   $(`#shop-panel-${kind}`).innerHTML = rows.map((r, i) => `<a class="tile" href="${r.href}" data-qa="home.shop.tile" data-collection="${esc(r.collection)}"><span class="tile__media" data-k="${kind}" data-i="${i}"></span><span class="tile__title">${esc(r.title)}</span><span class="tile__line">${esc(r.line)}</span><span class="tile__meta" data-i="${i}">${esc(r.meta)}</span></a>`).join('');
   rows.forEach((r, i) => shopNeons.push(tile($(`#shop-panel-${kind} .tile__media[data-i="${i}"]`), { scene: r.scene, text: r.words, font: r.font, colour: r.colour, fitW: .8, fitH: .55 })));
 }
-function paintShopMeta() { for (const kind of ['room', 'occasion', 'business']) { const rows = (C.homeTiles[kind] || []).map(id => tileRow(kind, id)).filter(Boolean); rows.forEach((r, i) => { const m = $(`#shop-panel-${kind} .tile__meta[data-i="${i}"]`); if (m) m.textContent = r.meta; }); } }
-ui.tabs($('#shop-tabs'), { onChange: () => R.refitAll() });
+function paintShopMeta() { if (!$('#shop-panel-room')) return; for (const kind of ['room', 'occasion', 'business']) { const rows = (C.homeTiles[kind] || []).map(id => tileRow(kind, id)).filter(Boolean); rows.forEach((r, i) => { const m = $(`#shop-panel-${kind} .tile__meta[data-i="${i}"]`); if (m) m.textContent = r.meta; }); } }
+if ($('#shop-tabs')) ui.tabs($('#shop-tabs'), { onChange: () => R.refitAll() });
 
 /* ============================================================ 4 · HOW IT WORKS ============================================================ */
 $('#how-list').innerHTML = (copy.get('how.steps') || []).map(s => `<li><div><h3>${esc(s.title)}</h3><p>${esc(s.line)}</p></div></li>`).join('');
 const howSheet = $('#how-sheet');
-const renderSheet = () => { sheetMod.render(howSheet, withState({ size: 'm' }), { lite: true }); };
-new ResizeObserver(() => renderSheet()).observe(howSheet);
+const renderSheet = () => { if (howSheet) sheetMod.render(howSheet, withState({ size: 'm' }), { lite: true }); };
+if (howSheet) new ResizeObserver(() => renderSheet()).observe(howSheet);
 onState(() => { renderSheet(); $('#how-cta').href = builderLink(); });
 $('#how-cta').href = builderLink();
-$('#how-pdf').addEventListener('click', async e => { const b = e.currentTarget; ui.setBusy(b, true); try { await drawing.download(withState({ size: 'm' })); } finally { ui.setBusy(b, false); } });
+const howPdf = $('#how-pdf'); if (howPdf) howPdf.addEventListener('click', async e => { const b = e.currentTarget; ui.setBusy(b, true); try { await drawing.download(withState({ size: 'm' })); } finally { ui.setBusy(b, false); } });
 
 /* =============================================================== ix loader =============================================================== */
 const IX = {};
@@ -455,6 +455,7 @@ function quickView(id, opener) {
 
 /* ============================================================== 9 · YOUR LOGO ============================================================== */
 function logoBand() {
+  if (!$('#logo-bands')) { if ($('#logo-plate') && !$('#logo-plate').firstChild) $('#logo-plate').innerHTML = plateHtml('s11-shopwindow', { w: 1600, cls: '' }); return; }
   if (!$('#logo-plate').firstChild) $('#logo-plate').innerHTML = plateHtml('s11-shopwindow', { w: 1600, cls: '' });
   const b = pricing.bands(); const small = b.find(x => x.size === 's' && x.from != null), large = b.find(x => x.size === 'l' && x.from != null) || b.find(x => x.size === 'xl' && x.from != null);
   const bands = copy.get('logo.bands') || []; const a = small ? gbp(small.from) : '', bb = large ? gbp(large.from) : '';
@@ -481,7 +482,7 @@ logoBand();
   // chrome.contactHref() returns { href, kind, label, icon, external } (core/chrome.js); never interpolate the object itself
   const contact = chrome.contactHref() || {}; const href = typeof contact === 'string' ? contact : (contact.href || '/lit-neon-preview/rework/contact.html');
   const kind = contact.kind || (/wa\.me/.test(href) ? 'whatsapp' : /^mailto:/.test(href) ? 'email' : 'contact'); const ext = contact.external || /wa\.me/.test(href);
-  $('#faq-ask').innerHTML = `<h3>${esc(t('faq.askTitle', {}, 'Still stuck?'))}</h3><p>${esc(t('faq.askBody'))}</p>${facts.has('supportHours') ? `<span class="hours">${esc(facts.get('supportHours'))}</span>` : ''}${facts.has('replyHours') ? `<span class="hours">${esc(facts.get('replyHours'))}</span>` : ''}<a class="c-btn c-btn--ghost" href="${esc(href)}" data-qa="home.faq.ask.cta" data-kind="${kind}"${ext ? ' target="_blank" rel="noopener"' : ''}>${icon(kind === 'whatsapp' ? 'whatsapp' : kind === 'email' ? 'mail' : 'chat')} ${esc(kind === 'whatsapp' ? t('nav.whatsapp', {}, 'Message us on WhatsApp') : kind === 'email' ? t('nav.email', {}, 'Email us') : t('faq.askCta', {}, 'Contact us'))}</a>`;
+  if ($('#faq-ask') && !$('#faq-ask').hidden) $('#faq-ask').innerHTML = `<h3>${esc(t('faq.askTitle', {}, 'Still stuck?'))}</h3><p>${esc(t('faq.askBody'))}</p>${facts.has('supportHours') ? `<span class="hours">${esc(facts.get('supportHours'))}</span>` : ''}${facts.has('replyHours') ? `<span class="hours">${esc(facts.get('replyHours'))}</span>` : ''}<a class="c-btn c-btn--ghost" href="${esc(href)}" data-qa="home.faq.ask.cta" data-kind="${kind}"${ext ? ' target="_blank" rel="noopener"' : ''}>${icon(kind === 'whatsapp' ? 'whatsapp' : kind === 'email' ? 'mail' : 'chat')} ${esc(kind === 'whatsapp' ? t('nav.whatsapp', {}, 'Message us on WhatsApp') : kind === 'email' ? t('nav.email', {}, 'Email us') : t('faq.askCta', {}, 'Contact us'))}</a>`;
   const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: resolved.map(q => ({ '@type': 'Question', name: q.q, acceptedAnswer: { '@type': 'Answer', text: q.a } })) };
   const s = document.createElement('script'); s.type = 'application/ld+json'; s.textContent = JSON.stringify(ld); document.head.appendChild(s);
 })();

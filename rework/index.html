@@ -89,7 +89,8 @@
         <li><span class="ic-slot" data-icon="check"></span><span>3-year warranty</span></li>
         <li><span class="ic-slot" data-icon="truck"></span><span>Free GB delivery</span></li>
         <li><span class="ic-slot" data-icon="clock"></span><span>10–14 working days</span></li>
-        <li><span class="ic-slot" data-icon="drawing"></span><span>Drawing in 12h</span></li>
+        <li><span class="ic-slot" data-icon="truck"></span><span>Express option</span></li>
+        <li><span class="ic-slot" data-icon="star"></span><span>5000+ signs made</span></li>
       </ul>
     </div>
     <div class="hero__media" data-qa="home.hero.media">
@@ -109,7 +110,7 @@
     </div>
   </section>
 
-  <!-- 3 · Where's it going? -->
+  <!-- 3 · Where's it going? (world round 3: eight photo tiles, matching the chosen preview) -->
   <section class="section night shop" data-section="shop" aria-labelledby="shop-h2">
     <div class="wrap">
       <header class="sec-head sec-head--split">
@@ -117,40 +118,20 @@
           <p class="t-eyebrow" data-copy="shop.eyebrow">Where's it going?</p>
           <h2 id="shop-h2" data-copy="shop.h2">Pick the room, we'll start the drawing</h2>
         </div>
-        <div class="c-tabs c-tabs--seg shop__tabs" role="tablist" aria-label="Where's it going?" id="shop-tabs">
-          <button role="tab" id="shop-tab-room" aria-controls="shop-panel-room" aria-selected="true" data-qa="home.shop.tab" data-tab="room">Room</button>
-          <button role="tab" id="shop-tab-occasion" aria-controls="shop-panel-occasion" aria-selected="false" data-qa="home.shop.tab" data-tab="occasion">Occasion</button>
-          <button role="tab" id="shop-tab-business" aria-controls="shop-panel-business" aria-selected="false" data-qa="home.shop.tab" data-tab="business">Business</button>
-        </div>
+        <a class="c-btn c-btn--ghost" href="/lit-neon-preview/rework/shop.html" data-qa="home.shop.all">All rooms and occasions</a>
       </header>
-      <div class="shop__panels">
-        <div role="tabpanel" id="shop-panel-room" aria-labelledby="shop-tab-room" class="shop__grid"></div>
-        <div role="tabpanel" id="shop-panel-occasion" aria-labelledby="shop-tab-occasion" class="shop__grid" hidden></div>
-        <div role="tabpanel" id="shop-panel-business" aria-labelledby="shop-tab-business" class="shop__grid" hidden></div>
+      <div class="w-rooms" data-qa="home.shop.tiles">
+        <a class="w-photo" href="/lit-neon-preview/rework/collection.html?c=bedroom" data-qa="home.shop.tile" data-collection="bedroom"><img src="/lit-neon-preview/rework/assets/img/photos/p24-800.jpg" alt="An ice blue neon sign reading dream big in a bedroom" loading="lazy" decoding="async"><span class="lb">Bedroom<small>Warm white, soft script</small></span></a>
+        <a class="w-photo" href="/lit-neon-preview/rework/collection.html?c=bar" data-qa="home.shop.tile" data-collection="bar"><img src="/lit-neon-preview/rework/assets/img/photos/p3-800.jpg" alt="An amber neon sign reading cheers above a home bar" loading="lazy" decoding="async"><span class="lb">Home bar<small>Amber, bold</small></span></a>
+        <a class="w-photo" href="/lit-neon-preview/rework/collection.html?c=kitchen" data-qa="home.shop.tile" data-collection="kitchen"><img src="/lit-neon-preview/rework/assets/img/photos/p4-800.jpg" alt="An ice blue neon sign reading kettle's on in a kitchen" loading="lazy" decoding="async"><span class="lb">Kitchen<small>Ice blue</small></span></a>
+        <a class="w-photo" href="/lit-neon-preview/rework/collection.html?c=gaming" data-qa="home.shop.tile" data-collection="gaming"><img src="/lit-neon-preview/rework/assets/img/photos/p12-800.jpg" alt="A violet neon sign reading game on above a gaming desk" loading="lazy" decoding="async"><span class="lb">Gaming<small>Violet, blocky</small></span></a>
+        <a class="w-photo" href="/lit-neon-preview/rework/weddings.html" data-qa="home.shop.tile" data-collection="wedding"><img src="/lit-neon-preview/rework/assets/img/photos/p7-800.jpg" alt="A couple dancing under a warm white neon sign reading better together" loading="lazy" decoding="async"><span class="lb">Weddings<small>Your names, warm white</small></span></a>
+        <a class="w-photo" href="/lit-neon-preview/rework/collection.html?c=kids" data-qa="home.shop.tile" data-collection="kids"><img src="/lit-neon-preview/rework/assets/img/photos/p9-800.jpg" alt="A pastel pink neon sign reading little dreamer above a cot" loading="lazy" decoding="async"><span class="lb">Kids<small>Pastel pink</small></span></a>
+        <a class="w-photo" href="/lit-neon-preview/rework/business.html" data-qa="home.shop.tile" data-collection="business"><img src="/lit-neon-preview/rework/assets/img/photos/p11-800.jpg" alt="An ice white neon sign reading fresh cuts in a barbershop" loading="lazy" decoding="async"><span class="lb">Business<small>Logo in neon</small></span></a>
+        <a class="w-photo" href="/lit-neon-preview/rework/business.html#bar-pub" data-qa="home.shop.tile" data-collection="business:bar-pub"><img src="/lit-neon-preview/rework/assets/img/photos/p8-800.jpg" alt="Friends laughing under a pink neon sign reading last orders" loading="lazy" decoding="async"><span class="lb">Bars and venues<small>Pink, loud</small></span></a>
       </div>
     </div>
   </section>
-
-  <!-- 4 · How it works (paper) -->
-  <section class="section section--a night how" data-section="how" aria-labelledby="how-h2">
-    <div class="wrap how__grid">
-      <div class="how__steps">
-        <p class="t-eyebrow" data-copy="how.eyebrow">How it works</p>
-        <h2 id="how-h2" data-copy="how.h2">Approve the drawing. We make exactly that.</h2>
-        <ol class="how__list" id="how-list"></ol>
-        <div class="how__ctas">
-          <a class="c-btn c-btn--primary c-btn--lg how__cta" id="how-cta" href="/lit-neon-preview/rework/create.html" data-qa="home.how.cta">Start designing</a>
-          <button type="button" class="c-btn c-btn--text how__pdf" id="how-pdf" data-qa="home.how.pdf"><span class="label">Download as PDF</span></button>
-        </div>
-      </div>
-      <figure class="how__sheetwrap">
-        <div class="how__sheet" id="how-sheet" data-qa="home.how.sheet"></div>
-        <figcaption class="t-caption how__caption" data-caption="rendered" data-copy="how.sheetCaption">Drawn live from your words, at Medium</figcaption>
-      </figure>
-    </div>
-  </section>
-
-
 
   <!-- 7 · Bestsellers rail -->
   <section class="section night best" data-section="best" aria-labelledby="best-h2">
@@ -176,6 +157,18 @@
   </section>
 
 
+
+  <!-- 4 · How it works (world round 3: four cards, as in the chosen preview) -->
+  <section class="section section--a night how" data-section="how" aria-labelledby="how-h2">
+    <div class="wrap">
+      <header class="sec-head">
+        <p class="t-eyebrow" data-copy="how.eyebrow">How it works</p>
+        <h2 id="how-h2" data-copy="how.h2">Approve the drawing. We make exactly that.</h2>
+      </header>
+      <ol class="how__list w-steps" id="how-list"></ol>
+      <div class="how__ctas"><a class="c-btn c-btn--primary c-btn--lg how__cta" id="how-cta" href="/lit-neon-preview/rework/create.html" data-qa="home.how.cta">Start designing</a></div>
+    </div>
+  </section>
 
   <!-- 7b · By day, by night (world 2026-10-15) -->
   <section class="section night daynight" data-section="daynight" aria-labelledby="dn-h2">
@@ -208,7 +201,6 @@
         </div>
       </div>
       <div class="w-logo"><div class="w-photo"><img src="/lit-neon-preview/rework/assets/img/photos/p10-800.jpg" alt="A warm white neon sign reading coffee first in a café window" loading="lazy" decoding="async"><span class="lb">Café<small>Window sign, warm white</small></span></div><div class="w-photo"><img src="/lit-neon-preview/rework/assets/img/photos/p11-800.jpg" alt="An ice white neon sign reading fresh cuts in a barbershop" loading="lazy" decoding="async"><span class="lb">Barbershop<small>Logo in neon, ice white</small></span></div></div>
-      <div class="logo__bands" id="logo-bands" data-qa="home.logo.bands"></div>
     </div>
   </section>
 
@@ -254,20 +246,15 @@
   <!-- 14 · Reviews (renders nothing until reviews exist) -->
   <section class="reviews" data-section="reviews" id="home-reviews" data-qa="home.reviews" hidden aria-label="Reviews"></section>
 
-  <!-- 15 · FAQ -->
+  <!-- 15 · FAQ (world round 3: the simple grid from the chosen preview) -->
   <section class="section section--c night faq" data-section="faq" aria-labelledby="faq-h2">
-    <div class="wrap faq__grid">
-      <div class="faq__side">
-        <p class="t-eyebrow" data-copy="faq.eyebrow">Good to know</p>
-        <h2 id="faq-h2" data-copy="faq.h2">The questions people ask before they order</h2>
-        <p class="t-lead" data-copy="faq.lede"></p>
-        <div class="faq__ask" id="faq-ask" data-qa="home.faq.ask"></div>
-        <p class="faq__all"><a class="c-btn c-btn--text" href="/lit-neon-preview/rework/help.html" data-qa="home.faq.all"><span class="label" data-copy="faq.allHelp">All help answers →</span></a></p>
-      </div>
-      <div class="faq__main">
-        <div class="c-acc faq__acc" id="faq-acc" data-qa="home.faq.list"></div>
-        
-      </div>
+    <div class="wrap">
+      <header class="sec-head sec-head--split">
+        <div><p class="t-eyebrow" data-copy="faq.eyebrow">Questions</p><h2 id="faq-h2" data-copy="faq.h2">Before you buy</h2></div>
+        <a class="c-btn c-btn--ghost" href="/lit-neon-preview/rework/help.html" data-qa="home.faq.all"><span data-copy="faq.allHelp">All help answers →</span></a>
+      </header>
+      <div class="c-acc faq__acc w-faq" id="faq-acc" data-qa="home.faq.list"></div>
+      <div class="faq__ask" id="faq-ask" data-qa="home.faq.ask" hidden></div>
     </div>
   </section>
 

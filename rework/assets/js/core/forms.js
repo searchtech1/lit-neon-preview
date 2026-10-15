@@ -7,7 +7,7 @@
 import * as clock from './clock.js';
 import { esc } from './money.js';
 
-export const KIND_PREFIX = { mockup: 'M', bulk: 'B', contact: 'C', emailDesign: 'E', quizEmail: 'Q', quote: 'R', capture: 'E' };
+export const KIND_PREFIX = { mockup: 'M', bulk: 'B', contact: 'C', emailDesign: 'E', quizEmail: 'Q', quote: 'R', capture: 'E', newsletter: 'N' };
 export const DEFAULT_CONFIG = { driver: 'webhook', endpoint: '', maxFileMb: 20, kinds: {} };
 const ACCEPT = { mockup: 'image/png,image/jpeg,image/svg+xml,application/pdf', bulk: 'image/png,image/jpeg,image/svg+xml,application/pdf' };
 
@@ -40,8 +40,8 @@ export function createForms({ fetch: fetchFn, storage, isReview, config, now = (
   function validate(kind, fields, files = []) {
     const errs = [];
     const need = (k, msg) => { if (!fields[k] || !String(fields[k]).trim()) errs.push({ field: k, message: msg }); };
-    if (kind !== 'quizEmail' && kind !== 'emailDesign') need('name', 'Your name, so we know who to write to');
-    if (['mockup', 'bulk', 'contact', 'emailDesign', 'quizEmail', 'quote'].includes(kind)) {
+    if (kind !== 'quizEmail' && kind !== 'emailDesign' && kind !== 'newsletter') need('name', 'Your name, so we know who to write to');
+    if (['mockup', 'bulk', 'contact', 'emailDesign', 'quizEmail', 'quote', 'newsletter'].includes(kind)) {
       need('email', EMAIL_NEED[kind] || 'An email address, so we can reply');
       if (fields.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(fields.email).trim())) errs.push({ field: 'email', message: 'That email address doesn’t look right' });
     }
@@ -62,7 +62,7 @@ export function createForms({ fetch: fetchFn, storage, isReview, config, now = (
     const payload = { ...fields, _ref: ref, _kind: kind, _page: typeof location !== 'undefined' ? location.pathname : '', _submittedAt: new Date(now()).toISOString(), _files: files.map(f => ({ name: f.name, size: f.size, type: f.type })) };
     if (c.driver === 'local') {
       if (!review()) return { ok: false, error: 'driver', message: 'This form isn’t connected yet. Please contact us another way.', ref, driver: 'local' };
-      const key = kind === 'emailDesign' || kind === 'quizEmail' ? 'captures' : 'requests';
+      const key = kind === 'emailDesign' || kind === 'quizEmail' || kind === 'newsletter' ? 'captures' : 'requests';
       listWrite(key, listRead(key).concat([payload]));
       return { ok: true, ref, status: 200, driver: 'local', local: true, message: 'Saved locally (review build) — nothing was sent.' };
     }

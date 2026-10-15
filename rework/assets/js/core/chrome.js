@@ -77,7 +77,7 @@ function contactHref(text) {
   if (facts.has('supportEmail')) return { href: `mailto:${facts.value('supportEmail')}${text ? `?subject=${encodeURIComponent(text)}` : ''}`, kind: 'email', label: copy.t('nav.email', {}, 'Email us'), icon: 'mail' };
   return { href: url('contact.html'), kind: 'contact', label: copy.t('nav.contact', {}, 'Contact us'), icon: 'chat' };
 }
-let markP = null; const wordmark = () => markP || (markP = Promise.resolve(`<img src="${url('assets/img/brand/litneon-logo.svg')}" alt="Lit Neon" width="390" height="152" decoding="async" fetchpriority="high">`)); /* world 2026-10-15: the lit tube wordmark (option 6), drawn on from both ends then lit (SVG, animates once per page view) */
+let markP = null; const wordmark = () => markP || (markP = (async () => { try { const r = await fetch(url('assets/img/brand/litneon-logo.svg')); if (r.ok) return (await r.text()).replace(/<\?xml[^>]*>/, '').replace(/ width="390" height="152"/, ''); } catch {} return `<img src="${url('assets/img/brand/litneon-logo-static.svg')}" alt="Lit Neon" width="390" height="152" decoding="async">`; })()); /* world round 3: the wordmark is inlined so its glow filter and draw-on animation run on every browser (an <img> SVG loses both on iOS) */
 
 /* =========================== announcement =========================== */
 function announceBar(live) {
@@ -401,6 +401,10 @@ async function footer() {
       </ul></div>
       <div><h3>${esc(copy.t('footer.cols.trust'))}</h3><div class="ch-footer__pay" data-qa="chrome.footer.pay"></div><p class="ch-footer__reviews">${esc(copy.t('footer.reviews'))}</p><div class="ch-footer__social" data-qa="chrome.footer.social"></div></div>
     </div>
+    <div class="w-news" data-qa="chrome.footer.news">
+      <div><h3>${esc(copy.t('footer.newsTitle', {}, 'New signs and offers, now and then'))}</h3><p>${esc(copy.t('footer.newsBody', {}, 'One email a month at most. Unsubscribe in one tap.'))}</p></div>
+      <form novalidate data-qa="chrome.footer.news.form"><div class="c-field"><label class="sr-only" for="ch-news-email">${esc(copy.t('footer.saveEmail', {}, 'Your email'))}</label><input id="ch-news-email" class="c-input" name="email" type="email" inputmode="email" autocomplete="email" placeholder="${esc(copy.t('footer.saveEmail', {}, 'Your email'))}" data-qa="chrome.footer.news.email" required></div><button type="submit" class="c-btn c-btn--primary" data-qa="chrome.footer.news.submit">${esc(copy.t('footer.newsButton', {}, 'Join'))}</button><p class="msg" aria-live="polite"></p></form>
+    </div>
     <div class="ch-footer__legal">
       <p data-qa="chrome.footer.legal">${esc(legal)}${facts.chip('companyName')}</p>
       <div class="ch-footer__copy"><span>${esc(copy.t('footer.copyright', { year }))}</span><a href="${url('legal/privacy.html')}">${esc(copy.t('footer.links.privacy'))}</a><a href="${url('legal/terms.html')}">${esc(copy.t('footer.links.terms'))}</a><a href="${url('legal/cookies.html')}">${esc(copy.t('footer.links.cookies'))}</a></div>
@@ -413,6 +417,7 @@ async function footer() {
   [['instagram', 'Instagram'], ['tiktok', 'TikTok'], ['pinterest', 'Pinterest']].forEach(([k, name]) => { if (facts.has(`social.${k}`)) soc.insertAdjacentHTML('beforeend', `<a class="c-btn c-btn--icon" href="${esc(facts.value(`social.${k}`))}" target="_blank" rel="noopener" aria-label="${name}">${icon('external')}</a>`); });
   if (!soc.children.length) soc.remove();
   wireSave(el);
+  try { const FM = state.peers && state.peers.forms; const F = FM && (FM.default || FM); const nf = el.querySelector('[data-qa="chrome.footer.news.form"]'); if (F && F.bind && nf) F.bind(nf, { kind: 'newsletter', qa: 'chrome.footer.news', onSuccess: () => { const d = document.createElement('p'); d.className = 'msg'; d.textContent = copy.t('footer.newsDone', {}, 'You are on the list.'); nf.replaceWith(d); } }); } catch (e) { console.warn('newsletter form', e); }
   return el;
 }
 function currentWords() {
@@ -563,7 +568,7 @@ function waFloat() {
 }
 function firstOrderPop() {
   let seen = false; try { seen = localStorage.getItem('ln.pop.lit10') === '1'; } catch {}
-  if (seen || document.querySelector('.w-pop') || pageOf() === 'checkout' || pageOf() === 'basket') return;
+  if (seen || document.querySelector('.w-pop') || !['home', 'shop', 'collection', 'weddings', 'business', 'inspiration', 'guides', 'about'].includes(pageOf())) return;
   const show = () => {
     if (document.querySelector('.w-pop') || document.body.classList.contains('has-overlay')) return;
     const el = document.createElement('div'); el.className = 'w-pop'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'w-pop-h'); el.setAttribute('data-qa', 'chrome.pop');

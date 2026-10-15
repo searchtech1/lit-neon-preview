@@ -1,16 +1,60 @@
 {
-  "_about": "Forms adapter config (brief §3.11, owner D10: Formspree test form → test inbox). driver 'webhook' POSTs FormData to `endpoint`; 'local' is allowed only in review mode. The success state renders only after a 2xx.",
+  "_about": "Forms adapter config (brief \u00a73.11, owner D10: Formspree test form \u2192 test inbox). driver 'webhook' POSTs FormData to `endpoint`; 'local' is allowed only in review mode. The success state renders only after a 2xx.",
   "driver": "webhook",
   "endpoint": "https://formspree.io/f/litneon-v2-test",
-  "_endpointNote": "Replace with the Formspree form id the owner creates (Settings → Forms → New form → forwarding to the test inbox). Until then the QA runner intercepts this URL; a real POST to the placeholder id returns 404 and the form shows its honest error + Retry state.",
+  "_endpointNote": "Replace with the Formspree form id the owner creates (Settings \u2192 Forms \u2192 New form \u2192 forwarding to the test inbox). Until then the QA runner intercepts this URL; a real POST to the placeholder id returns 404 and the form shows its honest error + Retry state.",
   "maxFileMb": 20,
-  "acceptFiles": [".png", ".jpg", ".jpeg", ".svg", ".pdf", ".webp", ".heic"],
+  "acceptFiles": [
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".svg",
+    ".pdf",
+    ".webp",
+    ".heic"
+  ],
   "kinds": {
-    "mockup":      { "refPrefix": "LN-M", "subject": "Free mockup request", "rights": true,  "event": "mockup_request" },
-    "bulk":        { "refPrefix": "LN-B", "subject": "Bulk quote request",  "rights": true,  "event": "bulk_request" },
-    "contact":     { "refPrefix": "LN-C", "subject": "Contact form",        "rights": false, "event": null },
-    "emailDesign": { "refPrefix": "LN-E", "subject": "Email me my design",  "rights": false, "event": "email_capture" },
-    "quizEmail":   { "refPrefix": "LN-Q", "subject": "Quiz result",         "rights": false, "event": "quiz_complete" },
-    "quote":       { "refPrefix": "LN-R", "subject": "Quote request (outdoor / over 2 m / over max / two colours)", "rights": false, "event": null }
+    "mockup": {
+      "refPrefix": "LN-M",
+      "subject": "Free mockup request",
+      "rights": true,
+      "event": "mockup_request"
+    },
+    "bulk": {
+      "refPrefix": "LN-B",
+      "subject": "Bulk quote request",
+      "rights": true,
+      "event": "bulk_request"
+    },
+    "contact": {
+      "refPrefix": "LN-C",
+      "subject": "Contact form",
+      "rights": false,
+      "event": null
+    },
+    "emailDesign": {
+      "refPrefix": "LN-E",
+      "subject": "Email me my design",
+      "rights": false,
+      "event": "email_capture"
+    },
+    "quizEmail": {
+      "refPrefix": "LN-Q",
+      "subject": "Quiz result",
+      "rights": false,
+      "event": "quiz_complete"
+    },
+    "quote": {
+      "refPrefix": "LN-R",
+      "subject": "Quote request (outdoor / over 2 m / over max / two colours)",
+      "rights": false,
+      "event": null
+    },
+    "newsletter": {
+      "refPrefix": "LN-N",
+      "subject": "Newsletter signup",
+      "rights": false,
+      "event": "newsletter_signup"
+    }
   }
 }

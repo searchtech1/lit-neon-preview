@@ -197,3 +197,47 @@ body.has-stickycta .w-wa { bottom: calc(var(--stickycta-h) + 16px + env(safe-are
 @media (max-width: 767px) { .ch-search, .ch-whatsapp { display: none !important; } .ch-brand { height: var(--touch); } }
 @media (max-width: 1599px) { .ch-nav__link[data-qa="chrome.nav.inspire"] { display: none; } }
 .ch-nav { flex-wrap: nowrap; }
+
+/* ---------- round 3: match the chosen preview + phone fixes ---------- */
+/* rooms: eight photo tiles */
+.w-rooms { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s-4); }
+.w-rooms .w-photo { aspect-ratio: 1 / 1; display: block; color: var(--bone); }
+.w-rooms .w-photo img { transition: transform var(--d-slow) var(--ease-out); }
+.w-rooms .w-photo:hover img { transform: scale(1.04); }
+@media (max-width: 1023px) { .w-rooms { grid-template-columns: repeat(3, 1fr); gap: var(--s-3); } }
+@media (max-width: 767px) { .w-rooms { grid-template-columns: repeat(2, 1fr); } .w-rooms .w-photo .lb { padding: var(--s-5) var(--s-3) var(--s-3); font-size: var(--t-body); } }
+/* how it works: four step cards */
+.w-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s-4); list-style: none; padding: 0; margin: 0 0 var(--s-5); counter-reset: how; }
+.w-steps > li { position: relative; padding: var(--s-5) var(--s-5) var(--s-5) var(--s-5); padding-top: calc(var(--s-5) + 44px); border: 1px solid var(--hair); border-radius: var(--r-3); background: rgba(0,0,0,.25); }
+.w-steps > li::before { counter-increment: how; content: counter(how); position: absolute; left: var(--s-5); top: var(--s-5); width: 36px; height: 36px; border-radius: 50%; background: var(--brass); color: var(--night); display: grid; place-items: center; font-weight: 900; font-size: var(--t-body); }
+.w-steps h3 { font-family: var(--f-display); font-weight: 800; text-transform: uppercase; letter-spacing: .02em; font-size: var(--t-title); margin-bottom: var(--s-2); }
+.w-steps p { color: var(--bone-2); font-size: var(--t-small); }
+@media (max-width: 1023px) { .w-steps { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .w-steps { grid-template-columns: 1fr; } }
+.how__ctas { display: flex; gap: var(--s-3); }
+/* faq: simple two-column grid of questions */
+.w-faq { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); }
+.w-faq details { border: 1px solid var(--hair); border-radius: var(--r-3); background: rgba(0,0,0,.25); padding: 0 var(--s-4); }
+.w-faq details[open] { border-color: var(--hair-lit); }
+.w-faq summary { font-weight: 700; }
+@media (max-width: 767px) { .w-faq { grid-template-columns: 1fr; } }
+/* hero badges on phones: smaller, no shouting */
+@media (max-width: 767px) { .w-badges li { font-size: 11px; padding: 5px 10px; letter-spacing: .02em; } .hero--photo .hero__sub { font-size: var(--t-body); } .hero--photo .hero__h1 { font-size: clamp(40px, 12vw, 56px); } }
+/* designer on phones: the dock CTA never truncates; the chat float stays out of the dock */
+.b-dock__cta { white-space: nowrap; font-size: var(--t-small); letter-spacing: .03em; padding-inline: var(--s-4); min-width: 0; }
+@media (max-width: 767px) { .b-dock__cta { font-size: 13px; padding-inline: var(--s-3); } .b-dock__deliverto { padding-inline: var(--s-2); } }
+@media (max-width: 1023px) { body[data-page="builder"] .w-wa { display: none; } }
+/* designer steps on phones: tighter cards, no double borders */
+@media (max-width: 767px) { .b-step { padding: var(--s-4); margin-bottom: var(--s-3); border-radius: var(--r-2); } .b-step__title { font-size: var(--t-body); } .b-panel__head { padding-bottom: var(--s-2); } }
+/* footer newsletter */
+.w-news { margin-top: var(--s-5); border-top: 1px solid var(--hair); padding-top: var(--s-5); display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-5); align-items: center; }
+.w-news h3 { font-family: var(--f-display); font-weight: 800; text-transform: uppercase; font-size: var(--t-display-3); }
+.w-news p { color: var(--bone-2); margin-top: var(--s-1); }
+.w-news form { display: grid; grid-template-columns: 1fr auto; gap: var(--s-2); }
+.w-news .msg { grid-column: 1 / -1; font-size: var(--t-caption); color: var(--smoke); }
+@media (max-width: 767px) { .w-news { grid-template-columns: 1fr; } .w-news form { grid-template-columns: 1fr; } }
+/* how it works cards: one counter, block layout (overrides the old two-column list) */
+.how__list.w-steps > li { display: block; grid-template-columns: none; counter-increment: how; }
+.how__list.w-steps > li::before { counter-increment: none; border: 0; font-family: var(--f-ui); }
+.how__list.w-steps p { color: var(--bone-2); max-width: none; }
+.how__list.w-steps h3 { font-family: var(--f-display); font-weight: 800; }
