@@ -513,7 +513,7 @@ function wireBasket(headerEl) {
 function startMarkLoop(head) {
   if (!head || ui.prefersReducedMotion()) return;
   const brand = head.querySelector('.ch-brand'); const first = brand && brand.querySelector('svg.ln-mark'); if (!first) return;
-  const tpl = first.outerHTML; const HOLD = 7000, OUT = 650;
+  const tpl = first.outerHTML; const HOLD = 2900, OUT = 400;   /* owner 2026-10-17: restart as soon as the ignition settles */
   const cycle = () => { if (document.hidden) return; const cur = brand.querySelector('svg.ln-mark'); if (!cur) return; cur.classList.add('is-out'); setTimeout(() => { const c2 = brand.querySelector('svg.ln-mark'); if (c2) c2.outerHTML = tpl; }, OUT); };
   setInterval(cycle, HOLD + OUT);
 }

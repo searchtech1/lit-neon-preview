@@ -68,7 +68,7 @@ let learnDone = false;
   const badLink = res.mode !== 'url' && res.hash && (res.hash.malformed || (res.hash.code && !res.hash.d));
   if (badLink) setTimeout(() => ui.toast(res.mode !== 'direct' ? t('ui.hashMalformedFresh', {}, 'That link looks incomplete, so we started a fresh design for you.') : t('ui.hashMalformed', {}, 'That link looks incomplete, so we started from your last design.'), { kind: 'info', duration: 6000 }), 900);
   if (res.hash && res.hash.scene && stage.getScene) design.scene = res.hash.scene || design.scene;
-  if (!design.scene || design.scene === 'wall' || !['s0', 's1'].includes(String(design.scene).slice(0, 2))) design.scene = 's05-pub';
+  if (!design.scene || design.scene === 'wall' || !['s0', 's1'].includes(String(design.scene).slice(0, 2))) design.scene = 's00-studio-dark';   /* owner pick 2026-10-17: the dark plaster studio */
   design.text = R.resolve(design).clean.text;
   roomScene = design.scene && design.scene !== 's00-studio-dark' ? design.scene : 's05-pub';
   rulers = design.unit === 'in' ? 'in' : 'cm';

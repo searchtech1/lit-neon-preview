@@ -50,7 +50,7 @@ export const OPTIONS = {
 /* §0.2 rule 7: nothing paid is pre-selected */
 export const DEFAULT_DESIGN = Object.freeze({
   v: 2, text: '', align: 'center', font: 'soho', colour: 'warm', colours: null, jacket: 'white', size: 'm', custom: null,
-  backing: 'cut', board: 'clear', use: 'in', hang: 'screws', icon: '', iconPos: 'above', pos: {}, scene: 's05-pub',
+  backing: 'cut', board: 'clear', use: 'in', hang: 'screws', icon: '', iconPos: 'above', pos: {}, scene: 's00-studio-dark',
   view: 'room', night: true, on: true, unit: 'cm', tube: '6'
 });
 
