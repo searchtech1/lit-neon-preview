@@ -205,7 +205,7 @@ async function traceLettering(res, L, emPt) {
   const toEm = loop => loop.map(([x, y]) => [(x - P) / em, (y - P) / em]);
   const letters = traceLoops(alphaOf(), W, H).map(l => toEm(simplifyLoop(l, 0.35))).filter(l => l.length > 2 && Math.abs(area(l)) * em * em > 4);
   let contour = null;
-  if (res.backing.id === 'cut') {
+  if (res.backing.id === 'cut' || res.backing.id === 'letter') {
     ctx.clearRect(0, 0, W, H); ctx.font = font; ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.lineWidth = 2 * marginEm * em; ctx.strokeStyle = '#000';
     paintLines(ctx, res, L, P, P, em, 'stroke');
     if (L.icon && typeof Path2D !== 'undefined') { ctx.save(); ctx.translate(P + L.icon.x * em, P + L.icon.y * em); const k = L.icon.s * em / 24; ctx.scale(k, k); ctx.lineWidth = 1.7 + 2 * marginEm * em / k; ctx.stroke(new Path2D(L.icon.d)); ctx.restore(); }
@@ -262,7 +262,7 @@ export async function build(state, opts = {}) {
   const traced = await traceLettering(res, L, emPt);
   const ink = { x: left + mg, y: topY + mg };
   const P = ([ex, ey]) => [ink.x + ex * emPt, ink.y + ey * emPt];
-  if (res.backing.id === 'cut') {
+  if (res.backing.id === 'cut' || res.backing.id === 'letter') {
     g.stroke(C.draft, 0.7, [3, 2.2]);
     if (traced && traced.contour && traced.contour.length) traced.contour.forEach(l => g.poly(l.map(P)));
     else g.roundRect(left, topY, w, h, Math.min(mg, h / 2, w / 2));

@@ -42,7 +42,7 @@ FRAMES.typing = () => [.2, .26];
 
 /* ====================================================================== state ====================================================================== */
 let design = R.normalise(R.DEFAULT_DESIGN);
-let editUid = null, roomScene = 's02-bedroom', rulers = 'cm', current = 'words', started = false;
+let editUid = null, roomScene = 's05-pub', rulers = 'cm', current = 'words', started = false;
 let stageApi = null, rail = null, sheets = {}, lb = null, areaLoaded = false, DESIGNS = null, arApi = null;
 const tiles = new Map(), minis = {}, examples = [];
 let paintTimer = 0, hashTimer = 0;
@@ -68,9 +68,9 @@ let learnDone = false;
   const badLink = res.mode !== 'url' && res.hash && (res.hash.malformed || (res.hash.code && !res.hash.d));
   if (badLink) setTimeout(() => ui.toast(res.mode !== 'direct' ? t('ui.hashMalformedFresh', {}, 'That link looks incomplete, so we started a fresh design for you.') : t('ui.hashMalformed', {}, 'That link looks incomplete, so we started from your last design.'), { kind: 'info', duration: 6000 }), 900);
   if (res.hash && res.hash.scene && stage.getScene) design.scene = res.hash.scene || design.scene;
-  if (!design.scene || design.scene === 'wall' || !['s0', 's1'].includes(String(design.scene).slice(0, 2))) design.scene = 's02-bedroom';
+  if (!design.scene || design.scene === 'wall' || !['s0', 's1'].includes(String(design.scene).slice(0, 2))) design.scene = 's05-pub';
   design.text = R.resolve(design).clean.text;
-  roomScene = design.scene && design.scene !== 's00-studio-dark' ? design.scene : 's02-bedroom';
+  roomScene = design.scene && design.scene !== 's00-studio-dark' ? design.scene : 's05-pub';
   rulers = design.unit === 'in' ? 'in' : 'cm';
   if (editUid) showEditing();
 
@@ -407,17 +407,31 @@ function paintWords() {
 /* ====================================================================== step 2 · lettering ====================================================================== */
 function renderLettering() {
   const faces = R.enabledFonts(); const styles = ['all', ...Array.from(new Set(faces.map(f => f.style || 'script')))];
+  const fam = f => `font-family:'${String(f.family).replace(/'/g, '')}',cursive;font-weight:${f.weight || 400}`;
   $('#body-lettering').innerHTML = `
     <p class="b-help">${esc(t('lettering.help'))}</p>
-    <div class="c-chips" role="group" aria-label="${esc(t('lettering.label'))}" id="b-styles">${styles.map(s => `<button type="button" class="c-chip" aria-pressed="${s === 'all'}" data-style="${s}" data-qa="builder.font.style" data-id="${s}">${esc(t(`lettering.styles.${s}`, {}, s))}</button>`).join('')}</div>
-    <div class="b-tiles" id="b-tiles" role="group" aria-label="${esc(t('lettering.label'))}">${faces.map(f => `<button type="button" class="b-tile" aria-pressed="${f.id === design.font}" data-font="${f.id}" data-style="${f.style || 'script'}" aria-label="${esc(t('a11y.tile', { face: f.name }))}" data-qa="builder.font.tile" data-id="${f.id}"><span class="b-tile__neon" data-neon></span><span class="b-tile__name"><span>${esc(f.name)}</span><span class="note" data-note></span></span></button>`).join('')}</div>`;
-  $$('#b-tiles .b-tile').forEach(b => { tiles.set(b.dataset.font, R.mountNeon(b.querySelector('[data-neon]'), { ...design, font: b.dataset.font, text: R.fontOf(b.dataset.font).name, icon: '', colours: null }, { lit: true, fitW: .88, fitH: .72, spill: .3 })); });
-  $('#b-tiles').addEventListener('click', e => { const b = e.target.closest('[data-font]'); if (!b) return; setDesign({ font: b.dataset.font }); stageApi.strike(); });
-  $('#b-styles').addEventListener('click', e => { const b = e.target.closest('[data-style]'); if (!b) return; $$('#b-styles .c-chip').forEach(x => x.setAttribute('aria-pressed', String(x === b))); $$('#b-tiles .b-tile').forEach(tl => { tl.hidden = b.dataset.style !== 'all' && tl.dataset.style !== b.dataset.style; }); R.refitAll(); });
+    <div class="b-fontpick" id="b-fontpick">
+      <button type="button" class="b-fontpick__btn" id="b-fontbtn" aria-haspopup="listbox" aria-expanded="false" aria-controls="b-fontpop" data-qa="builder.font.open"><span class="face" data-face></span><span class="meta"><span class="nm" data-facename></span><span class="note" data-note></span></span>${icon('chevron-down')}</button>
+      <div class="b-fontpick__pop" id="b-fontpop" hidden>
+        <div class="c-chips" role="group" aria-label="${esc(t('lettering.label'))}" id="b-styles">${styles.map(st => `<button type="button" class="c-chip" aria-pressed="${st === 'all'}" data-style="${st}" data-qa="builder.font.style" data-id="${st}">${esc(t(`lettering.styles.${st}`, {}, st))}</button>`).join('')}</div>
+        <div class="b-fontlist" role="listbox" aria-label="${esc(t('lettering.label'))}" id="b-tiles">${faces.map(f => `<button type="button" role="option" class="b-fontopt" aria-selected="${f.id === design.font}" data-font="${f.id}" data-style="${f.style || 'script'}" aria-label="${esc(t('a11y.tile', { face: f.name }))}" data-qa="builder.font.tile" data-id="${f.id}"><span class="face" style="${fam(f)}">${esc(f.name)}</span><span class="meta"><span class="nm">${esc(f.name)}</span><span class="note" data-note></span></span></button>`).join('')}</div>
+      </div>
+    </div>`;
+  const btn = $('#b-fontbtn'), pop = $('#b-fontpop');
+  const open = on => { pop.hidden = !on; btn.setAttribute('aria-expanded', String(on)); if (on) { const sel = $('#b-tiles [aria-selected="true"]'); if (sel) sel.scrollIntoView({ block: 'nearest' }); } };
+  btn.addEventListener('click', () => open(pop.hidden));
+  $('#b-tiles').addEventListener('click', e => { const b = e.target.closest('[data-font]'); if (!b) return; setDesign({ font: b.dataset.font }); stageApi.strike(); open(false); btn.focus(); });
+  $('#b-styles').addEventListener('click', e => { const b = e.target.closest('[data-style]'); if (!b) return; $$('#b-styles .c-chip').forEach(x => x.setAttribute('aria-pressed', String(x === b))); $$('#b-tiles .b-fontopt').forEach(tl => { tl.hidden = b.dataset.style !== 'all' && tl.dataset.style !== b.dataset.style; }); });
+  document.addEventListener('click', e => { if (!pop.hidden && !$('#b-fontpick').contains(e.target)) open(false); });
+  pop.addEventListener('keydown', e => { if (e.key === 'Escape') { open(false); btn.focus(); } });
 }
 function paintLettering() {
   const res = R.resolve(design); const sizeName = res.sizeId === 'custom' ? t('size.custom') : R.sizeOf(res.sizeId).name;
-  $$('#b-tiles .b-tile').forEach(b => { const f = R.fontOf(b.dataset.font); b.setAttribute('aria-pressed', String(f.id === design.font)); const m = tiles.get(f.id); if (m) m.update({ ...design, font: f.id, text: f.name, icon: '', colours: null }); const thin = (f.minLetterCm || 0) > res.letterCm; const n = b.querySelector('[data-note]'); n.textContent = thin ? t('lettering.thinAtSmall', { size: sizeName }) : ''; n.title = thin ? t('lettering.thinNote', { face: f.name, min: f.minLetterCm, size: sizeName }) : ''; });
+  const cur = R.fontOf(design.font); const btn = $('#b-fontbtn'); if (!btn) return;
+  const face = btn.querySelector('[data-face]'); face.textContent = cur.name; face.style.cssText = `font-family:'${String(cur.family).replace(/'/g, '')}',cursive;font-weight:${cur.weight || 400}`;
+  btn.querySelector('[data-facename]').textContent = cur.name;
+  const thinCur = (cur.minLetterCm || 0) > res.letterCm; btn.querySelector('[data-note]').textContent = thinCur ? t('lettering.thinAtSmall', { size: sizeName }) : '';
+  $$('#b-tiles .b-fontopt').forEach(b => { const f = R.fontOf(b.dataset.font); b.setAttribute('aria-selected', String(f.id === design.font)); const thin = (f.minLetterCm || 0) > res.letterCm; const n = b.querySelector('[data-note]'); n.textContent = thin ? t('lettering.thinAtSmall', { size: sizeName }) : ''; n.title = thin ? t('lettering.thinNote', { face: f.name, min: f.minLetterCm, size: sizeName }) : ''; });
 }
 
 /* ====================================================================== step 3 · colour ====================================================================== */
@@ -497,7 +511,7 @@ function renderSize() {
     <p class="b-help">${esc(t('size.help'))}</p>
     <div class="c-sizes b-sizes" id="b-sizes" role="group" aria-label="${esc(t('size.label'))}"></div>
     <div class="b-group b-tube"><span class="b-label"><span>${esc(t('size.tubeLabel'))}</span><span class="sub">${esc(t('size.tubeHelp'))}</span></span>
-      <div class="c-seg c-seg--lg" role="group" aria-label="${esc(t('size.tubeLabel'))}" id="b-tube"><button type="button" aria-pressed="${design.tube !== '12'}" data-tube="8" data-qa="builder.size.tube.8">${esc(t('size.tube8'))}</button><button type="button" aria-pressed="${design.tube === '12'}" data-tube="12" data-qa="builder.size.tube.12">${esc(t('size.tube12'))} <span class="delta" data-tube-delta></span></button></div></div>
+      <div class="c-seg c-seg--lg" role="group" aria-label="${esc(t('size.tubeLabel'))}" id="b-tube"><button type="button" aria-pressed="${design.tube !== '8'}" data-tube="6" data-qa="builder.size.tube.6">${esc(t('size.tube6'))}</button><button type="button" aria-pressed="${design.tube === '8'}" data-tube="8" data-qa="builder.size.tube.8">${esc(t('size.tube8'))} <span class="delta" data-tube-delta></span></button></div></div>
     <div class="b-custom__slider c-range" id="b-custom" hidden data-qa="builder.size.custom.panel">
       <label class="b-label" for="b-width"><span>${esc(t('size.custom'))}</span><span class="readout" data-qa="builder.size.custom.readout"></span></label>
       <input type="range" id="b-width" min="${L.customMinCm}" max="${L.customMaxCm}" step="${L.customStepCm}" value="60" data-qa="builder.size.custom.slider">
@@ -511,8 +525,9 @@ function renderSize() {
 function paintSize() {
   const scene = stageApi && stageApi.scene && !stageApi.scene.own ? stageApi.scene : roomScene;
   const cards = pricing.sizeCards(design, scene); const el = $('#b-sizes'); const unit = design.unit;
-  const html = c => { const priceTxt = c.payable != null ? gbp(c.payable) : c.tooWide ? t('size.quoted') : !c.available ? t('size.unavailable', {}, 'Not offered') : t('pills.quote', {}, 'Quote'); const dims = c.W ? `${fmtDims(c.W, c.H, unit)} <span class="in">(${fmtDims(c.W, c.H, unit === 'in' ? 'cm' : 'in')})</span>` : '—';
-    return `<span class="name">${esc(c.name)}</span><span class="dims">${dims}</span><span class="price${c.payable == null ? ' is-quote' : ''}">${esc(priceTxt)}</span><span class="promo">${c.selected && c.promoLine ? esc(c.promoLine) : ''}</span><span class="verdict">${esc(!c.available ? (c.reason || t('size.tooThin')) : c.verdict || '')}</span>`; };
+  const html = c => { const priceTxt = c.payable != null ? gbp(c.payable) : c.tooWide ? t('size.quoted') : !c.available ? t('size.unavailable', {}, 'Not offered') : t('pills.quote', {}, 'Quote'); const other = unit === 'in' ? 'cm' : 'in';
+    const dims = c.W ? `<span title="${esc(fmtDims(c.W, c.H, other))}">${esc(t('size.length', {}, 'Length'))} <b>${esc(fmtLen(c.W, unit))}</b></span><span title="${esc(fmtDims(c.W, c.H, other))}">${esc(t('size.height', {}, 'Height'))} <b>${esc(fmtLen(c.H, unit))}</b></span>` : '<span>—</span>';
+    return `<span class="name">${esc(c.name)}</span><span class="price${c.payable == null ? ' is-quote' : ''}">${esc(priceTxt)}</span><span class="dims">${dims}</span><span class="promo">${c.selected && c.promoLine ? esc(c.promoLine) : ''}</span><span class="verdict">${esc(!c.available ? (c.reason || t('size.tooThin')) : c.verdict || '')}</span>`; };
   const list = cards.filter(c => c.id !== 'custom');
   const custom = { id: 'custom', name: t('size.custom'), selected: design.size === 'custom', available: true };
   const all = list.concat([custom]);
@@ -521,12 +536,12 @@ function paintSize() {
   const panel = $('#b-custom'); panel.hidden = design.size !== 'custom';
   if (design.size === 'custom') { const res = R.resolve(design); const w = res.dims ? Math.round(res.dims.W / 5) * 5 : 60; const inp = $('#b-width'); if (Math.abs(+inp.value - w) > 2 && document.activeElement !== inp) { inp.value = String(Math.max(+inp.min, Math.min(+inp.max, w))); } inp.setAttribute('aria-valuetext', t('size.customReadout', { width: fmtLen(+inp.value, unit), letter: res.letterCm })); $('#b-custom .readout').textContent = t('size.customReadout', { width: fmtLen(res.dims ? res.dims.W : +inp.value, unit), letter: res.letterCm }); }
   $$('#b-unit [data-unit]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.unit === unit)));
-  $$('#b-tube [data-tube]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.tube === (design.tube === '12' ? '12' : '8')))); const td = $('[data-tube-delta]'); if (td) { const dl = pricing.tubeDelta(design); td.textContent = dl ? fmtDelta(dl, '') : ''; }
+  $$('#b-tube [data-tube]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.tube === (design.tube === '8' ? '8' : '6')))); const td = $('[data-tube-delta]'); if (td) { const dl = pricing.tubeDelta(design); td.textContent = dl ? fmtDelta(dl, '') : ''; }
 }
 
 /* ====================================================================== step 5 · backing ====================================================================== */
 function renderBacking() {
-  const rules = pricing.rules().pricing; const ICON = { cut: 'drawing', rect: 'box', stand: 'stand' };
+  const rules = pricing.rules().pricing; const ICON = { cut: 'drawing', letter: 'pencil', rect: 'box', stand: 'stand' };
   $('#body-backing').innerHTML = `
     <p class="b-help">${esc(t('backing.help'))}</p>
     <div class="c-opts" role="radiogroup" aria-label="${esc(t('backing.label'))}" id="b-backings">${R.OPTIONS.backings.map(b => `<button type="button" class="c-opt" role="radio" aria-checked="${b.id === design.backing}" data-backing="${b.id}" data-qa="builder.backing.card" data-id="${b.id}">${icon(ICON[b.id])}<span><span class="name">${esc(t(`backing.${b.id}`, {}, b.name))}</span><span class="sub">${esc(t(`backing.${b.id}Sub`, {}, b.sub))}</span></span><span class="delta${!rules.backing[b.id] ? ' is-included' : ''}">${esc(fmtDelta(rules.backing[b.id] || 0, t('pills.included', {}, 'Included')))}</span></button>`).join('')}</div>
@@ -615,7 +630,7 @@ function paintReview() {
      The size row is the one cell with markup, so it is assembled from escaped pieces. */
   const rows = [[t('review.rows.words'), esc(res.words || '—')], [t('review.rows.lettering'), esc(res.font.name)], [t('review.rows.colour'), esc(colourText)], [t('review.rows.jacket'), esc(res.jacket.sub)], [t('review.rows.size'), `${esc(res.sizeId === 'custom' ? t('size.custom') : R.sizeOf(res.sizeId).name)} · <span class="mono">${esc(res.dims ? fmtDims(res.dims.W, res.dims.H, design.unit) : '—')}</span>`]];
   if (design.icon) rows.push([t('review.rows.symbol'), esc(`${t(`words.symbolNames.${design.icon}`)}, ${design.iconPos === 'inline' ? t('words.inline').toLowerCase() : t('words.above').toLowerCase()}`)]);
-  rows.push([t('review.rows.tube'), esc(design.tube === '12' ? t('size.tube12') : t('size.tube8'))], [t('review.rows.backing'), esc(res.backing.name)], [t('review.rows.finish'), esc(`${res.finish.name} acrylic`)], [t('review.rows.hangs'), esc(design.backing === 'stand' ? t('backing.stand') : res.hang.name)], [t('review.rows.where'), esc(res.use.name)], [t('review.rows.plug'), esc(t('review.plugValue'))]);
+  rows.push([t('review.rows.tube'), esc(design.tube === '8' ? t('size.tube8') : t('size.tube6'))], [t('review.rows.backing'), esc(res.backing.name)], [t('review.rows.finish'), esc(`${res.finish.name} acrylic`)], [t('review.rows.hangs'), esc(design.backing === 'stand' ? t('backing.stand') : res.hang.name)], [t('review.rows.where'), esc(res.use.name)], [t('review.rows.plug'), esc(t('review.plugValue'))]);
   $('#b-spec').innerHTML = rows.map(([k, v]) => `<tr><th>${esc(k)}</th><td>${v}</td></tr>`).join('');
   $('#b-review-rows').innerHTML = breakdownRows(false);
   $('#b-review-delivery').innerHTML = deliveryMarkup(pricing.deliveryLine(router.postcode.get()), 'builder.review');

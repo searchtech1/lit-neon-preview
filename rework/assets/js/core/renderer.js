@@ -22,6 +22,7 @@ export const OPTIONS = {
   symbols: ['heart', 'twohearts', 'ring', 'champagne', 'moon', 'bolt', 'cocktail', 'star'],
   backings: [
     { id: 'cut', name: 'Cut to shape', sub: 'Acrylic follows the outline of your letters', margin: 2.5 },
+    { id: 'letter', name: 'Cut to letter', sub: 'Acrylic hugs each letter, almost invisible', margin: 1 },
     { id: 'rect', name: 'Rectangle', sub: 'A clean panel on brass standoffs', margin: 5 },
     { id: 'stand', name: 'Table stand', sub: 'Freestanding, for shelves and bars', margin: 5 }
   ],
@@ -49,8 +50,8 @@ export const OPTIONS = {
 /* §0.2 rule 7: nothing paid is pre-selected */
 export const DEFAULT_DESIGN = Object.freeze({
   v: 2, text: '', align: 'center', font: 'soho', colour: 'warm', colours: null, jacket: 'white', size: 'm', custom: null,
-  backing: 'cut', board: 'clear', use: 'in', hang: 'screws', icon: '', iconPos: 'above', pos: {}, scene: 's02-bedroom',
-  view: 'room', night: true, on: true, unit: 'cm', tube: '8'
+  backing: 'cut', board: 'clear', use: 'in', hang: 'screws', icon: '', iconPos: 'above', pos: {}, scene: 's05-pub',
+  view: 'room', night: true, on: true, unit: 'cm', tube: '6'
 });
 
 const byId = (arr, id) => arr.find(x => x.id === id);
@@ -79,7 +80,7 @@ export function normalise(state) {
   if (!byId(OPTIONS.sizes, s.size) && s.size !== 'custom') s.size = DEFAULT_DESIGN.size;
   if (s.custom && Number.isFinite(+s.custom.letterCm)) s.custom = { letterCm: Math.max(2, Math.min(60, Math.round(+s.custom.letterCm * 2) / 2)) }; else s.custom = null;
   if (s.size === 'custom' && !s.custom) s.size = DEFAULT_DESIGN.size;
-  s.tube = String(s.tube) === '12' ? '12' : '8';
+  s.tube = String(s.tube) === '8' || String(s.tube) === '12' ? '8' : '6';
   if (!byId(OPTIONS.backings, s.backing)) s.backing = 'cut';
   if (!byId(OPTIONS.finishes, s.board)) s.board = 'clear';
   if (!byId(OPTIONS.uses, s.use)) s.use = 'in';
@@ -269,7 +270,7 @@ export function mountNeon(el, state, opts = {}) {
   function draw(st) {
     const res = resolve(st); h.res = res;
     const c = res.colour;
-    el.classList.add('ln-neon'); el.classList.toggle('rgb', res.rgb); el.classList.toggle('thick', res.state.tube === '12');
+    el.classList.add('ln-neon'); el.classList.toggle('rgb', res.rgb); el.classList.toggle('thick', res.state.tube === '8');
     el.dataset.hex = uiHex(c); if (h.composite === undefined) { h.composite = isComposite(el, opts); if (h.composite && !el.hasAttribute('data-composite')) el.dataset.composite = ''; }
     el.style.setProperty('--spill-c', rgba(c.hex, opts.spill ?? .42)); el.style.setProperty('--off', offTube(c, res.state.jacket));
     const inline = res.icon && res.iconPos === 'inline' && res.drawLines.length;

@@ -289,7 +289,7 @@ export function mount(el, opts = {}) {
     E.contour.querySelectorAll('.ln-line').forEach(ln => { ln.style.color = '#fff'; ln.style.textShadow = 'none'; });
     /* backing */
     const bk = res.backing, fin = res.finish, R2 = bk.margin * ppc;
-    if (bk.id === 'cut') { E.contour.style.display = 'grid'; E.board.style.display = 'none'; E.standbase.style.display = 'none'; E.contour.style.padding = (R2 * 1.4) + 'px'; E.contour.style.filter = night ? `url(#${id}) brightness(.62)` : `url(#${id})`;
+    if (bk.id === 'cut' || bk.id === 'letter') { E.contour.style.display = 'grid'; E.board.style.display = 'none'; E.standbase.style.display = 'none'; E.contour.style.padding = (R2 * 1.4) + 'px'; E.contour.style.filter = night ? `url(#${id}) brightness(.62)` : `url(#${id})`;
       const ms = E.filter.querySelectorAll('feMorphology'); ms[0].setAttribute('radius', (R2 * .9).toFixed(2)); E.filter.querySelector('feGaussianBlur').setAttribute('stdDeviation', Math.max(1, R2 * .32).toFixed(2)); ms[1].setAttribute('radius', Math.max(.8, R2 * .045).toFixed(2));
       const fl = E.filter.querySelector('.cfFill'), ed = E.filter.querySelector('.cfEdge'); fl.setAttribute('flood-color', fin.fill[0]); fl.setAttribute('flood-opacity', fin.fill[1]); ed.setAttribute('flood-color', fin.edge[0]); ed.setAttribute('flood-opacity', fin.edge[1]); }
     else { E.contour.style.display = 'none'; E.board.style.display = 'block';

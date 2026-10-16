@@ -336,3 +336,63 @@ body[data-page="builder"] .w-wa { display: none; }
 .b-tile__name { flex-wrap: wrap; }
 .b-tile__name .note { flex-basis: 100%; }
 @media (max-width: 1023px) { .builder { --b-stage-h: 30dvh; } }
+/* round 8 (owner 2026-10-17): font picker and colour swatches in the Custom Neon shape */
+.b-fontpick { display: grid; gap: var(--s-2); }
+.b-fontpick__btn { display: flex; align-items: center; gap: var(--s-3); width: 100%; min-height: 64px; padding: var(--s-2) var(--s-4); border: 1px solid var(--hair-lit); border-radius: var(--r-2); background: var(--night-3); color: var(--bone); text-align: left; cursor: pointer; }
+.b-fontpick__btn:hover { border-color: var(--brass); }
+.b-fontpick__btn .face, .b-fontopt .face { font-size: 30px; line-height: 1.1; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--bone); }
+.b-fontpick__btn .meta, .b-fontopt .meta { display: grid; justify-items: end; gap: 2px; flex: none; }
+.b-fontpick__btn .nm, .b-fontopt .nm { font-size: var(--t-caption); color: var(--smoke); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.b-fontpick__btn .note, .b-fontopt .note { font-size: var(--t-caption); color: var(--amber); }
+.b-fontpick__btn .note:empty, .b-fontopt .note:empty { display: none; }
+.b-fontpick__btn .ic { flex: none; transition: transform var(--d-base); }
+.b-fontpick__btn[aria-expanded="true"] .ic { transform: rotate(180deg); }
+.b-fontpick__pop { border: 1px solid var(--hair); border-radius: var(--r-2); background: var(--night-2); padding: var(--s-3); display: grid; gap: var(--s-3); }
+.b-fontlist { display: grid; gap: 2px; max-height: 360px; overflow-y: auto; overscroll-behavior: contain; }
+.b-fontopt { display: flex; align-items: center; gap: var(--s-3); width: 100%; min-height: 56px; padding: var(--s-2) var(--s-3); border: 0; border-left: 3px solid transparent; border-radius: var(--r-1); background: none; color: var(--bone); text-align: left; cursor: pointer; }
+.b-fontopt:hover { background: var(--night-3); }
+.b-fontopt[aria-selected="true"] { border-left-color: var(--brass); background: var(--night-3); }
+.b-fontopt[hidden] { display: none; }
+.b-fontopt .face { font-size: 26px; }
+/* colour: filled circles with the name under, a ring on the chosen one */
+.b-swatches { grid-template-columns: repeat(auto-fill, minmax(66px, 1fr)); gap: var(--s-2) var(--s-1); }
+.b-swatches .c-swatch { border: 0; background: none; box-shadow: none; padding: var(--s-1) 0; display: grid; justify-items: center; gap: 6px; min-height: 0; }
+.b-swatches .c-swatch .tube { width: 36px; height: 36px; border-radius: 50%; background: var(--tube); box-shadow: 0 0 10px -2px var(--tube); }
+.b-swatches .c-swatch--rgb .tube { background: var(--rgb-spectrum); }
+.b-swatches .c-swatch:hover .tube { box-shadow: 0 0 0 2px var(--night-2), 0 0 0 3px var(--hair-lit), 0 0 12px var(--tube); }
+.b-swatches .c-swatch[aria-pressed="true"], .b-swatches .c-swatch.is-selected { border: 0; box-shadow: none; }
+.b-swatches .c-swatch[aria-pressed="true"] .tube { box-shadow: 0 0 0 3px var(--night-2), 0 0 0 5px var(--brass), 0 0 14px var(--tube); }
+.b-swatches .c-swatch .name { font-size: 11px; line-height: 1.15; color: var(--bone-2); text-align: center; white-space: normal; max-width: 70px; }
+.b-swatches .c-swatch[aria-pressed="true"] .name { color: var(--bone); font-weight: 600; }
+/* size cards in the Custom Neon shape: name left, price right, length and height on one row */
+.b-sizes .c-size { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name price" "dims dims" "promo promo" "verdict verdict"; align-items: start; gap: var(--s-1) var(--s-3); padding: var(--s-3) var(--s-4); }
+.b-sizes .c-size .name { grid-area: name; font-size: var(--t-body); font-weight: 700; }
+.b-sizes .c-size .price { grid-area: price; margin: 0; font-size: var(--t-title); line-height: 1.2; text-align: right; }
+.b-sizes .c-size .dims { grid-area: dims; display: flex; justify-content: space-between; gap: var(--s-3); font-size: var(--t-caption); color: var(--smoke); }
+.b-sizes .c-size .dims b { color: var(--bone-2); font-weight: 600; }
+.b-sizes .c-size .promo { grid-area: promo; }
+.b-sizes .c-size .promo:empty { display: none; }
+.b-sizes .c-size .verdict { grid-area: verdict; }
+.b-sizes .c-size .verdict:empty { display: none; }
+.b-sizes .c-size[aria-pressed="true"] { border-color: var(--brass); box-shadow: 0 0 0 1px var(--brass); }
+.b-sizes .b-customcard .price.is-quote { font-size: var(--t-small); color: var(--brass); }
+/* announcement bar: one continuous ticker; the mark redraws itself every few seconds */
+.ch-announce__rot { justify-content: flex-start; overflow: hidden; }
+.ch-marquee { flex: 1; min-width: 0; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
+.ch-marquee__track { display: inline-flex; align-items: center; gap: var(--s-6); white-space: nowrap; padding-right: var(--s-6); animation: chMarquee var(--marquee-d, 28s) linear infinite; will-change: transform; }
+.ch-marquee__track i { font-style: normal; color: var(--brass); opacity: .8; }
+.ch-announce.is-paused .ch-marquee__track { animation-play-state: paused; }
+@keyframes chMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .ch-marquee__track { animation: none; } }
+.ch-brand .ln-mark.is-out .draw, .ch-brand .ln-mark.is-out .lit { animation: lnMarkOut .6s ease forwards; }
+@keyframes lnMarkOut { from { opacity: 1; } to { opacity: 0; } }
+/* ticker separators and set spacing; custom-width card keeps its label on its own row; dims never break mid-value */
+.ch-marquee__set { display: inline-flex; align-items: center; gap: var(--s-4); }
+.ch-marquee__set i, .ch-marquee__track > i { font-style: normal; color: var(--brass); opacity: .9; }
+.ch-marquee__track { gap: var(--s-4); padding-right: 0; }
+.b-sizes .b-customcard { grid-template-areas: "name name" "price price" "dims dims" "promo promo" "verdict verdict"; }
+.b-sizes .b-customcard .price { text-align: left; }
+.b-sizes .c-size .dims { flex-wrap: wrap; row-gap: 2px; }
+.b-sizes .c-size .dims span { white-space: nowrap; }
+.b-sizes .c-size .verdict { font-size: 11px; line-height: 1.3; }
+.ch-announce .ch-marquee__set i, .ch-announce .ch-marquee__track > i { color: var(--night); opacity: .55; }

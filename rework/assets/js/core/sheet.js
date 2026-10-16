@@ -109,7 +109,7 @@ export function render(container, state, opts = {}) {
   const spec = container.querySelector('.spec'); spec.innerHTML = rows.length ? `<table>${rows.map(([k, v, cls]) => `<tr><td>${k}</td><td${cls ? ` class="${cls}"` : ''}>${v}</td></tr>`).join('')}</table>` : '';
   const notes = container.querySelector('.notes'); notes.innerHTML = lite ? '' : `<h4>Construction notes</h4><ol>
     <li>Tube path follows the centreline of each letter${res.icon ? ' and the symbol' : ''}.</li>
-    <li>${res.backing.id === 'cut' ? `Acrylic cut ${res.backing.margin} cm outside the lettering.` : `Acrylic panel with ${res.backing.margin} cm clearance, four brass standoffs.`}</li>
+    <li>${(res.backing.id === 'cut' || res.backing.id === 'letter') ? `Acrylic cut ${res.backing.margin} cm outside the lettering.` : `Acrylic panel with ${res.backing.margin} cm clearance, four brass standoffs.`}</li>
     <li>Lines ${res.state.align === 'center' ? 'centred' : 'aligned ' + res.state.align}. Cable exits bottom right${F.has('cableLengthM') ? `, ${F.get('cableLengthM')} m clear` : ''}.</li>
     <li>Made in a UK workshop. You approve this drawing before anything is made.</li></ol>`;
   /* title block: Title · Acrylic W×H · LED flex · Power (if confirmed) · Date · Drawn by */
@@ -138,7 +138,7 @@ export function render(container, state, opts = {}) {
   lines.forEach((line, li) => { svg += `<text x="${((textShiftX + alignOff(li)) * s).toFixed(1)}" y="${((m.textOffY + m.baselines[li] - m.top) * s).toFixed(1)}" style="font-family:'${f.family}';font-weight:${f.weight || 400};font-size:100px;word-spacing:${f.wordSpacingEm || 0}em">${esc(line)}</text>`; });
   svg += '</svg>';
   let back = '';
-  if (res.backing.id === 'cut') {
+  if (res.backing.id === 'cut' || res.backing.id === 'letter') {
     const fl = container.querySelector('filter'), ms = fl.querySelectorAll('feMorphology');
     ms[0].setAttribute('radius', (mg * .9).toFixed(2)); fl.querySelector('feGaussianBlur').setAttribute('stdDeviation', Math.max(1, mg * .32).toFixed(2));
     const padC = mg * 1.4;
@@ -169,7 +169,7 @@ export function svg(state, { width = 1123, height = 794 } = {}) {
   const textShiftX = (m.inkW - m.textW) / 2 - m.minX; const alignOff = li => res.state.align === 'left' ? 0 : res.state.align === 'right' ? (m.blockW - m.lineWidths[li]) : (m.blockW - m.lineWidths[li]) / 2;
   const text = lines.map((line, li) => `<text x="${(left + mg + (textShiftX + alignOff(li)) * emPx).toFixed(1)}" y="${(top + mg + (m.textOffY + m.baselines[li] - m.top) * emPx).toFixed(1)}" font-family="${esc(res.font.family)}" font-weight="${res.font.weight || 400}" font-size="${emPx.toFixed(1)}" fill="none" stroke="#2F5D8A" stroke-width="1.6">${esc(line)}</text>`).join('');
   const icon = res.icon ? `<g transform="translate(${left + mg + (m.inkW - m.iconEm) / 2 * emPx} ${top + mg}) scale(${m.iconEm * emPx / 24})"><path d="${OPTIONS.icons[res.icon]}" fill="none" stroke="#2F5D8A" stroke-width="${(1.7 * 24 / (m.iconEm * emPx)).toFixed(3)}"/></g>` : '';
-  const backing = res.backing.id === 'cut' ? `<rect x="${left}" y="${top}" width="${w}" height="${h}" rx="${mg}" fill="none" stroke="#2F5D8A" stroke-dasharray="4 4"/>` : `<rect x="${left}" y="${top}" width="${w}" height="${h}" rx="3" fill="none" stroke="#2F5D8A" stroke-dasharray="6 4"/>`;
+  const backing = (res.backing.id === 'cut' || res.backing.id === 'letter') ? `<rect x="${left}" y="${top}" width="${w}" height="${h}" rx="${mg}" fill="none" stroke="#2F5D8A" stroke-dasharray="4 4"/>` : `<rect x="${left}" y="${top}" width="${w}" height="${h}" rx="3" fill="none" stroke="#2F5D8A" stroke-dasharray="6 4"/>`;
   const flex = flexMetres(res);
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><rect width="100%" height="100%" fill="#F2E9DF"/><rect x="14" y="14" width="${width - 28}" height="${height - 28}" fill="none" stroke="#180E1F"/>
     <text x="30" y="46" font-family="Big Shoulders Display, Arial Narrow, sans-serif" font-weight="800" font-size="26" fill="#180E1F">Custom neon sign · drawing 1</text>

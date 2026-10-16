@@ -85,16 +85,13 @@ function announceBar(live) {
   msgs.push(copy.t('announce.promo', { pct: 10, code: 'LIT10' }, '10% off your first sign · code LIT10'));   /* world 2026-10-15: the first-order code leads the bar */
   msgs.push(copy.t('announce.free', {}, 'Free delivery across mainland GB'), copy.t('announce.proof', {}, 'You approve a drawing before we make anything'));
   const el = document.createElement('div'); el.className = 'ch-announce'; el.setAttribute('data-qa', 'chrome.announce'); el.setAttribute('role', 'region'); el.setAttribute('aria-label', 'Announcements');
-  el.innerHTML = `<div class="wrap"><div class="ch-announce__rot"><p class="ch-announce__msg" data-qa="chrome.announce.msg" aria-live="polite">${esc(msgs[0])}</p><button type="button" class="ch-announce__pause" data-qa="chrome.announce.pause" aria-pressed="false" aria-label="${esc(copy.t('announce.pause', {}, 'Pause announcements'))}">${icon('pause')}</button></div><nav class="ch-announce__util" aria-label="Utility"><a href="${url('bulk-quote.html')}" data-qa="chrome.announce.bulk">${esc(copy.t('announce.bulk', {}, 'Bulk quotes'))}</a><a href="${url('help.html')}" data-qa="chrome.announce.help">${esc(copy.t('announce.help', {}, 'Help'))}</a></nav></div>`;
-  const msg = el.querySelector('.ch-announce__msg'), btn = el.querySelector('.ch-announce__pause');
-  let i = 0, timer = null, paused = ui.prefersReducedMotion();
-  const tick = () => { i = (i + 1) % msgs.length; msg.textContent = msgs[i]; msg.style.animation = 'none'; void msg.offsetWidth; msg.style.animation = ''; };
-  const start = () => { if (msgs.length > 1 && !paused) { clearInterval(timer); timer = setInterval(tick, 5000); } };
-  const stop = () => { clearInterval(timer); timer = null; };
-  btn.addEventListener('click', () => { paused = !paused; btn.setAttribute('aria-pressed', String(paused)); btn.setAttribute('aria-label', copy.t(paused ? 'announce.play' : 'announce.pause', {}, paused ? 'Resume' : 'Pause')); btn.innerHTML = icon(paused ? 'play' : 'pause'); paused ? stop() : start(); });
-  if (paused) { btn.setAttribute('aria-pressed', 'true'); btn.innerHTML = icon('play'); }
-  document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
-  start();
+  const track = msgs.map(mm => `<span>${esc(mm)}</span>`).join('<i aria-hidden="true">·</i>');
+  el.innerHTML = `<div class="wrap"><div class="ch-announce__rot"><div class="ch-marquee" data-qa="chrome.announce.msg" aria-label="${esc(msgs.join('. '))}"><div class="ch-marquee__track" style="--marquee-d:${Math.max(22, msgs.join(' ').length * .32)}s"><span class="ch-marquee__set">${track}</span><i aria-hidden="true">·</i><span class="ch-marquee__set" aria-hidden="true">${track}</span><i aria-hidden="true">·</i></div></div><button type="button" class="ch-announce__pause" data-qa="chrome.announce.pause" aria-pressed="false" aria-label="${esc(copy.t('announce.pause', {}, 'Pause announcements'))}">${icon('pause')}</button></div><nav class="ch-announce__util" aria-label="Utility"><a href="${url('bulk-quote.html')}" data-qa="chrome.announce.bulk">${esc(copy.t('announce.bulk', {}, 'Bulk quotes'))}</a><a href="${url('help.html')}" data-qa="chrome.announce.help">${esc(copy.t('announce.help', {}, 'Help'))}</a></nav></div>`;
+  const btn = el.querySelector('.ch-announce__pause');
+  let paused = ui.prefersReducedMotion();
+  const paint = () => { el.classList.toggle('is-paused', paused); btn.setAttribute('aria-pressed', String(paused)); btn.setAttribute('aria-label', copy.t(paused ? 'announce.play' : 'announce.pause', {}, paused ? 'Resume' : 'Pause')); btn.innerHTML = icon(paused ? 'play' : 'pause'); };
+  btn.addEventListener('click', () => { paused = !paused; paint(); });
+  paint();
   return el;
 }
 
@@ -510,6 +507,17 @@ function wireBasket(headerEl) {
 }
 
 /* =========================== mount =========================== */
+
+/* the mark draws on, ignites, holds, fades back to the unlit tube and draws again (owner 2026-10-17). A fresh copy of the
+   inline SVG restarts every CSS animation on every browser; reduced motion keeps the single run. */
+function startMarkLoop(head) {
+  if (!head || ui.prefersReducedMotion()) return;
+  const brand = head.querySelector('.ch-brand'); const first = brand && brand.querySelector('svg.ln-mark'); if (!first) return;
+  const tpl = first.outerHTML; const HOLD = 7000, OUT = 650;
+  const cycle = () => { if (document.hidden) return; const cur = brand.querySelector('svg.ln-mark'); if (!cur) return; cur.classList.add('is-out'); setTimeout(() => { const c2 = brand.querySelector('svg.ln-mark'); if (c2) c2.outerHTML = tpl; }, OUT); };
+  setInterval(cycle, HOLD + OUT);
+}
+
 export async function mount(opts = {}) {
   state = { ...state, page: opts.page || null, minimal: !!opts.minimal };
   document.documentElement.classList.add('has-chrome');
@@ -528,6 +536,7 @@ export async function mount(opts = {}) {
   /* announcement + header land in ONE frame (perf audit: two inserts were two layout shifts on every page) */
   const bar = state.minimal ? null : announceBar(state.promoLive);
   const head = await header();
+  startMarkLoop(head);
   top.innerHTML = '';
   if (bar) top.appendChild(bar);
   top.appendChild(head);

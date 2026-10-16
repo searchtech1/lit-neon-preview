@@ -145,7 +145,7 @@ export function createPricing({ core: C = core, rules = RULES, resolve = resolve
     rows.push({ id: 'base', label: `Words × ${res.font.name} × ${res.sizeId === 'custom' ? `${res.letterCm} cm letters` : sizeOf(res.sizeId).name}`, step: 'words', amount: baseTotal, sub: `${d.W} × ${d.H} cm` });
     if (res.icon) rows.push({ id: 'symbol', label: `Symbol · ${res.icon}`, step: 'words', amount: symbolDelta(state), sub: `adds ${symbolHeightDelta(state)} cm` });
     if (res.rgb && baseTotal != null && !withRgb.quote) rows.push({ id: 'rgb', label: 'Colour changing (RGB)', step: 'colour', amount: round2(withRgb.total - baseTotal) });
-    if (res.state.tube === '12' && !withRgb.quote && !withTube.quote && withTube.total !== withRgb.total) rows.push({ id: 'tube', label: '12 mm tube', step: 'size', amount: round2(withTube.total - withRgb.total) });
+    if (res.state.tube === '8' && !withRgb.quote && !withTube.quote && withTube.total !== withRgb.total) rows.push({ id: 'tube', label: '8 mm tube', step: 'size', amount: round2(withTube.total - withRgb.total) });
     if (multicolourExtra(res)) rows.push({ id: 'colours', label: `${distinctCount(res)} colours`, step: 'colour', amount: multicolourExtra(res) });
     rows.push({ id: 'backing', label: res.backing.name, step: 'backing', amount: rules.backing[res.state.backing] || 0 });
     rows.push({ id: 'finish', label: `${res.finish.name} acrylic`, step: 'backing', amount: rules.finish[res.state.board] || 0 });
@@ -154,7 +154,7 @@ export function createPricing({ core: C = core, rules = RULES, resolve = resolve
   }
   /** £ the bold 12 mm tube adds to this design (null when not priceable) */
   function tubeDelta(state) {
-    const bold = price({ ...state, tube: '12' }), std = price({ ...state, tube: '8' });
+    const bold = price({ ...state, tube: '8' }), std = price({ ...state, tube: '6' });
     if (bold.kind !== 'price' || std.kind !== 'price') return null;
     return round2(bold.everyday - std.everyday);
   }

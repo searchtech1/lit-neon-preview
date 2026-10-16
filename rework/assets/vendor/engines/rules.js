@@ -16,11 +16,12 @@ window.LIT_RULES = {
     "step": 5,
     "maxWidthCm": 200,
     "tube": {
-      "8": 1,
-      "12": 1.2
+      "6": 1,
+      "8": 1.2
     },
     "backing": {
       "cut": 0,
+      "letter": 15,
       "rect": 0,
       "stand": 20
     },
