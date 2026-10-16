@@ -296,10 +296,10 @@ if ($('#shop-tabs')) ui.tabs($('#shop-tabs'), { onChange: () => R.refitAll() });
 
 /* ============================================================ 4 · HOW IT WORKS ============================================================ */
 const HOW_MEDIA = [
-  { kind: 'shot', src: '/lit-neon-preview/rework/assets/img/how/design-800.jpg', alt: 'The designer: after dark drawn to scale on the wall, with its sizes' },
+  { kind: 'shot', src: '/lit-neon-preview/rework/assets/img/how/design-800.jpg', alt: 'The designer: after dark in hot pink, cut to letter, drawn to scale with its sizes' },
   { kind: 'photo', src: '/lit-neon-preview/rework/assets/img/photos/p41-800.jpg', alt: 'A printed proof drawing of a neon sign with its sizes marked, on a desk' },
   { kind: 'photo', src: '/lit-neon-preview/rework/assets/img/photos/p42-800.jpg', alt: 'Hands fitting white LED neon into acrylic cut to the outline of after dark' },
-  { kind: 'photo', src: '/lit-neon-preview/rework/assets/img/photos/p43-800.jpg', alt: 'The finished after dark sign lit ice blue on a living room wall' }
+  { kind: 'photo', src: '/lit-neon-preview/rework/assets/img/photos/p43-800.jpg', alt: 'The finished after dark sign lit hot pink above a hallway console' }
 ];
 $('#how-list').innerHTML = (copy.get('how.steps') || []).map((s, i) => { const m = HOW_MEDIA[i]; return `<li><span class="w-step__media${m && m.kind === 'shot' ? ' is-shot' : ''}">${m ? `<img src="${m.src}" alt="${esc(m.alt)}" loading="lazy" decoding="async">` : ''}</span><div><h3>${esc(s.title)}</h3><p>${esc(s.line)}</p></div></li>`; }).join('');
 const howSheet = $('#how-sheet');

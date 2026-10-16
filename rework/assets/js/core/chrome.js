@@ -396,7 +396,7 @@ async function footer() {
         ${contact.kind === 'whatsapp' && facts.has('supportEmail') ? `<li><a href="mailto:${esc(facts.value('supportEmail'))}" data-qa="chrome.footer.email">${icon('mail')}<span>${esc(facts.value('supportEmail'))}</span></a></li>` : ''}
         ${contact.kind !== 'contact' ? `<li><a href="${url('contact.html')}" data-qa="chrome.footer.link" data-id="contactForm">${icon('chat')}<span>${esc(copy.t('footer.contactForm'))}</span></a></li>` : ''}
       </ul></div>
-      <div><h3>${esc(copy.t('footer.cols.trust'))}</h3><div class="ch-footer__pay" data-qa="chrome.footer.pay"></div><p class="ch-footer__reviews">${esc(copy.t('footer.reviews'))}</p><div class="ch-footer__social" data-qa="chrome.footer.social"></div></div>
+      <div><h3>${esc(copy.t('footer.cols.trust'))}</h3><div class="ch-footer__pay" data-qa="chrome.footer.pay"></div><p class="ch-footer__reviews">${icon('trustpilot', 'ic--sm')}${esc(copy.t('footer.reviews'))}</p><div class="ch-footer__social" data-qa="chrome.footer.social"></div></div>
     </div>
     <div class="w-news" data-qa="chrome.footer.news">
       <div><h3>${esc(copy.t('footer.newsTitle', {}, 'New signs and offers, now and then'))}</h3><p>${esc(copy.t('footer.newsBody', {}, 'One email a month at most. Unsubscribe in one tap.'))}</p></div>

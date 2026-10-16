@@ -398,3 +398,6 @@ body[data-page="builder"] .w-wa { display: none; }
 .ch-announce .ch-marquee__set i, .ch-announce .ch-marquee__track > i { color: var(--night); opacity: .55; }
 /* phones: the menu button sits on the left, the basket on the right, the mark centred between them (owner 2026-10-17) */
 @media (max-width: 1023px) { .ch-burger { position: absolute; left: var(--gutter); top: 50%; transform: translateY(-50%); z-index: 2; } }
+.ch-footer__reviews { display: flex; align-items: center; gap: var(--s-2); }
+.ch-footer__reviews .ic { width: 16px; height: 16px; color: #00B67A; flex: none; }
+.w-wa .ic { width: 30px; height: 30px; }
