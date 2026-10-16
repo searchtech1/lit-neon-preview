@@ -8,7 +8,7 @@
     "status": "P5 filled. Strings live under the page key. The gallery is renders of catalogue designs on our scenes, labelled; no customer, town or date captions (rule 4)."
   },
   "inspiration": {
-    "meta": {
+    "pageMeta": {
       "title": "Neon sign ideas, rendered on real rooms | Lit Neon",
       "description": "Ideas for LED neon signs by room, occasion and colour, rendered on our scenes. Borrow a style and open it in the designer with your own words.",
       "ogTitle": "Neon sign ideas | Lit Neon",

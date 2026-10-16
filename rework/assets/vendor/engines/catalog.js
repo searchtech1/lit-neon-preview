@@ -21,6 +21,13 @@ window.LIT = {
   // letter height the tube can follow in this face; sizes below it are unavailable), wordSpacingEm / ampersandGapEm
   // (per-face gaps the renderer and the measurer both apply, B44). minLetterCm values are workshop estimates [CONFIRM].
   fonts: [
+    // owner's list 2026-10-17 (Custom Neon-style set, real font names). The four with free commercial licences ship now; the
+    // paid seven (Rocket Clouds · Brittany Signature · Hesterica · Bayshore · Kabel · Linoleo Script · Wardrum Bold Outline)
+    // slot in here once the owner's licences/files arrive, Rocket Clouds first. minLetterCm are workshop estimates [CONFIRM].
+    { id: 'gruenewald', name: 'Gruenewald VA', family: 'Gruenewald VA', style: 'script', enabled: true, minLetterCm: 9, wordSpacingEm: 0.16, ampersandGapEm: 0.14 },
+    { id: 'nickainley', name: 'Nickainley', family: 'Nickainley', style: 'script', enabled: true, minLetterCm: 8, wordSpacingEm: 0.14, ampersandGapEm: 0.14 },
+    { id: 'neoneon', name: 'Neoneon', family: 'Neoneon', style: 'retro', enabled: true, minLetterCm: 7, wordSpacingEm: 0.12, ampersandGapEm: 0.12 },
+    { id: 'poiret', name: 'Poiret One', family: 'Poiret One', style: 'modern', enabled: true, minLetterCm: 7, wordSpacingEm: 0.10, ampersandGapEm: 0.12 },
     { id: 'soho', name: 'Soho', family: 'Neonderthaw', style: 'script', enabled: true, minLetterCm: 8, wordSpacingEm: 0.18, ampersandGapEm: 0.14 },
     { id: 'shoreditch', name: 'Shoreditch', family: 'Tilt Neon', style: 'modern', enabled: true, minLetterCm: 7, wordSpacingEm: 0.10, ampersandGapEm: 0.12 },
     { id: 'brighton', name: 'Brighton', family: 'Pacifico', style: 'script', enabled: true, minLetterCm: 7, wordSpacingEm: 0.12, ampersandGapEm: 0.14 },
@@ -32,7 +39,7 @@ window.LIT = {
     { id: 'hackney', name: 'Hackney', family: 'Comfortaa', weight: 600, style: 'modern', enabled: true, minLetterCm: 7, wordSpacingEm: 0.10, ampersandGapEm: 0.12 },
     { id: 'leith', name: 'Leith', family: 'Kaushan Script', style: 'script', enabled: false, minLetterCm: 10, wordSpacingEm: 0.16, ampersandGapEm: 0.14 }
   ],
-  googleFontsHref: 'https://fonts.googleapis.com/css2?family=Neonderthaw&family=Tilt+Neon&family=Pacifico&family=Sacramento&family=Monoton&family=Yellowtail&family=Great+Vibes&family=Righteous&family=Comfortaa:wght@600&family=Kaushan+Script&display=swap',
+  googleFontsHref: 'https://fonts.googleapis.com/css2?family=Poiret+One&family=Neonderthaw&family=Tilt+Neon&family=Pacifico&family=Sacramento&family=Monoton&family=Yellowtail&family=Great+Vibes&family=Righteous&family=Comfortaa:wght@600&family=Kaushan+Script&display=swap',
 
   colours: [
     { id: 'warm', name: 'Warm white', hex: '#ffc77a', core: '#fff6e6', jacketColour: '#f1e2c6' },
