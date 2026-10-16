@@ -42,7 +42,7 @@ FRAMES.typing = () => [.2, .26];
 
 /* ====================================================================== state ====================================================================== */
 let design = R.normalise(R.DEFAULT_DESIGN);
-let editUid = null, roomScene = 's01-living', rulers = 'cm', current = 'words', started = false;
+let editUid = null, roomScene = 's02-bedroom', rulers = 'cm', current = 'words', started = false;
 let stageApi = null, rail = null, sheets = {}, lb = null, areaLoaded = false, DESIGNS = null, arApi = null;
 const tiles = new Map(), minis = {}, examples = [];
 let paintTimer = 0, hashTimer = 0;
@@ -68,9 +68,9 @@ let learnDone = false;
   const badLink = res.mode !== 'url' && res.hash && (res.hash.malformed || (res.hash.code && !res.hash.d));
   if (badLink) setTimeout(() => ui.toast(res.mode !== 'direct' ? t('ui.hashMalformedFresh', {}, 'That link looks incomplete, so we started a fresh design for you.') : t('ui.hashMalformed', {}, 'That link looks incomplete, so we started from your last design.'), { kind: 'info', duration: 6000 }), 900);
   if (res.hash && res.hash.scene && stage.getScene) design.scene = res.hash.scene || design.scene;
-  if (!design.scene || design.scene === 'wall' || !['s0', 's1'].includes(String(design.scene).slice(0, 2))) design.scene = 's01-living';
+  if (!design.scene || design.scene === 'wall' || !['s0', 's1'].includes(String(design.scene).slice(0, 2))) design.scene = 's02-bedroom';
   design.text = R.resolve(design).clean.text;
-  roomScene = design.scene && design.scene !== 's00-studio-dark' ? design.scene : 's01-living';
+  roomScene = design.scene && design.scene !== 's00-studio-dark' ? design.scene : 's02-bedroom';
   rulers = design.unit === 'in' ? 'in' : 'cm';
   if (editUid) showEditing();
 
@@ -410,7 +410,7 @@ function renderLettering() {
   $('#body-lettering').innerHTML = `
     <p class="b-help">${esc(t('lettering.help'))}</p>
     <div class="c-chips" role="group" aria-label="${esc(t('lettering.label'))}" id="b-styles">${styles.map(s => `<button type="button" class="c-chip" aria-pressed="${s === 'all'}" data-style="${s}" data-qa="builder.font.style" data-id="${s}">${esc(t(`lettering.styles.${s}`, {}, s))}</button>`).join('')}</div>
-    <div class="b-tiles" id="b-tiles" role="group" aria-label="${esc(t('lettering.label'))}">${faces.map(f => `<button type="button" class="b-tile" aria-pressed="${f.id === design.font}" data-font="${f.id}" data-style="${f.style || 'script'}" aria-label="${esc(t('a11y.tile', { face: f.name }))}" data-qa="builder.font.tile" data-id="${f.id}"><span class="b-tile__neon" data-neon></span><span class="b-tile__name"><span>${esc(f.name)}</span><span class="note" data-note></span></span>${f.id === 'soho' ? ui.pill('new', t('lettering.mostChosen')) : ''}</button>`).join('')}</div>`;
+    <div class="b-tiles" id="b-tiles" role="group" aria-label="${esc(t('lettering.label'))}">${faces.map(f => `<button type="button" class="b-tile" aria-pressed="${f.id === design.font}" data-font="${f.id}" data-style="${f.style || 'script'}" aria-label="${esc(t('a11y.tile', { face: f.name }))}" data-qa="builder.font.tile" data-id="${f.id}"><span class="b-tile__neon" data-neon></span><span class="b-tile__name"><span>${esc(f.name)}</span><span class="note" data-note></span></span></button>`).join('')}</div>`;
   $$('#b-tiles .b-tile').forEach(b => { tiles.set(b.dataset.font, R.mountNeon(b.querySelector('[data-neon]'), { ...design, font: b.dataset.font, text: R.fontOf(b.dataset.font).name, icon: '', colours: null }, { lit: true, fitW: .88, fitH: .72, spill: .3 })); });
   $('#b-tiles').addEventListener('click', e => { const b = e.target.closest('[data-font]'); if (!b) return; setDesign({ font: b.dataset.font }); stageApi.strike(); });
   $('#b-styles').addEventListener('click', e => { const b = e.target.closest('[data-style]'); if (!b) return; $$('#b-styles .c-chip').forEach(x => x.setAttribute('aria-pressed', String(x === b))); $$('#b-tiles .b-tile').forEach(tl => { tl.hidden = b.dataset.style !== 'all' && tl.dataset.style !== b.dataset.style; }); R.refitAll(); });
@@ -579,7 +579,7 @@ function paintFitting() {
 function renderSymbol() {
   $('#body-symbol').innerHTML = `
     <div class="b-group">
-      <span class="b-label"><span>${esc(t('words.symbols'))}</span><span class="sub">${esc(t('words.symbolsHelp'))}</span></span>
+      <p class="b-help">${esc(t('words.symbolsHelp'))}</p>
       <div class="b-symbols" role="group" aria-label="${esc(t('words.symbols'))}" id="b-symbols">
         ${['', ...R.OPTIONS.symbols].map(id => `<button type="button" class="b-symbol" aria-pressed="${id === design.icon}" data-icon="${id}" data-qa="builder.words.symbol" data-id="${id || 'none'}">${id ? R.iconSvg(id, null, '', '') : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg>'}<span><span class="name">${esc(t(`words.symbolNames.${id || 'none'}`))}</span><span class="delta" data-delta></span></span></button>`).join('')}
       </div>

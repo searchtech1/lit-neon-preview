@@ -296,10 +296,10 @@ if ($('#shop-tabs')) ui.tabs($('#shop-tabs'), { onChange: () => R.refitAll() });
 
 /* ============================================================ 4 · HOW IT WORKS ============================================================ */
 const HOW_MEDIA = [
-  { kind: 'shot', src: '/lit-neon-preview/rework/assets/img/how/design-800.jpg', alt: 'The designer on a phone: your words drawn to scale on the wall, with the sizes' },
+  { kind: 'shot', src: '/lit-neon-preview/rework/assets/img/how/design-800.jpg', alt: 'The designer: after dark drawn to scale on the wall, with its sizes' },
   { kind: 'photo', src: '/lit-neon-preview/rework/assets/img/photos/p41-800.jpg', alt: 'A printed proof drawing of a neon sign with its sizes marked, on a desk' },
-  { kind: 'photo', src: '/lit-neon-preview/rework/assets/img/photos/p42-800.jpg', alt: 'Hands pressing LED neon into the channel cut in clear acrylic' },
-  { kind: 'photo', src: '/lit-neon-preview/rework/assets/img/photos/p43-800.jpg', alt: 'Fixing the finished sign to a living room wall with a drill and level' }
+  { kind: 'photo', src: '/lit-neon-preview/rework/assets/img/photos/p42-800.jpg', alt: 'Hands fitting white LED neon into acrylic cut to the outline of after dark' },
+  { kind: 'photo', src: '/lit-neon-preview/rework/assets/img/photos/p43-800.jpg', alt: 'The finished after dark sign lit ice blue on a living room wall' }
 ];
 $('#how-list').innerHTML = (copy.get('how.steps') || []).map((s, i) => { const m = HOW_MEDIA[i]; return `<li><span class="w-step__media${m && m.kind === 'shot' ? ' is-shot' : ''}">${m ? `<img src="${m.src}" alt="${esc(m.alt)}" loading="lazy" decoding="async">` : ''}</span><div><h3>${esc(s.title)}</h3><p>${esc(s.line)}</p></div></li>`; }).join('');
 const howSheet = $('#how-sheet');
@@ -442,9 +442,12 @@ logoBand();
 (function reviews() { const r = facts.value('reviews'); const count = r && typeof r === 'object' ? (r.count || 0) : 0; const el = $('#home-reviews'); if (count > 0) { el.hidden = false; el.className = 'section night reviews'; el.innerHTML = `<div class="wrap"><p class="t-eyebrow">Reviews</p><h2>What our first customers say</h2><p class="t-lead">${esc(facts.get('reviews'))}</p></div>`; } })();
 
 /* ============================================================== 15 · FAQ ============================================================== */
+let repaintFaq = () => {};
 (function faq() {
   const Q = data.faq; const qs = Q.questions.filter(q => q.showOnHome).slice(0, 6);
-  const resolved = qs.map(q => { const v = (q.variants || []).find(x => x.when && x.when.startsWith('fact:') && facts.has(x.when.slice(5))); return { ...q, a: fillD2(v ? v.a : q.a) }; });
+  const raw = qs.map(q => { const v = (q.variants || []).find(x => x.when && x.when.startsWith('fact:') && facts.has(x.when.slice(5))); return v ? v.a : q.a; });
+  const resolved = qs.map((q, i) => ({ ...q, a: fillD2(raw[i]) }));
+  repaintFaq = () => { qs.forEach((q, i) => { const el = $(`#home-${q.id} .c-acc__body > p`); if (el) el.textContent = fillD2(raw[i]); }); };
   $('#faq-acc').innerHTML = resolved.map(q => `<details id="home-${esc(q.id)}" data-id="${esc(q.id)}" data-cat="${esc(q.category)}" data-qa="home.faq.q"><summary data-qa="home.faq.summary"><span class="label">${esc(q.q)}</span>${icon('chevron-down')}</summary><div class="c-acc__body"><p>${esc(q.a)}</p>${(q.links || []).length ? `<div class="links">${q.links.map(l => `<a href="/lit-neon-preview/rework/${esc(l.href)}" data-qa="home.faq.link">${esc(l.label)}</a>`).join('')}</div>` : ''}<a class="deep" href="/lit-neon-preview/rework/help.html#${esc(q.id)}" data-qa="home.faq.deep">${icon('link', 'ic--sm')} ${esc(t('faq.copyLink', {}, 'Link to this answer'))}</a></div></details>`).join('');
   ui.accordion($('#faq-acc'), { single: true, deepLink: false });
   // chrome.contactHref() returns { href, kind, label, icon, external } (core/chrome.js); never interpolate the object itself
@@ -456,7 +459,7 @@ logoBand();
 })();
 
 /* ================================================================ wiring ================================================================ */
-function refreshAll() { R.refitAll(); renderSheet(); paintShopMeta(); logoBand(); }
+function refreshAll() { R.refitAll(); renderSheet(); paintShopMeta(); logoBand(); repaintFaq(); }
 window.addEventListener('resize', debounce(() => R.refitAll(), 120));
 await ixMounts;
 document.dispatchEvent(new CustomEvent('ln:home-ready'));

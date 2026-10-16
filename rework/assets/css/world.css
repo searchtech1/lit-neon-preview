@@ -295,3 +295,44 @@ html.is-scrolled .ch-brand img, html.is-scrolled .ch-brand svg, .ch-header.is-sc
 @media (max-width: 480px) { .w-kit--photos b { font-size: var(--t-small); } }
 /* day / night: two real photos of the same kitchen, no drawn words */
 .w-dn__sign { display: none; }
+
+/* round 7: the hero is narrower than the viewport, so its flat night fill showed as a box against the body gradient */
+.hero.hero--photo, .home .hero { background: transparent; }
+/* round 7 · audit fixes (2026-10-17) */
+/* hero: no black halo under the photo; photo top aligns with the copy */
+.hero.hero--photo { align-items: start; }
+.hero--photo .hero__media { box-shadow: 0 0 60px -10px var(--hair-lit); margin-top: var(--s-2); }
+.hero--photo .hero__door small { line-height: 1.35; }
+/* one grid gap, one text inset */
+.w-steps, .how__list.w-steps, .w-kit, .w-faq, .w-rooms, .w-nums, .w-made, .w-logo { gap: var(--s-4); }
+.how__ctas { margin-top: var(--s-6); }
+.kit .sec-head { margin-bottom: var(--s-6); }
+.section { padding-block: var(--s-9); }
+.section--a { padding-block: var(--s-9); }
+.section--c, .faq.section--c { padding-block: var(--s-9); }
+.w-kit--photos b, .w-kit--photos small { padding-inline: var(--s-5); }
+.w-photo .lb { padding-inline: var(--s-5); background: linear-gradient(transparent 20%, rgba(6,5,14,.88)); }
+.w-rooms .w-photo .lb small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 767px) { .w-rooms .w-photo .lb { padding-inline: var(--s-3); } .w-kit--photos b, .w-kit--photos small { padding-inline: var(--s-4); } }
+@media (max-width: 480px) { .w-kit--photos > div:last-child { grid-column: 1 / -1; } .w-kit--photos > div:last-child img { aspect-ratio: 16 / 9; } }
+/* logo band: flat background, no half-sized plate */
+.logo__plate { display: none; }
+/* FAQ: an open item never stretches its neighbour; the focus ring hugs the card */
+.w-faq { align-items: start; }
+.w-faq summary:focus-visible { outline-offset: -2px; }
+/* footer payment marks in tidy rows */
+.ch-footer__pay { display: grid; grid-template-columns: repeat(4, auto); justify-content: start; gap: var(--s-2); }
+/* chat float: never over the designer dock; above the sticky bar on phones */
+body[data-page="builder"] .w-wa { display: none; }
+@media (max-width: 767px) { .w-wa { bottom: calc(88px + env(safe-area-inset-bottom)); width: 48px; height: 48px; } }
+/* designer: stacked labels, two-column symbols, plain counter, one accent, shorter phone stage */
+.b-label { flex-direction: column; align-items: flex-start; gap: 2px; }
+.b-label:has(.c-seg), .b-label:has(.readout) { flex-direction: row; align-items: center; justify-content: space-between; }
+.b-symbols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.b-symbol .delta { white-space: nowrap; }
+.b-counter { border: 0; padding: 0; background: none; min-height: 0; }
+.b-tabs [role="tab"].is-done .n { background: var(--brass); border-color: var(--brass); color: var(--night); }
+.b-sizes .c-size .price.is-quote { font-size: var(--t-body); font-weight: 600; }
+.b-tile__name { flex-wrap: wrap; }
+.b-tile__name .note { flex-basis: 100%; }
+@media (max-width: 1023px) { .builder { --b-stage-h: 30dvh; } }

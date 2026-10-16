@@ -175,7 +175,7 @@
   },
   "colour": {
     "label": "Tube colour",
-    "help": "Screens vary a little. Warm white is the colour most people choose.",
+    "help": "Screens vary a little; treat the swatch as a guide.",
     "jacketLabel": "When it’s off",
     "jacketWhite": "White jacket",
     "jacketWhiteSub": "White tube by day",
