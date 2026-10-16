@@ -47,7 +47,7 @@ $$('[data-copy]').forEach(el => { const v = copy.get(el.dataset.copy); if (typeo
 $$('.hero__promise, .hero [data-copy]').forEach(el => { if (el.children.length || !/\d–\d/.test(el.textContent)) return; const txt = el.textContent; el.textContent = ''; txt.split(/(\d+–\d+ working days|\d+–\d+)/).forEach((part, i) => { if (!part) return; if (i % 2) { const s = document.createElement('span'); s.className = 'nowrap'; s.style.whiteSpace = 'nowrap'; s.textContent = part; el.appendChild(s); } else el.appendChild(document.createTextNode(part)); }); });
 $$('.ic-slot[data-icon]').forEach(el => { el.innerHTML = icon(el.dataset.icon); });
 $('#hero-lettering .ic-wrap').innerHTML = icon('chevron-down');
-$('#best-prev').innerHTML = icon('chevron-left'); $('#best-next').innerHTML = icon('chevron-right');
+
 try { $('link[rel="canonical"]').href = location.origin + '/lit-neon-preview/rework/'; $('meta[property="og:image"]').content = location.origin + '/lit-neon-preview/rework/assets/img/og/index.jpg'; } catch {}
 
 /* ------------------------------------------------------- D2 typed-token resolver ------------------------------------------------------- */
@@ -295,7 +295,13 @@ function paintShopMeta() { if (!$('#shop-panel-room')) return; for (const kind o
 if ($('#shop-tabs')) ui.tabs($('#shop-tabs'), { onChange: () => R.refitAll() });
 
 /* ============================================================ 4 · HOW IT WORKS ============================================================ */
-$('#how-list').innerHTML = (copy.get('how.steps') || []).map(s => `<li><div><h3>${esc(s.title)}</h3><p>${esc(s.line)}</p></div></li>`).join('');
+const HOW_MEDIA = [
+  { kind: 'shot', src: '/lit-neon-preview/rework/assets/img/how/design-800.jpg', alt: 'The designer on a phone: your words drawn to scale on the wall, with the sizes' },
+  { kind: 'photo', src: '/lit-neon-preview/rework/assets/img/photos/p41-800.jpg', alt: 'A printed proof drawing of a neon sign with its sizes marked, on a desk' },
+  { kind: 'photo', src: '/lit-neon-preview/rework/assets/img/photos/p42-800.jpg', alt: 'Hands pressing LED neon into the channel cut in clear acrylic' },
+  { kind: 'photo', src: '/lit-neon-preview/rework/assets/img/photos/p43-800.jpg', alt: 'Fixing the finished sign to a living room wall with a drill and level' }
+];
+$('#how-list').innerHTML = (copy.get('how.steps') || []).map((s, i) => { const m = HOW_MEDIA[i]; return `<li><span class="w-step__media${m && m.kind === 'shot' ? ' is-shot' : ''}">${m ? `<img src="${m.src}" alt="${esc(m.alt)}" loading="lazy" decoding="async">` : ''}</span><div><h3>${esc(s.title)}</h3><p>${esc(s.line)}</p></div></li>`; }).join('');
 const howSheet = $('#how-sheet');
 const renderSheet = () => { if (howSheet) sheetMod.render(howSheet, withState({ size: 'm' }), { lite: true }); };
 if (howSheet) new ResizeObserver(() => renderSheet()).observe(howSheet);
@@ -413,45 +419,7 @@ const FALLBACK = {
 /* ============================================================ 5 · 6 · 10 mounts ============================================================ */
 const ixMounts = Promise.all([FALLBACK.quiz($('#hero-panel')).then(api => { IX.quiz = api; })]);   /* world 2026-10-15: the illustrated process strip is gone */
 
-/* ============================================================== 7 · BESTSELLERS ============================================================== */
-const best = data.designs.designs.filter(d => d.bestseller).sort((a, b) => (a.bestsellerRank || 99) - (b.bestsellerRank || 99)).slice(0, 8);
-const rail = $('#best-rail');
-rail.innerHTML = best.map((d, i) => { const from = fromAny(d); const text = (d.lines || []).join('\n') || d.name; return `<a class="c-card" href="/lit-neon-preview/rework/product.html?id=${encodeURIComponent(d.id)}" data-qa="home.best.card" data-id="${esc(d.id)}" data-i="${i}" aria-label="${esc(d.alt || d.name)}"><span class="media" data-composite><img class="lit" src="/lit-neon-preview/rework/assets/img/cards/${esc(d.id)}/lit-800.avif" alt="" loading="lazy" decoding="async"><img class="off" src="/lit-neon-preview/rework/assets/img/cards/${esc(d.id)}/off-800.avif" alt="" loading="lazy" decoding="async"><span class="ln-tile"></span>${pillRendered()}${d.new ? `<span class="c-pill c-pill--new">${esc(t('pills.new', {}, 'New'))}</span>` : ''}<button type="button" class="c-btn c-btn--ghost c-btn--md quick" data-quick="${esc(d.id)}" data-qa="home.best.quick">${esc(t('best.quick', {}, 'Quick view'))}</button></span><span class="eyebrow">${esc((d.collections || [])[0] ? (byId(d.collections[0])?.name || '') : '')}</span><span class="title">${esc(d.name)}</span><span class="from" data-i="${i}">${from != null ? esc(t('best.from', { from: gbp(from) })) : ''}</span></a>`; }).join('');
-function paintBestFrom() { best.forEach((d, i) => { const from = fromAny(d); const el = $(`.c-card .from[data-i="${i}"]`, rail); if (el) el.textContent = from != null ? t('best.from', { from: gbp(from) }) : ''; }); }
-const bestNeons = best.map((d, i) => { const card = $(`.c-card[data-i="${i}"]`, rail); const lit = card.querySelector('img.lit'), off = card.querySelector('img.off'); let gone = 0; const fail = () => { if (++gone) { card.classList.remove('has-img'); lit.remove(); off.remove(); } }; lit.addEventListener('error', fail, { once: true }); off.addEventListener('error', fail, { once: true }); lit.addEventListener('load', () => card.classList.add('has-img'), { once: true });
-  const n = R.mountNeon(card.querySelector('.ln-tile'), withState({ text: (d.lines || []).join('\n') || d.name, font: d.font, colour: d.colour, icon: d.icon || '', iconPos: d.iconPos || 'above', colours: null }), { fitW: .78, fitH: .6, lit: true, spill: .3, strike: false });
-  const sc = sceneOf(d.scene); card.querySelector('.ln-tile').style.setProperty('--tile-bg', sc && sc.light === 'warm' ? 'var(--surface-2)' : 'var(--ink)');
-  card.addEventListener('pointerenter', () => { if (hoverable()) n.setLit(false); }); card.addEventListener('pointerleave', () => n.setLit(true)); return n; });
-const rails = { step: () => (rail.querySelector('.c-card')?.getBoundingClientRect().width || 300) + (parseFloat(getComputedStyle(rail).columnGap) || 16) };
-$('#best-prev').addEventListener('click', () => rail.scrollBy({ left: -rails.step(), behavior: R.reducedMotion() ? 'auto' : 'smooth' }));
-$('#best-next').addEventListener('click', () => rail.scrollBy({ left: rails.step(), behavior: R.reducedMotion() ? 'auto' : 'smooth' }));
-const paintProgress = () => { const max = rail.scrollWidth - rail.clientWidth; const w = Math.max(.12, rail.clientWidth / rail.scrollWidth); const x = max > 0 ? rail.scrollLeft / max : 0; const bar = $('#best-progress'); bar.style.width = (w * 100) + '%'; bar.style.transform = `translateX(${x * (100 / w - 100)}%)`; $('#best-prev').disabled = rail.scrollLeft <= 2; $('#best-next').disabled = rail.scrollLeft >= max - 2; };
-rail.addEventListener('scroll', paintProgress, { passive: true }); window.addEventListener('resize', debounce(paintProgress, 120)); paintProgress();
-rail.addEventListener('click', e => { const q = e.target.closest('[data-quick]'); if (!q) return; e.preventDefault(); e.stopPropagation(); quickView(q.dataset.quick, q); });
-let quickSheet = null, quickStage = null;
-function quickView(id, opener) {
-  const d = data.designs.designs.find(x => x.id === id); if (!d) return;
-  let st = withState({ text: (d.lines || []).join('\n') || d.name, font: d.font, colour: d.colour, icon: d.icon || '', iconPos: d.iconPos || 'above', colours: null, size: 'm', scene: d.scene, backing: 'cut', board: 'clear' });
-  if (!quickSheet) quickSheet = ui.sheet({ title: d.name, qa: 'home.quick', body: '<div class="hx-quick"></div>', onClose: () => { quickStage && quickStage.destroy(); quickStage = null; } });
-  quickSheet.el.querySelector('.c-dialog__head h2, .c-dialog__head .title, .c-dialog__head [class*="title"]')?.replaceChildren(document.createTextNode(d.name));
-  const box = quickSheet.body().querySelector('.hx-quick');
-  const paint = () => {
-    const p = pricing.price(st); const cards = pricing.sizeCards(st, d.scene).filter(c => c.id !== 'custom');
-    box.innerHTML = `<div class="hx-quick__stage" data-qa="home.quick.stage"></div><p class="hx-quick__blurb">${esc(d.blurb || '')}</p>
-      <div class="hx-quick__opts"><h4>${esc(t('best.quickSize', {}, 'Size'))}</h4><div class="c-chips" role="group" aria-label="${esc(t('best.quickSize', {}, 'Size'))}">${cards.map(c => `<button type="button" class="c-chip" data-size="${c.id}" data-qa="home.quick.size" aria-pressed="${c.id === st.size}" ${c.available ? '' : `disabled data-reason="${esc(c.reason || 'Not available at this size')}"`}>${esc(c.name)}${c.payable != null ? ` · ${gbp(c.payable)}` : ''}</button>`).join('')}</div>
-      <h4>${esc(t('best.quickColour', {}, 'Colour'))}</h4><div class="c-swatches" role="group" aria-label="${esc(t('best.quickColour', {}, 'Colour'))}">${swatchesHtml('home.quick.colour', st.colour)}</div></div>
-      <div class="hx-quick__row"><div class="c-price c-price--dock" data-qa="home.quick.price"><div class="amount">${p.kind === 'price' ? gbp(p.payable) : esc(t('price.quote', {}, 'Quote'))}</div>${p.kind === 'price' && p.promoLine ? `<div class="promo">${esc(p.promoLine)}</div>` : ''}<div class="reason">${p.kind === 'price' ? esc(fmtDims(p.dims.W, p.dims.H)) : esc(pricing.quoteReason(p))}</div></div><button type="button" class="c-btn c-btn--primary c-btn--lg" data-qa="home.quick.add" ${p.kind === 'price' ? '' : 'disabled'}>${esc(t('best.quickAdd', {}, 'Add to basket'))}</button></div>
-      <p class="hx-quick__returns">${esc(t('best.quickReturns'))}</p>
-      <div class="cluster"><a class="c-btn c-btn--ghost" href="/lit-neon-preview/rework/product.html?id=${encodeURIComponent(d.id)}" data-qa="home.quick.open">${esc(t('best.quickOpen', {}, 'See the full page'))}</a><a class="c-btn c-btn--text" href="${router.builderLink(st)}" data-qa="home.quick.custom"><span class="label">${esc(t('best.quickCustom', {}, 'Make it custom'))}</span></a></div>`;
-    quickStage && quickStage.destroy(); quickStage = stage.mount(box.querySelector('.hx-quick__stage'), { frame: 'card', scene: d.scene, design: st, qa: 'home.quick', interactive: false });
-  };
-  box.onclick = e => {
-    const s = e.target.closest('[data-size]'); if (s && !s.disabled) { st = withState(Object.assign({}, st, { size: s.dataset.size })); paint(); return; }
-    const c = e.target.closest('[data-qa="home.quick.colour"]'); if (c) { st = withState(Object.assign({}, st, { colour: c.dataset.id })); paint(); return; }
-    const a = e.target.closest('[data-qa="home.quick.add"]'); if (a) { const r = basket.add({ kind: 'ready', state: st, meta: { design: d.id } }); analytics.track('builder_add_to_basket', { kind: 'ready', design: d.id }); ui.flashSuccess(a, t('ui.added', {}, 'Added ✓')); setTimeout(() => { quickSheet.close(); drawer && drawer.open(); }, 600); }
-  };
-  paint(); quickSheet.open(opener);
-}
+/* ============================================================== 7 · BESTSELLERS: removed from the homepage (owner, 2026-10-16); the rail lives on /lit-neon-preview/rework/shop.html ============================================================== */
 
 /* ============================================================== 9 · YOUR LOGO ============================================================== */
 function logoBand() {
@@ -488,7 +456,7 @@ logoBand();
 })();
 
 /* ================================================================ wiring ================================================================ */
-function refreshAll() { R.refitAll(); renderSheet(); paintShopMeta(); paintBestFrom(); logoBand(); }
+function refreshAll() { R.refitAll(); renderSheet(); paintShopMeta(); logoBand(); }
 window.addEventListener('resize', debounce(() => R.refitAll(), 120));
 await ixMounts;
 document.dispatchEvent(new CustomEvent('ln:home-ready'));

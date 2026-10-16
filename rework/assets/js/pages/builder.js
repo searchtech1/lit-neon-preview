@@ -27,7 +27,7 @@ const RULES = globalThis.LIT_RULES;
 const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const t = (k, v, f) => copy.t(k, v, f);
 const icon = ui.icon;
-const STEPS = ['words', 'lettering', 'colour', 'size', 'backing', 'fitting', 'review'];
+const STEPS = ['words', 'lettering', 'colour', 'size', 'backing', 'fitting', 'symbol', 'review'];   /* owner 2026-10-16: text first, lettering second, the symbol picker last */
 const STEP_ICONS = { words: 'pencil', lettering: 'drawing', colour: 'image', size: 'ruler', backing: 'box', fitting: 'standoff', review: 'check' };
 const SYMBOL_FOR_GLYPH = { '💍': 'ring', '❤': 'heart', '♥': 'heart', '❤️': 'heart', '💕': 'twohearts', '💞': 'twohearts', '💖': 'heart', '🥂': 'champagne', '🍾': 'champagne', '🌙': 'moon', '☾': 'moon', '⚡': 'bolt', '🍸': 'cocktail', '🍹': 'cocktail', '⭐': 'star', '★': 'star', '☆': 'star', '✨': 'star' };
 const RULER_CYCLE = ['cm', 'in', 'off'];
@@ -82,7 +82,7 @@ let learnDone = false;
   stage.loadScenes().then(list => { pricing.setScenes(list); paintSceneButton(); paintAll(); });
 
   renderToolbar(); renderTabs(); renderRail();
-  renderWords(); renderLettering(); renderColour(); renderSize(); renderBacking(); renderFitting(); renderReview();
+  renderWords(); renderLettering(); renderColour(); renderSize(); renderBacking(); renderFitting(); renderSymbol(); renderReview();
   wireDock(); wireShell(); wireSpy();
   applyView(design.view, true);
   update({ silent: true });
@@ -292,21 +292,12 @@ function renderWords() {
       <div class="b-counters" id="b-counters" aria-live="polite"></div>
       <div class="b-note" id="b-words-note" hidden role="status" aria-live="polite" data-qa="builder.words.note"></div>
     </div>
-    <div class="b-group">
-      <span class="b-label"><span>${esc(t('words.symbols'))}</span><span class="sub">${esc(t('words.symbolsHelp'))}</span></span>
-      <div class="b-symbols" role="group" aria-label="${esc(t('words.symbols'))}" id="b-symbols">
-        ${['', ...R.OPTIONS.symbols].map(id => `<button type="button" class="b-symbol" aria-pressed="${id === design.icon}" data-icon="${id}" data-qa="builder.words.symbol" data-id="${id || 'none'}">${id ? R.iconSvg(id, null, '', '') : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg>'}<span><span class="name">${esc(t(`words.symbolNames.${id || 'none'}`))}</span><span class="delta" data-delta></span></span></button>`).join('')}
-      </div>
-      <div class="c-seg b-iconpos" role="group" aria-label="${esc(t('words.position'))}" id="b-iconpos" hidden><button type="button" aria-pressed="true" data-pos="above" data-qa="builder.words.symbolpos.above">${esc(t('words.above'))}</button><button type="button" aria-pressed="false" data-pos="inline" data-qa="builder.words.symbolpos.inline">${esc(t('words.inline'))}</button></div>
-    </div>
     <a class="b-logocard" href="/lit-neon-preview/rework/upload.html?from=builder" data-qa="builder.words.logocard">${icon('upload')}<span><b>${esc(t('words.logoCard'))}</b><span>${esc(t('words.logoCardLine', { hours: facts.has('mockupHours') ? facts.value('mockupHours') : '' }))}</span></span>${icon('arrow-right')}</a>`;
   const ta = $('#b-words'); paintWordsValue();
   ta.addEventListener('beforeinput', e => { lastWords = ta.value; ta._sel = [ta.selectionStart, ta.selectionEnd]; ta._type = e.inputType; });
   ta.addEventListener('input', onWordsInput);
   ta.addEventListener('blur', () => { const cleaned = R.resolve(design).clean.text; if (cleaned !== ta.value) { ta.value = cleaned; design.text = cleaned; update(); } });
   $('#b-words-clear').addEventListener('click', () => { ta.value = ''; design.text = ''; design.icon = ''; update(); ta.focus(); });
-  $('#b-symbols').addEventListener('click', e => { const b = e.target.closest('[data-icon]'); if (!b) return; setDesign({ icon: b.dataset.icon }); stageApi.strike(); });
-  $('#b-iconpos').addEventListener('click', e => { const b = e.target.closest('[data-pos]'); if (!b) return; setDesign({ iconPos: b.dataset.pos }); });
 }
 function paintWordsValue() { const ta = $('#b-words'); if (ta && ta.value !== design.text) ta.value = design.text; }
 function onWordsInput() {
@@ -420,13 +411,13 @@ function renderLettering() {
     <p class="b-help">${esc(t('lettering.help'))}</p>
     <div class="c-chips" role="group" aria-label="${esc(t('lettering.label'))}" id="b-styles">${styles.map(s => `<button type="button" class="c-chip" aria-pressed="${s === 'all'}" data-style="${s}" data-qa="builder.font.style" data-id="${s}">${esc(t(`lettering.styles.${s}`, {}, s))}</button>`).join('')}</div>
     <div class="b-tiles" id="b-tiles" role="group" aria-label="${esc(t('lettering.label'))}">${faces.map(f => `<button type="button" class="b-tile" aria-pressed="${f.id === design.font}" data-font="${f.id}" data-style="${f.style || 'script'}" aria-label="${esc(t('a11y.tile', { face: f.name }))}" data-qa="builder.font.tile" data-id="${f.id}"><span class="b-tile__neon" data-neon></span><span class="b-tile__name"><span>${esc(f.name)}</span><span class="note" data-note></span></span>${f.id === 'soho' ? ui.pill('new', t('lettering.mostChosen')) : ''}</button>`).join('')}</div>`;
-  $$('#b-tiles .b-tile').forEach(b => { tiles.set(b.dataset.font, R.mountNeon(b.querySelector('[data-neon]'), { ...design, font: b.dataset.font }, { lit: true, fitW: .88, fitH: .72, spill: .3 })); });
+  $$('#b-tiles .b-tile').forEach(b => { tiles.set(b.dataset.font, R.mountNeon(b.querySelector('[data-neon]'), { ...design, font: b.dataset.font, text: R.fontOf(b.dataset.font).name, icon: '', colours: null }, { lit: true, fitW: .88, fitH: .72, spill: .3 })); });
   $('#b-tiles').addEventListener('click', e => { const b = e.target.closest('[data-font]'); if (!b) return; setDesign({ font: b.dataset.font }); stageApi.strike(); });
   $('#b-styles').addEventListener('click', e => { const b = e.target.closest('[data-style]'); if (!b) return; $$('#b-styles .c-chip').forEach(x => x.setAttribute('aria-pressed', String(x === b))); $$('#b-tiles .b-tile').forEach(tl => { tl.hidden = b.dataset.style !== 'all' && tl.dataset.style !== b.dataset.style; }); R.refitAll(); });
 }
 function paintLettering() {
   const res = R.resolve(design); const sizeName = res.sizeId === 'custom' ? t('size.custom') : R.sizeOf(res.sizeId).name;
-  $$('#b-tiles .b-tile').forEach(b => { const f = R.fontOf(b.dataset.font); b.setAttribute('aria-pressed', String(f.id === design.font)); const m = tiles.get(f.id); if (m) m.update({ ...design, font: f.id, colours: null }); const thin = (f.minLetterCm || 0) > res.letterCm; const n = b.querySelector('[data-note]'); n.textContent = thin ? t('lettering.thinAtSmall', { size: sizeName }) : ''; n.title = thin ? t('lettering.thinNote', { face: f.name, min: f.minLetterCm, size: sizeName }) : ''; });
+  $$('#b-tiles .b-tile').forEach(b => { const f = R.fontOf(b.dataset.font); b.setAttribute('aria-pressed', String(f.id === design.font)); const m = tiles.get(f.id); if (m) m.update({ ...design, font: f.id, text: f.name, icon: '', colours: null }); const thin = (f.minLetterCm || 0) > res.letterCm; const n = b.querySelector('[data-note]'); n.textContent = thin ? t('lettering.thinAtSmall', { size: sizeName }) : ''; n.title = thin ? t('lettering.thinNote', { face: f.name, min: f.minLetterCm, size: sizeName }) : ''; });
 }
 
 /* ====================================================================== step 3 · colour ====================================================================== */
@@ -505,12 +496,15 @@ function renderSize() {
     <div class="b-label"><span>${esc(t('size.label'))}</span><div class="c-seg b-unit" role="group" aria-label="Units" id="b-unit"><button type="button" aria-pressed="${design.unit !== 'in'}" data-unit="cm" data-qa="builder.size.unit.cm">${esc(t('size.unitCm'))}</button><button type="button" aria-pressed="${design.unit === 'in'}" data-unit="in" data-qa="builder.size.unit.in">${esc(t('size.unitIn'))}</button></div></div>
     <p class="b-help">${esc(t('size.help'))}</p>
     <div class="c-sizes b-sizes" id="b-sizes" role="group" aria-label="${esc(t('size.label'))}"></div>
+    <div class="b-group b-tube"><span class="b-label"><span>${esc(t('size.tubeLabel'))}</span><span class="sub">${esc(t('size.tubeHelp'))}</span></span>
+      <div class="c-seg c-seg--lg" role="group" aria-label="${esc(t('size.tubeLabel'))}" id="b-tube"><button type="button" aria-pressed="${design.tube !== '12'}" data-tube="8" data-qa="builder.size.tube.8">${esc(t('size.tube8'))}</button><button type="button" aria-pressed="${design.tube === '12'}" data-tube="12" data-qa="builder.size.tube.12">${esc(t('size.tube12'))} <span class="delta" data-tube-delta></span></button></div></div>
     <div class="b-custom__slider c-range" id="b-custom" hidden data-qa="builder.size.custom.panel">
       <label class="b-label" for="b-width"><span>${esc(t('size.custom'))}</span><span class="readout" data-qa="builder.size.custom.readout"></span></label>
       <input type="range" id="b-width" min="${L.customMinCm}" max="${L.customMaxCm}" step="${L.customStepCm}" value="60" data-qa="builder.size.custom.slider">
       <p class="b-help">${esc(t('size.customHint'))}</p>
     </div>`;
   $('#b-sizes').addEventListener('click', e => { const b = e.target.closest('[data-size]'); if (!b || b.disabled) return; const id = b.dataset.size; if (id === 'custom') { const res = R.resolve(design); const letterCm = design.custom ? design.custom.letterCm : R.sizeOf(design.size === 'custom' ? 'm' : design.size).letterCm; setDesign({ size: 'custom', custom: { letterCm } }); $('#b-width').value = String(Math.round((res.dims ? res.dims.W : 60) / 5) * 5); } else setDesign({ size: id }); });
+  $('#b-tube').addEventListener('click', e => { const b = e.target.closest('[data-tube]'); if (!b) return; setDesign({ tube: b.dataset.tube }); stageApi.strike(); });
   $('#b-unit').addEventListener('click', e => { const b = e.target.closest('[data-unit]'); if (!b) return; design.unit = b.dataset.unit; rulers = b.dataset.unit; stageApi.setView({ rulers, unit: rulers }); paintToolbar(); update(); });
   ui.range($('#b-custom'), { text: v => t('size.customReadout', { width: fmtLen(v, design.unit), letter: pricing.letterCmForWidth(design, v) || '—' }), onInput: v => { const letterCm = pricing.letterCmForWidth(design, v); if (letterCm) setDesign({ size: 'custom', custom: { letterCm } }, { heavy: true }); } });
 }
@@ -527,6 +521,7 @@ function paintSize() {
   const panel = $('#b-custom'); panel.hidden = design.size !== 'custom';
   if (design.size === 'custom') { const res = R.resolve(design); const w = res.dims ? Math.round(res.dims.W / 5) * 5 : 60; const inp = $('#b-width'); if (Math.abs(+inp.value - w) > 2 && document.activeElement !== inp) { inp.value = String(Math.max(+inp.min, Math.min(+inp.max, w))); } inp.setAttribute('aria-valuetext', t('size.customReadout', { width: fmtLen(+inp.value, unit), letter: res.letterCm })); $('#b-custom .readout').textContent = t('size.customReadout', { width: fmtLen(res.dims ? res.dims.W : +inp.value, unit), letter: res.letterCm }); }
   $$('#b-unit [data-unit]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.unit === unit)));
+  $$('#b-tube [data-tube]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.tube === (design.tube === '12' ? '12' : '8')))); const td = $('[data-tube-delta]'); if (td) { const dl = pricing.tubeDelta(design); td.textContent = dl ? fmtDelta(dl, '') : ''; }
 }
 
 /* ====================================================================== step 5 · backing ====================================================================== */
@@ -579,7 +574,23 @@ function paintFitting() {
   $$('#b-hangs [data-hang]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.hang === design.hang)));
 }
 
-/* ====================================================================== step 7 · review ====================================================================== */
+
+/* ====================================================================== step 7 · symbol (moved to the end, owner 2026-10-16) ====================================================================== */
+function renderSymbol() {
+  $('#body-symbol').innerHTML = `
+    <div class="b-group">
+      <span class="b-label"><span>${esc(t('words.symbols'))}</span><span class="sub">${esc(t('words.symbolsHelp'))}</span></span>
+      <div class="b-symbols" role="group" aria-label="${esc(t('words.symbols'))}" id="b-symbols">
+        ${['', ...R.OPTIONS.symbols].map(id => `<button type="button" class="b-symbol" aria-pressed="${id === design.icon}" data-icon="${id}" data-qa="builder.words.symbol" data-id="${id || 'none'}">${id ? R.iconSvg(id, null, '', '') : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg>'}<span><span class="name">${esc(t(`words.symbolNames.${id || 'none'}`))}</span><span class="delta" data-delta></span></span></button>`).join('')}
+      </div>
+      <div class="c-seg b-iconpos" role="group" aria-label="${esc(t('words.position'))}" id="b-iconpos" hidden><button type="button" aria-pressed="true" data-pos="above" data-qa="builder.words.symbolpos.above">${esc(t('words.above'))}</button><button type="button" aria-pressed="false" data-pos="inline" data-qa="builder.words.symbolpos.inline">${esc(t('words.inline'))}</button></div>
+    </div>
+`;
+  $('#b-symbols').addEventListener('click', e => { const b = e.target.closest('[data-icon]'); if (!b) return; setDesign({ icon: b.dataset.icon }); stageApi.strike(); });
+  $('#b-iconpos').addEventListener('click', e => { const b = e.target.closest('[data-pos]'); if (!b) return; setDesign({ iconPos: b.dataset.pos }); });
+}
+
+/* ====================================================================== step 8 · review ====================================================================== */
 function renderReview() {
   $('#body-review').innerHTML = `
     <p class="b-help">${esc(t('review.help'))}</p>
@@ -604,7 +615,7 @@ function paintReview() {
      The size row is the one cell with markup, so it is assembled from escaped pieces. */
   const rows = [[t('review.rows.words'), esc(res.words || '—')], [t('review.rows.lettering'), esc(res.font.name)], [t('review.rows.colour'), esc(colourText)], [t('review.rows.jacket'), esc(res.jacket.sub)], [t('review.rows.size'), `${esc(res.sizeId === 'custom' ? t('size.custom') : R.sizeOf(res.sizeId).name)} · <span class="mono">${esc(res.dims ? fmtDims(res.dims.W, res.dims.H, design.unit) : '—')}</span>`]];
   if (design.icon) rows.push([t('review.rows.symbol'), esc(`${t(`words.symbolNames.${design.icon}`)}, ${design.iconPos === 'inline' ? t('words.inline').toLowerCase() : t('words.above').toLowerCase()}`)]);
-  rows.push([t('review.rows.backing'), esc(res.backing.name)], [t('review.rows.finish'), esc(`${res.finish.name} acrylic`)], [t('review.rows.hangs'), esc(design.backing === 'stand' ? t('backing.stand') : res.hang.name)], [t('review.rows.where'), esc(res.use.name)], [t('review.rows.plug'), esc(t('review.plugValue'))]);
+  rows.push([t('review.rows.tube'), esc(design.tube === '12' ? t('size.tube12') : t('size.tube8'))], [t('review.rows.backing'), esc(res.backing.name)], [t('review.rows.finish'), esc(`${res.finish.name} acrylic`)], [t('review.rows.hangs'), esc(design.backing === 'stand' ? t('backing.stand') : res.hang.name)], [t('review.rows.where'), esc(res.use.name)], [t('review.rows.plug'), esc(t('review.plugValue'))]);
   $('#b-spec').innerHTML = rows.map(([k, v]) => `<tr><th>${esc(k)}</th><td>${v}</td></tr>`).join('');
   $('#b-review-rows').innerHTML = breakdownRows(false);
   $('#b-review-delivery').innerHTML = deliveryMarkup(pricing.deliveryLine(router.postcode.get()), 'builder.review');
@@ -613,7 +624,7 @@ function paintReview() {
 }
 function breakdownRows(withEdit) {
   const b = pricing.breakdown(design); if (!b.rows.length) return '';
-  const label = r => r.id === 'base' ? r.label : r.id === 'symbol' ? `${t('dock.rows.symbol')} · ${t(`words.symbolNames.${design.icon}`)}` : r.id === 'rgb' ? t('dock.rows.rgb') : r.id === 'colours' ? `${t('dock.rows.colours')} · ${r.label}` : r.id === 'backing' ? `${t('dock.rows.backing')} · ${r.label}` : r.id === 'finish' ? `${t('dock.rows.finish')} · ${r.label}` : r.label;
+  const label = r => r.id === 'base' ? r.label : r.id === 'symbol' ? `${t('dock.rows.symbol')} · ${t(`words.symbolNames.${design.icon}`)}` : r.id === 'rgb' ? t('dock.rows.rgb') : r.id === 'colours' ? `${t('dock.rows.colours')} · ${r.label}` : r.id === 'tube' ? t('dock.rows.tube') : r.id === 'backing' ? `${t('dock.rows.backing')} · ${r.label}` : r.id === 'finish' ? `${t('dock.rows.finish')} · ${r.label}` : r.label;
   const rows = b.rows.map(r => `<div><span>${esc(label(r))}${r.sub ? `<span class="sub">${esc(r.sub)}</span>` : ''}</span>${withEdit ? `<button type="button" class="c-btn c-btn--text" data-step="${esc(r.step)}" data-qa="builder.breakdown.edit" data-id="${r.id}"><span class="label">${esc(t('dock.edit'))}</span></button>` : ''}<b>${r.amount == null ? '—' : r.id === 'base' ? gbp(r.amount) : fmtDelta(r.amount, t('pills.included', {}, 'Included'))}</b></div>`).join('');
   const total = b.kind === 'price' ? `<div class="total"><span>${esc(t('dock.rows.total'))}${b.promoNote ? `<span class="sub promo">${esc(b.promoNote)}</span>` : ''}</span><b>${gbp(b.total)}</b></div>` : `<div class="total"><span>${esc(b.reason)}</span><b class="is-quote">${esc(t('pills.quote', {}, 'Quote'))}</b></div>`;
   return rows + total;

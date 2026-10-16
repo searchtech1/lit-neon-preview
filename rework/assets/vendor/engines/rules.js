@@ -15,6 +15,10 @@ window.LIT_RULES = {
     "maxPrice": 1500,
     "step": 5,
     "maxWidthCm": 200,
+    "tube": {
+      "8": 1,
+      "12": 1.2
+    },
     "backing": {
       "cut": 0,
       "rect": 0,
@@ -31,8 +35,8 @@ window.LIT_RULES = {
   "delivery": {
     "_placeholder": true,
     "_note": "excludedPostcodes = the owner's 2026-10-09 boundary (brief §0.6 D11): Northern Ireland, the Scottish islands, Isles of Scilly, Channel Islands and the Isle of Man only; the Highlands mainland and the Isle of Wight are delivered. Entries: area ('BT') or area+district range ('KW15-17') or single district ('IV51'). Days, cutoff hour and the bank-holiday list stay placeholders.",
-    "minDays": 10,
-    "maxDays": 14,
+    "minDays": 7,
+    "maxDays": 10,
     "cutoffHour": 14,
     "bankHolidays": [
       "2026-12-25",

@@ -29,6 +29,7 @@
     "size": "Size",
     "backing": "Backing",
     "fitting": "Fitting",
+    "symbol": "Add a symbol",
     "review": "Review"
   },
   "stepsShort": {
@@ -38,6 +39,7 @@
     "size": "Size",
     "backing": "Backing",
     "fitting": "Fitting",
+    "symbol": "Symbol",
     "review": "Review"
   },
   "stepOf": "Step {n} of {total}",
@@ -160,7 +162,7 @@
   },
   "lettering": {
     "label": "Pick a face",
-    "help": "Each tile shows your own words. Every face is a real tube path our benders follow.",
+    "help": "Each name is set in its own lettering. Pick one and your words change on the wall.",
     "styles": {
       "all": "All",
       "script": "Script",
@@ -196,6 +198,10 @@
   "size": {
     "label": "How big?",
     "help": "Sizes go by the height of a capital letter. The width follows your words.",
+    "tubeLabel": "Tube thickness",
+    "tubeHelp": "Standard tube suits most signs. The bold tube reads from further away and costs a little more.",
+    "tube8": "8 mm standard",
+    "tube12": "12 mm bold",
     "custom": "Custom width",
     "customHint": "Slide to the width you want. The letters scale with it.",
     "customReadout": "{width} wide · {letter} cm letters",
@@ -272,6 +278,7 @@
       "jacket": "When off",
       "size": "Size",
       "symbol": "Symbol",
+      "tube": "Tube",
       "backing": "Backing",
       "finish": "Finish",
       "hangs": "Hangs",
@@ -295,6 +302,7 @@
     "rows": {
       "base": "Words × lettering × size",
       "symbol": "Symbol",
+      "tube": "Bold 12 mm tube",
       "backing": "Backing",
       "finish": "Finish",
       "rgb": "Colour changing",

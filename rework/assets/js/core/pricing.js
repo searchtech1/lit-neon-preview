@@ -103,7 +103,7 @@ export function createPricing({ core: C = core, rules = RULES, resolve = resolve
     if (!res.dimsReady) return { kind: 'wait', res };
     const d = res.dimsReady;
     if (d.W > P().maxWidthCm) return { kind: 'quote', reason: 'too-wide', res, dims: d };
-    const r = C.priceFor(d, { backing: res.state.backing, finish: res.state.board, rgb: res.rgb }, P());
+    const r = C.priceFor(d, { backing: res.state.backing, finish: res.state.board, rgb: res.rgb, tube: res.state.tube }, P());
     if (r.quote) return { kind: 'quote', reason: r.reason, res, dims: d, total: r.total };
     let everyday = r.total + multicolourExtra(res);
     if (everyday > P().maxPrice) return { kind: 'quote', reason: 'over-max', res, dims: d, total: everyday };
@@ -139,16 +139,24 @@ export function createPricing({ core: C = core, rules = RULES, resolve = resolve
     const d = p.dims, rules = P();
     const base = C.priceFor(d, { backing: 'cut', finish: 'clear', rgb: false }, rules);
     const withRgb = C.priceFor(d, { backing: 'cut', finish: 'clear', rgb: res.rgb }, rules);
+    const withTube = C.priceFor(d, { backing: 'cut', finish: 'clear', rgb: res.rgb, tube: res.state.tube }, rules);
     const rows = [];
     const baseTotal = base.quote ? null : base.total;
     rows.push({ id: 'base', label: `Words × ${res.font.name} × ${res.sizeId === 'custom' ? `${res.letterCm} cm letters` : sizeOf(res.sizeId).name}`, step: 'words', amount: baseTotal, sub: `${d.W} × ${d.H} cm` });
     if (res.icon) rows.push({ id: 'symbol', label: `Symbol · ${res.icon}`, step: 'words', amount: symbolDelta(state), sub: `adds ${symbolHeightDelta(state)} cm` });
     if (res.rgb && baseTotal != null && !withRgb.quote) rows.push({ id: 'rgb', label: 'Colour changing (RGB)', step: 'colour', amount: round2(withRgb.total - baseTotal) });
+    if (res.state.tube === '12' && !withRgb.quote && !withTube.quote && withTube.total !== withRgb.total) rows.push({ id: 'tube', label: '12 mm tube', step: 'size', amount: round2(withTube.total - withRgb.total) });
     if (multicolourExtra(res)) rows.push({ id: 'colours', label: `${distinctCount(res)} colours`, step: 'colour', amount: multicolourExtra(res) });
     rows.push({ id: 'backing', label: res.backing.name, step: 'backing', amount: rules.backing[res.state.backing] || 0 });
     rows.push({ id: 'finish', label: `${res.finish.name} acrylic`, step: 'backing', amount: rules.finish[res.state.board] || 0 });
     const total = p.kind === 'price' ? p.payable : null;
     return { kind: p.kind, rows, everyday: p.kind === 'price' ? p.everyday : (p.total ?? null), payable: total, total, promo: promoLive(), promoNote: promoLive() && p.kind === 'price' ? copy('promo.everydayNote', { everyday: gbp(p.everyday), date: fmtDay(promoEndsAfter()) }) : null, reason: quoteReason(p) };
+  }
+  /** £ the bold 12 mm tube adds to this design (null when not priceable) */
+  function tubeDelta(state) {
+    const bold = price({ ...state, tube: '12' }), std = price({ ...state, tube: '8' });
+    if (bold.kind !== 'price' || std.kind !== 'price') return null;
+    return round2(bold.everyday - std.everyday);
   }
   /** £ a symbol adds to this design (difference between with and without) — "+£40" */
   function symbolDelta(state, icon = state.icon) {
@@ -326,14 +334,14 @@ export function createPricing({ core: C = core, rules = RULES, resolve = resolve
   }
   if (typeof window !== 'undefined' && !areas) loadAreas();
 
-  return { price, everyday, payable, promoLive, promoPct, promoLine, promoEndsAfter, discountRowLabel, payableFrom, breakdown, deltas, symbolDelta, symbolHeightDelta,
+  return { price, everyday, payable, promoLive, promoPct, promoLine, promoEndsAfter, discountRowLabel, payableFrom, breakdown, deltas, symbolDelta, tubeDelta, symbolHeightDelta,
     sizeCards, sizeAvailable, letterCmForWidth, verdict, setScenes, fromPrice, fromPriceDetail, fromPriceAll, bands, photo, deliveryLine, needBy, windowFrom, nextApprovalSlot,
     describeExclusions, setAreas, loadAreas, formatPostcode, postcodeStatus, quoteReason, rules: () => rules, facts: F, limits: () => ({ min: P().minPrice, max: P().maxPrice, step: P().step, maxWidthCm: P().maxWidthCm }) };
 }
 
 const pricing = createPricing();
 export default pricing;
-export const { price, everyday, payable, promoLive, promoPct, promoLine, promoEndsAfter, discountRowLabel, payableFrom, breakdown, deltas, symbolDelta, symbolHeightDelta,
+export const { price, everyday, payable, promoLive, promoPct, promoLine, promoEndsAfter, discountRowLabel, payableFrom, breakdown, deltas, symbolDelta, tubeDelta, symbolHeightDelta,
   sizeCards, sizeAvailable, letterCmForWidth, verdict, setScenes, fromPrice, fromPriceDetail, fromPriceAll, bands, photo, deliveryLine, needBy, windowFrom, nextApprovalSlot,
   describeExclusions, setAreas, loadAreas, formatPostcode, postcodeStatus, quoteReason, limits } = pricing;
 export { gbp };

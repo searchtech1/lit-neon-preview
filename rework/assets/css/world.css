@@ -257,3 +257,41 @@ body.has-stickycta .w-wa { bottom: calc(var(--stickycta-h) + 16px + env(safe-are
 /* round 5: the hero badges line up in two equal columns on phones; the mark's glow is now an SVG filter (Safari ignored the CSS one) */
 @media (max-width: 767px) { .hero--photo .hero__trust.w-badges { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-2); } .hero--photo .hero__trust.w-badges li { width: 100%; justify-content: flex-start; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; padding: 8px 10px; } .hero--photo .hero__trust.w-badges li span:last-child { overflow: hidden; text-overflow: ellipsis; } }
 .ch-brand svg { overflow: visible; }
+
+/* ===== round 6 (owner notes 2026-10-16) ===== */
+/* no stray rules: the hero trust strip and the FAQ accordion lose their inherited top borders */
+.hero--photo ul.hero__trust, .hero--photo .hero__trust { border: 0 !important; background: none !important; -webkit-backdrop-filter: none; backdrop-filter: none; min-height: 0; }
+.c-acc.w-faq, .w-faq { border-top: 0; }
+/* hero badges: a quiet three-column strip, icon in a tinted square, text left-aligned; no pills */
+.w-badges--strip, .hero--photo .hero__trust.w-badges--strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-3) var(--s-4); margin-top: var(--s-6); padding: 0; }
+.w-badges--strip li, .hero--photo .hero__trust.w-badges--strip li { border: 0; border-radius: 0; background: none; padding: 0; min-height: 0; display: flex; align-items: center; justify-content: flex-start; gap: var(--s-3); font-size: var(--t-caption); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--bone); white-space: nowrap; overflow: visible; text-overflow: clip; width: auto; }
+.w-badges--strip .ic-slot { width: 34px; height: 34px; border-radius: 8px; background: rgba(79,210,255,.12); border: 1px solid rgba(79,210,255,.22); display: grid; place-items: center; flex: none; color: var(--brass); }
+.w-badges--strip .ic-slot .ic, .w-badges--strip .ic { width: 16px; height: 16px; }
+@media (max-width: 767px) { .hero--photo .hero__trust.w-badges--strip { grid-template-columns: 1fr 1fr; gap: var(--s-3); margin-top: var(--s-4); } .hero--photo .hero__trust.w-badges--strip li { font-size: 11px; padding: 0; letter-spacing: .03em; white-space: normal; line-height: 1.2; } .w-badges--strip .ic-slot { width: 30px; height: 30px; } }
+/* header: the mockup pill reads dark on bone; the mark is 15% bigger and the nav never reaches it */
+.ch-pill, .ch-pill:hover { color: var(--night); background: var(--bone); border-color: var(--bone); }
+.ch-brand img, .ch-brand svg { height: 55px; }
+html.is-scrolled .ch-brand img, html.is-scrolled .ch-brand svg, .ch-header.is-scrolled .ch-brand img, .ch-header.is-scrolled .ch-brand svg { height: 46px; }
+@media (max-width: 1023px) { .ch-brand img, .ch-brand svg { height: 44px; } html.is-scrolled .ch-brand img, html.is-scrolled .ch-brand svg { height: 44px; } }
+.ch-nav-wrap { max-width: calc(50% - 120px); }
+/* help and inspiration stay in the drawer and footer: six nav items reach the centred mark at every width */
+.ch-nav__link[data-qa="chrome.nav.help"], .ch-nav__link[data-qa="chrome.nav.inspire"] { display: none; }
+@media (max-width: 1399px) { .ch-nav__link[data-qa="chrome.nav.weddings"] { display: none; } }
+/* how it works: a photo on every step, the number sits on the photo */
+.how__list.w-steps > li, .w-steps > li { padding: 0 0 var(--s-5); padding-inline: 0; overflow: hidden; }
+.w-step__media { display: block; aspect-ratio: 4 / 3; background: var(--night-3); border-bottom: 1px solid var(--hair); }
+.w-step__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.w-step__media.is-shot img { object-position: center top; }
+.w-steps > li::before, .how__list.w-steps > li::before { left: var(--s-3); top: var(--s-3); z-index: 1; box-shadow: 0 2px 10px rgba(0,0,0,.4); }
+.w-steps > li > div { padding: var(--s-4) var(--s-5) 0; }
+/* what you get: the real flat-lay, then one photo per item; the drawing tile is the live sheet */
+.w-kitlay { margin: 0 0 var(--s-4); border-radius: var(--r-4); overflow: hidden; border: 1px solid var(--hair); background: var(--night-3); }
+.w-kitlay img { width: 100%; height: auto; display: block; aspect-ratio: 16 / 9; object-fit: cover; }
+.w-kitlay figcaption { padding: var(--s-3) var(--s-4); color: var(--bone-2); font-size: var(--t-small); background: rgba(0,0,0,.25); border-top: 1px solid var(--hair); }
+.w-kit.w-kit--photos div { padding: 0 0 var(--s-4); padding-inline: 0; overflow: hidden; text-align: left; }
+.w-kit--photos img, .w-kit__drawing { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; margin: 0 0 var(--s-3); background: var(--night-3); border-bottom: 1px solid var(--hair); }
+.w-kit--photos b, .w-kit--photos small { display: block; padding-inline: var(--s-4); }
+.w-kit--photos b { font-size: var(--t-body); }
+@media (max-width: 480px) { .w-kit--photos b { font-size: var(--t-small); } }
+/* day / night: two real photos of the same kitchen, no drawn words */
+.w-dn__sign { display: none; }

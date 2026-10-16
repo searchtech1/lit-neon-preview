@@ -67,6 +67,7 @@ const self = globalThis;
     if (dims.W > rules.maxWidthCm) return { quote: true, reason: 'too-wide' };
     let base = rules.base + dims.W * rules.perCmWidth + dims.H * rules.perCmHeight;
     if (opts.rgb) base *= rules.rgbMultiplier;
+    if (opts.tube != null && rules.tube && hasOwn(rules.tube, String(opts.tube))) base *= rules.tube[String(opts.tube)];
     const adds = rules.backing[opts.backing] + rules.finish[opts.finish];
     const total = Math.max(rules.minPrice, ceilTo(ceilTo(base, rules.step) + adds, rules.step));
     if (!Number.isFinite(total)) throw new Error('invalid pricing rules: total is ' + total);
