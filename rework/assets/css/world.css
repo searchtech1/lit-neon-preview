@@ -401,3 +401,13 @@ body[data-page="builder"] .w-wa { display: none; }
 .ch-footer__reviews { display: flex; align-items: center; gap: var(--s-2); }
 .ch-footer__reviews .ic { width: 16px; height: 16px; color: #00B67A; flex: none; }
 .w-wa .ic { width: 30px; height: 30px; }
+/* backing cards with a photo of each style (Custom Neon shape); colour examples as real photos */
+.b-backcards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-3); }
+.b-backcard { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "img img" "txt delta"; align-items: center; gap: var(--s-2) var(--s-3); padding: 0 0 var(--s-3); overflow: hidden; text-align: left; }
+.b-backcard .b-backcard__img { grid-area: img; display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-bottom: 1px solid var(--hair); }
+.b-backcard > .ic { display: none; }
+.b-backcard > span:not(.delta) { grid-area: txt; padding-left: var(--s-4); }
+.b-backcard .delta { grid-area: delta; padding-right: var(--s-4); }
+.b-backcard[aria-checked="true"] { border-color: var(--brass); box-shadow: 0 0 0 1px var(--brass); }
+@media (max-width: 420px) { .b-backcards { grid-template-columns: 1fr; } }
+.b-example.is-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }

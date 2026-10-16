@@ -9,7 +9,11 @@ window.LIT_RULES = {
     "base": 25,
     "perCmWidth": 1,
     "perCmHeight": 1.6,
-    "rgbMultiplier": 1.25,
+    "rgbMultiplier": 1,
+    "rgbDelta": 60,
+    "symbolDelta": 12,
+    "dimmerDelta": 20,
+    "outdoorPct": 25,
     "multicolourDelta": 20,
     "minPrice": 70,
     "maxPrice": 1500,
@@ -17,20 +21,20 @@ window.LIT_RULES = {
     "maxWidthCm": 200,
     "tube": {
       "6": 1,
-      "8": 1.2
+      "8": 1
     },
     "backing": {
       "cut": 0,
-      "letter": 15,
+      "letter": 0,
       "rect": 0,
       "stand": 20
     },
     "finish": {
       "clear": 0,
-      "black": 10,
-      "white": 10,
-      "gold": 25,
-      "silver": 25
+      "black": 19,
+      "white": 19,
+      "gold": 19,
+      "silver": 19
     }
   },
   "delivery": {

@@ -103,16 +103,21 @@ export function createPricing({ core: C = core, rules = RULES, resolve = resolve
     if (!res.dimsReady) return { kind: 'wait', res };
     const d = res.dimsReady;
     if (d.W > P().maxWidthCm) return { kind: 'quote', reason: 'too-wide', res, dims: d };
-    const r = C.priceFor(d, { backing: res.state.backing, finish: res.state.board, rgb: res.rgb, tube: res.state.tube }, P());
+    /* owner 2026-10-17: a symbol is a flat extra, so the sign is priced on its lettering alone; RGB, dimmer+remote and the
+       outdoor build are flat or percentage extras inside priceFor */
+    const dP = priceDims(state, res); if (!dP) return { kind: 'wait', res };
+    const r = C.priceFor(dP, priceOpts(res), P());
     if (r.quote) return { kind: 'quote', reason: r.reason, res, dims: d, total: r.total };
     let everyday = r.total + multicolourExtra(res);
     if (everyday > P().maxPrice) return { kind: 'quote', reason: 'over-max', res, dims: d, total: everyday };
     const minOk = sizeAvailable(res);
     if (!minOk.ok) return { kind: 'quote', reason: 'too-small', note: minOk.reason, res, dims: d, total: everyday };
-    if (res.state.use === 'out') return { kind: 'quote', reason: 'outdoor', res, dims: d, indoor: everyday, total: everyday };
     const pay = payableFrom(everyday);
-    return { kind: 'price', everyday, payable: pay, promo: promoLive(), promoLine: promoLine(everyday), res, dims: d, discount: round2(everyday - pay) };
+    return { kind: 'price', everyday, payable: pay, promo: promoLive(), promoLine: promoLine(everyday), res, dims: d, outdoor: res.state.use === 'out', discount: round2(everyday - pay) };
   }
+  /** the dimensions the price is based on: the lettering without its symbol (the symbol is a flat extra) */
+  function priceDims(state, res) { if (!res.icon) return res.dimsReady; const r2 = resolve({ ...state, icon: '' }); return r2.dimsReady || null; }
+  function priceOpts(res, over = {}) { return { backing: res.state.backing, finish: res.state.board, rgb: res.rgb, tube: res.state.tube, symbol: !!res.icon, dimmer: !!res.state.dimmer, outdoor: res.state.use === 'out', ...over }; }
   /** the £5-step rules price, or null when the design is a quote / not ready */
   function everyday(state) { const p = price(state); return p.kind === 'price' ? p.everyday : null; }
   /** everyday × (1 − promoPct/100) while promoLive(), else everyday; null when not priceable */
@@ -136,19 +141,19 @@ export function createPricing({ core: C = core, rules = RULES, resolve = resolve
   function breakdown(state) {
     const p = price(state); const res = p.res;
     if (p.kind !== 'price' && p.kind !== 'quote') return { kind: p.kind, rows: [], total: null, everyday: null, payable: null, promo: false };
-    const d = p.dims, rules = P();
-    const base = C.priceFor(d, { backing: 'cut', finish: 'clear', rgb: false }, rules);
-    const withRgb = C.priceFor(d, { backing: 'cut', finish: 'clear', rgb: res.rgb }, rules);
-    const withTube = C.priceFor(d, { backing: 'cut', finish: 'clear', rgb: res.rgb, tube: res.state.tube }, rules);
+    const d = p.dims, rules = P(); const dP = priceDims(state, res) || d;
+    const base = C.priceFor(dP, { backing: 'cut', finish: 'clear', rgb: false, tube: res.state.tube }, rules);
+    const full = C.priceFor(dP, priceOpts(res), rules); const noOut = C.priceFor(dP, priceOpts(res, { outdoor: false }), rules);
     const rows = [];
     const baseTotal = base.quote ? null : base.total;
     rows.push({ id: 'base', label: `Words × ${res.font.name} × ${res.sizeId === 'custom' ? `${res.letterCm} cm letters` : sizeOf(res.sizeId).name}`, step: 'words', amount: baseTotal, sub: `${d.W} × ${d.H} cm` });
-    if (res.icon) rows.push({ id: 'symbol', label: `Symbol · ${res.icon}`, step: 'words', amount: symbolDelta(state), sub: `adds ${symbolHeightDelta(state)} cm` });
-    if (res.rgb && baseTotal != null && !withRgb.quote) rows.push({ id: 'rgb', label: 'Colour changing (RGB)', step: 'colour', amount: round2(withRgb.total - baseTotal) });
-    if (res.state.tube === '8' && !withRgb.quote && !withTube.quote && withTube.total !== withRgb.total) rows.push({ id: 'tube', label: '8 mm tube', step: 'size', amount: round2(withTube.total - withRgb.total) });
+    if (res.icon) rows.push({ id: 'symbol', label: `Symbol · ${res.icon}`, step: 'symbol', amount: rules.symbolDelta || 0, sub: `adds ${symbolHeightDelta(state)} cm` });
+    if (res.rgb) rows.push({ id: 'rgb', label: 'Colour changing (RGB)', step: 'colour', amount: rules.rgbDelta || 0 });
     if (multicolourExtra(res)) rows.push({ id: 'colours', label: `${distinctCount(res)} colours`, step: 'colour', amount: multicolourExtra(res) });
     rows.push({ id: 'backing', label: res.backing.name, step: 'backing', amount: rules.backing[res.state.backing] || 0 });
     rows.push({ id: 'finish', label: `${res.finish.name} acrylic`, step: 'backing', amount: rules.finish[res.state.board] || 0 });
+    if (res.state.dimmer) rows.push({ id: 'dimmer', label: 'Dimmer + remote', step: 'fitting', amount: rules.dimmerDelta || 0 });
+    if (res.state.use === 'out' && !full.quote && !noOut.quote) rows.push({ id: 'outdoor', label: `Outdoor build (+${rules.outdoorPct || 0}%)`, step: 'fitting', amount: round2(full.total - noOut.total) });
     const total = p.kind === 'price' ? p.payable : null;
     return { kind: p.kind, rows, everyday: p.kind === 'price' ? p.everyday : (p.total ?? null), payable: total, total, promo: promoLive(), promoNote: promoLive() && p.kind === 'price' ? copy('promo.everydayNote', { everyday: gbp(p.everyday), date: fmtDay(promoEndsAfter()) }) : null, reason: quoteReason(p) };
   }
@@ -160,10 +165,11 @@ export function createPricing({ core: C = core, rules = RULES, resolve = resolve
   }
   /** £ a symbol adds to this design (difference between with and without) — "+£40" */
   function symbolDelta(state, icon = state.icon) {
-    const withIcon = price({ ...state, icon }), without = price({ ...state, icon: '' });
-    if (withIcon.kind !== 'price' || without.kind !== 'price') return null;
-    return round2(withIcon.everyday - without.everyday);
+    const withIcon = price({ ...state, icon }); if (withIcon.kind !== 'price') return null;
+    return round2(P().symbolDelta || 0);
   }
+  /** £ the dimmer + remote adds (flat rule) */
+  function dimmerDelta() { return round2(P().dimmerDelta || 0); }
   function symbolHeightDelta(state, icon = state.icon) {
     const a = resolve({ ...state, icon }), b = resolve({ ...state, icon: '' });
     return a.dims && b.dims ? Math.max(0, a.dims.H - b.dims.H) : 0;
@@ -334,14 +340,14 @@ export function createPricing({ core: C = core, rules = RULES, resolve = resolve
   }
   if (typeof window !== 'undefined' && !areas) loadAreas();
 
-  return { price, everyday, payable, promoLive, promoPct, promoLine, promoEndsAfter, discountRowLabel, payableFrom, breakdown, deltas, symbolDelta, tubeDelta, symbolHeightDelta,
+  return { price, everyday, payable, promoLive, promoPct, promoLine, promoEndsAfter, discountRowLabel, payableFrom, breakdown, deltas, symbolDelta, tubeDelta, dimmerDelta, symbolHeightDelta,
     sizeCards, sizeAvailable, letterCmForWidth, verdict, setScenes, fromPrice, fromPriceDetail, fromPriceAll, bands, photo, deliveryLine, needBy, windowFrom, nextApprovalSlot,
     describeExclusions, setAreas, loadAreas, formatPostcode, postcodeStatus, quoteReason, rules: () => rules, facts: F, limits: () => ({ min: P().minPrice, max: P().maxPrice, step: P().step, maxWidthCm: P().maxWidthCm }) };
 }
 
 const pricing = createPricing();
 export default pricing;
-export const { price, everyday, payable, promoLive, promoPct, promoLine, promoEndsAfter, discountRowLabel, payableFrom, breakdown, deltas, symbolDelta, tubeDelta, symbolHeightDelta,
+export const { price, everyday, payable, promoLive, promoPct, promoLine, promoEndsAfter, discountRowLabel, payableFrom, breakdown, deltas, symbolDelta, tubeDelta, dimmerDelta, symbolHeightDelta,
   sizeCards, sizeAvailable, letterCmForWidth, verdict, setScenes, fromPrice, fromPriceDetail, fromPriceAll, bands, photo, deliveryLine, needBy, windowFrom, nextApprovalSlot,
   describeExclusions, setAreas, loadAreas, formatPostcode, postcodeStatus, quoteReason, limits } = pricing;
 export { gbp };

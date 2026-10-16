@@ -68,8 +68,10 @@ const self = globalThis;
     let base = rules.base + dims.W * rules.perCmWidth + dims.H * rules.perCmHeight;
     if (opts.rgb) base *= rules.rgbMultiplier;
     if (opts.tube != null && rules.tube && hasOwn(rules.tube, String(opts.tube))) base *= rules.tube[String(opts.tube)];
-    const adds = rules.backing[opts.backing] + rules.finish[opts.finish];
-    const total = Math.max(rules.minPrice, ceilTo(ceilTo(base, rules.step) + adds, rules.step));
+    const extra = (opts.rgb && rules.rgbDelta ? rules.rgbDelta : 0) + (opts.symbol && rules.symbolDelta ? rules.symbolDelta : 0) + (opts.dimmer && rules.dimmerDelta ? rules.dimmerDelta : 0);
+    const adds = rules.backing[opts.backing] + rules.finish[opts.finish] + extra;
+    let total = Math.max(rules.minPrice, ceilTo(ceilTo(base, rules.step) + adds, rules.step));
+    if (opts.outdoor && rules.outdoorPct) total = ceilTo(total * (1 + rules.outdoorPct / 100), rules.step);   /* outdoor build: a percentage of the whole sign price (owner 2026-10-17) */
     if (!Number.isFinite(total)) throw new Error('invalid pricing rules: total is ' + total);
     if (total > rules.maxPrice) return { quote: true, reason: 'over-max', total };
     return { quote: false, total };

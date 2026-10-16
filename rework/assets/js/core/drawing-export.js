@@ -249,7 +249,7 @@ export async function build(state, opts = {}) {
   /* head */
   const title = opts.title || 'Custom neon sign · drawing 1';
   g.text(fit(title, 'bold', 21, RC.x - 60), 34, 56, { font: 'bold', size: 21 });
-  g.text(`${L.lines.length || 0} line${L.lines.length === 1 ? '' : 's'} · ${res.letterCm} cm letters · about ${fmtMetres(flex)} of LED flex · drawn to scale ${fmtScale(scale)}`, 34, 74, { font: 'mono', size: 8.5, rgb: C.soft });
+  g.text(`${L.lines.length || 0} line${L.lines.length === 1 ? '' : 's'} · ${res.letterCm} cm letters · drawn to scale ${fmtScale(scale)}`, 34, 74, { font: 'mono', size: 8.5, rgb: C.soft });
   /* stamp */
   g.save(); const sx = PW - 34 - 150, sy = 34; const a = -5 * Math.PI / 180, ca = Math.cos(a), sa = Math.sin(a);
   g.raw(`1 0 0 1 ${n2(sx + 75)} ${n2(PH - (sy + 22))} cm ${n2(ca)} ${n2(sa)} ${n2(-sa)} ${n2(ca)} 0 0 cm`);
@@ -302,7 +302,7 @@ export async function build(state, opts = {}) {
 
   /* spec table */
   const rows = [['Words', words || '—'], ['Lettering', res.font.name], ['Colour', res.state.colours && !res.rgb ? res.lineColours.map((c, i) => `${c.name} (line ${i + 1}) ${c.hex}`).join(', ') : colourText + (res.rgb ? '' : ` · ${res.colour.hex}`)], ['Tube', `${res.jacket.name.toLowerCase()}`], ['Letter height', `${res.letterCm} cm`],
-    ['Overall', `${d.W} × ${d.H} cm (${cmToIn(d.W)} × ${cmToIn(d.H)} in)`], ['LED flex, est.', fmtMetres(flex)], ['Backing', `${res.backing.name}, ${res.finish.name.toLowerCase()} acrylic`],
+    ['Overall', `${d.W} × ${d.H} cm (${cmToIn(d.W)} × ${cmToIn(d.H)} in)`], ['Backing', `${res.backing.name}, ${res.finish.name.toLowerCase()} acrylic`],
     ['Hangs', `${res.use.name.toLowerCase()}, ${res.backing.id === 'stand' ? 'on its stand' : res.hang.name.toLowerCase()}`], ['Power', [F.has('psuVoltage') ? `${F.get('psuVoltage')} supply` : null, 'UK plug', 'dimmer and remote'].filter(Boolean).join(', ')]];
   if (res.icon) rows.splice(1, 0, ['Symbol', `${res.icon.replace(/^two/, 'two ')} (${res.iconPos})`]);
   if (watts != null) rows.push(['Power use', `${watts} W`]);
@@ -317,13 +317,13 @@ export async function build(state, opts = {}) {
   const notes = [`Tube path follows the centreline of each letter${res.icon ? ' and the symbol' : ''}.`,
     res.backing.id === 'cut' ? `Acrylic cut ${res.backing.margin} cm outside the lettering (dashed line).` : res.backing.id === 'stand' ? `Acrylic panel with ${res.backing.margin} cm clearance, slotted into its base (shown below the panel).` : `Acrylic panel with ${res.backing.margin} cm clearance, four brass standoffs.`,
     `Lines ${res.state.align === 'center' ? 'centred' : 'aligned ' + res.state.align}. Cable exits bottom right${F.has('cableLengthM') ? `, ${F.get('cableLengthM')} m clear` : ''}.`,
-    'All dimensions in centimetres; LED flex length is an estimate.',
+    'All dimensions in centimetres.',
     'Made in a UK workshop. You approve this drawing before anything is made.'];
   g.text('Construction notes', RC.x, ry, { font: 'bold', size: 8.5 }); ry += 12;
   notes.forEach((t, i) => { const wrapped = wrap(t, 'reg', 7.5, RC.w - 14); wrapped.forEach((ln, j) => { if (ry > TB.y - 10) return; if (!j) g.text(`${i + 1}.`, RC.x, ry, { size: 7.5, rgb: C.soft }); g.text(ln, RC.x + 12, ry, { size: 7.5, rgb: C.soft }); ry += 10; }); ry += 2; });
 
   /* title block */
-  const cells = [['Title', words || '—'], ['Acrylic', `${d.W} × ${d.H} cm`], ['LED flex', fmtMetres(flex)]];
+  const cells = [['Title', words || '—'], ['Acrylic', `${d.W} × ${d.H} cm`]];
   if (watts != null) cells.push(['Power', `${watts} W`]);
   cells.push(['Scale', `${fmtScale(scale)} on A4`], ['Date', today], ['Drawn by', 'Lit Neon'], ['Sheet', '1 of 1']);
   const widths = cells.map((c, i) => i === 0 ? 2.2 : 1); const tot = widths.reduce((s, x) => s + x, 0); let cx = TB.x;

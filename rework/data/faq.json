@@ -93,7 +93,7 @@
       "tags": [],
       "pages": ["home", "product", "help"],
       "q": "What's in the box?",
-      "a": "Your sign on its acrylic backing, a power supply with a UK plug (never a travel adaptor) and a dimmer with a remote, included free. {fact:cableLengthM}",
+      "a": "Your sign on its acrylic backing, a power supply with a UK plug (never a travel adaptor), the fixings you chose and your proof drawing. A dimmer with a remote is an optional extra in the designer. {fact:cableLengthM}",
       "links": [{ "label": "How to hang it", "href": "guides/installation.html" }],
       "keywords": ["box", "included", "contents", "dimmer", "remote", "plug"]
     },

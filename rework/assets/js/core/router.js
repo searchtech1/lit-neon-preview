@@ -4,7 +4,7 @@
    Codec: `#d=` + base64url(compact JSON with short keys, defaults omitted) — typically ≤ 120 chars (tested). */
 import { DEFAULT_DESIGN, normalise, OPTIONS } from './renderer.js';
 
-const KEYS = { text: 't', align: 'a', font: 'f', colour: 'c', colours: 'cs', jacket: 'j', size: 's', custom: 'cu', backing: 'b', board: 'bd', use: 'u', hang: 'h', icon: 'i', iconPos: 'ip', scene: 'sc', pos: 'p', night: 'n', on: 'o', view: 'v', unit: 'un', tube: 'tb' };
+const KEYS = { text: 't', align: 'a', font: 'f', colour: 'c', colours: 'cs', jacket: 'j', size: 's', custom: 'cu', backing: 'b', board: 'bd', use: 'u', hang: 'h', icon: 'i', iconPos: 'ip', scene: 'sc', pos: 'p', night: 'n', on: 'o', view: 'v', unit: 'un', tube: 'tb', dimmer: 'dm' };
 const UNKEYS = Object.fromEntries(Object.entries(KEYS).map(([k, v]) => [v, k]));
 
 export function b64e(s) { const bytes = new TextEncoder().encode(s); let bin = ''; for (const b of bytes) bin += String.fromCharCode(b); return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }

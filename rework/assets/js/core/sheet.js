@@ -100,11 +100,11 @@ export function render(container, state, opts = {}) {
   const colourText = res.state.colours ? res.lineColours.map((c, i) => `${c.name} (line ${i + 1})`).join(', ') : res.colour.name;
   container.setAttribute('aria-label', `Proof drawing: ${words}, ${res.font.name} lettering in ${colourText}, ${fmtDims(d.W, d.H)}`);
   container.querySelector('.title').textContent = opts.title || (compact ? 'Proof drawing' : 'Custom neon sign · drawing 1');
-  const sub = container.querySelector('.sub'); sub.textContent = `${lines.length} line${lines.length === 1 ? '' : 's'} · ${res.letterCm} cm letters · about ${fmtMetres(flex)} of LED flex · not to scale`; sub.hidden = (compact && SH < 320) || (narrow && SH < 420);
+  const sub = container.querySelector('.sub'); sub.textContent = `${lines.length} line${lines.length === 1 ? '' : 's'} · ${res.letterCm} cm letters · not to scale`; sub.hidden = (compact && SH < 320) || (narrow && SH < 420);
   const today = fmtDate(clock.now());
   /* spec table (customer names only) */
   const rows = compact || lite ? [] : [['Words', esc(words), 'name'], ['Lettering', esc(res.font.name)], ['Colour', esc(colourText) + (res.rgb ? '' : ` · ${res.colour.hex}`)], ['Tube', res.jacket.name.toLowerCase()],
-    ['Letter height', `${res.letterCm} cm`], ['Overall', `${d.W} × ${d.H} cm (${cmToIn(d.W)} × ${cmToIn(d.H)} in)`], ['LED flex, est.', fmtMetres(flex)], ['Backing', `${res.backing.name}, ${res.finish.name.toLowerCase()} acrylic`],
+    ['Letter height', `${res.letterCm} cm`], ['Overall', `${d.W} × ${d.H} cm (${cmToIn(d.W)} × ${cmToIn(d.H)} in)`], ['Backing', `${res.backing.name}, ${res.finish.name.toLowerCase()} acrylic`],
     ['Hangs', `${res.use.name.toLowerCase()}, ${res.backing.id === 'stand' ? 'on its stand' : res.hang.name.toLowerCase()}`], ['Power', [F.has('psuVoltage') ? `${F.get('psuVoltage')} supply` : null, 'UK plug', 'dimmer and remote'].filter(Boolean).join(', ')], ['Drawn', `${today}, sheet 1 of 1`]];
   const spec = container.querySelector('.spec'); spec.innerHTML = rows.length ? `<table>${rows.map(([k, v, cls]) => `<tr><td>${k}</td><td${cls ? ` class="${cls}"` : ''}>${v}</td></tr>`).join('')}</table>` : '';
   const notes = container.querySelector('.notes'); notes.innerHTML = lite ? '' : `<h4>Construction notes</h4><ol>
@@ -114,7 +114,7 @@ export function render(container, state, opts = {}) {
     <li>Made in a UK workshop. You approve this drawing before anything is made.</li></ol>`;
   /* title block: Title · Acrylic W×H · LED flex · Power (if confirmed) · Date · Drawn by */
   const tb = container.querySelector('.tb');
-  const cells = compact ? [['Acrylic', `${d.W} × ${d.H} cm`, 'mono'], ['LED flex', fmtMetres(flex), 'mono'], ['Date', today, 'mono']] : narrow ? [['Title', esc(words.slice(0, 24)) || '—'], ['Acrylic', `${d.W} × ${d.H} cm`, 'mono'], ['LED flex', fmtMetres(flex), 'mono'], ['Date', today, 'mono']] : [['Title', esc(words.slice(0, 40)) || '—'], ['Acrylic', `${d.W} × ${d.H} cm`, 'mono'], ['LED flex', fmtMetres(flex), 'mono']];
+  const cells = compact ? [['Acrylic', `${d.W} × ${d.H} cm`, 'mono'], ['Date', today, 'mono']] : narrow ? [['Title', esc(words.slice(0, 24)) || '—'], ['Acrylic', `${d.W} × ${d.H} cm`, 'mono'], ['Date', today, 'mono']] : [['Title', esc(words.slice(0, 40)) || '—'], ['Acrylic', `${d.W} × ${d.H} cm`, 'mono'], ['LED flex', fmtMetres(flex), 'mono']];
   if (!compact && !narrow) { if (watts != null) cells.push(['Power', `${watts} W`, 'mono']); cells.push(['Date', today, 'mono'], ['Drawn by', 'Lit Neon']); }
   tb.innerHTML = cells.map(([k, v, cls]) => `<div><small>${k}</small><b${cls ? ` class="${cls}"` : ''}>${v}</b></div>`).join('');
   /* layout */
@@ -173,12 +173,12 @@ export function svg(state, { width = 1123, height = 794 } = {}) {
   const flex = flexMetres(res);
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><rect width="100%" height="100%" fill="#F2E9DF"/><rect x="14" y="14" width="${width - 28}" height="${height - 28}" fill="none" stroke="#180E1F"/>
     <text x="30" y="46" font-family="Big Shoulders Display, Arial Narrow, sans-serif" font-weight="800" font-size="26" fill="#180E1F">Custom neon sign · drawing 1</text>
-    <text x="30" y="66" font-family="B612 Mono, monospace" font-size="11" fill="#5A4F5C">${lines.length} line${lines.length === 1 ? '' : 's'} · ${res.letterCm} cm letters · about ${fmtMetres(flex)} of LED flex · not to scale</text>
+    <text x="30" y="66" font-family="B612 Mono, monospace" font-size="11" fill="#5A4F5C">${lines.length} line${lines.length === 1 ? '' : 's'} · ${res.letterCm} cm letters · not to scale</text>
     ${backing}${icon}${text}
     <line x1="${left}" y1="${top + h + 24}" x2="${left + w}" y2="${top + h + 24}" stroke="#2F5D8A"/><text x="${left + w / 2}" y="${top + h + 40}" text-anchor="middle" font-family="B612 Mono, monospace" font-size="12" fill="#2F5D8A">${d.W} cm</text>
     <line x1="${left + w + 24}" y1="${top}" x2="${left + w + 24}" y2="${top + h}" stroke="#2F5D8A"/><text x="${left + w + 32}" y="${top + h / 2 + 4}" font-family="B612 Mono, monospace" font-size="12" fill="#2F5D8A">${d.H} cm</text>
     <g font-family="Hanken Grotesk, Arial, sans-serif" font-size="12" fill="#180E1F"><rect x="30" y="${height - 76}" width="${width - 60}" height="46" fill="none" stroke="#180E1F"/>
-      ${[['Title', res.words || '—'], ['Acrylic', `${d.W} × ${d.H} cm`], ['LED flex', fmtMetres(flex)], ['Date', fmtDate(clock.now())], ['Drawn by', 'Lit Neon']].map(([k, v], i, a) => `<text x="${40 + i * (width - 80) / a.length}" y="${height - 58}" font-size="9" fill="#5A4F5C">${k.toUpperCase()}</text><text x="${40 + i * (width - 80) / a.length}" y="${height - 40}" font-weight="600">${esc(String(v))}</text>`).join('')}</g></svg>`;
+      ${[['Title', res.words || '—'], ['Acrylic', `${d.W} × ${d.H} cm`], ['Date', fmtDate(clock.now())], ['Drawn by', 'Lit Neon']].map(([k, v], i, a) => `<text x="${40 + i * (width - 80) / a.length}" y="${height - 58}" font-size="9" fill="#5A4F5C">${k.toUpperCase()}</text><text x="${40 + i * (width - 80) / a.length}" y="${height - 40}" font-weight="600">${esc(String(v))}</text>`).join('')}</g></svg>`;
 }
 
 export default { render, svg, wattsFor };

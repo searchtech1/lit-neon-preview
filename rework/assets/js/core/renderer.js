@@ -51,7 +51,7 @@ export const OPTIONS = {
 export const DEFAULT_DESIGN = Object.freeze({
   v: 2, text: '', align: 'center', font: 'soho', colour: 'warm', colours: null, jacket: 'white', size: 'm', custom: null,
   backing: 'cut', board: 'clear', use: 'in', hang: 'screws', icon: '', iconPos: 'above', pos: {}, scene: 's00-studio-dark',
-  view: 'room', night: true, on: true, unit: 'cm', tube: '6'
+  view: 'room', night: true, on: true, unit: 'cm', tube: '6', dimmer: false
 });
 
 const byId = (arr, id) => arr.find(x => x.id === id);
@@ -81,6 +81,7 @@ export function normalise(state) {
   if (s.custom && Number.isFinite(+s.custom.letterCm)) s.custom = { letterCm: Math.max(2, Math.min(60, Math.round(+s.custom.letterCm * 2) / 2)) }; else s.custom = null;
   if (s.size === 'custom' && !s.custom) s.size = DEFAULT_DESIGN.size;
   s.tube = String(s.tube) === '8' || String(s.tube) === '12' ? '8' : '6';
+  s.dimmer = s.dimmer === true || s.dimmer === 1 || s.dimmer === '1';
   if (!byId(OPTIONS.backings, s.backing)) s.backing = 'cut';
   if (!byId(OPTIONS.finishes, s.board)) s.board = 'clear';
   if (!byId(OPTIONS.uses, s.use)) s.use = 'in';

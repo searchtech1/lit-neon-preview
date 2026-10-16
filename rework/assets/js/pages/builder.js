@@ -75,7 +75,7 @@ let learnDone = false;
   if (editUid) showEditing();
 
   /* stage */
-  stageApi = stage.mount($('#b-stage'), { frame: design.view === 'fit' ? 'closeup' : 'room', scene: design.scene, design, qa: 'builder.stage', priority: 'high', view: { rulers } });
+  stageApi = stage.mount($('#b-stage'), { frame: design.view === 'drawing' ? 'room' : 'real', scene: design.scene, design, qa: 'builder.stage', priority: 'high', view: { rulers } });   /* owner 2026-10-17: real size is the default frame */
   stageApi.on('change', e => { design.pos = e.pos; autosave(); });
   stageApi.on('wall', onWall);
   window.__builder = { get stage() { return stageApi; }, get design() { return design; } };   /* QA hook (like window.__p4) */
@@ -186,7 +186,7 @@ function applyView(v, initial = false) {
   $$('#b-view [role=tab]').forEach(b => { const on = b.dataset.view === v; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; });
   const drawingEl = $('#b-drawing'), stageEl = $('#b-stage');
   if (v === 'drawing') { drawingEl.hidden = false; stageEl.classList.add('is-hidden'); paintDrawing(); }
-  else { drawingEl.hidden = true; stageEl.classList.remove('is-hidden'); $('#b-realsize').setAttribute('aria-pressed', 'false'); stageApi.setFrame(v === 'fit' ? 'closeup' : 'room'); }
+  else { drawingEl.hidden = true; stageEl.classList.remove('is-hidden'); const real = initial || $('#b-realsize').getAttribute('aria-pressed') === 'true'; $('#b-realsize').setAttribute('aria-pressed', String(real)); stageApi.setFrame(real ? 'real' : (v === 'fit' ? 'closeup' : 'room')); }
   $('#b-realsize').hidden = v === 'drawing';
   paintToolbar();
   if (!initial) autosave();
@@ -469,9 +469,8 @@ function renderColour() {
   $('#b-twocolours').addEventListener('click', () => { const sw = $('#b-perline'); if (sw.disabled) { jumpTo('words'); showNote(t('colour.perLineNeedsLines'), 'warn', [], true); return; } togglePerLine(true); sw.focus(); });
   /* example signs in this colour: three catalogue designs, rendered, opening a lightbox of baked renders */
   const EX = [{ text: 'Open late', font: 'shoreditch' }, { text: 'Mr & Mrs', font: 'notting' }, { text: 'Cuppa first', font: 'margate' }];
-  $('#b-examples').innerHTML = EX.map((x, i) => `<button type="button" class="b-example" data-ex="${i}" aria-label="${esc(x.text)}" data-qa="builder.colour.example" data-id="${i}"><span data-exneon></span>${ui.pill('rendered')}</button>`).join('');
-  $$('#b-examples .b-example').forEach((b, i) => { examples[i] = R.mountNeon(b.querySelector('[data-exneon]'), { ...EX[i], colour: design.colour, jacket: design.jacket }, { lit: true, fitW: .8, fitH: .6 }); b.addEventListener('click', () => openExampleLightbox(EX, i)); });
   $('#b-examples').dataset.ex = JSON.stringify(EX);
+  paintExamples();
 }
 function togglePerLine(on) {
   const lines = R.resolve(design).lines;
@@ -496,7 +495,35 @@ function paintColour() {
     if (linesEl.dataset.key !== key) { linesEl.dataset.key = key; linesEl.innerHTML = res.lines.map((l, i) => `<div class="b-line" data-line="${i}"><span class="b-line__label"><span>${esc(t('words.lineLabel', { n: i + 1 }))}</span><b>${esc(l)}</b><span class="b-line__now" data-qa="builder.colour.line.name" data-line="${i}"></span></span><div class="c-swatches" role="group" aria-label="${esc(t('colour.lineLabel', { n: i + 1, text: l }))}">${R.OPTIONS.colours.filter(x => !x.rgb).map(x => `<button type="button" class="c-swatch" aria-pressed="false" style="--tube:${x.hex};--core:${x.core || '#fff'}" data-line-colour="${x.id}" aria-label="${esc(x.name)}" data-qa="builder.colour.line" data-id="${i}-${x.id}"><span class="tube"></span><span class="name">${esc(x.name)}</span></button>`).join('')}</div></div>`).join(''); }
     $$('.b-line[data-line]', linesEl).forEach(row => { const i = +row.dataset.line; const cur = (design.colours[i] || design.colour); $$('[data-line-colour]', row).forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lineColour === cur))); const now = row.querySelector('.b-line__now'); if (now) now.textContent = t('colour.lineColourNow', { name: R.colourOf(cur).name }, R.colourOf(cur).name); });
   }
-  examples.forEach((m, i) => { const EX = JSON.parse($('#b-examples').dataset.ex); m.update({ ...EX[i], colour: design.colour, jacket: design.jacket }); });
+  paintExamples();
+}
+
+/* real photos per tube colour (homepage set); renders fill in where no photo exists yet (owner 2026-10-17: "view examples" must look real) */
+const COLOUR_PHOTOS = {
+  pink: [{ f: 'hero', alt: 'after dark in hot pink on a brick wall' }, { f: 'p8', alt: 'last orders in pink above a bar table' }],
+  ice: [{ f: 'p4', alt: "kettle's on in ice blue in a kitchen" }, { f: 'p55', alt: 'the same kitchen sign at night' }],
+  warm: [{ f: 'p24', alt: 'dream big in warm white above a bed' }, { f: 'p11', alt: 'a florist logo in warm white' }, { f: 'p49', alt: 'a café logo in warm white on brick' }],
+  cool: [{ f: 'p50', alt: 'a barbershop logo in cool white' }],
+  violet: [{ f: 'p12', alt: 'game on in violet above a desk' }],
+  candy: [{ f: 'p9', alt: 'little dreamer in candy pink above a cot' }],
+  orange: [{ f: 'p3', alt: 'cheers in amber above a home bar' }],
+  gold: [{ f: 'p3', alt: 'cheers in golden yellow above a home bar' }]
+};
+let exPhotosKey = null;
+function paintExamples() {
+  const host = $('#b-examples'); if (!host) return;
+  const EX = JSON.parse(host.dataset.ex || '[]'); const photos = COLOUR_PHOTOS[design.colour] || [];
+  const key = design.colour + '|' + design.jacket;
+  if (exPhotosKey !== key) {
+    exPhotosKey = key; examples.length = 0;
+    const tiles = photos.slice(0, 3).map((p, i) => `<button type="button" class="b-example is-photo" data-photo="${i}" aria-label="${esc(p.alt)}" data-qa="builder.colour.example" data-id="p${i}"><img src="/lit-neon-preview/rework/assets/img/photos/${p.f}-800.jpg" alt="" loading="lazy" decoding="async"></button>`);
+    const need = Math.max(0, 3 - tiles.length);
+    for (let i = 0; i < need; i++) tiles.push(`<button type="button" class="b-example" data-ex="${i}" aria-label="${esc(EX[i].text)}" data-qa="builder.colour.example" data-id="${i}"><span data-exneon></span>${ui.pill('rendered')}</button>`);
+    host.innerHTML = tiles.join('');
+    $$('#b-examples .b-example[data-ex]').forEach(b => { const i = +b.dataset.ex; examples[i] = R.mountNeon(b.querySelector('[data-exneon]'), { ...EX[i], colour: design.colour, jacket: design.jacket }, { lit: true, fitW: .8, fitH: .6 }); b.addEventListener('click', () => openExampleLightbox(EX, i)); });
+    $$('#b-examples .b-example[data-photo]').forEach(b => b.addEventListener('click', () => { const items = photos.map(p => ({ src: `/lit-neon-preview/rework/assets/img/photos/${p.f}-1600.jpg`, alt: p.alt, caption: `${p.alt} · ${R.colourOf(design.colour).name}` })); lb && lb.destroy(); lb = ui.lightbox({ items, index: +b.dataset.photo, qa: 'builder.lightbox' }); lb.open(+b.dataset.photo, b); }));
+    const note = host.closest('.b-group') && host.closest('.b-group').querySelector('.b-label .sub'); if (note) note.textContent = photos.length ? t('colour.examplesPhotos', {}, 'Real photos in this colour') : t('colour.examplesNote');
+  } else { examples.forEach((m, i) => { if (m) m.update({ ...EX[i], colour: design.colour, jacket: design.jacket }); }); }
 }
 async function openExampleLightbox(EX, index) {
   const items = EX.map(x => { const r = R.bakeGlow({ ...R.DEFAULT_DESIGN, ...x, colour: design.colour, jacket: design.jacket, size: 'm' }, { ppc: 10, transparent: false, background: '#180E1F', on: design.on, night: true, maxPx: 1400 }); return { src: r ? r.canvas.toDataURL('image/png') : '', alt: `${x.text} in ${R.colourOf(design.colour).name}`, caption: `${x.text} · ${R.colourOf(design.colour).name} · ${t('scenes.placeholderNote')}` }; });
@@ -544,14 +571,15 @@ function renderBacking() {
   const rules = pricing.rules().pricing; const ICON = { cut: 'drawing', letter: 'pencil', rect: 'box', stand: 'stand' };
   $('#body-backing').innerHTML = `
     <p class="b-help">${esc(t('backing.help'))}</p>
-    <div class="c-opts" role="radiogroup" aria-label="${esc(t('backing.label'))}" id="b-backings">${R.OPTIONS.backings.map(b => `<button type="button" class="c-opt" role="radio" aria-checked="${b.id === design.backing}" data-backing="${b.id}" data-qa="builder.backing.card" data-id="${b.id}">${icon(ICON[b.id])}<span><span class="name">${esc(t(`backing.${b.id}`, {}, b.name))}</span><span class="sub">${esc(t(`backing.${b.id}Sub`, {}, b.sub))}</span></span><span class="delta${!rules.backing[b.id] ? ' is-included' : ''}">${esc(fmtDelta(rules.backing[b.id] || 0, t('pills.included', {}, 'Included')))}</span></button>`).join('')}</div>
+    <div class="c-opts b-backcards" role="radiogroup" aria-label="${esc(t('backing.label'))}" id="b-backings">${R.OPTIONS.backings.map(b => `<button type="button" class="c-opt b-backcard" role="radio" aria-checked="${b.id === design.backing}" data-backing="${b.id}" data-qa="builder.backing.card" data-id="${b.id}"><img class="b-backcard__img" src="/lit-neon-preview/rework/assets/img/photos/bk-${b.id}-800.jpg" alt="" loading="lazy" decoding="async" onerror="this.remove()">${icon(ICON[b.id])}<span><span class="name">${esc(t(`backing.${b.id}`, {}, b.name))}</span><span class="sub">${esc(t(`backing.${b.id}Sub`, {}, b.sub))}</span></span><span class="delta${!rules.backing[b.id] ? ' is-included' : ''}">${esc(fmtDelta(rules.backing[b.id] || 0, t('pills.included', {}, 'Included')))}</span></button>`).join('')}</div>
     <span class="b-label">${esc(t('backing.finishLabel'))}</span>
     <div class="b-finishes" role="group" aria-label="${esc(t('backing.finishLabel'))}" id="b-finishes">${R.OPTIONS.finishes.map(f => `<button type="button" class="b-finish" aria-pressed="${f.id === design.board}" data-finish="${f.id}" data-qa="builder.backing.finish" data-id="${f.id}"><span class="sw" style="background:${f.swatch}" aria-hidden="true"></span><span>${esc(t(`backing.finishes.${f.id}`, {}, f.name))}</span><span class="delta">${esc(fmtDelta(rules.finish[f.id] || 0, t('pills.included', {}, 'Included')))}</span></button>`).join('')}</div>
     <div><button type="button" class="c-btn c-btn--ghost" id="b-backing-example" data-qa="builder.backing.example">${icon('eye')}<span>${esc(t('backing.example'))}</span></button></div>`;
   $('#b-backings').addEventListener('click', e => { const b = e.target.closest('[data-backing]'); if (!b) return; setDesign({ backing: b.dataset.backing }); });
   $('#b-finishes').addEventListener('click', e => { const b = e.target.closest('[data-finish]'); if (!b) return; setDesign({ board: b.dataset.finish }); });
   $('#b-backing-example').addEventListener('click', () => {
-    const items = R.OPTIONS.backings.map(b => { const r = R.bakeGlow({ ...design, backing: b.id, text: design.text || 'Your words' }, { ppc: 9, transparent: false, background: '#180E1F', on: true, night: true, maxPx: 1400 }); return { src: r ? r.canvas.toDataURL('image/png') : '', alt: `${b.name}, ${R.finishOf(design.board).name}`, caption: t('backing.exampleCaption', { backing: t(`backing.${b.id}`, {}, b.name), finish: R.finishOf(design.board).name.toLowerCase() }) }; });
+    /* owner 2026-10-17: real photos of each backing style; the baked render is the fallback when a photo is missing */
+    const items = R.OPTIONS.backings.map(b => ({ src: `/lit-neon-preview/rework/assets/img/photos/bk-${b.id}-1600.jpg`, alt: `${b.name} backing`, caption: t(`backing.${b.id}`, {}, b.name) + ' · ' + t(`backing.${b.id}Sub`, {}, b.sub) }));
     lb && lb.destroy(); lb = ui.lightbox({ items, index: R.OPTIONS.backings.findIndex(b => b.id === design.backing), qa: 'builder.lightbox' }); lb.open(undefined, $('#b-backing-example'));
   });
 }
@@ -563,18 +591,21 @@ function paintBacking() {
 /* ====================================================================== step 6 · fitting ====================================================================== */
 function renderFitting() {
   const ICON = { screws: 'standoff', chains: 'chain', strips: 'strip' };
-  const outLabel = facts.has('outdoorIndicativePct') ? t('fitting.outdoorIndicative', { pct: facts.value('outdoorIndicativePct') + '%' }) : t('fitting.outdoorQuoted');
+  const rulesP = pricing.rules().pricing; const outLabel = t('fitting.outdoorIndicative', { pct: (rulesP.outdoorPct || 0) + '%' });
   $('#body-fitting').innerHTML = `
     <div class="b-group"><span class="b-label">${esc(t('fitting.where'))}</span>
       <div class="c-seg c-seg--lg" role="group" aria-label="${esc(t('fitting.where'))}" id="b-use"><button type="button" aria-pressed="${design.use === 'in'}" data-use="in" data-qa="builder.fitting.use.in">${esc(t('fitting.indoors'))}</button><button type="button" aria-pressed="${design.use === 'out'}" data-use="out" data-qa="builder.fitting.use.out">${esc(t('fitting.outdoors'))}<span class="delta">${esc(outLabel)}</span></button></div>
-      <p class="b-quotehint" id="b-outdoornote" hidden>${esc(t('fitting.outdoorNote', { hours: facts.has('mockupHours') ? facts.value('mockupHours') : '' }))}</p></div>
+      <p class="b-quotehint" id="b-outdoornote" hidden>${esc(t('fitting.outdoorNote', { pct: (rulesP.outdoorPct || 0) + '%' }))}</p></div>
+    <div class="b-group"><span class="b-label"><span>${esc(t('fitting.dimmer'))}</span><span class="sub">${esc(t('fitting.dimmerHelp'))}</span></span>
+      <div class="c-seg c-seg--lg" role="group" aria-label="${esc(t('fitting.dimmer'))}" id="b-dimmer"><button type="button" aria-pressed="${!design.dimmer}" data-dimmer="0" data-qa="builder.fitting.dimmer.no">${esc(t('fitting.dimmerNo'))}</button><button type="button" aria-pressed="${!!design.dimmer}" data-dimmer="1" data-qa="builder.fitting.dimmer.yes">${esc(t('fitting.dimmerYes'))} <span class="delta">${esc(fmtDelta(rulesP.dimmerDelta || 0, ''))}</span></button></div></div>
     <div class="b-group" id="b-hanggroup"><span class="b-label">${esc(t('fitting.how'))}</span>
       <div class="c-opts" role="radiogroup" aria-label="${esc(t('fitting.how'))}" id="b-hangs">${R.OPTIONS.hangs.map(h => { const kit = facts.get(`kitContents.${h.id}`); return `<button type="button" class="c-opt" role="radio" aria-checked="${h.id === design.hang}" data-hang="${h.id}" data-qa="builder.fitting.hang" data-id="${h.id}">${icon(ICON[h.id])}<span><span class="name">${esc(t(`fitting.${h.id}`, {}, h.name))}</span><span class="sub">${esc(kit || t(`fitting.${h.id}Sub`, {}, h.sub))}</span></span><span class="delta is-included">${esc(t('pills.included', {}, 'Included'))}</span></button>`; }).join('')}</div>
       <p class="b-help" id="b-standnote" hidden>${esc(t('fitting.standNote'))}</p></div>
     <div class="b-group"><span class="b-label">${esc(t('fitting.badges'))}</span>
-      <ul class="b-badges">${[['dimmer', t('fitting.badgeDimmer')], ['plug-uk', t('fitting.badgePlug')], ['shield', t('fitting.badgeWarranty', { years: facts.has('warrantyYears') ? facts.value('warrantyYears') : '' })], ['truck', t('fitting.badgeDelivery')]].map(([ic, txt]) => `<li>${icon(ic)}<span>${esc(txt)}</span></li>`).join('')}</ul></div>`;
+      <ul class="b-badges">${[['standoff', t('fitting.badgeFixings')], ['plug-uk', t('fitting.badgePlug')], ['shield', t('fitting.badgeWarranty', { years: facts.has('warrantyYears') ? facts.value('warrantyYears') : '' })], ['truck', t('fitting.badgeDelivery')]].map(([ic, txt]) => `<li>${icon(ic)}<span>${esc(txt)}</span></li>`).join('')}</ul></div>`;
   $('#b-use').addEventListener('click', e => { const b = e.target.closest('[data-use]'); if (!b) return; setUse(b.dataset.use); });
   $('#b-hangs').addEventListener('click', e => { const b = e.target.closest('[data-hang]'); if (!b) return; setDesign({ hang: b.dataset.hang }); });
+  $('#b-dimmer').addEventListener('click', e => { const b = e.target.closest('[data-dimmer]'); if (!b) return; setDesign({ dimmer: b.dataset.dimmer === '1' }); });
 }
 function setUse(use) {
   if (use === design.use) return;
@@ -586,6 +617,7 @@ function paintFitting() {
   $$('#b-use [data-use]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.use === design.use)));
   $('#b-outdoornote').hidden = design.use !== 'out';
   const stand = design.backing === 'stand'; $('#b-hangs').hidden = stand; $('#b-standnote').hidden = !stand;
+  $$('#b-dimmer [data-dimmer]').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.dimmer === '1') === !!design.dimmer)));
   $$('#b-hangs [data-hang]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.hang === design.hang)));
 }
 
@@ -630,7 +662,7 @@ function paintReview() {
      The size row is the one cell with markup, so it is assembled from escaped pieces. */
   const rows = [[t('review.rows.words'), esc(res.words || '—')], [t('review.rows.lettering'), esc(res.font.name)], [t('review.rows.colour'), esc(colourText)], [t('review.rows.jacket'), esc(res.jacket.sub)], [t('review.rows.size'), `${esc(res.sizeId === 'custom' ? t('size.custom') : R.sizeOf(res.sizeId).name)} · <span class="mono">${esc(res.dims ? fmtDims(res.dims.W, res.dims.H, design.unit) : '—')}</span>`]];
   if (design.icon) rows.push([t('review.rows.symbol'), esc(`${t(`words.symbolNames.${design.icon}`)}, ${design.iconPos === 'inline' ? t('words.inline').toLowerCase() : t('words.above').toLowerCase()}`)]);
-  rows.push([t('review.rows.tube'), esc(design.tube === '8' ? t('size.tube8') : t('size.tube6'))], [t('review.rows.backing'), esc(res.backing.name)], [t('review.rows.finish'), esc(`${res.finish.name} acrylic`)], [t('review.rows.hangs'), esc(design.backing === 'stand' ? t('backing.stand') : res.hang.name)], [t('review.rows.where'), esc(res.use.name)], [t('review.rows.plug'), esc(t('review.plugValue'))]);
+  rows.push([t('review.rows.tube'), esc(design.tube === '8' ? t('size.tube8') : t('size.tube6'))], [t('review.rows.backing'), esc(res.backing.name)], [t('review.rows.finish'), esc(`${res.finish.name} acrylic`)], [t('review.rows.hangs'), esc(design.backing === 'stand' ? t('backing.stand') : res.hang.name)], [t('review.rows.where'), esc(res.use.name)], [t('review.rows.dimmer'), esc(design.dimmer ? t('fitting.dimmerYes') : t('fitting.dimmerNo'))], [t('review.rows.plug'), esc(t('review.plugValue'))]);
   $('#b-spec').innerHTML = rows.map(([k, v]) => `<tr><th>${esc(k)}</th><td>${v}</td></tr>`).join('');
   $('#b-review-rows').innerHTML = breakdownRows(false);
   $('#b-review-delivery').innerHTML = deliveryMarkup(pricing.deliveryLine(router.postcode.get()), 'builder.review');
@@ -639,7 +671,7 @@ function paintReview() {
 }
 function breakdownRows(withEdit) {
   const b = pricing.breakdown(design); if (!b.rows.length) return '';
-  const label = r => r.id === 'base' ? r.label : r.id === 'symbol' ? `${t('dock.rows.symbol')} · ${t(`words.symbolNames.${design.icon}`)}` : r.id === 'rgb' ? t('dock.rows.rgb') : r.id === 'colours' ? `${t('dock.rows.colours')} · ${r.label}` : r.id === 'tube' ? t('dock.rows.tube') : r.id === 'backing' ? `${t('dock.rows.backing')} · ${r.label}` : r.id === 'finish' ? `${t('dock.rows.finish')} · ${r.label}` : r.label;
+  const label = r => r.id === 'base' ? r.label : r.id === 'symbol' ? `${t('dock.rows.symbol')} · ${t(`words.symbolNames.${design.icon}`)}` : r.id === 'rgb' ? t('dock.rows.rgb') : r.id === 'colours' ? `${t('dock.rows.colours')} · ${r.label}` : r.id === 'tube' ? t('dock.rows.tube') : r.id === 'dimmer' ? t('dock.rows.dimmer') : r.id === 'outdoor' ? r.label : r.id === 'backing' ? `${t('dock.rows.backing')} · ${r.label}` : r.id === 'finish' ? `${t('dock.rows.finish')} · ${r.label}` : r.label;
   const rows = b.rows.map(r => `<div><span>${esc(label(r))}${r.sub ? `<span class="sub">${esc(r.sub)}</span>` : ''}</span>${withEdit ? `<button type="button" class="c-btn c-btn--text" data-step="${esc(r.step)}" data-qa="builder.breakdown.edit" data-id="${r.id}"><span class="label">${esc(t('dock.edit'))}</span></button>` : ''}<b>${r.amount == null ? '—' : r.id === 'base' ? gbp(r.amount) : fmtDelta(r.amount, t('pills.included', {}, 'Included'))}</b></div>`).join('');
   const total = b.kind === 'price' ? `<div class="total"><span>${esc(t('dock.rows.total'))}${b.promoNote ? `<span class="sub promo">${esc(b.promoNote)}</span>` : ''}</span><b>${gbp(b.total)}</b></div>` : `<div class="total"><span>${esc(b.reason)}</span><b class="is-quote">${esc(t('pills.quote', {}, 'Quote'))}</b></div>`;
   return rows + total;

@@ -87,7 +87,7 @@ export function createBasket({ storage, pricing = pricingDefault, resolve = reso
       ...(line.kind === 'photo'
         ? { lines: [], lettering: null, font_family: null, size: 'photo', letter_height_cm: null, width_cm: line.meta.widthCm || null, height_cm: line.meta.heightCm || null }
         : { size: res.sizeId, letter_height_cm: res.letterCm, width_cm: res.dims ? res.dims.W : null, height_cm: res.dims ? res.dims.H : null }),
-      backing: st.backing, finish: st.board, hang: st.backing === 'stand' ? 'stand' : st.hang, use: st.use, plug: 'UK', everyday_gbp: p.everyday, qty: line.qty, ref: line.uid,
+      backing: st.backing, finish: st.board, hang: st.backing === 'stand' ? 'stand' : st.hang, use: st.use, dimmer: !!st.dimmer, plug: 'UK', everyday_gbp: p.everyday, qty: line.qty, ref: line.uid,
       ...(line.kind === 'photo' ? { photoHash: line.meta.photoHash || null, render: line.meta.png ? 'attached' : null, ledMetres: line.meta.ledMetres || null } : {}),
       ...(line.kind === 'ready' ? { design: line.meta.design || null } : {}) };
   }
@@ -98,6 +98,7 @@ export function createBasket({ storage, pricing = pricingDefault, resolve = reso
     const props = { Words: photo ? 'From your photo' : (res.words || '—'), Lettering: photo ? 'Traced from your photo' : res.font.name, Colour: colourText, Jacket: jacketOf(st.jacket).name, Size: photo ? `About ${fmtDims(spec.width_cm, spec.height_cm)}${spec.ledMetres ? ` · ${spec.ledMetres} m LED` : ''}` : `${res.sizeId === 'custom' ? 'Custom' : sizeOf(res.sizeId).name}, ${fmtDims(spec.width_cm, spec.height_cm)}`,
       Backing: backingOf(st.backing).name, Finish: finishOf(st.board).name, Hangs: st.backing === 'stand' ? 'On its stand' : hangOf(st.hang).name };
     if (st.icon) props.Symbol = `${st.icon}${st.iconPos === 'inline' ? ', inline' : ''}`;
+    props['Dimmer + remote'] = st.dimmer ? 'Yes' : 'No';
     if (postcode) props['Deliver to'] = postcode;
     props._spec = JSON.stringify(spec);
     return props;
