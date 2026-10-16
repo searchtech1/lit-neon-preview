@@ -27,7 +27,7 @@ window.LIT_RULES = {
       "cut": 0,
       "letter": 0,
       "rect": 0,
-      "stand": 20
+      "stand": 0
     },
     "finish": {
       "clear": 0,

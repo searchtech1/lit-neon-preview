@@ -421,3 +421,18 @@ body[data-page="builder"] .w-wa { display: none; }
   .has-hero-film .hero--photo .hero__media { display: none; }
   .has-hero-film .hero--photo .hero__copy { max-width: 640px; }
 }
+
+/* hero film on phones and tablets (owner 2026-10-17): the loop takes the media frame above the copy; the photo card steps aside */
+@media (max-width: 1023px) {
+  .has-hero-film .hero__video { display: block; position: relative; order: -1; aspect-ratio: 16 / 9; border-radius: var(--r-4); overflow: hidden; border: 2px solid var(--hair); box-shadow: var(--e-3), 0 0 60px -10px var(--hair-lit); background: var(--night); margin-top: var(--s-2); }
+  .has-hero-film .hero__video video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .has-hero-film .hero--photo .hero__media { display: none; }
+}
+
+/* "What's in the box" diagram (owner's pick, 2026-10-17): light illustration on the home kit section and in the designer review step */
+.b-kitfig { margin: 0; border: 1px solid var(--hair); border-radius: var(--r-3); overflow: hidden; background: #ededf0; }
+.b-kitfig img { display: block; width: 100%; height: auto; }
+.b-kitfig figcaption { padding: var(--s-3) var(--s-4); font-size: var(--t-caption); color: var(--bone-2); background: var(--night-3); border-top: 1px solid var(--hair); line-height: 1.4; }
+.w-kitlay.w-kitlay--diagram { background: #ededf0; }
+.w-kitlay.w-kitlay--diagram img { aspect-ratio: 1600 / 1075; object-fit: contain; background: #ededf0; }
+.w-kitlay.w-kitlay--diagram figcaption { background: var(--night-3); color: var(--bone-2); border-top: 1px solid var(--hair); }

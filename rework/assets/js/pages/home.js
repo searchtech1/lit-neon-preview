@@ -269,12 +269,13 @@ router.design.subscribe(rec => {
 R.onFonts(() => { heroRender(); refreshAll(); });
 fontsLoading.then(() => { heroRender(); refreshAll(); });
 
-/* hero film (owner 2026-10-17): desktop only, muted loop behind the copy; phones and reduced-motion users keep the poster photo */
+/* hero film (owner 2026-10-17): muted loop on every device (owner: "must be there on mobiles too"); full-bleed behind the copy on desktop, in the media frame on phones; reduced-motion users keep the poster photo */
 (function heroFilm() {
   const v = $('#hero-video'); if (!v) return;
-  const wants = () => matchMedia('(min-width: 1024px)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches && !(navigator.connection && navigator.connection.saveData);
+  const wants = () => !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const small = () => matchMedia('(max-width: 767px)').matches;
   let armed = false;
-  const arm = () => { if (armed || !wants()) return; armed = true; [['video/webm', v.dataset.webm], ['video/mp4', v.dataset.mp4]].forEach(([type, src]) => { if (!src) return; const el = document.createElement('source'); el.type = type; el.src = src; v.appendChild(el); }); v.load(); const p = v.play(); if (p && p.catch) p.catch(() => {}); document.documentElement.classList.add('has-hero-film'); };
+  const arm = () => { if (armed || !wants()) return; armed = true; (small() ? [['video/mp4', v.dataset.mp4Sm || v.dataset.mp4]] : [['video/webm', v.dataset.webm], ['video/mp4', v.dataset.mp4]]).forEach(([type, src]) => { if (!src) return; const el = document.createElement('source'); el.type = type; el.src = src; v.appendChild(el); }); v.load(); const p = v.play(); if (p && p.catch) p.catch(() => {}); document.documentElement.classList.add('has-hero-film'); };
   if (document.readyState === 'complete') setTimeout(arm, 400); else window.addEventListener('load', () => setTimeout(arm, 400), { once: true });
   document.addEventListener('visibilitychange', () => { if (!armed) return; document.hidden ? v.pause() : v.play().catch(() => {}); });
 })();
