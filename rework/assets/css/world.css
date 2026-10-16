@@ -411,3 +411,13 @@ body[data-page="builder"] .w-wa { display: none; }
 .b-backcard[aria-checked="true"] { border-color: var(--brass); box-shadow: 0 0 0 1px var(--brass); }
 @media (max-width: 420px) { .b-backcards { grid-template-columns: 1fr; } }
 .b-example.is-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* hero film: full-bleed muted loop behind the copy on desktop; the photo card gives way to it */
+.hero__video { display: none; }
+@media (min-width: 1024px) {
+  .has-hero-film .home .hero.hero--photo { position: relative; width: 100%; max-width: none; margin: 0; padding-inline: max(var(--gutter), calc((100% - var(--max)) / 2)); isolation: isolate; min-height: min(78vh, 760px); grid-template-columns: minmax(0, 1fr) minmax(0, .8fr); }
+  .has-hero-film .hero__video { display: block; position: absolute; inset: 0; z-index: -1; overflow: hidden; background: var(--night); }
+  .has-hero-film .hero__video video { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(.62) saturate(1.05); }
+  .has-hero-film .hero__video::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(11,10,21,.86) 0%, rgba(11,10,21,.55) 45%, rgba(11,10,21,.15) 100%), linear-gradient(180deg, rgba(11,10,21,.35), transparent 30%, transparent 70%, rgba(11,10,21,.7)); }
+  .has-hero-film .hero--photo .hero__media { display: none; }
+  .has-hero-film .hero--photo .hero__copy { max-width: 640px; }
+}

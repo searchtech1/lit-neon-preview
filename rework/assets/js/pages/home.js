@@ -269,6 +269,16 @@ router.design.subscribe(rec => {
 R.onFonts(() => { heroRender(); refreshAll(); });
 fontsLoading.then(() => { heroRender(); refreshAll(); });
 
+/* hero film (owner 2026-10-17): desktop only, muted loop behind the copy; phones and reduced-motion users keep the poster photo */
+(function heroFilm() {
+  const v = $('#hero-video'); if (!v) return;
+  const wants = () => matchMedia('(min-width: 1024px)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches && !(navigator.connection && navigator.connection.saveData);
+  let armed = false;
+  const arm = () => { if (armed || !wants()) return; armed = true; [['video/webm', v.dataset.webm], ['video/mp4', v.dataset.mp4]].forEach(([type, src]) => { if (!src) return; const el = document.createElement('source'); el.type = type; el.src = src; v.appendChild(el); }); v.load(); const p = v.play(); if (p && p.catch) p.catch(() => {}); document.documentElement.classList.add('has-hero-film'); };
+  if (document.readyState === 'complete') setTimeout(arm, 400); else window.addEventListener('load', () => setTimeout(arm, 400), { once: true });
+  document.addEventListener('visibilitychange', () => { if (!armed) return; document.hidden ? v.pause() : v.play().catch(() => {}); });
+})();
+
 /* ============================================================ 2 · THREE WAYS ============================================================ */
 const ways = copy.get('ways.cards') || [];
 const WAYS = [{ scene: 's01-living', href: '/lit-neon-preview/rework/create.html', qa: 'home.ways.design', font: 'soho', colour: 'pink', live: true }, { scene: 's11-shopwindow', href: '/lit-neon-preview/rework/upload.html', qa: 'home.ways.upload', font: 'shoreditch', colour: 'red' }, { scene: 's02-bedroom', href: '/lit-neon-preview/rework/shop.html', qa: 'home.ways.shop', font: 'brighton', colour: 'ice' }];
