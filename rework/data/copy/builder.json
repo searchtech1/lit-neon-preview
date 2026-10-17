@@ -239,7 +239,7 @@
   "label": "Acrylic backing",
   "help": "The sign is mounted on clear or coloured acrylic. Every option is drawn on the wall as you pick it.",
   "cut": "Cut to shape",
-  "cutSub": "Acrylic follows the outline of your letters",
+  "cutSub": "One smooth piece of acrylic around the whole sign",
   "letter": "Cut to letter",
   "letterSub": "Acrylic hugs each letter, almost invisible on the wall",
   "rect": "Rectangle",
@@ -261,8 +261,7 @@
    "letter": "Cut to letter · follows each letter, {margin} cm out",
    "rect": "Rectangle · a clear panel on brass standoffs",
    "stand": "Table stand · the panel slots into a base"
-  },
-  "liveAlt": "{backing} drawn around your words"
+  }
  },
  "fitting": {
   "where": "Where it will hang",
