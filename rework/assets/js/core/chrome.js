@@ -127,18 +127,24 @@ async function header() {
 function megaItem(href, label, sample, qaId, sub) {
   return `<li><a class="ch-mega__item" href="${esc(href)}" data-qa="chrome.megamenu.link" data-id="${esc(qaId)}">${mini({ ...sample, lit: false, eager: true })}<span class="meta"><span>${esc(label)}</span>${sub ? `<small>${esc(sub)}</small>` : ''}</span></a></li>`;
 }
+/* the six trust badges, the same set and wording as the homepage strip (owner 2026-10-17: consistent across the site) */
+export function trustItems() {
+  const lead = facts.has('leadTimeDays') ? (() => { const v = facts.value('leadTimeDays'); return v && typeof v === 'object' ? `${v.min}–${v.max} working days` : String(v); })() : null;
+  return [['shield', copy.t('trust.uk', {}, 'Made in the UK')], ['check', facts.get('warrantyYears') || null], ['truck', copy.t('trust.delivery', {}, 'Free GB delivery')], ['calendar', lead], ['star', facts.has('signsMade') ? facts.get('signsMade') : null], ['drawing', copy.t('trust.drawing', {}, 'You approve a drawing first')]].filter(([, t]) => t);
+}
+export function trustStrip(cls = '') {
+  return `<ul class="w-badges w-badges--strip ${cls}" aria-label="${esc(copy.t('trust.label', {}, 'What you get with every sign'))}">${trustItems().map(([ic, t]) => `<li><span class="ic-slot">${icon(ic)}</span><span>${esc(t)}</span></li>`).join('')}</ul>`;
+}
+/* Shop signs mega-menu (owner 2026-10-17 "the UI is shit"): three tidy text columns, two real-photo feature cards, the trust
+   strip and the honest reviews line. No tiny rendered thumbnails; it fits in one screen. */
 async function megaShop(el) {
-  const [collections, designsRaw] = await Promise.all([data('collections'), data('designs')]);
-  const designs = designsRaw;
   const now = clock.now();
-  const col = (title, rows, group) => `<div><h3>${esc(title)}</h3><ul>${rows.map(([id, href, cid, season]) => {
-    if (season && !clock.inSeason(season[0], season[1], now)) return '';
-    const s = sampleFor(collections, cid, id, designs);
-    return megaItem(url(href), copy.t(`mega.${group}.${id}`, {}, id), s, `${group}.${id}`);
-  }).join('')}</ul></div>`;
-  const best = designs.filter(d => d.bestseller).sort((a, b) => (a.bestsellerRank || 99) - (b.bestsellerRank || 99)).slice(0, 4);
-  const bestHtml = `<div><h3>${esc(copy.t('mega.best', {}, 'Bestsellers'))}</h3><div class="ch-mega__best">${best.map(d => `<a class="c-card" href="${url(`product.html?id=${encodeURIComponent(d.id)}`)}" data-qa="chrome.megamenu.best" data-id="${esc(d.id)}"><span class="media">${mini({ text: (d.lines || []).join(' ') || d.name, font: d.font, colour: d.colour, img: url(`assets/img/cards/${d.id}/lit-400.avif`), lit: true, large: true, eager: true })}</span><span class="title">${esc(d.name)}</span></a>`).join('')}</div></div>`;
-  el.innerHTML = `<div class="wrap">${col(copy.t('mega.room', {}, 'By room'), ROOMS, 'rooms')}${col(copy.t('mega.occasion', {}, 'By occasion'), OCCASIONS, 'occasions')}${col(copy.t('mega.style', {}, 'By style'), STYLES, 'styles')}${bestHtml}<div class="ch-mega__foot"><a href="${url('shop.html')}" data-qa="chrome.megamenu.shop.all">${esc(copy.t('mega.all', {}, 'All designs'))} ${icon('arrow-right')}</a><span class="t-caption">${esc(facts.get('deliveryFree') ? copy.t('announce.free', {}, 'Free delivery across mainland GB') : '')}</span></div></div>`;
+  const col = (title, rows, group) => `<div class="ch-mega__col"><h3>${esc(title)}</h3><ul>${rows.map(([id, href, cid, season]) => (season && !clock.inSeason(season[0], season[1], now)) ? '' : `<li><a class="ch-mega__link" href="${url(href)}" data-qa="chrome.megamenu.link" data-id="${group}.${id}">${esc(copy.t(`mega.${group}.${id}`, {}, id))}${icon('arrow-right')}</a></li>`).join('')}</ul></div>`;
+  const feats = [['design', 'create.html', 'photos/hero-800.jpg', copy.t('mega.feat.design', {}, 'Design your own'), copy.t('mega.feat.designSub', {}, 'Your words, priced live')],
+    ['logo', 'business.html', 'photos/p49-800.jpg', copy.t('mega.feat.logo', {}, 'Your logo in neon'), copy.t('mega.feat.logoSub', { hours: facts.get('mockupHours') || '' }, 'Free mockup within {hours}')]];
+  const featHtml = `<div class="ch-mega__feats">${feats.map(([id, href, img, t1, t2]) => `<a class="ch-mega__feat" href="${url(href)}" data-qa="chrome.megamenu.feature" data-id="${id}"><img src="${url('assets/img/' + img)}" alt="" loading="lazy" decoding="async"><span class="cap"><b>${esc(t1)}</b><small>${esc(t2)}</small></span></a>`).join('')}</div>`;
+  el.innerHTML = `<div class="wrap">${col(copy.t('mega.room', {}, 'By room'), ROOMS, 'rooms')}${col(copy.t('mega.occasion', {}, 'By occasion'), OCCASIONS, 'occasions')}${col(copy.t('mega.style', {}, 'By style'), STYLES, 'styles')}${featHtml}
+  <div class="ch-mega__foot">${trustStrip('ch-mega__trust')}<div class="ch-mega__end"><span class="ch-mega__reviews">${icon('trustpilot', 'ic--sm')}${esc(copy.t('footer.reviews', {}, 'Reviews on Trustpilot from our first orders'))}</span><a href="${url('shop.html')}" data-qa="chrome.megamenu.shop.all">${esc(copy.t('mega.all', {}, 'All designs'))} ${icon('arrow-right')}</a></div></div></div>`;
 }
 async function megaGuides(el) {
   const guides = await data('guides');
@@ -294,14 +300,14 @@ async function navDrawer(headerEl) {
   async function build() {
     const [collections, designs] = await Promise.all([data('collections'), data('designs')]);
     const now = clock.now();
-    const sub = (title, rows, group) => `<h4>${esc(title)}</h4>${rows.map(([id, href, cid, season]) => (season && !clock.inSeason(season[0], season[1], now)) ? '' : `<a href="${url(href)}" data-qa="chrome.drawer.link">${mini({ ...sampleFor(collections, cid, id, designs), lit: false })}<span>${esc(copy.t(`mega.${group}.${id}`, {}, id))}</span></a>`).join('')}`;
+    const sub = (title, rows, group) => `<h4>${esc(title)}</h4><div class="ch-drawer__links">${rows.map(([id, href, cid, season]) => (season && !clock.inSeason(season[0], season[1], now)) ? '' : `<a href="${url(href)}" data-qa="chrome.drawer.link">${esc(copy.t(`mega.${group}.${id}`, {}, id))}</a>`).join('')}</div>`;
     const guides = await data('guides');
     const contact = contactHref();
     const leadTime = facts.has('leadTimeDays') ? (() => { const v = facts.value('leadTimeDays'); return v && typeof v === 'object' ? `${v.min}–${v.max} working days` : String(v); })() : '';
     const body = `
 <a class="ch-drawer__row" href="${url('create.html')}" data-qa="chrome.drawer.link">${esc(copy.t('nav.design'))}${icon('arrow-right')}</a>
 <a class="ch-drawer__row" href="${url('business.html')}" data-qa="chrome.drawer.link">${esc(copy.t('nav.logo'))}${icon('arrow-right')}</a>
-<details data-qa="chrome.drawer.shop"><summary class="ch-drawer__row">${esc(copy.t('nav.shop'))}${icon('chevron-down')}</summary><div class="ch-drawer__sub">${sub(copy.t('mega.room'), ROOMS, 'rooms')}${sub(copy.t('mega.occasion'), OCCASIONS, 'occasions')}${sub(copy.t('mega.style'), STYLES, 'styles')}<a href="${url('shop.html')}" data-qa="chrome.drawer.link"><strong>${esc(copy.t('mega.all'))} →</strong></a></div></details>
+<details data-qa="chrome.drawer.shop"><summary class="ch-drawer__row">${esc(copy.t('nav.shop'))}${icon('chevron-down')}</summary><div class="ch-drawer__sub">${sub(copy.t('mega.room'), ROOMS, 'rooms')}${sub(copy.t('mega.occasion'), OCCASIONS, 'occasions')}${sub(copy.t('mega.style'), STYLES, 'styles')}<a class="ch-drawer__all" href="${url('shop.html')}" data-qa="chrome.drawer.link"><strong>${esc(copy.t('mega.all'))} →</strong></a><a class="ch-drawer__feat" href="${url('create.html')}" data-qa="chrome.drawer.feature"><img src="${url('assets/img/photos/hero-800.jpg')}" alt="" loading="lazy" decoding="async"><span><b>${esc(copy.t('mega.feat.design', {}, 'Design your own'))}</b><small>${esc(copy.t('mega.feat.designSub', {}, 'Your words, priced live'))}</small></span></a></div></details>
 <a class="ch-drawer__row" href="${url('weddings.html')}" data-qa="chrome.drawer.link">${esc(copy.t('nav.weddings'))}${icon('arrow-right')}</a>
 <details data-qa="chrome.drawer.inspire"><summary class="ch-drawer__row">${esc(copy.t('nav.inspire'))}${icon('chevron-down')}</summary><div class="ch-drawer__sub"><a href="${url('inspiration.html')}" data-qa="chrome.drawer.link">${esc(copy.t('mega.gallery'))}</a><h4>${esc(copy.t('mega.guides'))}</h4>${guides.map(g => `<a href="${url(g.href || `guides/${g.slug}.html`)}" data-qa="chrome.drawer.link">${esc(g.title)}</a>`).join('')}<a href="${url('guides.html')}" data-qa="chrome.drawer.link"><strong>${esc(copy.t('mega.allGuides'))} →</strong></a></div></details>
 <a class="ch-drawer__row" href="${url('bulk-quote.html')}" data-qa="chrome.drawer.link">${esc(copy.t('drawer.bulk'))}${icon('arrow-right')}</a>
@@ -559,6 +565,7 @@ export async function mount(opts = {}) {
       stickyCta();
       consentBanner();
       waFloat(); firstOrderPop();
+      document.querySelectorAll('.ic-slot[data-icon]:empty').forEach(el => { el.innerHTML = icon(el.dataset.icon); });   /* badge strips on every page (owner 2026-10-17) */
     }
     facts.renderBadge();
     document.dispatchEvent(new CustomEvent('ln:chrome', { detail: { page: pageOf(), promoLive: state.promoLive } }));

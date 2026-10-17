@@ -154,11 +154,23 @@
     },
     "symbolDelta": "{price} · +{cm} cm",
     "symbolNone": "No extra",
-    "position": "Symbol sits",
+    "position": "Where the symbol sits",
     "above": "Above the words",
     "inline": "Beside the words",
     "logoCard": "Have a logo or artwork?",
-    "logoCardLine": "Send it over and a designer redraws it as tube. Free mockup within {hours} hours."
+    "logoCardLine": "Send it over and a designer redraws it as tube. Free mockup within {hours} hours.",
+    "dragHint": "Tap a spot, or drag the symbol on the wall",
+    "dragNote": "Drag the symbol on the wall to place it anywhere around your words, or tap a spot below.",
+    "places": {
+      "above": "Above",
+      "below": "Below",
+      "left": "On the left",
+      "right": "On the right",
+      "tl": "Top left",
+      "tr": "Top right",
+      "bl": "Bottom left",
+      "br": "Bottom right"
+    }
   },
   "lettering": {
     "label": "Pick a face",
@@ -328,8 +340,8 @@
     "edit": "Edit",
     "reason": "{delta} · {what}",
     "reasonSize": "{name} size",
-    "reasonSymbol": "{name} symbol",
-    "reasonFont": "{name} lettering",
+    "reasonSymbol": "{name} symbol, sign resized to fit",
+    "reasonFont": "{name} lettering, sign resized to fit",
     "reasonColour": "{name}",
     "reasonBacking": "{name}",
     "reasonFinish": "{name} acrylic",
@@ -472,8 +484,8 @@
         "Varies"
       ],
       [
-        "Dimmer and remote",
-        "Included",
+        "8 mm bold tube",
+        "Free upgrade",
         "Often extra"
       ],
       [

@@ -2,7 +2,9 @@
   "_meta": {
     "page": "basket",
     "owner": "P7",
-    "renders": ["basket.html"],
+    "renders": [
+      "basket.html"
+    ],
     "status": "filled by P7. No literal dates, £ amounts or percentages (tools/lint-copy.mjs); prices, dates and fact values arrive as {vars}."
   },
   "meta": {
@@ -18,7 +20,10 @@
   "eyebrow": "Nearly yours",
   "h1": "Your basket",
   "count": "{n} {unit}",
-  "unit": { "one": "sign", "many": "signs" },
+  "unit": {
+    "one": "sign",
+    "many": "signs"
+  },
   "continue": "Continue shopping",
   "kind": {
     "custom": "Custom",
@@ -98,7 +103,7 @@
     "drawing": "You approve a drawing of your sign first. Tweaks are free.",
     "warranty": "{warranty} on every sign.",
     "delivery": "Free tracked delivery across mainland GB.",
-    "kit": "Dimmer, remote and UK plug in the box."
+    "kit": "UK plug and your fixings in the box. Add a dimmer and remote in the designer."
   },
   "next": {
     "eyebrow": "After you order",

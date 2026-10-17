@@ -269,7 +269,7 @@ function renderPanels() {
     <div class="c-seg c-seg--lg" role="group" aria-label="${esc(t('product.buy.where'))}">${O.uses.map(u => `<button type="button" data-qa="product.use" data-id="${u.id}" aria-pressed="${u.id === st.use}">${esc(u.name)}<span class="delta">${u.id === 'out' ? esc(quoteOut) : esc(t('pills.included', {}, 'Included'))}</span></button>`).join('')}</div>
     ${st.use === 'out' ? `<p class="pd-note">${icon('info', 'ic--sm')} ${esc(t('product.buy.outdoorNote'))} ${esc(facts.get('outdoorIndicativePct'))}</p>` : ''}
     <h3 class="pd-sub">${esc(t('product.buy.included'))}</h3>
-    <ul class="pd-included">${[['dimmer', 'remote'], ['plug', 'plug-uk'], ['warranty', 'shield'], ['delivery', 'truck']].map(([k, ic]) => `<li>${icon(ic)}<span>${esc(t('product.buy.includedItems.' + k, { warranty: facts.get('warrantyYears') }))}</span></li>`).join('')}</ul>`;
+    <ul class="pd-included">${[['drawing', 'drawing'], ['plug', 'plug-uk'], ['warranty', 'shield'], ['delivery', 'truck']].map(([k, ic]) => `<li>${icon(ic)}<span>${esc(t('product.buy.includedItems.' + k, { warranty: facts.get('warrantyYears') }))}</span></li>`).join('')}</ul>`;
   /* tab labels carry the current choice */
   const fin = O.finishes.find(f => f.id === st.board) || {}; const bk = O.backings.find(b => b.id === st.backing) || {};
   $('#pd-tabv-size').textContent = sizeName(st.size);

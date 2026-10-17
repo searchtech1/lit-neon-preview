@@ -4,7 +4,7 @@
    INTEGRATION.md). Prices are never stored: every render recomputes them from the spec under the live clock (§3.7a).
    Line kinds: custom · photo · ready · quote. Quote lines never reach payload().items (they go out via forms.submit).
    Node-safe: createBasket({ storage, pricing, resolve, variants, now }) — the drawer is DOM-only and mounted on demand. */
-import { resolve as resolveDesign, OPTIONS, fontOf, colourOf, sizeOf, backingOf, finishOf, hangOf, useOf, jacketOf } from './renderer.js';
+import { resolve as resolveDesign, OPTIONS, iconPlaceName, fontOf, colourOf, sizeOf, backingOf, finishOf, hangOf, useOf, jacketOf } from './renderer.js';
 import pricingDefault from './pricing.js';
 import * as clock from './clock.js';
 import { gbp, esc, fmtDims, sayDims } from './money.js';
@@ -82,8 +82,8 @@ export function createBasket({ storage, pricing = pricingDefault, resolve = reso
   function specFor(line, p = priceLine(line)) {
     const res = resolve(line.state); const st = res.state;
     const colours = st.colours ? res.lineColours.map(c => c.name) : [res.colour.name];
-    return { v: 3, kind: line.kind, lines: res.lines, align: st.align, icon: st.icon || null, iconPos: st.icon ? st.iconPos : null,
-      lettering: res.font.name, font_family: res.font.family, colour: res.colour.name, colour_hex: res.colour.hex, colours, rgb: res.rgb, jacket: st.jacket,
+    return { v: 3, kind: line.kind, lines: res.lines, align: st.align, icon: st.icon || null, iconPos: st.icon ? st.iconPos : null, iconAt: st.icon ? res.iconAt : null,
+      lettering: res.font.name, font_family: res.font.family, font_actual: res.font.realName || res.font.family, tube_mm: st.tube === '8' ? 8 : 6, colour: res.colour.name, colour_hex: res.colour.hex, colours, rgb: res.rgb, jacket: st.jacket,
       ...(line.kind === 'photo'
         ? { lines: [], lettering: null, font_family: null, size: 'photo', letter_height_cm: null, width_cm: line.meta.widthCm || null, height_cm: line.meta.heightCm || null }
         : { size: res.sizeId, letter_height_cm: res.letterCm, width_cm: res.dims ? res.dims.W : null, height_cm: res.dims ? res.dims.H : null }),
@@ -97,8 +97,12 @@ export function createBasket({ storage, pricing = pricingDefault, resolve = reso
     const photo = line.kind === 'photo';
     const props = { Words: photo ? 'From your photo' : (res.words || '—'), Lettering: photo ? 'Traced from your photo' : res.font.name, Colour: colourText, Jacket: jacketOf(st.jacket).name, Size: photo ? `About ${fmtDims(spec.width_cm, spec.height_cm)}${spec.ledMetres ? ` · ${spec.ledMetres} m LED` : ''}` : `${res.sizeId === 'custom' ? 'Custom' : sizeOf(res.sizeId).name}, ${fmtDims(spec.width_cm, spec.height_cm)}`,
       Backing: backingOf(st.backing).name, Finish: finishOf(st.board).name, Hangs: st.backing === 'stand' ? 'On its stand' : hangOf(st.hang).name };
-    if (st.icon) props.Symbol = `${st.icon}${st.iconPos === 'inline' ? ', inline' : ''}`;
+    if (st.icon) props.Symbol = `${st.icon}, ${iconPlaceName(res.iconAt).replace(/^tl$/, 'top left').replace(/^tr$/, 'top right').replace(/^bl$/, 'bottom left').replace(/^br$/, 'bottom right')}`;
+    if (!photo) props.Tube = st.tube === '8' ? '8 mm bold' : '6 mm standard';
     props['Dimmer + remote'] = st.dimmer ? 'Yes' : 'No';
+    /* owner 2026-10-17: customers see the public lettering name; the workshop needs the real font. Shopify hides "_" properties
+       from shoppers (cart, checkout, emails) but shows them on the order in admin */
+    if (!photo) props['_Font (actual)'] = res.font.realName || res.font.family;
     if (postcode) props['Deliver to'] = postcode;
     props._spec = JSON.stringify(spec);
     return props;
@@ -114,7 +118,7 @@ export function createBasket({ storage, pricing = pricingDefault, resolve = reso
       const props = properties(l, p, opts.postcode);
       if (l.kind === 'ready') {
         const st = l.state; const id = `ready:${l.meta.design || 'design'}:${st.size}:${st.colour}:${st.backing}`;
-        items.push({ id, quantity: l.qty, properties: { Jacket: props.Jacket, Hangs: props.Hangs, Finish: props.Finish, _spec: props._spec } });
+        items.push({ id, quantity: l.qty, properties: { Jacket: props.Jacket, Hangs: props.Hangs, Finish: props.Finish, ...(props['_Font (actual)'] ? { '_Font (actual)': props['_Font (actual)'] } : {}), _spec: props._spec } });
         if (st.board !== 'clear') items.push({ id: `finish-upgrade:${st.board}`, quantity: l.qty, properties: { For: l.uid, _addon: true } });
       } else {
         const id = variantFor(p.everyday); if (!id) { unpriced.push({ uid: l.uid, kind: 'quote', reason: 'no-variant' }); continue; }

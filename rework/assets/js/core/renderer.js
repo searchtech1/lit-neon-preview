@@ -42,6 +42,9 @@ export const OPTIONS = {
   ],
   aligns: ['left', 'center', 'right'],
   iconPositions: ['above', 'inline'],
+  /* free placement (owner 2026-10-17: drag the symbol anywhere around the words). iconAt = icon centre relative to the text box:
+     x -1 = touching the left edge, +1 = the right edge; y -1 = above, +1 = below; |x| or |y| = 1 sits just outside the words */
+  iconPresets: { above: { x: 0, y: -1 }, below: { x: 0, y: 1 }, left: { x: -1, y: 0 }, right: { x: 1, y: 0 }, tl: { x: -1, y: -1 }, tr: { x: 1, y: -1 }, bl: { x: -1, y: 1 }, br: { x: 1, y: 1 } },
   views: ['room', 'fit', 'drawing'],
   units: ['cm', 'in'],
   limits: { maxLines: 3, maxChars: 24, customMinCm: 20, customMaxCm: 200, customStepCm: 5 }
@@ -50,7 +53,7 @@ export const OPTIONS = {
 /* §0.2 rule 7: nothing paid is pre-selected */
 export const DEFAULT_DESIGN = Object.freeze({
   v: 2, text: '', align: 'center', font: 'soho', colour: 'warm', colours: null, jacket: 'white', size: 'm', custom: null,
-  backing: 'cut', board: 'clear', use: 'in', hang: 'screws', icon: '', iconPos: 'above', pos: {}, scene: 's00-studio-dark',
+  backing: 'cut', board: 'clear', use: 'in', hang: 'screws', icon: '', iconPos: 'above', iconAt: null, pos: {}, scene: 's00-studio-dark',
   view: 'room', night: true, on: true, unit: 'cm', tube: '6', dimmer: false
 });
 
@@ -88,6 +91,7 @@ export function normalise(state) {
   if (!byId(OPTIONS.hangs, s.hang)) s.hang = 'screws';
   if (!(s.icon && OPTIONS.icons[s.icon])) s.icon = '';
   if (!OPTIONS.iconPositions.includes(s.iconPos)) s.iconPos = 'above';
+  s.iconAt = s.iconAt && Number.isFinite(+s.iconAt.x) && Number.isFinite(+s.iconAt.y) ? iconAtOf(s.iconAt) : null;
   if (!OPTIONS.views.includes(s.view)) s.view = 'room';
   if (!OPTIONS.units.includes(s.unit)) s.unit = 'cm';
   s.night = s.night !== false; s.on = s.on !== false;
@@ -137,10 +141,41 @@ const countOf = (s, ch) => { let n = 0; for (const x of s) if (x === ch) n++; re
 export const gapsEm = (f, line) => countOf(line, ' ') * (f.wordSpacingEm || 0) + countOf(line, '&') * 2 * (f.ampersandGapEm || 0);
 
 const LH = 1.15; /* line-height, em */
+/* ---------- symbol placement: one layout every renderer reads (DOM, stage, canvas, drawing, PDF) ---------- */
+export const ICON_SIZE = 1.45, ICON_GAP = .28;   /* × cap height */
+const clampN = v => Math.max(-1.6, Math.min(1.6, Math.round(+v * 100) / 100));
+/** a usable placement: legacy iconPos maps to above/beside; a spot inside the words is pushed out to the nearest edge */
+export function iconAtOf(at, iconPos = 'above') {
+  let a = at && Number.isFinite(+at.x) && Number.isFinite(+at.y) ? { x: clampN(at.x), y: clampN(at.y) } : (iconPos === 'inline' ? { x: -1, y: 0 } : { x: 0, y: -1 });
+  if (Math.abs(a.x) < 1 && Math.abs(a.y) < 1) { if (1 - Math.abs(a.x) < 1 - Math.abs(a.y)) a.x = a.x < 0 ? -1 : 1; else a.y = a.y > 0 ? 1 : -1; }
+  return a;
+}
+/** the nearest named spot for a placement (review rows, the order line, the preset buttons) */
+export function iconPlaceName(at) {
+  const a = iconAtOf(at); let best = 'above', bd = Infinity;
+  for (const [k, p] of Object.entries(OPTIONS.iconPresets)) { const dd = (p.x - a.x) ** 2 + (p.y - a.y) ** 2; if (dd < bd) { bd = dd; best = k; } }
+  return best;
+}
+/** the lettering pixel nearest to a point (em, text-box coords): where the symbol's acrylic bridge should land so the
+    backing stays one piece without a long tail across the words. Low-res raster of the same lines; null without a canvas. */
+function nearestInk(ctx, f, Ls, ms, align, blockW, lh, half, fA, minX, top, px, py) {
+  if (!ctx || typeof document === 'undefined') return null;
+  try {
+    const k = .32, pad = 3, maxX = Math.max(...ms.map((m, i) => { const x0 = align === 'left' ? 0 : align === 'right' ? blockW - m.width : (blockW - m.width) / 2; return x0 + m.right; }));
+    const W = Math.ceil((maxX - minX) * k) + pad * 2, H = Math.ceil((Ls.length * lh) * k) + pad * 2; if (W * H > 4e5) return null;
+    const cv = document.createElement('canvas'); cv.width = W; cv.height = H; const c = cv.getContext('2d', { willReadFrequently: true });
+    c.font = `${f.weight || 400} ${100 * k}px "${f.family}"`; c.fillStyle = '#000';
+    ms.forEach((m, i) => { if (!Ls[i].trim()) return; const x0 = align === 'left' ? 0 : align === 'right' ? blockW - m.width : (blockW - m.width) / 2; c.fillText(Ls[i], (x0 - minX) * k + pad, (i * lh + half + fA - top) * k + pad); });
+    const d = c.getImageData(0, 0, W, H).data; const qx = px * 100 * k + pad, qy = py * 100 * k + pad; let best = null, bd = Infinity;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { if (d[(y * W + x) * 4 + 3] < 140) continue; const dd = (x - qx) ** 2 + (y - qy) ** 2; if (dd < bd) { bd = dd; best = [x, y]; } }
+    return best ? { x: (best[0] - pad) / k / 100, y: (best[1] - pad) / k / 100 } : null;
+  } catch { return null; }
+}
 /** metrics for a block of lines in a face: cap, inkW, inkH (em), offsets, baselines, per-line widths. icon adds its box. */
-export function measure(f, lines, align = 'center', icon = '', iconPos = 'above') {
+export function measure(f, lines, align = 'center', icon = '', iconPos = 'above', iconAt = null) {
   const Ls = (lines && lines.length ? lines : []).map(String);
-  const key = f.family + '|' + (f.weight || 400) + '|' + align + '|' + (icon || '') + iconPos + '|' + Ls.join('\n') + (fontReady(f) ? '' : '|~');
+  const at = icon ? iconAtOf(iconAt, iconPos) : null;
+  const key = f.family + '|' + (f.weight || 400) + '|' + align + '|' + (icon || '') + (at ? at.x + ',' + at.y : '') + '|' + Ls.join('\n') + (fontReady(f) ? '' : '|~');
   if (mcache.has(key)) return mcache.get(key);
   const ctx = ctx2d();
   let cap, fA, fD, ms;
@@ -168,16 +203,23 @@ export function measure(f, lines, align = 'center', icon = '', iconPos = 'above'
   const r = { cap: cap / 100, inkW: (maxX - minX) / 100, inkH: (bot - top) / 100, textW: (maxX - minX) / 100, textH: (bot - top) / 100,
     offX: (blockW / 2 - (minX + maxX) / 2) / 100, offY: (blockH / 2 - (top + bot) / 2) / 100, iconEm: 0, iconPos, textOffY: 0, textOffX: 0,
     blockW: blockW / 100, blockH: blockH / 100, minX: minX / 100, maxX: maxX / 100, top: top / 100, bot: bot / 100, baselines, lineWidths: ms.map(m => m.width / 100), lines: Ls.length };
+  r.iconX = 0; r.iconY = 0; r.bridge = null; r.iconAt = at;
   if (icon) {
-    if (iconPos === 'inline' && Ls.length) { r.iconEm = 1.25 * r.cap; r.textOffX = r.iconEm * 1.2; r.inkW = r.textW + r.textOffX; r.inkH = Math.max(r.textH, r.iconEm); }
-    else { r.iconEm = 1.7 * r.cap; r.inkW = Math.max(r.textW, r.iconEm); r.textOffY = Ls.length ? r.iconEm * 1.15 : 0; r.inkH = r.textH + (Ls.length ? r.iconEm * 1.15 : r.iconEm); }
+    /* icon box placed around the text box (both in em, text box at 0,0); the ink box is their union */
+    const sz = ICON_SIZE * r.cap, gap = ICON_GAP * r.cap, has = Ls.some(t => t.trim()), tW = has ? r.textW : 0, tH = has ? r.textH : 0;
+    const cx = tW / 2 + (has ? at.x * (tW / 2 + sz / 2 + gap) : 0), cy = tH / 2 + (has ? at.y * (tH / 2 + sz / 2 + gap) : 0);
+    const x0 = Math.min(0, cx - sz / 2), y0 = Math.min(0, cy - sz / 2), x1 = Math.max(tW, cx + sz / 2), y1 = Math.max(tH, cy + sz / 2);
+    Object.assign(r, { iconEm: sz, inkW: x1 - x0, inkH: y1 - y0, textOffX: -x0, textOffY: -y0, iconX: cx - sz / 2 - x0, iconY: cy - sz / 2 - y0 });
+    /* a hidden acrylic bridge from the symbol to the words keeps a cut-to-shape backing ONE piece */
+    if (has) { const nb = nearestInk(ctx, f, Ls, ms, align, blockW, lh, half, fA, minX, top, cx, cy) || { x: tW / 2, y: tH / 2 };
+      r.bridge = { x1: cx - x0, y1: cy - y0, x2: nb.x - x0, y2: nb.y - y0, w: .42 * r.cap }; }
   }
   if (!(r.inkW > 0)) { r.inkW = 1; r.inkH = r.inkH || .7; }
   mcache.set(key, r);
   return r;
 }
 /** metrics for pricing: null until the face is loaded, so the core answers "no-dimensions" rather than a wrong number */
-export function metricsFor(f, lines, align, icon, iconPos) { return fontReady(f) ? measure(f, lines, align, icon, iconPos) : null; }
+export function metricsFor(f, lines, align, icon, iconPos, iconAt) { return fontReady(f) ? measure(f, lines, align, icon, iconPos, iconAt) : null; }
 export const clearMetrics = () => mcache.clear();
 
 /* ---------- resolve: state → text rules → metrics → cm ---------- */
@@ -194,7 +236,7 @@ export function resolve(state, opts = {}) {
   const f = fontOf(st.font), c = colourOf(st.colour);
   const lineColours = linesForMetrics.map((_, i) => colourOf(st.colours ? (st.colours[i] || st.colour) : st.colour));
   const distinct = Array.from(new Set((st.colours ? linesForMetrics.map((_, i) => st.colours[i] || st.colour) : [st.colour]))).map(colourOf);
-  const m = measure(f, linesForMetrics, st.align, st.icon, st.iconPos);
+  const m = measure(f, linesForMetrics, st.align, st.icon, st.iconPos, st.iconAt);
   const ready = fontReady(f);
   const sizeId = opts.sizeId || st.size;
   const letterCm = sizeId === 'custom' ? (st.custom ? st.custom.letterCm : sizeOf('m').letterCm) : (opts.letterCm || sizeOf(sizeId).letterCm);
@@ -203,7 +245,7 @@ export function resolve(state, opts = {}) {
   return {
     state: st, clean, lines, drawLines, bad, hasText, placeholder: !hasText || bad.length > 0, truncated: clean.truncated,
     font: f, colour: c, lineColours, distinctColours: distinct, rgb: !!c.rgb, jacket: jacketOf(st.jacket), m, ready, letterCm, sizeId,
-    backing, finish, hang: hangOf(st.hang), use: useOf(st.use), dims, dimsReady: ready ? dims : null, icon: st.icon, iconPos: st.iconPos,
+    backing, finish, hang: hangOf(st.hang), use: useOf(st.use), dims, dimsReady: ready ? dims : null, icon: st.icon, iconPos: st.iconPos, iconAt: m.iconAt,
     words: lines.length ? lines.join(' / ') : (st.icon ? `${st.icon} symbol` : '')
   };
 }
@@ -230,8 +272,8 @@ const CSS = `
 .ln-neon{position:relative;display:grid;place-items:center;overflow:hidden;isolation:isolate;--off:#e7e0d6}
 .ln-neon-text{white-space:pre;line-height:${LH};text-align:center;margin:0;position:relative;z-index:2;transition:color var(--d-base,240ms),text-shadow var(--d-base,240ms),opacity var(--d-base,240ms)}
 .ln-neon-icon{position:relative;z-index:2;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5;transition:filter var(--d-base,240ms),stroke var(--d-base,240ms)}
-.ln-neon-body{display:grid;justify-items:center;gap:0;position:relative;z-index:2}
-.ln-neon-body.inline{grid-auto-flow:column;align-items:center}
+.ln-neon-body{display:block;position:relative;z-index:2}.ln-neon-body>.ln-neon-text,.ln-neon-body>.ln-neon-icon{position:absolute;margin:0}
+
 .ln-neon.thick .ln-neon-text{-webkit-text-stroke:.04em currentColor;paint-order:stroke fill}
 .ln-neon.thick .ln-neon-icon{stroke-width:2.3}
 .ln-neon-spill{position:absolute;inset:-20%;z-index:1;pointer-events:none;mix-blend-mode:screen;transition:opacity var(--d-slow,480ms);opacity:0;background:radial-gradient(closest-side,var(--spill-c),transparent 70%)}
@@ -274,9 +316,8 @@ export function mountNeon(el, state, opts = {}) {
     el.classList.add('ln-neon'); el.classList.toggle('rgb', res.rgb); el.classList.toggle('thick', res.state.tube === '8');
     el.dataset.hex = uiHex(c); if (h.composite === undefined) { h.composite = isComposite(el, opts); if (h.composite && !el.hasAttribute('data-composite')) el.dataset.composite = ''; }
     el.style.setProperty('--spill-c', rgba(c.hex, opts.spill ?? .42)); el.style.setProperty('--off', offTube(c, res.state.jacket));
-    const inline = res.icon && res.iconPos === 'inline' && res.drawLines.length;
     const text = (res.drawLines.length || !res.hasText) ? `<p class="ln-neon-text" style="font-family:'${res.font.family}',cursive;font-weight:${res.font.weight || 400};text-align:${res.state.align};word-spacing:${res.font.wordSpacingEm || 0}em;color:${coreOf(c)};text-shadow:${glowOf(c)}">${tubeHtml(res, { perLine: opts.perLine !== false })}</p>` : '';
-    el.innerHTML = `<div class="ln-neon-spill"></div><div class="ln-neon-body${inline ? ' inline' : ''}">${res.icon ? iconSvg(res.icon, c) : ''}${text}</div>`;
+    el.innerHTML = `<div class="ln-neon-spill"></div><div class="ln-neon-body">${res.icon ? iconSvg(res.icon, c) : ''}${text}</div>`;
     el.classList.toggle('placeholder', res.placeholder && !res.hasText);
     fit();
   }
@@ -286,9 +327,11 @@ export function mountNeon(el, state, opts = {}) {
     const m = res.m, fw = opts.fitW ?? .74, fh = opts.fitH ?? .6;
     let em = Math.min(box.width * fw / m.inkW, box.height * fh / m.inkH);
     if (opts.maxEm) em = Math.min(em, opts.maxEm);
-    const t = el.querySelector('.ln-neon-text'), ic = el.querySelector('.ln-neon-icon');
-    if (t) { t.style.fontSize = em + 'px'; t.style.transform = `translate(${m.offX}em, ${res.drawLines.length ? m.offY : 0}em)`; }
-    if (ic) { const s = m.iconEm * em; ic.style.width = ic.style.height = s + 'px'; ic.style.marginBottom = (res.iconPos === 'above' && res.drawLines.length) ? (-.12 * s) + 'px' : 0; ic.style.marginRight = (res.iconPos === 'inline' && res.drawLines.length) ? (.2 * s) + 'px' : 0; }
+    const body = el.querySelector('.ln-neon-body'), t = el.querySelector('.ln-neon-text'), ic = el.querySelector('.ln-neon-icon');
+    /* one explicit layout (renderer.measure): the ink box is the body; text and symbol sit at their measured spots */
+    if (body) { body.style.width = m.inkW * em + 'px'; body.style.height = m.inkH * em + 'px'; }
+    if (t) { t.style.fontSize = em + 'px'; t.style.transform = 'none'; t.style.left = (m.textOffX - m.minX) * em + 'px'; t.style.top = (m.textOffY - m.top) * em + 'px'; }
+    if (ic) { const s = m.iconEm * em; ic.style.width = ic.style.height = s + 'px'; ic.style.left = m.iconX * em + 'px'; ic.style.top = m.iconY * em + 'px'; ic.style.margin = 0; }
   }
   draw(state);
   if (opts.lit === true || opts.strike === false || reducedMotion()) el.classList.add('lit');
@@ -411,7 +454,7 @@ function roundRect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); 
 function drawText(ctx, res, left, top, emPx, _unused, glow, contourOnly = false) {
   const m = res.m, Ls = res.drawLines.length ? res.drawLines : (res.hasText ? [] : PLACEHOLDER_LINES);
   const alignOff = i => res.state.align === 'left' ? 0 : res.state.align === 'right' ? (m.blockW - m.lineWidths[i]) : (m.blockW - m.lineWidths[i]) / 2;
-  const textShiftX = (m.inkW - m.textW) / 2 - m.minX + (m.textOffX ? m.textOffX / 2 : 0);
+  const textShiftX = m.textOffX - m.minX;
   const f = res.font;
   const colourFor = i => (res.lineColours[i] || res.colour);
   const paintLine = (t, x, y, c) => {
@@ -434,8 +477,8 @@ function drawText(ctx, res, left, top, emPx, _unused, glow, contourOnly = false)
   });
   if (res.icon && typeof Path2D !== 'undefined') {
     const s = m.iconEm * emPx, c = res.colour;
-    const ix = res.iconPos === 'inline' && Ls.length ? left : left + (m.inkW - m.iconEm) / 2 * emPx;
-    const iy = res.iconPos === 'inline' && Ls.length ? top + (m.inkH * emPx - s) / 2 : top;
+    const ix = left + m.iconX * emPx, iy = top + m.iconY * emPx;
+    if (contourOnly && m.bridge) { ctx.save(); ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(left + m.bridge.x1 * emPx, top + m.bridge.y1 * emPx); ctx.lineTo(left + m.bridge.x2 * emPx, top + m.bridge.y2 * emPx); ctx.stroke(); ctx.restore(); }
     ctx.save(); ctx.translate(ix, iy); ctx.scale(s / 24, s / 24); ctx.lineWidth = contourOnly ? (res.backing.margin * 2 * emPx / s) * 24 / emPx * emPx / 24 : 1.7; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     if (glow && glow.blur != null) { ctx.shadowColor = rgba(c.hex, glow.dim ?? 1); ctx.shadowBlur = glow.blur * 24 / s; ctx.strokeStyle = c.hex; }
     else ctx.strokeStyle = contourOnly ? ctx.strokeStyle : (glow && glow.on === false ? offTube(c, res.state.jacket) : coreOf(c));

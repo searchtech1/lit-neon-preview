@@ -449,3 +449,95 @@ body[data-page="builder"] .w-wa { display: none; }
 .w-wa { color: #fff; background: #25D366; }
 .w-wa .ic { width: 32px; height: 32px; }
 @media (max-width: 767px) { .w-wa .ic { width: 28px; height: 28px; } }
+
+/* hero headline lower so more of the film shows (owner 2026-10-17: 10% on mobile, 5% on desktop) */
+@media (max-width: 1023px) { .has-hero-film .hero--photo .hero__copy { margin-top: calc(-1 * clamp(84px, 26vw, 200px) + 10dvh); } }
+@media (min-width: 1024px) { .has-hero-film .hero--photo .hero__copy { margin-top: 5vh; } }
+
+/* ===== Shop signs mega-menu, rebuilt (owner 2026-10-17: "the UI is shit"): text columns + real-photo features + trust strip ===== */
+.ch-mega.ch-mega--shop > .wrap { grid-template-columns: repeat(3, minmax(0, .78fr)) minmax(0, 1.7fr); gap: var(--s-4) var(--s-7); padding: var(--s-6) 0 var(--s-5); align-items: start; }
+.ch-mega__col ul { display: grid; gap: 0; }
+.ch-mega__link { display: flex; align-items: center; justify-content: space-between; gap: var(--s-2); min-height: 40px; padding: 0 2px; color: var(--bone-2); font-size: var(--t-body); font-weight: 500; border-bottom: 1px solid rgba(244,242,250,.07); transition: color var(--d-base), padding var(--d-base) var(--ease-out); }
+.ch-mega__link .ic { width: 16px; height: 16px; color: var(--brass); opacity: 0; transform: translateX(-6px); transition: opacity var(--d-base), transform var(--d-base) var(--ease-out); }
+.ch-mega__link:hover, .ch-mega__link:focus-visible { color: var(--bone); padding-left: 6px; text-decoration: none; }
+.ch-mega__link:hover .ic, .ch-mega__link:focus-visible .ic { opacity: 1; transform: none; }
+.ch-mega__feats { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-4); }
+.ch-mega__feat { position: relative; display: block; aspect-ratio: 1 / 1; max-height: 290px; border-radius: var(--r-3); overflow: hidden; border: 1px solid var(--hair); isolation: isolate; }
+.ch-mega__feat img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform var(--d-slow) var(--ease-out); z-index: -1; }
+.ch-mega__feat::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(11,10,21,0) 45%, rgba(11,10,21,.88)); }
+.ch-mega__feat .cap { position: absolute; left: var(--s-4); right: var(--s-4); bottom: var(--s-3); display: grid; gap: 2px; }
+.ch-mega__feat b { color: var(--bone); font-size: var(--t-body); font-weight: 700; }
+.ch-mega__feat small { color: var(--bone-2); font-size: var(--t-caption); }
+.ch-mega__feat:hover { border-color: var(--brass); box-shadow: 0 0 28px -8px var(--hair-lit); text-decoration: none; }
+.ch-mega__feat:hover img { transform: scale(1.05); }
+.ch-mega.ch-mega--shop .ch-mega__foot { grid-column: 1 / -1; display: grid; gap: var(--s-3); border-top: 1px solid var(--hair); padding-top: var(--s-4); }
+.ch-mega__trust.w-badges--strip { margin: 0; grid-template-columns: repeat(6, auto); justify-content: space-between; gap: var(--s-3); }
+.ch-mega__trust.w-badges--strip li { font-size: 11px; white-space: nowrap; }
+.ch-mega__trust .ic-slot { width: 28px; height: 28px; }
+.ch-mega__end { display: flex; align-items: center; justify-content: space-between; gap: var(--s-4); }
+.ch-mega__reviews { display: inline-flex; align-items: center; gap: var(--s-2); color: var(--bone-2); font-size: var(--t-small); }
+.ch-mega__reviews .ic { color: #00B67A; width: 18px; height: 18px; }
+@media (max-width: 1279px) { .ch-mega.ch-mega--shop > .wrap { gap: var(--s-4) var(--s-5); } .ch-mega__trust.w-badges--strip { grid-template-columns: repeat(3, minmax(0, 1fr)); } .ch-mega__trust.w-badges--strip li { white-space: normal; } }
+
+/* phone drawer: compact two-column text links, one real-photo feature card */
+.ch-drawer__sub .ch-drawer__links { display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--s-4); margin: 0 0 var(--s-3); }
+.ch-drawer__sub .ch-drawer__links a { display: flex; align-items: center; min-height: 44px; padding: 0; color: var(--bone-2); font-size: var(--t-body); font-weight: 500; border-bottom: 1px solid rgba(244,242,250,.07); }
+.ch-drawer__sub .ch-drawer__links a:active, .ch-drawer__sub .ch-drawer__links a:hover { color: var(--bone); }
+.ch-drawer__sub a.ch-drawer__all { min-height: 44px; color: var(--bone); }
+.ch-drawer__sub a.ch-drawer__feat { display: grid; grid-template-columns: 104px 1fr; align-items: center; gap: var(--s-3); min-height: 0; padding: 0; margin-top: var(--s-2); border: 1px solid var(--hair); border-radius: var(--r-3); overflow: hidden; }
+.ch-drawer__feat img { width: 104px; height: 78px; object-fit: cover; display: block; }
+.ch-drawer__feat b { display: block; color: var(--bone); font-size: var(--t-body); }
+.ch-drawer__feat small { color: var(--smoke); font-size: var(--t-caption); }
+[role="dialog"] h2:focus:not(:focus-visible), [role="dialog"] [tabindex="-1"]:focus:not(:focus-visible) { outline: none; box-shadow: none; }
+
+/* ready-made (shop) + collection pages: the same six badges and the honest reviews line as the homepage */
+.sh-head__row { grid-template-columns: minmax(0, 1fr); align-items: start; gap: var(--s-4); }
+.sh-trust.w-badges--strip { margin: 0; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); max-width: 980px; gap: var(--s-3) var(--s-5); }
+.co-trust.w-badges--strip { margin-top: var(--s-4); grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+.sh-reviews { display: flex; align-items: center; gap: var(--s-2); margin: 0; color: var(--bone-2); font-size: var(--t-small); }
+.co-hero .sh-reviews { margin-top: var(--s-3); }
+.sh-reviews .ic-slot { display: inline-grid; width: auto; height: auto; border: 0; background: none; }
+.sh-reviews .ic { color: #00B67A; width: 18px; height: 18px; }
+@media (max-width: 767px) { .sh-trust.w-badges--strip, .co-trust.w-badges--strip { grid-template-columns: 1fr 1fr; gap: var(--s-3); } .sh-trust.w-badges--strip li { font-size: 11px; white-space: normal; line-height: 1.2; letter-spacing: .03em; } .sh-trust .ic-slot { width: 30px; height: 30px; } }
+/* fixes after review: menu foot full width; the shop header stacks (beats shop.css, which loads later); no ring on the drawer title */
+.ch-mega.ch-mega--shop .ch-mega__trust, .ch-mega.ch-mega--shop .ch-mega__end { width: 100%; }
+.sh-head .sh-head__row { grid-template-columns: minmax(0, 1fr); align-items: start; }
+.sh-head .sh-head__copy { max-width: 980px; }
+.c-dialog__head .title:focus { outline: none; box-shadow: none; }
+.ch-mega.ch-mega--shop .ch-mega__foot { grid-template-columns: minmax(0, 1fr); justify-content: stretch; }
+
+/* ===== designer right panel: soft off-white with white cards (owner 2026-10-17, option B "can be off white") =====
+   The panel (and the phone step tabs) re-map the dark tokens to a light set, so every component inside follows. */
+.builder .b-panel, .builder .b-tabs {
+  --night: #FFFFFF; --night-2: #F6F5F9; --night-3: #ECEBF2; --surface: #FFFFFF; --surface-2: #ECEBF2; --ink: #14121F;
+  --bone: #14121F; --bone-2: #4B4660; --smoke: #6B6582; --fg: #14121F; --bg: #F6F5F9;
+  --brass: #0089BB; --hair: rgba(20,18,31,.13); --hair-lit: rgba(0,137,187,.5); --glass: rgba(255,255,255,.94);
+  --tint-bone: rgba(20,18,31,.035); --tint-bone-2: rgba(20,18,31,.07); --shadow-ink: rgba(20,18,31,.14);
+  --ok: #1A7A40; --bad: #B8322A; --amber: #00739E; --info: #2D5BB0;
+  --e-1: 0 1px 2px rgba(20,18,31,.06), 0 6px 18px -10px rgba(20,18,31,.18); --e-2: 0 12px 32px -14px rgba(20,18,31,.25);
+  color-scheme: light; color: var(--bone);
+}
+.builder .b-panel { background: #F6F5F9; border-left-color: rgba(20,18,31,.1); }
+.builder .b-tabs { background: #F6F5F9; border-bottom-color: rgba(20,18,31,.1); }
+.builder .b-panel *:not(svg):not(use), .builder .b-tabs * { text-shadow: none; }
+.builder .b-panel .c-input, .builder .b-panel input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), .builder .b-panel textarea, .builder .b-panel select { background: #FFFFFF; color: #14121F; border-color: rgba(20,18,31,.18); }
+.builder .b-panel .c-btn--primary { color: #FFFFFF; }
+.builder .b-panel .b-fontpick, .builder .b-panel .b-backcard, .builder .b-panel .c-size, .builder .b-panel .c-opt, .builder .b-panel .c-seg, .builder .b-panel .b-jacket > button, .builder .b-panel .b-symbols > *, .builder .b-panel .b-example { background: #FFFFFF; border-color: rgba(20,18,31,.13); box-shadow: 0 1px 2px rgba(20,18,31,.05); }
+.builder .b-panel .b-fontpop { background: #FFFFFF; border-color: rgba(20,18,31,.12); box-shadow: 0 18px 40px -16px rgba(20,18,31,.35); }
+.builder .b-panel .b-fontopt:hover, .builder .b-panel .b-fontopt[aria-selected="true"] { background: rgba(0,137,187,.08); }
+.builder .b-panel .c-swatch .tube { box-shadow: inset 0 0 0 1px rgba(20,18,31,.16); }
+.builder .b-tabs [role="tab"] .n, .builder .b-panel .b-tabs .n { background: #FFFFFF; color: #14121F; border-color: rgba(20,18,31,.25); }
+.builder .b-panel .b-dock { background: #FFFFFF; border-top-color: rgba(20,18,31,.1); box-shadow: 0 -10px 24px -18px rgba(20,18,31,.35); }
+/* font picker: tall script faces (Rocket, Brittany…) were clipped top and bottom (owner 2026-10-17) */
+.b-fontpick__btn .face, .b-fontopt .face { line-height: 1.65; padding-block: 2px; }
+/* symbol placement pad (owner 2026-10-17): eight spots around the words; the symbol can also be dragged on the wall */
+.b-iconplace { display: grid; gap: var(--s-2); margin-top: var(--s-4); }
+.b-iconpad { display: grid; grid-template-columns: repeat(3, 44px); grid-template-rows: repeat(3, 44px); gap: 6px; }
+.b-iconpad button { display: grid; place-items: center; border: 1px solid var(--hair); border-radius: var(--r-2); background: var(--night); cursor: pointer; transition: border-color var(--d-base), background var(--d-base); }
+.b-iconpad button i { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--smoke); }
+.b-iconpad button:hover { border-color: var(--brass); }
+.b-iconpad button[aria-pressed="true"] { border-color: var(--brass); background: rgba(0,137,187,.1); }
+.b-iconpad button[aria-pressed="true"] i { background: var(--brass); border-color: var(--brass); }
+.b-iconpad__words { display: grid; place-items: center; border: 1px dashed var(--hair); border-radius: var(--r-2); font-family: var(--f-display); font-weight: 800; color: var(--bone-2); }
+/* backing cards show a clean line diagram of the cut (owner 2026-10-17: match Custom Neon's examples) */
+.b-backcard .b-backcard__img--diagram { aspect-ratio: 11 / 8; object-fit: contain; background: #FFFFFF; padding: 6px 10px; }

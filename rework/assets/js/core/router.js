@@ -4,7 +4,7 @@
    Codec: `#d=` + base64url(compact JSON with short keys, defaults omitted) — typically ≤ 120 chars (tested). */
 import { DEFAULT_DESIGN, normalise, OPTIONS } from './renderer.js';
 
-const KEYS = { text: 't', align: 'a', font: 'f', colour: 'c', colours: 'cs', jacket: 'j', size: 's', custom: 'cu', backing: 'b', board: 'bd', use: 'u', hang: 'h', icon: 'i', iconPos: 'ip', scene: 'sc', pos: 'p', night: 'n', on: 'o', view: 'v', unit: 'un', tube: 'tb', dimmer: 'dm' };
+const KEYS = { text: 't', align: 'a', font: 'f', colour: 'c', colours: 'cs', jacket: 'j', size: 's', custom: 'cu', backing: 'b', board: 'bd', use: 'u', hang: 'h', icon: 'i', iconPos: 'ip', iconAt: 'ia', scene: 'sc', pos: 'p', night: 'n', on: 'o', view: 'v', unit: 'un', tube: 'tb', dimmer: 'dm' };
 const UNKEYS = Object.fromEntries(Object.entries(KEYS).map(([k, v]) => [v, k]));
 
 export function b64e(s) { const bytes = new TextEncoder().encode(s); let bin = ''; for (const b of bytes) bin += String.fromCharCode(b); return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
@@ -22,6 +22,7 @@ export function encode(state) {
     if (k === 'pos') { const p = st.pos && st.pos[st.scene]; if (!p) continue; v = `${Math.round(p.x * 1000) / 1000},${Math.round(p.y * 1000) / 1000}`; }
     else if (k === 'custom') { if (!v || st.size !== 'custom') continue; v = v.letterCm; }
     else if (k === 'colours') { if (!v) continue; v = v.join(','); }
+    else if (k === 'iconAt') { if (!v || !st.icon) continue; v = `${v.x},${v.y}`; }
     else if (typeof v === 'boolean') { if (v === DEFAULT_DESIGN[k]) continue; v = v ? 1 : 0; }
     else if (v === DEFAULT_DESIGN[k] || v == null || v === '') continue;
     parts.push(short + ':' + escV(v));
@@ -38,6 +39,7 @@ export function decode(code) {
       if (k === 'pos') { const [x, y] = v.split(',').map(Number); if (Number.isFinite(x) && Number.isFinite(y)) out._pos = { x, y }; continue; }
       if (k === 'custom') { out.custom = { letterCm: +v }; out.size = 'custom'; continue; }
       if (k === 'colours') { out.colours = v.split(',').filter(Boolean); continue; }
+      if (k === 'iconAt') { const [x, y] = v.split(',').map(Number); if (Number.isFinite(x) && Number.isFinite(y)) out.iconAt = { x, y }; continue; }
       if (k === 'night' || k === 'on') { out[k] = v !== '0' && v !== 'false'; continue; }
       out[k] = v;
     }

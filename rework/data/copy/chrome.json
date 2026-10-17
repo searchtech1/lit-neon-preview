@@ -1,6 +1,9 @@
 {
   "_about": "Customer-facing strings for the global chrome (brief §4.0, §4.22, Appendix C). No literal dates, prices or percentages: promo lines are templated and filled from facts + clock + pricing at render time. Owned by WS0-A.",
-  "brand": { "name": "Lit Neon", "tagline": "Your words, lit." },
+  "brand": {
+    "name": "Lit Neon",
+    "tagline": "Your words, lit."
+  },
   "announce": {
     "promo": "{pct}% off your first sign · code {code}",
     "free": "Free delivery across mainland GB",
@@ -39,15 +42,37 @@
     "allGuides": "All guides",
     "seasonalBack": "Back from {month}",
     "rooms": {
-      "bedroom": "Bedroom", "kitchen": "Kitchen & hallway", "living": "Living room", "bar": "Home bar", "kids": "Kids & nursery", "gaming": "Gaming"
+      "bedroom": "Bedroom",
+      "kitchen": "Kitchen & hallway",
+      "living": "Living room",
+      "bar": "Home bar",
+      "kids": "Kids & nursery",
+      "gaming": "Gaming"
     },
     "occasions": {
-      "wedding": "Weddings", "party": "Parties & birthdays", "baby": "New baby", "christmas": "Christmas", "halloween": "Halloween"
+      "wedding": "Weddings",
+      "party": "Parties & birthdays",
+      "baby": "New baby",
+      "christmas": "Christmas",
+      "halloween": "Halloween"
     },
     "styles": {
-      "names": "Names & initials", "quotes": "Quotes", "wall-art": "Line art & icons", "love": "Love"
+      "names": "Names & initials",
+      "quotes": "Quotes",
+      "wall-art": "Line art & icons",
+      "love": "Love"
     },
-    "galleryTiles": { "rooms": "Rooms", "weddings": "Weddings", "business": "Shops & bars" }
+    "galleryTiles": {
+      "rooms": "Rooms",
+      "weddings": "Weddings",
+      "business": "Shops & bars"
+    },
+    "feat": {
+      "design": "Design your own",
+      "designSub": "Your words, priced live",
+      "logo": "Your logo in neon",
+      "logoSub": "Free mockup within {hours}"
+    }
   },
   "search": {
     "designs": "Designs",
@@ -60,7 +85,13 @@
     "title": "Search",
     "close": "Close search",
     "popularLabel": "Popular searches",
-    "popular": ["Bedroom", "Wedding", "Name signs", "Business logo", "Bar"]
+    "popular": [
+      "Bedroom",
+      "Wedding",
+      "Name signs",
+      "Business logo",
+      "Bar"
+    ]
   },
   "drawer": {
     "title": "Menu",
@@ -71,7 +102,9 @@
     "design": "Design your sign",
     "mockup": "Get a free mockup"
   },
-  "stickycta": { "label": "Design your sign" },
+  "stickycta": {
+    "label": "Design your sign"
+  },
   "consent": {
     "text": "We use essential cookies to run the site and, only if you agree, analytics cookies to see which pages help. Your design lives in your browser either way.",
     "learn": "How we use cookies",
@@ -102,9 +135,24 @@
       "trust": "Trust"
     },
     "links": {
-      "design": "Design your sign", "logo": "Logo & business", "ready": "Ready-made designs", "weddings": "Weddings & events", "bulk": "Bulk quotes", "gift": "Gift a sign",
-      "helpCentre": "Help centre", "delivery": "Delivery", "returns": "Returns & warranty", "install": "Installation guide", "recycling": "Recycling", "contact": "Contact",
-      "about": "The workshop", "guides": "Guides", "privacy": "Privacy", "terms": "Terms of sale", "cookies": "Cookies", "reviewsPolicy": "How we handle reviews"
+      "design": "Design your sign",
+      "logo": "Logo & business",
+      "ready": "Ready-made designs",
+      "weddings": "Weddings & events",
+      "bulk": "Bulk quotes",
+      "gift": "Gift a sign",
+      "helpCentre": "Help centre",
+      "delivery": "Delivery",
+      "returns": "Returns & warranty",
+      "install": "Installation guide",
+      "recycling": "Recycling",
+      "contact": "Contact",
+      "about": "The workshop",
+      "guides": "Guides",
+      "privacy": "Privacy",
+      "terms": "Terms of sale",
+      "cookies": "Cookies",
+      "reviewsPolicy": "How we handle reviews"
     },
     "whatsapp": "WhatsApp",
     "email": "Email",
@@ -163,5 +211,11 @@
     "empty": "Nothing in here yet",
     "emptyDesign": "Design a sign",
     "emptyBrowse": "Browse ready-made"
+  },
+  "trust": {
+    "label": "What you get with every sign",
+    "uk": "Made in the UK",
+    "delivery": "Free GB delivery",
+    "drawing": "You approve a drawing first"
   }
 }

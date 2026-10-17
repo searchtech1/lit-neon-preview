@@ -48,7 +48,7 @@
       "parts": {
         "sign": { "name": "Your sign", "spec": "LED neon flex, bent to your words, on its acrylic backing.", "specAcrylic": "LED neon flex on {thickness} cast acrylic, cut to shape." },
         "cable": { "name": "Clear cable", "spec": "A clear exit cable runs from the sign to the power supply.", "specLength": "{length} of clear cable from the sign to the power supply." },
-        "dimmer": { "name": "Dimmer and remote", "spec": "Dim, switch and set the mood from the sofa. Included with every sign." },
+        "dimmer": { "name": "Dimmer and remote", "spec": "Dim, switch and set the mood from the sofa. An optional extra in the designer." },
         "psu": { "name": "Power supply, UK plug", "spec": "A moulded three-pin UK plug. No adapter, nothing to wire.", "specMarked": "{voltage} supply with a moulded three-pin UK plug, {marking} marked." },
         "fixings": { "name": "Fixing kit", "spec": "{kit}" },
         "card": { "name": "Instruction card", "spec": "A one-page card for hanging and care." }
@@ -230,8 +230,8 @@
         "drawn": ["You approve the drawing first"],
         "bent": ["Bent by hand in a UK workshop"],
         "mounted": [],
-        "tested": ["Two-year warranty"],
-        "boxed": ["Moulded UK plug", "Dimmer and remote included"]
+        "tested": ["3-year warranty"],
+        "boxed": ["Moulded UK plug", "Your fixings"]
       },
       "factSlots": { "acrylic": "{value} cast acrylic", "bench": "Bench-tested for {value}", "town": "Made in {value}", "lead": "{min}–{max} working days after you approve" },
       "chapterOf": "Chapter {n} of {total}",

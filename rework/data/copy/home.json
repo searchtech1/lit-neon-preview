@@ -7,14 +7,14 @@
   },
   "meta": {
     "title": "Custom LED neon signs, made in the UK | Lit Neon",
-    "description": "Type your words, see them lit in a real room and priced live. Custom LED neon signs drawn to order in a UK workshop: free proof drawing, two-year warranty, free mainland-GB delivery.",
+    "description": "Type your words, see them lit in a real room and priced live. Custom LED neon signs drawn to order in a UK workshop: free proof drawing, 3-year warranty, free mainland-GB delivery.",
     "ogTitle": "Your words, lit. Custom LED neon, made in a UK workshop",
     "ogDescription": "Type anything and see it as a neon sign, at true size, with a real price. Free proof drawing before we make it."
   },
   "hero": {
     "eyebrow": "Custom LED neon, made in a UK workshop",
     "h1": "Your words, lit.",
-    "promise": "Free proof drawing in 12h · 2-year warranty · Free mainland-GB delivery in 7–10 working days",
+    "promise": "Free proof drawing in 12h · 3-year warranty · Free mainland-GB delivery in 7–10 working days",
     "fromPrice": "Signs from {from}",
     "defaultWords": "After dark",
     "inputLabel": "Your words",
@@ -32,7 +32,7 @@
     "trust": [
       "Free proof drawing in 12h",
       "Made in a UK workshop",
-      "2-year warranty",
+      "3-year warranty",
       "Free mainland-GB delivery, 7–10 working days"
     ],
     "noteUnsupported": "We can't draw {glyph} in tube, but we have a {symbol} symbol",
@@ -112,9 +112,9 @@
       "tube": { "title": "Tube", "body": "Flexible silicone LED neon with a dense LED pitch, so the line reads as one unbroken glow. {fact}" },
       "backing": { "title": "Backing", "body": "{fact} Cut to the shape of your words or to a clean rectangle, with polished edges." },
       "power": { "title": "Power", "body": "{psuVoltage}, {psuMarking} {psuFuseA}. No travel adaptor, ever." },
-      "tested": { "title": "Tested", "body": "{fact} Every sign carries a two-year warranty, and it was made in a UK workshop." }
+      "tested": { "title": "Tested", "body": "{fact} Every sign carries a 3-year warranty, and it was made in a UK workshop." }
     },
-    "paragraph": "Every sign is made in a UK workshop, from a drawing you approved, and carries a two-year warranty. The workshop is measuring the rest, so the numbers arrive as facts, not guesses.",
+    "paragraph": "Every sign is made in a UK workshop, from a drawing you approved, and carries a 3-year warranty. The workshop is measuring the rest, so the numbers arrive as facts, not guesses.",
     "link": "How LED neon is made →"
   },
   "logo": {
@@ -159,8 +159,8 @@
         { "label": "Where it's made", "us": "The UK workshop", "them": "Typically overseas" },
         { "label": "Lead time", "us": "7–10 working days after you approve the drawing", "them": "Typically 2–4 weeks for imports" },
         { "label": "Proof drawing before making", "us": "Always", "them": "Varies" },
-        { "label": "Warranty", "us": "2 years", "them": "Varies" },
-        { "label": "Dimmer and remote", "us": "Included", "them": "Often extra" },
+        { "label": "Warranty", "us": "3 years", "them": "Varies" },
+        { "label": "8 mm bold tube", "us": "Free upgrade", "them": "Often extra" },
         { "label": "Plug", "us": "Moulded UK plug", "them": "Adaptor" },
         { "label": "Who you talk to", "us": "The people who make it", "them": "A reseller" }
       ]
@@ -280,7 +280,7 @@
     "anatomyParts": {
       "sign": { "name": "Your sign", "sub": "On its acrylic backing, standoffs fitted" },
       "psu": { "name": "Power supply", "sub": "Moulded UK plug" },
-      "dimmer": { "name": "Dimmer and remote", "sub": "Included free" },
+      "dimmer": { "name": "Dimmer and remote", "sub": "Optional extra" },
       "cable": { "name": "Clear cable", "sub": "From the sign to the power supply" },
       "fixings": { "name": "Fixing kit", "sub": "For the hanging method you chose" },
       "card": { "name": "Instruction card", "sub": "Hanging, care and the warranty" }

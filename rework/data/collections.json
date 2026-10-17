@@ -46,7 +46,7 @@
       "scene": "s02-bedroom",
       "eyebrow": "Room",
       "h1": "Neon signs for the bedroom",
-      "intro": "A soft glow for the wall above the bed, with a dimmer and remote in the box so it never outshines the reading lamp. Pick a phrase below or write your own.",
+      "intro": "A soft glow for the wall above the bed, and an optional dimmer and remote so it never outshines the reading lamp. Pick a phrase below or write your own.",
       "sizeGuide": { "text": "Above a double bed, 80 to 100 cm reads best.", "cm": [80, 100] },
       "phrases": ["Sweet dreams", "Stay in bed", "Good night, love", "Let's stay in", "Five more minutes", "You & me"],
       "faq": ["q-size", "q-off", "q-power"],
@@ -55,7 +55,7 @@
       "related": ["names", "wall-art", "kids"],
       "tile": { "words": "Sweet dreams", "line": "Soft light above the bed, dimmable from the pillow." },
       "metaTitle": "Neon signs for the bedroom | Lit Neon",
-      "metaDescription": "LED neon bedroom signs with a free dimmer and remote. Ready-made phrases or your own words, made in a UK workshop."
+      "metaDescription": "LED neon bedroom signs with an optional dimmer and remote. Ready-made phrases or your own words, made in a UK workshop."
     },
     {
       "id": "bar",
@@ -109,7 +109,7 @@
       "related": ["bar", "names", "bedroom"],
       "tile": { "words": "Kettle's on", "line": "House rules for the room where everyone ends up." },
       "metaTitle": "Neon signs for the kitchen and hallway | Lit Neon",
-      "metaDescription": "LED neon kitchen signs: cuppa-first classics or your own words, made in the UK with a free dimmer and remote."
+      "metaDescription": "LED neon kitchen signs: cuppa-first classics or your own words, made in the UK, with an optional dimmer and remote."
     },
     {
       "id": "gaming",
@@ -182,7 +182,7 @@
       "related": ["names", "bedroom", "wall-art"],
       "tile": { "words": "Oh baby", "line": "Nursery names and night lights, dimmable at bedtime." },
       "metaTitle": "Kids and nursery neon signs | Lit Neon",
-      "metaDescription": "LED neon signs for nurseries and kids' rooms: names, night lights and new-baby gifts, with a dimmer and remote included."
+      "metaDescription": "LED neon signs for nurseries and kids' rooms: names, night lights and new-baby gifts, with an optional dimmer and remote."
     },
     {
       "id": "christmas",

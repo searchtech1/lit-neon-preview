@@ -128,12 +128,12 @@ const PLACEHOLDER = ['Your words'];
 function layoutOf(res) {
   const m = res.m; const lines = res.drawLines.length ? res.drawLines : (res.hasText ? [] : PLACEHOLDER);
   const alignOff = i => res.state.align === 'left' ? 0 : res.state.align === 'right' ? (m.blockW - m.lineWidths[i]) : (m.blockW - m.lineWidths[i]) / 2;
-  const textShiftX = (m.inkW - m.textW) / 2 - m.minX + (m.textOffX ? m.textOffX / 2 : 0);
+  const textShiftX = m.textOffX - m.minX;
   /* positions in em, relative to the ink box's top-left (same maths as renderer.bakeGlow / the stage) */
   const pos = lines.map((t, i) => ({ t, x: textShiftX + alignOff(i), y: m.textOffY + m.baselines[i] - m.top }));
   let icon = null;
-  if (res.icon) { const inline = res.iconPos === 'inline' && lines.length; icon = { d: OPTIONS.icons[res.icon], s: m.iconEm, x: inline ? 0 : (m.inkW - m.iconEm) / 2, y: inline ? (m.inkH - m.iconEm) / 2 : 0 }; }
-  return { lines, pos, icon };
+  if (res.icon) icon = { d: OPTIONS.icons[res.icon], s: m.iconEm, x: m.iconX, y: m.iconY };
+  return { lines, pos, icon, bridge: m.bridge };
 }
 function paintLines(ctx, res, L, ox, oy, em, mode) {
   const f = res.font;
@@ -209,6 +209,7 @@ async function traceLettering(res, L, emPt) {
     ctx.clearRect(0, 0, W, H); ctx.font = font; ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.lineWidth = 2 * marginEm * em; ctx.strokeStyle = '#000';
     paintLines(ctx, res, L, P, P, em, 'stroke');
     if (L.icon && typeof Path2D !== 'undefined') { ctx.save(); ctx.translate(P + L.icon.x * em, P + L.icon.y * em); const k = L.icon.s * em / 24; ctx.scale(k, k); ctx.lineWidth = 1.7 + 2 * marginEm * em / k; ctx.stroke(new Path2D(L.icon.d)); ctx.restore(); }
+    if (L.bridge) { const b = L.bridge; ctx.save(); ctx.lineCap = 'round'; ctx.lineWidth = Math.max(2 * marginEm * em, b.w * em); ctx.beginPath(); ctx.moveTo(P + b.x1 * em, P + b.y1 * em); ctx.lineTo(P + b.x2 * em, P + b.y2 * em); ctx.stroke(); ctx.restore(); }   /* symbol + words = one acrylic piece */
     const loops = traceLoops(alphaOf(), W, H).map(l => simplifyLoop(l, 0.5)).filter(l => l.length > 2);
     contour = loops.filter(l => loops.filter(o => o !== l && inside(l[0], o)).length % 2 === 0).map(toEm);
   }

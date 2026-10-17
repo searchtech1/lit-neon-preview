@@ -171,11 +171,7 @@
           "us": "{warranty}",
           "them": "Varies"
         },
-        {
-          "label": "Dimmer and remote",
-          "us": "Included",
-          "them": "Often extra"
-        },
+        { "label": "8 mm bold tube", "us": "Free upgrade", "them": "Often extra" },
         {
           "label": "Plug",
           "us": "Moulded UK plug",

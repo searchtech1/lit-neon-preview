@@ -78,6 +78,7 @@ let learnDone = false;
   /* stage */
   stageApi = stage.mount($('#b-stage'), { frame: design.view === 'drawing' ? 'room' : (isMobile() ? 'closeup' : 'real'), scene: design.scene, design, qa: 'builder.stage', priority: 'high', view: { rulers } });   /* owner 2026-10-17: real size is the default frame */
   stageApi.on('change', e => { design.pos = e.pos; autosave(); });
+  stageApi.on('icon', e => { design.iconAt = e.iconAt; if (!e.live) { autosave(); update({ silent: true }); } });   /* the symbol dragged into place on the wall */
   stageApi.on('wall', onWall);
   window.__builder = { get stage() { return stageApi; }, get design() { return design; } };   /* QA hook (like window.__p4) */
   stage.loadScenes().then(list => { pricing.setScenes(list); paintSceneButton(); paintAll(); });
@@ -402,7 +403,7 @@ function paintWords() {
   }
   /* symbol deltas: "+£40 · +27 cm" */
   $$('#b-symbols [data-icon]').forEach(b => { const id = b.dataset.icon; b.setAttribute('aria-pressed', String(id === design.icon)); const d = b.querySelector('[data-delta]'); if (!id) { d.textContent = t('words.symbolNone'); return; } if (!res.hasText && !design.icon) { d.textContent = ''; return; } const delta = pricing.symbolDelta(design, id), cm = pricing.symbolHeightDelta(design, id); d.textContent = delta == null ? '' : t('words.symbolDelta', { price: fmtDelta(delta), cm }); });
-  const pos = $('#b-iconpos'); pos.hidden = !design.icon || !res.drawLines.length; $$('[data-pos]', pos).forEach(b => b.setAttribute('aria-pressed', String(b.dataset.pos === design.iconPos)));
+  const pos = $('#b-iconpos'); if (pos) { pos.hidden = !design.icon || !res.drawLines.length; const at = res.m.iconAt || R.iconAtOf(design.iconAt, design.iconPos); $$('[data-place]', pos).forEach(b => { const p = R.OPTIONS.iconPresets[b.dataset.place]; b.setAttribute('aria-pressed', String(Math.abs(p.x - at.x) < .08 && Math.abs(p.y - at.y) < .08)); }); }
 }
 
 /* ====================================================================== step 2 · lettering ====================================================================== */
@@ -567,7 +568,7 @@ function renderBacking() {
   const rules = pricing.rules().pricing; const ICON = { cut: 'drawing', letter: 'pencil', rect: 'box', stand: 'stand' };
   $('#body-backing').innerHTML = `
     <p class="b-help">${esc(t('backing.help'))}</p>
-    <div class="c-opts b-backcards" role="radiogroup" aria-label="${esc(t('backing.label'))}" id="b-backings">${R.OPTIONS.backings.map(b => `<button type="button" class="c-opt b-backcard" role="radio" aria-checked="${b.id === design.backing}" data-backing="${b.id}" data-qa="builder.backing.card" data-id="${b.id}"><img class="b-backcard__img" src="/lit-neon-preview/rework/assets/img/photos/bk-${b.id}-800.jpg" alt="" loading="lazy" decoding="async" onerror="this.remove()">${icon(ICON[b.id])}<span><span class="name">${esc(t(`backing.${b.id}`, {}, b.name))}</span><span class="sub">${esc(t(`backing.${b.id}Sub`, {}, b.sub))}</span></span><span class="delta${!rules.backing[b.id] ? ' is-included' : ''}">${esc(fmtDelta(rules.backing[b.id] || 0, t('pills.included', {}, 'Included')))}</span></button>`).join('')}</div>
+    <div class="c-opts b-backcards" role="radiogroup" aria-label="${esc(t('backing.label'))}" id="b-backings">${R.OPTIONS.backings.map(b => `<button type="button" class="c-opt b-backcard" role="radio" aria-checked="${b.id === design.backing}" data-backing="${b.id}" data-qa="builder.backing.card" data-id="${b.id}"><img class="b-backcard__img b-backcard__img--diagram" src="/lit-neon-preview/rework/assets/img/backing/${b.id}.svg" alt="" loading="lazy" decoding="async" onerror="this.remove()">${icon(ICON[b.id])}<span><span class="name">${esc(t(`backing.${b.id}`, {}, b.name))}</span><span class="sub">${esc(t(`backing.${b.id}Sub`, {}, b.sub))}</span></span><span class="delta${!rules.backing[b.id] ? ' is-included' : ''}">${esc(fmtDelta(rules.backing[b.id] || 0, t('pills.included', {}, 'Included')))}</span></button>`).join('')}</div>
     <span class="b-label">${esc(t('backing.finishLabel'))}</span>
     <div class="b-finishes" role="group" aria-label="${esc(t('backing.finishLabel'))}" id="b-finishes">${R.OPTIONS.finishes.map(f => `<button type="button" class="b-finish" aria-pressed="${f.id === design.board}" data-finish="${f.id}" data-qa="builder.backing.finish" data-id="${f.id}"><span class="sw" style="background:${f.swatch}" aria-hidden="true"></span><span>${esc(t(`backing.finishes.${f.id}`, {}, f.name))}</span><span class="delta">${esc(fmtDelta(rules.finish[f.id] || 0, t('pills.included', {}, 'Included')))}</span></button>`).join('')}</div>
     <div><button type="button" class="c-btn c-btn--ghost" id="b-backing-example" data-qa="builder.backing.example">${icon('eye')}<span>${esc(t('backing.example'))}</span></button></div>`;
@@ -626,11 +627,19 @@ function renderSymbol() {
       <div class="b-symbols" role="group" aria-label="${esc(t('words.symbols'))}" id="b-symbols">
         ${['', ...R.OPTIONS.symbols].map(id => `<button type="button" class="b-symbol" aria-pressed="${id === design.icon}" data-icon="${id}" data-qa="builder.words.symbol" data-id="${id || 'none'}">${id ? R.iconSvg(id, null, '', '') : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg>'}<span><span class="name">${esc(t(`words.symbolNames.${id || 'none'}`))}</span><span class="delta" data-delta></span></span></button>`).join('')}
       </div>
-      <div class="c-seg b-iconpos" role="group" aria-label="${esc(t('words.position'))}" id="b-iconpos" hidden><button type="button" aria-pressed="true" data-pos="above" data-qa="builder.words.symbolpos.above">${esc(t('words.above'))}</button><button type="button" aria-pressed="false" data-pos="inline" data-qa="builder.words.symbolpos.inline">${esc(t('words.inline'))}</button></div>
+      <div class="b-iconplace" id="b-iconpos" hidden data-qa="builder.words.symbolplace">
+        <span class="b-label"><span>${esc(t('words.position'))}</span><span class="sub">${esc(t('words.dragHint'))}</span></span>
+        <div class="b-iconpad" role="group" aria-label="${esc(t('words.position'))}">${['tl', 'above', 'tr', 'left', '', 'right', 'bl', 'below', 'br'].map(k => k ? `<button type="button" data-place="${k}" aria-pressed="false" aria-label="${esc(t(`words.places.${k}`))}" data-qa="builder.words.symbolplace.${k}"><i></i></button>` : `<span class="b-iconpad__words" aria-hidden="true">Aa</span>`).join('')}</div>
+      </div>
     </div>
 `;
-  $('#b-symbols').addEventListener('click', e => { const b = e.target.closest('[data-icon]'); if (!b) return; setDesign({ icon: b.dataset.icon }); stageApi.strike(); });
-  $('#b-iconpos').addEventListener('click', e => { const b = e.target.closest('[data-pos]'); if (!b) return; setDesign({ iconPos: b.dataset.pos }); });
+  $('#b-symbols').addEventListener('click', e => {
+    const b = e.target.closest('[data-icon]'); if (!b) return; const first = !design.icon && b.dataset.icon;
+    setDesign({ icon: b.dataset.icon }); stageApi.strike();
+    /* owner 2026-10-17: picking a symbol invites you to drag it into place on the wall */
+    if (b.dataset.icon && R.resolve(design).drawLines.length) { const sg = document.querySelector('#b-stage .ln-sign'); if (sg) { sg.classList.remove('icon-hint'); void sg.offsetWidth; sg.classList.add('icon-hint'); } if (first) showNote(t('words.dragNote'), 'info', [], true); }
+  });
+  $('#b-iconpos').addEventListener('click', e => { const b = e.target.closest('[data-place]'); if (!b) return; setDesign({ iconAt: { ...R.OPTIONS.iconPresets[b.dataset.place] } }); });
 }
 
 /* ====================================================================== step 8 · review ====================================================================== */
@@ -657,7 +666,7 @@ function paintReview() {
   /* every cell is escaped: the words come from the textarea, the share hash or the search box (user text, never HTML).
      The size row is the one cell with markup, so it is assembled from escaped pieces. */
   const rows = [[t('review.rows.words'), esc(res.words || '—')], [t('review.rows.lettering'), esc(res.font.name)], [t('review.rows.colour'), esc(colourText)], [t('review.rows.jacket'), esc(res.jacket.sub)], [t('review.rows.size'), `${esc(res.sizeId === 'custom' ? t('size.custom') : R.sizeOf(res.sizeId).name)} · <span class="mono">${esc(res.dims ? fmtDims(res.dims.W, res.dims.H, design.unit) : '—')}</span>`]];
-  if (design.icon) rows.push([t('review.rows.symbol'), esc(`${t(`words.symbolNames.${design.icon}`)}, ${design.iconPos === 'inline' ? t('words.inline').toLowerCase() : t('words.above').toLowerCase()}`)]);
+  if (design.icon) rows.push([t('review.rows.symbol'), esc(`${t(`words.symbolNames.${design.icon}`)}, ${t(`words.places.${R.iconPlaceName(R.iconAtOf(design.iconAt, design.iconPos))}`).toLowerCase()}`)]);
   rows.push([t('review.rows.tube'), esc(design.tube === '8' ? t('size.tube8') : t('size.tube6'))], [t('review.rows.backing'), esc(res.backing.name)], [t('review.rows.finish'), esc(`${res.finish.name} acrylic`)], [t('review.rows.hangs'), esc(design.backing === 'stand' ? t('backing.stand') : res.hang.name)], [t('review.rows.where'), esc(res.use.name)], [t('review.rows.dimmer'), esc(design.dimmer ? t('fitting.dimmerYes') : t('fitting.dimmerNo'))], [t('review.rows.plug'), esc(t('review.plugValue'))]);
   $('#b-spec').innerHTML = rows.map(([k, v]) => `<tr><th>${esc(k)}</th><td>${v}</td></tr>`).join('');
   $('#b-review-rows').innerHTML = breakdownRows(false);

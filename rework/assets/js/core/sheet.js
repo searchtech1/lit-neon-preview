@@ -105,7 +105,7 @@ export function render(container, state, opts = {}) {
   /* spec table (customer names only) */
   const rows = compact || lite ? [] : [['Words', esc(words), 'name'], ['Lettering', esc(res.font.name)], ['Colour', esc(colourText) + (res.rgb ? '' : ` · ${res.colour.hex}`)], ['Tube', res.jacket.name.toLowerCase()],
     ['Letter height', `${res.letterCm} cm`], ['Overall', `${d.W} × ${d.H} cm (${cmToIn(d.W)} × ${cmToIn(d.H)} in)`], ['Backing', `${res.backing.name}, ${res.finish.name.toLowerCase()} acrylic`],
-    ['Hangs', `${res.use.name.toLowerCase()}, ${res.backing.id === 'stand' ? 'on its stand' : res.hang.name.toLowerCase()}`], ['Power', [F.has('psuVoltage') ? `${F.get('psuVoltage')} supply` : null, 'UK plug', 'dimmer and remote'].filter(Boolean).join(', ')], ['Drawn', `${today}, sheet 1 of 1`]];
+    ['Hangs', `${res.use.name.toLowerCase()}, ${res.backing.id === 'stand' ? 'on its stand' : res.hang.name.toLowerCase()}`], ['Power', [F.has('psuVoltage') ? `${F.get('psuVoltage')} supply` : null, 'UK plug', res.state && res.state.dimmer ? 'dimmer and remote' : null].filter(Boolean).join(', ')], ['Drawn', `${today}, sheet 1 of 1`]];
   const spec = container.querySelector('.spec'); spec.innerHTML = rows.length ? `<table>${rows.map(([k, v, cls]) => `<tr><td>${k}</td><td${cls ? ` class="${cls}"` : ''}>${v}</td></tr>`).join('')}</table>` : '';
   const notes = container.querySelector('.notes'); notes.innerHTML = lite ? '' : `<h4>Construction notes</h4><ol>
     <li>Tube path follows the centreline of each letter${res.icon ? ' and the symbol' : ''}.</li>
@@ -114,7 +114,7 @@ export function render(container, state, opts = {}) {
     <li>Made in a UK workshop. You approve this drawing before anything is made.</li></ol>`;
   /* title block: Title · Acrylic W×H · LED flex · Power (if confirmed) · Date · Drawn by */
   const tb = container.querySelector('.tb');
-  const cells = compact ? [['Acrylic', `${d.W} × ${d.H} cm`, 'mono'], ['Date', today, 'mono']] : narrow ? [['Title', esc(words.slice(0, 24)) || '—'], ['Acrylic', `${d.W} × ${d.H} cm`, 'mono'], ['Date', today, 'mono']] : [['Title', esc(words.slice(0, 40)) || '—'], ['Acrylic', `${d.W} × ${d.H} cm`, 'mono'], ['LED flex', fmtMetres(flex), 'mono']];
+  const cells = compact ? [['Acrylic', `${d.W} × ${d.H} cm`, 'mono'], ['Date', today, 'mono']] : narrow ? [['Title', esc(words.slice(0, 24)) || '—'], ['Acrylic', `${d.W} × ${d.H} cm`, 'mono'], ['Date', today, 'mono']] : [['Title', esc(words.slice(0, 40)) || '—'], ['Acrylic', `${d.W} × ${d.H} cm`, 'mono']];   /* LED flex removed from the drawing (owner 2026-10-16) */
   if (!compact && !narrow) { if (watts != null) cells.push(['Power', `${watts} W`, 'mono']); cells.push(['Date', today, 'mono'], ['Drawn by', 'Lit Neon']); }
   tb.innerHTML = cells.map(([k, v, cls]) => `<div><small>${k}</small><b${cls ? ` class="${cls}"` : ''}>${v}</b></div>`).join('');
   /* layout */
@@ -130,11 +130,11 @@ export function render(container, state, opts = {}) {
   const mg = res.backing.margin * ppc, emPx = d.emCm * ppc;
   const dr = container.querySelector('.drawing'); Object.assign(dr.style, { left: left + 'px', top: top + 'px', width: w + 'px', height: h + 'px' });
   const s = 100, iw = m.inkW * emPx, ih = m.inkH * emPx;
-  const textShiftX = (m.inkW - m.textW) / 2 - m.minX + (m.textOffX ? m.textOffX / 2 : 0);
+  const textShiftX = m.textOffX - m.minX;   /* one layout: renderer.measure places text + symbol */
   const alignOff = li => res.state.align === 'left' ? 0 : res.state.align === 'right' ? (m.blockW - m.lineWidths[li]) : (m.blockW - m.lineWidths[li]) / 2;
   const f = res.font;
   let svg = `<svg viewBox="0 0 ${m.inkW * s} ${m.inkH * s}" style="left:${mg}px;top:${mg}px;width:${iw}px;height:${ih}px">`;
-  if (res.icon) { const inline = res.iconPos === 'inline' && lines.length; const ix = inline ? 0 : (m.inkW - m.iconEm) / 2, iy = inline ? (m.inkH - m.iconEm) / 2 : 0; svg += `<g transform="translate(${ix * s} ${iy * s}) scale(${m.iconEm * s / 24})"><path d="${OPTIONS.icons[res.icon]}" style="stroke-width:${(1.7 * 24 / (m.iconEm * s)).toFixed(3)}"/></g>`; }
+  if (res.icon) { const ix = m.iconX, iy = m.iconY; svg += `<g transform="translate(${ix * s} ${iy * s}) scale(${m.iconEm * s / 24})"><path d="${OPTIONS.icons[res.icon]}" style="stroke-width:${(1.7 * 24 / (m.iconEm * s)).toFixed(3)}"/></g>`; }
   lines.forEach((line, li) => { svg += `<text x="${((textShiftX + alignOff(li)) * s).toFixed(1)}" y="${((m.textOffY + m.baselines[li] - m.top) * s).toFixed(1)}" style="font-family:'${f.family}';font-weight:${f.weight || 400};font-size:100px;word-spacing:${f.wordSpacingEm || 0}em">${esc(line)}</text>`; });
   svg += '</svg>';
   let back = '';
@@ -142,10 +142,10 @@ export function render(container, state, opts = {}) {
     const fl = container.querySelector('filter'), ms = fl.querySelectorAll('feMorphology');
     ms[0].setAttribute('radius', (mg * .9).toFixed(2)); fl.querySelector('feGaussianBlur').setAttribute('stdDeviation', Math.max(1, mg * .32).toFixed(2));
     const padC = mg * 1.4;
-    const inline = res.icon && res.iconPos === 'inline' && lines.length;
-    const iconH = res.icon ? `<svg viewBox="0 0 24 24" style="left:${(inline ? 0 : (m.inkW - m.iconEm) / 2) * emPx}px;top:${(inline ? (m.inkH - m.iconEm) / 2 : 0) * emPx}px;width:${m.iconEm * emPx}px;height:${m.iconEm * emPx}px"><path d="${OPTIONS.icons[res.icon]}"/></svg>` : '';
-    const textH = lines.length ? `<p class="c-text" style="left:${(textShiftX + (inline ? m.textOffX / 2 : 0)) * emPx}px;top:${(m.textOffY - m.top) * emPx}px;width:${m.blockW * emPx}px;font-family:'${f.family}',cursive;font-weight:${f.weight || 400};font-size:${emPx}px;line-height:1.15;text-align:${res.state.align};word-spacing:${f.wordSpacingEm || 0}em">${esc(lines.join('\n'))}</p>` : '';
-    back = `<div class="contourL" style="left:${mg - padC}px;top:${mg - padC}px;width:${iw + 2 * padC}px;height:${ih + 2 * padC}px;filter:url(#${id})"><div style="position:absolute;left:${padC}px;top:${padC}px;width:${iw}px;height:${ih}px">${iconH}${textH}</div></div>`;
+    const B = m.bridge, bridgeH = B ? `<i style="position:absolute;background:#fff;transform-origin:0 50%;left:${B.x1 * emPx}px;top:${(B.y1 - B.w / 2) * emPx}px;width:${Math.hypot(B.x2 - B.x1, B.y2 - B.y1) * emPx}px;height:${B.w * emPx}px;transform:rotate(${Math.atan2(B.y2 - B.y1, B.x2 - B.x1)}rad)"></i>` : '';
+    const iconH = res.icon ? `<svg viewBox="0 0 24 24" style="left:${m.iconX * emPx}px;top:${m.iconY * emPx}px;width:${m.iconEm * emPx}px;height:${m.iconEm * emPx}px"><path d="${OPTIONS.icons[res.icon]}"/></svg>` : '';
+    const textH = lines.length ? `<p class="c-text" style="left:${textShiftX * emPx}px;top:${(m.textOffY - m.top) * emPx}px;width:${m.blockW * emPx}px;font-family:'${f.family}',cursive;font-weight:${f.weight || 400};font-size:${emPx}px;line-height:1.15;text-align:${res.state.align};word-spacing:${f.wordSpacingEm || 0}em">${esc(lines.join('\n'))}</p>` : '';
+    back = `<div class="contourL" style="left:${mg - padC}px;top:${mg - padC}px;width:${iw + 2 * padC}px;height:${ih + 2 * padC}px;filter:url(#${id})"><div style="position:absolute;left:${padC}px;top:${padC}px;width:${iw}px;height:${ih}px">${bridgeH}${iconH}${textH}</div></div>`;
   } else {
     back = `<div class="rectL" style="left:0;top:0;width:${w}px;height:${h}px"><i></i><i></i><i></i><i></i></div>` + (res.backing.id === 'stand' ? `<div class="rectL" style="left:${w * .18}px;top:${h}px;width:${w * .64}px;height:${5 * ppc}px;border-style:solid"></div>` : '');
   }
@@ -166,9 +166,9 @@ export function svg(state, { width = 1123, height = 794 } = {}) {
   const pad = 60, areaW = width - pad * 2, areaH = height - pad * 2 - 90;
   const ppc = Math.min((areaW - 80) / d.W, (areaH - 60) / d.H); const w = d.W * ppc, h = d.H * ppc, left = pad + (areaW - w) / 2, top = pad + (areaH - h) / 2;
   const emPx = d.emCm * ppc, mg = res.backing.margin * ppc;
-  const textShiftX = (m.inkW - m.textW) / 2 - m.minX; const alignOff = li => res.state.align === 'left' ? 0 : res.state.align === 'right' ? (m.blockW - m.lineWidths[li]) : (m.blockW - m.lineWidths[li]) / 2;
+  const textShiftX = m.textOffX - m.minX; const alignOff = li => res.state.align === 'left' ? 0 : res.state.align === 'right' ? (m.blockW - m.lineWidths[li]) : (m.blockW - m.lineWidths[li]) / 2;
   const text = lines.map((line, li) => `<text x="${(left + mg + (textShiftX + alignOff(li)) * emPx).toFixed(1)}" y="${(top + mg + (m.textOffY + m.baselines[li] - m.top) * emPx).toFixed(1)}" font-family="${esc(res.font.family)}" font-weight="${res.font.weight || 400}" font-size="${emPx.toFixed(1)}" fill="none" stroke="#2F5D8A" stroke-width="1.6">${esc(line)}</text>`).join('');
-  const icon = res.icon ? `<g transform="translate(${left + mg + (m.inkW - m.iconEm) / 2 * emPx} ${top + mg}) scale(${m.iconEm * emPx / 24})"><path d="${OPTIONS.icons[res.icon]}" fill="none" stroke="#2F5D8A" stroke-width="${(1.7 * 24 / (m.iconEm * emPx)).toFixed(3)}"/></g>` : '';
+  const icon = res.icon ? `<g transform="translate(${left + mg + m.iconX * emPx} ${top + mg + m.iconY * emPx}) scale(${m.iconEm * emPx / 24})"><path d="${OPTIONS.icons[res.icon]}" fill="none" stroke="#2F5D8A" stroke-width="${(1.7 * 24 / (m.iconEm * emPx)).toFixed(3)}"/></g>` : '';
   const backing = (res.backing.id === 'cut' || res.backing.id === 'letter') ? `<rect x="${left}" y="${top}" width="${w}" height="${h}" rx="${mg}" fill="none" stroke="#2F5D8A" stroke-dasharray="4 4"/>` : `<rect x="${left}" y="${top}" width="${w}" height="${h}" rx="3" fill="none" stroke="#2F5D8A" stroke-dasharray="6 4"/>`;
   const flex = flexMetres(res);
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><rect width="100%" height="100%" fill="#F2E9DF"/><rect x="14" y="14" width="${width - 28}" height="${height - 28}" fill="none" stroke="#180E1F"/>

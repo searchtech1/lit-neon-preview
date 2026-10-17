@@ -154,6 +154,8 @@ export function createPricing({ core: C = core, rules = RULES, resolve = resolve
     rows.push({ id: 'finish', label: `${res.finish.name} acrylic`, step: 'backing', amount: rules.finish[res.state.board] || 0 });
     if (res.state.dimmer) rows.push({ id: 'dimmer', label: 'Dimmer + remote', step: 'fitting', amount: rules.dimmerDelta || 0 });
     if (res.state.use === 'out' && !full.quote && !noOut.quote) rows.push({ id: 'outdoor', label: `Outdoor build (+${rules.outdoorPct || 0}%)`, step: 'fitting', amount: round2(full.total - noOut.total) });
+    /* rows must add up to the total: the £5-step rounding (e.g. a £19 backboard) is folded into the base line (owner 2026-10-17) */
+    if (!noOut.quote && baseTotal != null) { const others = rows.filter(r => r.id !== 'base' && r.id !== 'outdoor').reduce((a, r) => a + (+r.amount || 0), 0); rows[0].amount = round2(noOut.total - others); }
     const total = p.kind === 'price' ? p.payable : null;
     return { kind: p.kind, rows, everyday: p.kind === 'price' ? p.everyday : (p.total ?? null), payable: total, total, promo: promoLive(), promoNote: promoLive() && p.kind === 'price' ? copy('promo.everydayNote', { everyday: gbp(p.everyday), date: fmtDay(promoEndsAfter()) }) : null, reason: quoteReason(p) };
   }

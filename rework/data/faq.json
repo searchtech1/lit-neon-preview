@@ -303,7 +303,7 @@
         "business"
       ],
       "q": "Can it go outside?",
-      "a": "Our standard signs are made for indoors. For a shopfront, a garden or a covered terrace, send us the details and a designer will quote an outdoor build within {value:mockupHours} hours. {fact:outdoorIndicativePct}",
+      "a": "Yes. Choose Outdoors in the Fitting step of the designer: outdoor signs get a sealed supply and a weatherproof jacket, and the outdoor build adds {value:outdoorIndicativePct}% to the sign price.",
       "links": [
         {
           "label": "Ask for an outdoor quote",

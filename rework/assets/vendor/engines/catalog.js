@@ -24,7 +24,7 @@ window.LIT = {
     // owner's list 2026-10-17, in his order (Custom Neon-style set, real font names). All 11 present. licence: 'demo' = the owner's file is the free
     // personal-use download; buy the commercial/webfont licence before the store goes live (tools/build-shopify.mjs warns).
     // minLetterCm are workshop estimates [CONFIRM].
-    { id: 'rocket', name: 'Rocket Clouds', family: 'Rocket Clouds', style: 'script', enabled: true, minLetterCm: 9, wordSpacingEm: 0.18, ampersandGapEm: 0.14, licence: 'demo' },
+    { id: 'rocket', name: 'Rocket', realName: 'Rocket Clouds', family: 'Rocket Clouds', style: 'script', enabled: true, minLetterCm: 9, wordSpacingEm: 0.18, ampersandGapEm: 0.14, licence: 'demo' },
     { id: 'gruenewald', name: 'Gruenewald VA', family: 'Gruenewald VA', style: 'script', enabled: true, minLetterCm: 9, wordSpacingEm: 0.16, ampersandGapEm: 0.14 },
     { id: 'brittany', name: 'Brittany Signature', family: 'Brittany Signature', style: 'script', enabled: true, minLetterCm: 10, wordSpacingEm: 0.18, ampersandGapEm: 0.16, licence: 'demo' },
     { id: 'hesterica', name: 'Hesterica', family: 'Hesterica', style: 'script', enabled: true, minLetterCm: 9, wordSpacingEm: 0.16, ampersandGapEm: 0.14, licence: 'demo' },

@@ -300,7 +300,7 @@ function renderSummary() {
     <div class="bk-express" data-slot="express"></div>
     <ul class="bk-assure" aria-label="${esc(t('assure.title', {}, 'Before anything is made'))}">
       <li>${icon('drawing')}<span>${esc(t('assure.drawing'))}</span></li>
-      <li>${icon('shield')}<span>${esc(t('assure.warranty', { warranty: facts.get('warrantyYears') || '2-year warranty' }))}</span></li>
+      <li>${icon('shield')}<span>${esc(t('assure.warranty', { warranty: facts.get('warrantyYears') || '3-year warranty' }))}</span></li>
       <li>${icon('truck')}<span>${esc(t('assure.delivery'))}</span></li>
       <li>${icon('remote')}<span>${esc(t('assure.kit'))}</span></li>
     </ul>

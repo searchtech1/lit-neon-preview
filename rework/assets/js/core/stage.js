@@ -9,7 +9,7 @@
    frame except `real` crops to the wall box and zooms until the sign hits the surface's target fraction of the stage
    width, capped so source pixels ≥ device pixels (the wall crop is the source), never leaving the plate and always
    keeping the calibration object's top edge in the bottom 30% of the crop. Review mode logs `frame-short`. */
-import { resolve as resolveDesign, OPTIONS, tubeHtml, iconSvg, coreOf, glowOf, iconGlowOf, offTube, uiHex, rgba, relight, reducedMotion, bakeGlow, onFonts, injectCss, escapeHtml as esc } from './renderer.js';
+import { resolve as resolveDesign, OPTIONS, ICON_SIZE, ICON_GAP, iconAtOf, tubeHtml, iconSvg, coreOf, glowOf, iconGlowOf, offTube, uiHex, rgba, relight, reducedMotion, bakeGlow, onFonts, injectCss, escapeHtml as esc } from './renderer.js';
 import { fmtLen, cmToIn } from './money.js';
 import * as clock from './clock.js';
 
@@ -83,11 +83,13 @@ const CSS = `
 .ln-board i{position:absolute;width:var(--so);height:var(--so);border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0,#e8d9a8 30%,#a8853d 70%,#6b5322 100%);box-shadow:0 2px 2px rgba(0,0,0,.45)}
 .ln-board i:nth-child(1){left:var(--soi);top:var(--soi)}.ln-board i:nth-child(2){right:var(--soi);top:var(--soi)}.ln-board i:nth-child(3){left:var(--soi);bottom:var(--soi)}.ln-board i:nth-child(4){right:var(--soi);bottom:var(--soi)}
 .ln-standbase{position:absolute;left:18%;right:18%;top:100%;display:none;border-radius:0 0 4px 4px}
-.ln-sbody{position:absolute;left:50%;top:50%;display:grid;justify-items:center;white-space:pre;line-height:1.15;margin:0;pointer-events:none}
-.ln-sbody.inline{grid-auto-flow:column;align-items:center}
-.ln-sbody p{margin:0;white-space:pre;line-height:1.15}
-.ln-sbody svg{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5;width:var(--ic);height:var(--ic)}
-.ln-sbody.above svg{margin-bottom:calc(var(--ic) * -.1)}.ln-sbody.inline svg{margin-right:calc(var(--ic) * .2)}
+.ln-sbody{position:absolute;left:50%;top:50%;display:block;white-space:pre;line-height:1.15;margin:0;pointer-events:none}
+.ln-sbody p{position:absolute;margin:0;white-space:pre;line-height:1.15}
+.ln-sbody svg{position:absolute;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.5;width:var(--ic);height:var(--ic)}
+.ln-sbody .ln-bridge{position:absolute;background:#fff;transform-origin:0 50%}
+.ln-sign.has-icon .ln-tube svg{pointer-events:auto;cursor:move;touch-action:none}
+.ln-sign.icon-hint .ln-tube svg{animation:ln-icon-hint 1.1s ease-in-out 3}
+@keyframes ln-icon-hint{50%{transform:scale(1.18)}}
 .ln-contour{color:#fff}.ln-contour svg{stroke:#fff;stroke-width:2.2}
 .ln-stage.is-night .ln-board,.ln-stage.is-night .ln-standbase{filter:brightness(.62)}
 .ln-tube{transition:color var(--d-base,240ms),text-shadow var(--d-base,240ms),filter var(--d-base,240ms)}
@@ -250,7 +252,11 @@ export function mount(el, opts = {}) {
       short = fraction < range[0] - .005 && k < desired;
       if (short && isReview()) { const line = `frame-short ${st.scene.id} ${frame} ${fraction.toFixed(2)}`; if (!frameShortLog.includes(line)) { frameShortLog.push(line); document.dispatchEvent(new CustomEvent('ln:frame-short', { detail: { scene: st.scene.id, frame, fraction } })); import('./facts.js').then(f => f.logFrameShort && f.logFrameShort(st.scene.id, frame, fraction)).catch(() => {}); } }
     }
-    st.k = k; st.crop = { x: cx, y: cy, w: cw, h: ch }; st.ppc = m.calibPpc * k;
+    /* a sign bigger than the view (2 m+ quote sizes, a long 3-line sign) is shown scaled to fit instead of spilling off the
+       stage; the rulers keep the true centimetres (sweep 2026-10-17) */
+    let fitScale = 1; if (m.calibPpc) { const sw = d.W * m.calibPpc * k, sh = d.H * m.calibPpc * k; fitScale = Math.min(1, (.94 * SW) / sw, (.86 * SH) / sh); }
+    E.sign.classList.toggle('is-scaled', fitScale < .999);
+    st.k = k; st.crop = { x: cx, y: cy, w: cw, h: ch }; st.ppc = m.calibPpc * k * fitScale; st.fitScale = fitScale;
     st.frameInfo = { frame, scene: st.scene.id, fraction: Math.round(fraction * 1000) / 1000, target: range, sourcePx, devicePx: Math.round(SW * DPR), short, k, ppc: st.ppc, orientation: st.orientation, crop: st.crop, useWall };
     /* plate box */
     const PWk = PW * k, PHk = PH * k, ox = -cx * k, oy = -cy * k;
@@ -271,15 +277,19 @@ export function mount(el, opts = {}) {
     E.sign.setAttribute('aria-label', `Your sign, ${Math.round(d.W)} by ${Math.round(d.H)} centimetres${st.interactive ? '. Drag or use the arrow keys to move it' : ''}`);
     const c = res.colour, night = st.view.night, onNow = st.view.on;
     el.classList.toggle('is-night', night); el.classList.toggle('is-on', onNow); el.classList.toggle('is-rgb', res.rgb && onNow); el.classList.toggle('is-light', !night && st.scene.light !== 'warm' && !!st.scene.studio === false && (st.scene.light === 'cool' || st.scene.light === 'neutral'));
-    const emPx = d.emCm * ppc, mres = res.m; const inline = res.icon && res.iconPos === 'inline' && res.drawLines.length;
-    const textShare = res.drawLines.length ? (mres.inkH - (mres.iconEm && !inline ? mres.iconEm * 1.15 : 0)) / mres.inkH : 0;
+    const emPx = d.emCm * ppc, mres = res.m;
+    /* one explicit layout (renderer.measure): the body is the ink box; text, symbol and (outline layer only) the bridge sit at measured spots */
     const bodyHtml = (res.icon ? iconSvg(res.icon, null, '', '') : '') + ((res.drawLines.length || !res.hasText) ? `<p>${tubeHtml(res)}</p>` : '');
+    const B = mres.bridge, bridgeHtml = B ? `<i class="ln-bridge" style="left:${B.x1}em;top:${B.y1 - B.w / 2}em;width:${Math.hypot(B.x2 - B.x1, B.y2 - B.y1)}em;height:${B.w}em;transform:rotate(${Math.atan2(B.y2 - B.y1, B.x2 - B.x1)}rad)"></i>` : '';
+    E.sign.classList.toggle('has-icon', !!res.icon && !!res.drawLines.length);
     for (const x of [E.tube, E.contour]) {
-      if (x.dataset.html !== bodyHtml) { x.innerHTML = bodyHtml; x.dataset.html = bodyHtml; }
-      x.classList.toggle('inline', !!inline); x.classList.toggle('above', !inline);
+      const html = x === E.contour ? bridgeHtml + bodyHtml : bodyHtml;
+      if (x.dataset.html !== html) { x.innerHTML = html; x.dataset.html = html; }
       x.style.fontFamily = `"${res.font.family}", cursive`; x.style.fontWeight = res.font.weight || 400; x.style.fontSize = emPx + 'px'; x.style.wordSpacing = (res.font.wordSpacingEm || 0) + 'em'; x.style.setProperty('--ic', (mres.iconEm || 0) + 'em');
-      const pEl = x.querySelector('p'); if (pEl) pEl.style.textAlign = res.state.align;
-      x.style.transform = `translate(-50%,-50%) translate(${mres.offX}em, ${inline ? 0 : mres.offY * textShare}em)`;
+      x.style.width = mres.inkW + 'em'; x.style.height = mres.inkH + 'em';
+      const pEl = x.querySelector('p'); if (pEl) { pEl.style.textAlign = res.state.align; pEl.style.left = (mres.textOffX - mres.minX) + 'em'; pEl.style.top = (mres.textOffY - mres.top) + 'em'; }
+      const sv = x.querySelector('svg'); if (sv) { sv.style.left = mres.iconX + 'em'; sv.style.top = mres.iconY + 'em'; }
+      x.style.transform = 'translate(-50%,-50%)';
     }
     E.tube.classList.toggle('placeholder', res.placeholder); E.tube.classList.toggle('off', !onNow);
     E.tube.style.setProperty('--off', offTube(c, res.state.jacket));
@@ -332,7 +342,7 @@ export function mount(el, opts = {}) {
   /* ---------- drag + keyboard (clamped to the wall box and the crop) ---------- */
   let drag = null; let hintShown = false;
   function clampPos(x, y) {
-    const m = sceneMeta(); const d = (st.res && st.res.dims) || { W: 60, H: 20 }; const { PW, PH } = m; const ppcPlate = m.calibPpc || (st.ppc / st.k);
+    const m = sceneMeta(); const d = (st.res && st.res.dims) || { W: 60, H: 20 }; const { PW, PH } = m; const ppcPlate = m.calibPpc ? m.calibPpc * (st.fitScale || 1) : (st.ppc / st.k);   /* the sign as drawn (scaled-to-fit included) */
     const hw = d.W * ppcPlate / 2 / PW, hh = d.H * ppcPlate / 2 / PH; const wb = m.wallBox || { x: 0, y: 0, w: 1, h: 1 };
     let minX = wb.x + hw, maxX = wb.x + wb.w - hw, minY = wb.y + hh, maxY = wb.y + wb.h - hh;
     if (st.crop && st.frame !== 'real') { const c = st.crop; minX = Math.max(minX, c.x / PW + hw * .5); maxX = Math.min(maxX, (c.x + c.w) / PW - hw * .5); minY = Math.max(minY, c.y / PH + hh * .5); maxY = Math.min(maxY, (c.y + c.h) / PH - hh * .5); }
@@ -342,7 +352,27 @@ export function mount(el, opts = {}) {
   function setPos(x, y, { silent } = {}) { const sc = st.scene; const np = clampPos(x, y); st.design.pos = Object.assign({}, st.design.pos, { [sc.id]: { x: Math.round(np.x * 1000) / 1000, y: Math.round(np.y * 1000) / 1000 } }); render(); if (!silent) emit('change', { pos: st.design.pos, scene: sc.id }); }
   function showHint() { if (hintShown || !st.interactive) return; let seen = false; try { seen = localStorage.getItem('stage.hint') === '1'; } catch {} if (seen) return; hintShown = true; E.hint.hidden = false; }
   function hideHint() { E.hint.hidden = true; try { localStorage.setItem('stage.hint', '1'); } catch {} }
-  E.sign.addEventListener('pointerdown', e => { if (!st.interactive || e.button) return; const m = sceneMeta(); const p = pos(); drag = { id: e.pointerId, x0: e.clientX, y0: e.clientY, px: p.x, py: p.y, PWk: m.PW * st.k, PHk: m.PH * st.k }; E.sign.setPointerCapture(e.pointerId); el.classList.add('is-dragging'); hideHint(); e.preventDefault(); });
+  let iconDrag = null;
+  const textCentre = () => { const r = E.tube.getBoundingClientRect(), mm = st.res && st.res.m; if (!mm) return null; const k = r.width / mm.inkW; return { x: r.left + (mm.textOffX + mm.textW / 2) * k, y: r.top + (mm.textOffY + mm.textH / 2) * k, k }; };
+  E.sign.addEventListener('pointerdown', e => {
+    if (!st.interactive || e.button || !E.sign.classList.contains('has-icon')) return;
+    const sv = E.tube.querySelector('svg'); if (!sv) return; const r = sv.getBoundingClientRect(), pad = 10;
+    if (e.clientX < r.left - pad || e.clientX > r.right + pad || e.clientY < r.top - pad || e.clientY > r.bottom + pad) return;
+    const tc = textCentre(); if (!tc) return; iconDrag = { id: e.pointerId, tc }; E.sign.setPointerCapture(e.pointerId); el.classList.add('is-dragging'); E.sign.classList.remove('icon-hint'); hideHint(); e.preventDefault(); e.stopImmediatePropagation();
+  });
+  E.sign.addEventListener('pointermove', e => {
+    if (!iconDrag || e.pointerId !== iconDrag.id) return; e.stopImmediatePropagation();
+    const mm = st.res.m, k = iconDrag.tc.k, gapS = (ICON_SIZE / 2 + ICON_GAP) * mm.cap;
+    const at = iconAtOf({ x: (e.clientX - iconDrag.tc.x) / k / (mm.textW / 2 + gapS), y: (e.clientY - iconDrag.tc.y) / k / (mm.textH / 2 + gapS) });
+    if (st.design.iconAt && st.design.iconAt.x === at.x && st.design.iconAt.y === at.y) return;
+    st.design = Object.assign({}, st.design, { iconAt: at }); render();
+    /* keep the words where they were: shift the sign by however far the text centre moved */
+    const tc2 = textCentre(); if (tc2) { const m2 = sceneMeta(), p = pos(); const dx = tc2.x - iconDrag.tc.x, dy = tc2.y - iconDrag.tc.y; if (Math.abs(dx) + Math.abs(dy) > .5) setPos(p.x - dx / (m2.PW * st.k), p.y - dy / (m2.PH * st.k), { silent: true }); }
+    emit('icon', { iconAt: at, live: true });
+  });
+  const endIcon = e => { if (!iconDrag || (e && e.pointerId !== iconDrag.id)) return; iconDrag = null; el.classList.remove('is-dragging'); emit('icon', { iconAt: st.design.iconAt }); emit('change', { pos: st.design.pos, scene: st.scene.id }); };
+  E.sign.addEventListener('pointerup', endIcon); E.sign.addEventListener('pointercancel', endIcon);
+  E.sign.addEventListener('pointerdown', e => { if (!st.interactive || e.button || iconDrag) return; const m = sceneMeta(); const p = pos(); drag = { id: e.pointerId, x0: e.clientX, y0: e.clientY, px: p.x, py: p.y, PWk: m.PW * st.k, PHk: m.PH * st.k }; E.sign.setPointerCapture(e.pointerId); el.classList.add('is-dragging'); hideHint(); e.preventDefault(); });
   E.sign.addEventListener('pointermove', e => { if (!drag || e.pointerId !== drag.id) return; setPos(drag.px + (e.clientX - drag.x0) / drag.PWk, drag.py + (e.clientY - drag.y0) / drag.PHk, { silent: true }); });
   const endDrag = e => { if (!drag || (e && e.pointerId !== drag.id)) return; drag = null; el.classList.remove('is-dragging'); emit('change', { pos: st.design.pos, scene: st.scene.id }); };
   E.sign.addEventListener('pointerup', endDrag); E.sign.addEventListener('pointercancel', endDrag);
