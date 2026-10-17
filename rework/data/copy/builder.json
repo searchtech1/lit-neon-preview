@@ -129,7 +129,7 @@
   "remove": "Remove it",
   "useSymbol": "Use our {name} symbol",
   "tooWide": "That’s wider than we can make in one piece at {size}.",
-  "fitsAt": "Fits at {size} ({width}, {price})",
+  "fitsAt": "Fits at {size} · {price}",
   "useSize": "Use {size}",
   "splitHint": "Or split it over two lines.",
   "empty": "Type your words to see a price.",
@@ -170,7 +170,11 @@
    "tr": "Top right",
    "bl": "Bottom left",
    "br": "Bottom right"
-  }
+  },
+  "helpBaselines": "Up to {maxLines} lines. Each line has its own character limit for the size you pick. Press Enter for a new line.",
+  "counterLine": "{name} · {n} / {max}",
+  "counterOff": "{name} · not at {size}",
+  "counterOver": "{name} · {n} / {max} · too long for {size}"
  },
  "lettering": {
   "label": "Pick a face",
@@ -233,7 +237,8 @@
    "fills": "Fills a feature wall"
   },
   "unitCm": "cm",
-  "unitIn": "in"
+  "unitIn": "in",
+  "tooLong": "Too long"
  },
  "backing": {
   "label": "Acrylic backing",

@@ -1,25 +1,108 @@
-import{boot as A,readState as S,watchState as W,hostState as J,link as j,onFonts as K,t as s,esc as o,icon as P,R as O,stage as Q,pricing as U,facts as X,money as Z,$ as x,reduced as I,onView as ee,pauseButton as te,registerFrame as se}from"./_ix.js";se("ix-card",()=>[.38,.44]);const b=["red","green","blue","ice","cool","violet","yellow"],ce=1200,ie=2600;function ae(t){return`<svg class="ix-effects__remote" viewBox="0 0 64 124" aria-hidden="true" focusable="false">
+/* Lit Neon v2 — ix/effects.js (brief §5.4): static vs RGB. Three cards of the SAME sign (the visitor's words) on the
+   gaming scene: One colour (static, the remote dimming it), Colour changing (steps through seven colours every 1.2 s),
+   Gradient (only when facts.rgbGradient is confirmed; otherwise two cards fill the row). Each card: a live stage, a
+   schematic remote with the buttons that matter, two bullets, the price difference at the current size from
+   pricing.deltas (the RGB multiplier) and "Choose this" into the builder. A "Pause animations" button (WCAG 2.2.2) and
+   an automatic pause off-screen; reduced motion shows a seven-swatch strip instead of cycling.
+   mount(el, { state, scene }) → { destroy, setState }. data-qa: ix.effects.* */
+import { boot, readState, watchState, hostState, link, onFonts, t, esc, icon, R, stage, pricing, facts, money, h, $, $$, reduced, onView, pauseButton, registerFrame } from './_ix.js';
+/* a slightly smaller card so the gaming scene's desk (its calibration object) and the sign both fit the crop */
+registerFrame('ix-card', () => [.38, .44]);
+
+const CYCLE = ['red', 'green', 'blue', 'ice', 'cool', 'violet', 'yellow'];
+const EVERY = 1200, DIM_EVERY = 2600;
+
+function remoteSvg(kind) {
+  /* a schematic remote: power, dim −/+, four colour dots, a cycle button. Classes mark what the card animates. */
+  return `<svg class="ix-effects__remote" viewBox="0 0 64 124" aria-hidden="true" focusable="false">
     <rect class="body" x="4" y="2" width="56" height="120" rx="12"/>
     <circle class="pwr" cx="32" cy="20" r="7"/><path class="pwr-glyph" d="M32 15v5M28.5 17.5a5 5 0 1 0 7 0"/>
     <rect class="dim dim-minus" x="12" y="36" width="18" height="12" rx="6"/><path class="glyph" d="M17 42h8"/>
     <rect class="dim dim-plus" x="34" y="36" width="18" height="12" rx="6"/><path class="glyph" d="M39 42h8M43 38v8"/>
-    ${t==="static"?"":`<g class="dots"><circle cx="17" cy="66" r="5"/><circle cx="27" cy="66" r="5"/><circle cx="37" cy="66" r="5"/><circle cx="47" cy="66" r="5"/><circle cx="17" cy="80" r="5"/><circle cx="27" cy="80" r="5"/><circle cx="37" cy="80" r="5"/><circle cx="47" cy="80" r="5"/></g>
+    ${kind === 'static' ? '' : `<g class="dots"><circle cx="17" cy="66" r="5"/><circle cx="27" cy="66" r="5"/><circle cx="37" cy="66" r="5"/><circle cx="47" cy="66" r="5"/><circle cx="17" cy="80" r="5"/><circle cx="27" cy="80" r="5"/><circle cx="37" cy="80" r="5"/><circle cx="47" cy="80" r="5"/></g>
     <rect class="cycle" x="12" y="96" width="40" height="14" rx="7"/><path class="glyph" d="M26 103h12M35 100l3 3-3 3"/>`}
-    ${t==="static"?'<rect class="dim-track" x="14" y="64" width="36" height="6" rx="3"/><rect class="dim-level" x="14" y="64" width="36" height="6" rx="3"/>':""}
-  </svg>`}export function mount(t,L={}){const p=J(L);t.classList.add("ix","ix-effects"),t.dataset.qa="ix.effects",t.dataset.playing="true";const d=L.scene||t.dataset.scene||"s12-gaming";let i=null,_=!1,v=!0,M=!1,$=0,w=0,g=0,u=!1;const l={};let k=()=>{},E=()=>{},B=()=>{};const V={destroy:H,setState:G},D=()=>X.has("rgbGradient"),C=()=>["static","changing"].concat(D()?["gradient"]:[]),F={static:s("effects.static"),changing:s("effects.changing"),gradient:s("effects.gradient")},T=e=>e==="static"?[s("effects.staticBullets.0"),s("effects.staticBullets.1")]:e==="changing"?[s("effects.changingBullets.0"),s("effects.changingBullets.1",{fix:s("effects.fix")})]:[s("effects.gradientBullets.0"),s("effects.gradientBullets.1")];function N(){const e=C();t.innerHTML=`
-      <div class="ix-effects__grid" data-cols="${e.length}">
-        ${e.map(c=>`<article class="ix-effects__card" data-kind="${c}" data-qa="ix.effects.card">
+    ${kind === 'static' ? '<rect class="dim-track" x="14" y="64" width="36" height="6" rx="3"/><rect class="dim-level" x="14" y="64" width="36" height="6" rx="3"/>' : ''}
+  </svg>`;
+}
+
+export function mount(el, opts = {}) {
+  const host = hostState(opts);
+  el.classList.add('ix', 'ix-effects'); el.dataset.qa = 'ix.effects'; el.dataset.playing = 'true';
+  const SCENE = opts.scene || el.dataset.scene || 's12-gaming';
+  let state = null, killed = false, playing = true, inView = false, timer = 0, dimTimer = 0, ci = 0, dimmed = false;
+  const stages = {}; let offWatch = () => {}, offFonts = () => {}, offView = () => {};
+  const api = { destroy, setState };
+
+  const hasGradient = () => facts.has('rgbGradient');
+  const kinds = () => ['static', 'changing'].concat(hasGradient() ? ['gradient'] : []);
+  const titles = { static: t('effects.static'), changing: t('effects.changing'), gradient: t('effects.gradient') };
+  const bullets = k => k === 'static' ? [t('effects.staticBullets.0'), t('effects.staticBullets.1')] : k === 'changing' ? [t('effects.changingBullets.0'), t('effects.changingBullets.1', { fix: t('effects.fix') })] : [t('effects.gradientBullets.0'), t('effects.gradientBullets.1')];
+
+  function markup() {
+    const ks = kinds();
+    el.innerHTML = `
+      <div class="ix-effects__grid" data-cols="${ks.length}">
+        ${ks.map(k => `<article class="ix-effects__card" data-kind="${k}" data-qa="ix.effects.card">
           <div class="ix-effects__stage ix__stage"><div class="ix-effects__mount"></div></div>
           <div class="ix-effects__body">
-            <div class="ix-effects__top"><h3 class="t-title">${o(F[c])}</h3>${ae(c)}</div>
-            <ul class="ix-effects__bullets">${T(c).map(n=>`<li>${o(n)}</li>`).join("")}</ul>
-            ${c==="changing"&&I()?`<div class="ix-effects__strip" data-qa="ix.effects.strip" aria-label="${o(s("effects.swatchStrip"))}">${b.map(n=>{const r=O.colourOf(n);return`<span class="c-swatch" style="--tube:${r.hex};--core:${O.coreOf(r)}" title="${o(r.name)}"><span class="tube"></span><span class="name">${o(r.name)}</span></span>`}).join("")}</div>`:""}
+            <div class="ix-effects__top"><h3 class="t-title">${esc(titles[k])}</h3>${remoteSvg(k)}</div>
+            <ul class="ix-effects__bullets">${bullets(k).map(b => `<li>${esc(b)}</li>`).join('')}</ul>
+            ${k === 'changing' && reduced() ? `<div class="ix-effects__strip" data-qa="ix.effects.strip" aria-label="${esc(t('effects.swatchStrip'))}">${CYCLE.map(c => { const col = R.colourOf(c); return `<span class="c-swatch" style="--tube:${col.hex};--core:${R.coreOf(col)}" title="${esc(col.name)}"><span class="tube"></span><span class="name">${esc(col.name)}</span></span>`; }).join('')}</div>` : ''}
             <p class="ix-effects__price" data-qa="ix.effects.price"></p>
-            <a class="c-btn c-btn--ghost" data-qa="ix.effects.choose" href="/lit-neon-preview/rework/create.html">${o(s("effects.choose"))}</a>
+            <a class="c-btn c-btn--ghost" data-qa="ix.effects.choose" href="/lit-neon-preview/rework/create.html">${esc(t('effects.choose'))}</a>
           </div>
-        </article>`).join("")}
+        </article>`).join('')}
       </div>
       <div class="ix__row ix__row--between ix-effects__foot">
-        <p class="ix__caption" data-caption="rendered">${P("image")}<span>${o(s("effects.caption"))} · ${o(s("effects.offNote"))}</span></p>
+        <p class="ix__caption" data-caption="rendered">${icon('image')}<span>${esc(t('effects.caption'))} · ${esc(t('effects.offNote'))}</span></p>
         <span class="ix-effects__pause"></span>
-      </div>`;const a=te({qa:"ix.effects.pause",label:s("effects.pause"),playLabel:s("effects.play"),onChange:c=>{v=c,y()}});x(t,".ix-effects__pause").appendChild(a.el);for(const c of e){const n=z(c);l[c]=Q.mount(x(t,`.ix-effects__card[data-kind="${c}"] .ix-effects__mount`),{frame:"ix-card",scene:d,design:n,interactive:!1,pill:!0,rulers:!1,qa:`ix.effects.${c}`,relight:c==="static"})}}function z(e){const a=Object.assign({},i,{scene:d,on:!0,night:!0,view:"room",colours:null});return e==="static"?Object.assign(a,{colour:i.colour==="rgb"?"warm":i.colour}):e==="changing"?Object.assign(a,{colour:b[g]}):Object.assign(a,{colour:"rgb"})}function m(){const e=O.sizeOf(i.size).name,a=Object.assign({},i,{colours:null,colour:i.colour==="rgb"?"warm":i.colour}),c=U.deltas(a,"colour",["rgb"]);for(const n of C()){const r=x(t,`.ix-effects__card[data-kind="${n}"]`);if(!r)continue;const f=r.querySelector(".ix-effects__price"),q=r.querySelector('.ix-effects__choose, [data-qa="ix.effects.choose"]');if(n==="static")f.textContent=s("effects.included"),f.dataset.delta="0",q.href=j(Object.assign({},a,{scene:d}));else if(n==="changing"){const h=c.rgb;f.textContent=h==="quote"||h==null?s("effects.quoted"):s("effects.atSize",{delta:Z.fmtDelta(h),size:e}),f.dataset.delta=h==null?"":String(h),q.href=j(Object.assign({},a,{colour:"rgb",scene:d}))}else f.textContent=s("effects.quoted"),f.dataset.delta="quote",q.href=j(Object.assign({},a,{colour:"rgb",scene:d}));l[n]&&l[n].setDesign(z(n))}}function R(){g=(g+1)%b.length,l.changing&&l.changing.setDesign({colour:b[g]});const e=x(t,'.ix-effects__card[data-kind="changing"]');e&&e.querySelectorAll(".dots circle").forEach((a,c)=>a.classList.toggle("is-active",c===g%8))}function Y(){u=!u;const e=x(t,'.ix-effects__card[data-kind="static"]');e&&(e.classList.toggle("is-dimmed",u),e.querySelector(".dim-minus")?.classList.toggle("is-active",u),e.querySelector(".dim-plus")?.classList.toggle("is-active",!u))}function y(){const e=v&&M&&!I()&&!_;t.dataset.playing=String(v),t.classList.toggle("is-running",e),clearInterval($),clearInterval(w),$=w=0,e&&($=setInterval(R,ce),w=setInterval(Y,ie))}function G(e={}){_||(i=S(t,{state:p.set(e)}),m())}function H(){_=!0,y(),k(),E(),B(),Object.values(l).forEach(e=>e.destroy()),t.innerHTML=""}return A().then(()=>{_||(i=S(t,{state:p.get()}),N(),m(),k=W(p,()=>{const e=S(t,{state:p.get()});(e.text!==i.text||e.font!==i.font||e.size!==i.size||e.colour!==i.colour)&&(i=e,m())}),E=K(m),B=ee(t,e=>{M=e,y()},{threshold:.2}),y())}),V}export default{mount};
+      </div>`;
+    const pb = pauseButton({ qa: 'ix.effects.pause', label: t('effects.pause'), playLabel: t('effects.play'), onChange: on => { playing = on; sync(); } });
+    $(el, '.ix-effects__pause').appendChild(pb.el);
+    for (const k of ks) {
+      const d = designFor(k);
+      stages[k] = stage.mount($(el, `.ix-effects__card[data-kind="${k}"] .ix-effects__mount`), { frame: 'ix-card', scene: SCENE, design: d, interactive: false, pill: true, rulers: false, qa: `ix.effects.${k}`, relight: k === 'static' });
+    }
+  }
+  function designFor(k) {
+    const base = Object.assign({}, state, { scene: SCENE, on: true, night: true, view: 'room', colours: null });
+    if (k === 'static') return Object.assign(base, { colour: state.colour === 'rgb' ? 'warm' : state.colour });
+    if (k === 'changing') return Object.assign(base, { colour: CYCLE[ci] });
+    return Object.assign(base, { colour: 'rgb' });
+  }
+  function paint() {
+    const sizeName = R.sizeOf(state.size).name;
+    const base = Object.assign({}, state, { colours: null, colour: state.colour === 'rgb' ? 'warm' : state.colour });
+    const d = pricing.deltas(base, 'colour', ['rgb']);
+    for (const k of kinds()) {
+      const card = $(el, `.ix-effects__card[data-kind="${k}"]`); if (!card) continue;
+      const price = card.querySelector('.ix-effects__price'), a = card.querySelector('.ix-effects__choose, [data-qa="ix.effects.choose"]');
+      if (k === 'static') { price.textContent = t('effects.included'); price.dataset.delta = '0'; a.href = link(Object.assign({}, base, { scene: SCENE })); }
+      else if (k === 'changing') { const v = d.rgb; price.textContent = v === 'quote' || v == null ? t('effects.quoted') : t('effects.atSize', { delta: money.fmtDelta(v), size: sizeName }); price.dataset.delta = v == null ? '' : String(v); a.href = link(Object.assign({}, base, { colour: 'rgb', scene: SCENE })); }
+      else { price.textContent = t('effects.quoted'); price.dataset.delta = 'quote'; a.href = link(Object.assign({}, base, { colour: 'rgb', scene: SCENE })); }
+      if (stages[k]) stages[k].setDesign(designFor(k));
+    }
+  }
+  function tick() { ci = (ci + 1) % CYCLE.length; if (stages.changing) stages.changing.setDesign({ colour: CYCLE[ci] }); const card = $(el, '.ix-effects__card[data-kind="changing"]'); if (card) card.querySelectorAll('.dots circle').forEach((c, i) => c.classList.toggle('is-active', i === ci % 8)); }
+  function dimTick() { dimmed = !dimmed; const card = $(el, '.ix-effects__card[data-kind="static"]'); if (!card) return; card.classList.toggle('is-dimmed', dimmed); card.querySelector('.dim-minus')?.classList.toggle('is-active', dimmed); card.querySelector('.dim-plus')?.classList.toggle('is-active', !dimmed); }
+  function sync() {
+    const run = playing && inView && !reduced() && !killed;
+    el.dataset.playing = String(playing);
+    el.classList.toggle('is-running', run);
+    clearInterval(timer); clearInterval(dimTimer); timer = dimTimer = 0;
+    if (run) { timer = setInterval(tick, EVERY); dimTimer = setInterval(dimTick, DIM_EVERY); }
+  }
+  function setState(partial = {}) { if (killed) return; state = readState(el, { state: host.set(partial) }); paint(); }
+  function destroy() { killed = true; sync(); offWatch(); offFonts(); offView(); Object.values(stages).forEach(s => s.destroy()); el.innerHTML = ''; }
+
+  boot().then(() => {
+    if (killed) return;
+    state = readState(el, { state: host.get() }); markup(); paint();
+    offWatch = watchState(host, () => { const s = readState(el, { state: host.get() }); if (s.text !== state.text || s.font !== state.font || s.size !== state.size || s.colour !== state.colour) { state = s; paint(); } });
+    offFonts = onFonts(paint);
+    offView = onView(el, on => { inView = on; sync(); }, { threshold: .2 });
+    sync();
+  });
+  return api;
+}
+export default { mount };
