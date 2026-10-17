@@ -122,7 +122,7 @@
     "saveEmail": "Your email",
     "saveConsent": "Also send me occasional ideas and offers (unsubscribe any time).",
     "saveButton": "Email my design",
-    "saveSent": "Sent to {email}",
+    "saveSent": "Got it. We’ll email your design to {email} shortly.",
     "saveLocal": "Saved locally (review build) — nothing was sent.",
     "saveError": "We couldn’t send that just now.",
     "retry": "Retry",

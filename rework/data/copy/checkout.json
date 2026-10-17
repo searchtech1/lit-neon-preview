@@ -31,7 +31,9 @@
     "min": "That code works on orders of {min} or more.",
     "applied": "{code} applied.",
     "onlyOne": "One code per order. A code never stacks with the launch price — you get whichever saves more.",
-    "loses": "{code} is valid, but the launch price is the better deal, so we kept it."
+    "loses": "{code} is valid, but the launch price is the better deal, so we kept it.",
+    "passthrough": "We’ll apply {code} at checkout.",
+    "saleOnly": "Codes can’t be added to the sale price."
   },
   "delivery": "Delivery",
   "deliveryFree": "Free",
@@ -106,5 +108,10 @@
     "another": "Design another sign",
     "none": "There's no test order to show here.",
     "noneText": "Orders appear here straight after checkout. Your basket is waiting where you left it."
+  },
+  "handoff": {
+    "busy": "Opening secure checkout…",
+    "noVariant": "One of your signs is priced outside our online checkout. Message us and we’ll send you a payment link.",
+    "failed": "We couldn’t open the secure checkout just now. Please try again, or message us."
   }
 }

@@ -435,7 +435,7 @@
   "giftFrom": "From",
   "submit": "Email me my design",
   "sending": "Sending",
-  "success": "On its way",
+  "success": "Got it. We’ll email it to you shortly.",
   "errorTitle": "That didn’t send",
   "errorBody": "Nothing was lost — try again.",
   "retry": "Retry",
