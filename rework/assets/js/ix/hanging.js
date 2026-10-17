@@ -1,131 +1,32 @@
-/* Lit Neon v2 — ix/hanging.js (brief §5.5): four ways to hang. Tabs (Wall screws & standoffs · Hanging chains ·
-   Adhesive strips · Table stand); the stage on s01-living shows the visitor's sign mounted that way (standoff caps,
-   chains from two hooks to the wall top, flush strips, or the stand backing on the sofa top); a step-by-step install
-   sequence in IMG's drafting SVGs (zoomed to one step, the `draw` paths animating, scrubbable, play/pause, a static
-   strip under reduced motion); "Best for" tags; "In the kit" and timing lines only from confirmed facts; a two-question
-   helper that recommends a method; and "Choose this in the designer". mount(el) → { destroy, setState }. */
-import { boot, readState, watchState, hostState, link, onFonts, t, esc, icon, stage, facts, ui, roving, h, $, $$, reduced, onView, inlineSvg, uid, registerFrame, reviewMode } from './_ix.js';
-
-const METHODS = [
-  { id: 'screws', svg: '/lit-neon-preview/rework/assets/img/hanging/screws.svg', steps: 8, hang: 'screws', icon: 'standoff' },
-  { id: 'chains', svg: '/lit-neon-preview/rework/assets/img/hanging/chains.svg', steps: 4, hang: 'chains', icon: 'chain' },
-  { id: 'strips', svg: '/lit-neon-preview/rework/assets/img/hanging/strips.svg', steps: 4, hang: 'strips', icon: 'strip' },
-  { id: 'stand', svg: '/lit-neon-preview/rework/assets/img/hanging/stand.svg', steps: 3, hang: 'screws', icon: 'stand' }
-];
-const STEP_W = 216, STEP_PAD = 8, EVERY = 1800;
-registerFrame('ix-hang', () => [.36, .44]);
-
-export function mount(el, opts = {}) {
-  const host = hostState(opts);
-  el.classList.add('ix', 'ix-hang'); el.dataset.qa = 'ix.hang'; el.dataset.playing = 'true';
-  const id = uid('hg'); let state = null, killed = false, cur = METHODS.find(m => m.id === (opts.method || el.dataset.method)) || METHODS[0];
-  let step = 1, playing = true, inView = false, timer = 0, api0 = null, mountEl = null, range = null, svgs = {}, helper = { drill: null, size: null };
-  let offWatch = () => {}, offFonts = () => {}, offView = () => {}, offFrame = () => {};
-  const api = { destroy, setState, stage: () => api0 };
-
-  el.innerHTML = `
-    <div class="c-tabs ix-hang__tabs" role="tablist" aria-label="${esc(t('hanging.h2'))}">
-      ${METHODS.map(m => `<button type="button" role="tab" id="${id}-t-${m.id}" aria-controls="${id}-p" aria-selected="${m === cur}" tabindex="${m === cur ? 0 : -1}" data-id="${m.id}" data-qa="ix.hang.tab">${icon(m.icon)}<span>${esc(t('hanging.tabs.' + m.id))}</span></button>`).join('')}
+import{boot as lt,readState as F,watchState as rt,hostState as gt,link as ot,onFonts as ht,t as a,esc as d,icon as w,stage as ct,facts as u,ui as pt,roving as ut,h as P,$ as r,$$ as C,reduced as T,onView as vt,inlineSvg as _t,uid as xt,registerFrame as ft,reviewMode as U}from"./_ix.js";const S=[{id:"screws",svg:"/lit-neon-preview/rework/assets/img/hanging/screws.svg",steps:8,hang:"screws",icon:"standoff"},{id:"chains",svg:"/lit-neon-preview/rework/assets/img/hanging/chains.svg",steps:4,hang:"chains",icon:"chain"},{id:"strips",svg:"/lit-neon-preview/rework/assets/img/hanging/strips.svg",steps:4,hang:"strips",icon:"strip"},{id:"stand",svg:"/lit-neon-preview/rework/assets/img/hanging/stand.svg",steps:3,hang:"screws",icon:"stand"}],X=216,Z=8,bt=1800;ft("ix-hang",()=>[.36,.44]);export function mount(n,j={}){const k=gt(j);n.classList.add("ix","ix-hang"),n.dataset.qa="ix.hang",n.dataset.playing="true";const v=xt("hg");let h=null,f=!1,i=S.find(t=>t.id===(j.method||n.dataset.method))||S[0],l=1,c=!0,I=!1,z=0,g=null,R=null,b=null,L={},$={drill:null,size:null},V=()=>{},D=()=>{},W=()=>{},K=()=>{};const tt={destroy:st,setState:nt,stage:()=>g};n.innerHTML=`
+    <div class="c-tabs ix-hang__tabs" role="tablist" aria-label="${d(a("hanging.h2"))}">
+      ${S.map(t=>`<button type="button" role="tab" id="${v}-t-${t.id}" aria-controls="${v}-p" aria-selected="${t===i}" tabindex="${t===i?0:-1}" data-id="${t.id}" data-qa="ix.hang.tab">${w(t.icon)}<span>${d(a("hanging.tabs."+t.id))}</span></button>`).join("")}
     </div>
-    <div class="ix-hang__panel" role="tabpanel" id="${id}-p" aria-labelledby="${id}-t-${cur.id}">
+    <div class="ix-hang__panel" role="tabpanel" id="${v}-p" aria-labelledby="${v}-t-${i.id}">
       <div class="ix-hang__stagecol">
         <div class="ix-hang__stage ix__stage"><div class="ix-hang__mount"></div></div>
-        <p class="ix__caption" data-caption="rendered">${icon('image')}<span>${esc(t('hanging.caption'))}</span></p>
+        <p class="ix__caption" data-caption="rendered">${w("image")}<span>${d(a("hanging.caption"))}</span></p>
       </div>
       <div class="ix-hang__info">
         <div class="ix-hang__seq">
-          <div class="ix-hang__strip paper" data-qa="ix.hang.strip"><span class="c-pill c-pill--illustration ix__pill">${esc(t('hanging.illustration'))}</span></div>
+          <div class="ix-hang__strip paper" data-qa="ix.hang.strip"><span class="c-pill c-pill--illustration ix__pill">${d(a("hanging.illustration"))}</span></div>
           <div class="ix-hang__seqbar">
             <p class="ix-hang__stepcap" aria-live="polite"><b class="ix-hang__stepn"></b> <span class="ix-hang__steptxt"></span></p>
-            <div class="c-range ix-hang__range"><input type="range" min="1" max="${cur.steps}" step="1" value="1" aria-label="${esc(t('hanging.stepOf', { n: 1, total: cur.steps }))}" data-qa="ix.hang.step"></div>
-            <button type="button" class="c-btn c-btn--ghost c-btn--sm ix-hang__play" aria-pressed="false" data-qa="ix.hang.play">${icon('pause')}<span class="label">${esc(t('hanging.pause'))}</span></button>
+            <div class="c-range ix-hang__range"><input type="range" min="1" max="${i.steps}" step="1" value="1" aria-label="${d(a("hanging.stepOf",{n:1,total:i.steps}))}" data-qa="ix.hang.step"></div>
+            <button type="button" class="c-btn c-btn--ghost c-btn--sm ix-hang__play" aria-pressed="false" data-qa="ix.hang.play">${w("pause")}<span class="label">${d(a("hanging.pause"))}</span></button>
           </div>
         </div>
         <dl class="ix-hang__facts">
-          <div><dt>${esc(t('hanging.bestFor'))}</dt><dd class="ix-hang__best"></dd></div>
-          <div class="ix-hang__kit" hidden><dt>${esc(t('hanging.kit'))}</dt><dd></dd></div>
-          <div class="ix-hang__time" hidden><dt>${icon('clock', 'ic--sm')}</dt><dd></dd></div>
+          <div><dt>${d(a("hanging.bestFor"))}</dt><dd class="ix-hang__best"></dd></div>
+          <div class="ix-hang__kit" hidden><dt>${d(a("hanging.kit"))}</dt><dd></dd></div>
+          <div class="ix-hang__time" hidden><dt>${w("clock","ic--sm")}</dt><dd></dd></div>
         </dl>
-        <div class="ix__cta"><a class="c-btn c-btn--primary" data-qa="ix.hang.cta" href="/lit-neon-preview/rework/create.html">${esc(t('hanging.cta'))}</a></div>
+        <div class="ix__cta"><a class="c-btn c-btn--primary" data-qa="ix.hang.cta" href="/lit-neon-preview/rework/create.html">${d(a("hanging.cta"))}</a></div>
       </div>
     </div>
     <div class="ix-hang__helper">
-      <p class="ix-hang__helpertitle">${esc(t('hanging.helper.title'))}</p>
-      <div class="ix-hang__q"><span>${esc(t('hanging.helper.drill'))}</span><div class="ix__chips" role="group" aria-label="${esc(t('hanging.helper.drill'))}"><button type="button" class="c-chip" aria-pressed="false" data-q="drill" data-v="yes" data-qa="ix.hang.helper.drill">${esc(t('hanging.helper.yes'))}</button><button type="button" class="c-chip" aria-pressed="false" data-q="drill" data-v="no" data-qa="ix.hang.helper.drill">${esc(t('hanging.helper.no'))}</button></div></div>
-      <div class="ix-hang__q"><span>${esc(t('hanging.helper.big'))}</span><div class="ix__chips" role="group" aria-label="${esc(t('hanging.helper.big'))}"><button type="button" class="c-chip" aria-pressed="false" data-q="size" data-v="small" data-qa="ix.hang.helper.size">${esc(t('hanging.helper.small'))}</button><button type="button" class="c-chip" aria-pressed="false" data-q="size" data-v="large" data-qa="ix.hang.helper.size">${esc(t('hanging.helper.large'))}</button></div></div>
-      <p class="ix-hang__result" aria-live="polite" hidden data-qa="ix.hang.helper.result"><b></b> <span></span> <button type="button" class="c-btn c-btn--ghost c-btn--sm" data-qa="ix.hang.helper.goto">${esc(t('hanging.helper.goto'))}</button></p>
-    </div>`;
-  const tabs = $(el, '[role=tablist]'), strip = $(el, '.ix-hang__strip'), stageEl = $(el, '.ix-hang__stage'); mountEl = $(el, '.ix-hang__mount');
-  const input = $(el, '[data-qa="ix.hang.step"]'), playBtn = $(el, '[data-qa="ix.hang.play"]');
-
-  const design = () => Object.assign({}, state, { scene: 's01-living', hang: cur.hang, backing: cur.id === 'stand' ? 'stand' : (state.backing === 'stand' ? 'cut' : state.backing), on: true, night: true, view: 'room' });
-  /* mounted overlays (caps, chains) positioned from the sign box after every stage render */
-  function overlays() {
-    if (!api0) return; let ov = stageEl.querySelector('.ix-hang__ov'); if (!ov) { ov = h('<div class="ix-hang__ov" aria-hidden="true"></div>'); stageEl.appendChild(ov); }
-    const R0 = api0.el.getBoundingClientRect(), b = api0.signBBox(); const sx = b.left - R0.left, sy = b.top - R0.top, sw = b.width, sh = b.height;
-    ov.dataset.method = cur.id; ov.innerHTML = '';
-    if (cur.id === 'screws') { const ix = sw * .12, iy = sh * .22; [[sx + ix, sy + iy], [sx + sw - ix, sy + iy], [sx + ix, sy + sh - iy], [sx + sw - ix, sy + sh - iy]].forEach(([x, y]) => ov.appendChild(h(`<i class="ix-hang__cap" style="left:${x}px;top:${y}px"></i>`))); }
-    if (cur.id === 'chains') { [sx + sw * .18, sx + sw * .82].forEach(x => ov.appendChild(h(`<i class="chain ix-hang__chain" style="left:${x}px;top:0;height:${Math.max(0, sy + 2)}px"></i>`))); }
-  }
-  function paint() {
-    $$(tabs, '[role=tab]').forEach(b => { const on = b.dataset.id === cur.id; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; });
-    $(el, '.ix-hang__panel').setAttribute('aria-labelledby', `${id}-t-${cur.id}`); el.dataset.method = cur.id;
-    if (api0) { api0.setDesign(design()); if (api0.scene) { if (cur.id === 'stand') api0.setPos(.5, 1); else api0.setPos(.5, .44); } /* low on the wall so the sofa top reads; the stand sits on it (only once the scene has loaded) */ }
-    $(el, '.ix-hang__best').innerHTML = (t('hanging.best.' + cur.id + '.0') ? [t('hanging.best.' + cur.id + '.0'), t('hanging.best.' + cur.id + '.1')] : []).filter(Boolean).map(x => `<span class="c-pill">${esc(x)}</span>`).join(' ');
-    const kitKey = 'kitContents.' + cur.id, kit = $(el, '.ix-hang__kit'); kit.hidden = !facts.has(kitKey) && !reviewMode(); if (!kit.hidden) kit.querySelector('dd').innerHTML = facts.has(kitKey) ? esc(facts.get(kitKey)) : facts.chip(kitKey);
-    const time = $(el, '.ix-hang__time'); time.hidden = !facts.has('installMinutes') && !reviewMode(); if (!time.hidden) time.querySelector('dd').innerHTML = facts.has('installMinutes') ? esc(t('hanging.time', { minutes: facts.value('installMinutes') }) + ', ' + t('hanging.timeTools.' + cur.id)) : facts.chip('installMinutes');
-    $(el, '[data-qa="ix.hang.cta"]').href = link(Object.assign({}, state, { hang: cur.hang, backing: cur.id === 'stand' ? 'stand' : (state.backing === 'stand' ? 'cut' : state.backing) }));
-    input.max = String(cur.steps); if (step > cur.steps) step = 1; input.value = String(step); range && range.paint();
-    showStrip(); overlays();
-  }
-  async function showStrip() {
-    const m = cur; if (!svgs[m.id]) { const s = await inlineSvg(m.svg, `${id}-${m.id}`); if (!s) return; svgs[m.id] = s; }
-    const svg = svgs[m.id]; if (strip.querySelector('svg') !== svg) { $$(strip, 'svg').forEach(x => x.remove()); strip.appendChild(svg); svg.classList.add('ix-hang__svg'); }
-    showStep();
-  }
-  function showStep() {
-    const svg = svgs[cur.id]; if (!svg) return;
-    const total = cur.steps; strip.classList.toggle('is-static', reduced());
-    if (reduced()) svg.setAttribute('viewBox', `0 0 ${STEP_PAD * 2 + total * STEP_W - 16} 216`);
-    else svg.setAttribute('viewBox', `${STEP_PAD + (step - 1) * STEP_W - 6} 2 212 212`);
-    $$(svg, '.step').forEach(g => { const on = +g.dataset.step === step; if (on && !g.classList.contains('is-active')) { g.classList.remove('is-active'); void g.getBoundingClientRect(); } g.classList.toggle('is-active', on); g.classList.toggle('is-done', +g.dataset.step < step); });
-    $(el, '.ix-hang__stepn').textContent = t('hanging.stepOf', { n: step, total });
-    $(el, '.ix-hang__steptxt').textContent = t(`hanging.steps.${cur.id}.${step - 1}`, {}, '');
-    input.setAttribute('aria-label', `${t('hanging.stepOf', { n: step, total })}: ${t(`hanging.steps.${cur.id}.${step - 1}`, {}, '')}`); input.setAttribute('aria-valuetext', t(`hanging.steps.${cur.id}.${step - 1}`, {}, String(step)));
-    el.dataset.step = String(step);
-  }
-  function setStep(n) { step = Math.max(1, Math.min(cur.steps, n)); input.value = String(step); range && range.paint(); showStep(); }
-  function sync() { const run = playing && inView && !reduced() && !killed; el.dataset.playing = String(playing); clearInterval(timer); timer = 0; if (run) timer = setInterval(() => setStep(step >= cur.steps ? 1 : step + 1), EVERY); playBtn.setAttribute('aria-pressed', String(!playing)); playBtn.innerHTML = `${icon(playing ? 'pause' : 'play')}<span class="label">${esc(playing ? t('hanging.pause') : t('hanging.play'))}</span>`; }
-  function pick(id) { cur = METHODS.find(m => m.id === id) || METHODS[0]; step = 1; paint(); if (api0 && !reduced()) api0.strike(); }
-
-  /* events */
-  tabs.addEventListener('click', e => { const b = e.target.closest('[role=tab]'); if (b) pick(b.dataset.id); });
-  roving(tabs, '[role=tab]', { onMove: b => pick(b.dataset.id) });
-  playBtn.addEventListener('click', () => { playing = !playing; sync(); });
-  $(el, '.ix-hang__helper').addEventListener('click', e => {
-    const chip = e.target.closest('.c-chip[data-q]'); if (chip) { helper[chip.dataset.q] = chip.dataset.v; $$(el, `.c-chip[data-q="${chip.dataset.q}"]`).forEach(c => c.setAttribute('aria-pressed', String(c === chip))); recommend(); return; }
-    if (e.target.closest('[data-qa="ix.hang.helper.goto"]')) { const r = $(el, '.ix-hang__result').dataset.method; if (r) { pick(r); $(el, `[role=tab][data-id="${r}"]`).focus(); } }
-  });
-  function recommend() {
-    const out = $(el, '.ix-hang__result'); if (!helper.drill || !helper.size) { out.hidden = true; return; }
-    const m = helper.drill === 'yes' ? 'screws' : helper.size === 'small' ? 'strips' : 'chains';
-    out.hidden = false; out.dataset.method = m; out.querySelector('b').textContent = t('hanging.helper.result', { method: t('hanging.tabs.' + m) }); out.querySelector('span').textContent = t('hanging.helper.why.' + m);
-  }
-  function setState(partial = {}) { if (killed) return; state = readState(el, { state: host.set(partial) }); paint(); }
-  function destroy() { killed = true; sync(); offWatch(); offFonts(); offView(); offFrame(); api0 && api0.destroy(); el.innerHTML = ''; }
-
-  boot().then(() => {
-    if (killed) return;
-    state = readState(el, { state: host.get() });
-    range = ui.range($(el, '.ix-hang__range'), { text: v => t('hanging.stepOf', { n: v, total: cur.steps }), onInput: v => { playing = false; sync(); setStep(v); } });
-    api0 = stage.mount(mountEl, { frame: 'ix-hang', scene: 's01-living', design: design(), interactive: false, pill: true, rulers: false, qa: 'ix.hang.stage' });
-    offFrame = api0.on('frame', overlays);
-    paint(); api0.ready.then(() => { if (!killed) paint(); });
-    offWatch = watchState(host, () => { const s = readState(el, { state: host.get() }); if (s.text !== state.text || s.font !== state.font || s.colour !== state.colour || s.size !== state.size) { state = s; paint(); } });
-    offFonts = onFonts(() => { paint(); });
-    offView = onView(el, on => { inView = on; sync(); }, { threshold: .2 });
-    sync();
-  });
-  return api;
-}
-export default { mount };
+      <p class="ix-hang__helpertitle">${d(a("hanging.helper.title"))}</p>
+      <div class="ix-hang__q"><span>${d(a("hanging.helper.drill"))}</span><div class="ix__chips" role="group" aria-label="${d(a("hanging.helper.drill"))}"><button type="button" class="c-chip" aria-pressed="false" data-q="drill" data-v="yes" data-qa="ix.hang.helper.drill">${d(a("hanging.helper.yes"))}</button><button type="button" class="c-chip" aria-pressed="false" data-q="drill" data-v="no" data-qa="ix.hang.helper.drill">${d(a("hanging.helper.no"))}</button></div></div>
+      <div class="ix-hang__q"><span>${d(a("hanging.helper.big"))}</span><div class="ix__chips" role="group" aria-label="${d(a("hanging.helper.big"))}"><button type="button" class="c-chip" aria-pressed="false" data-q="size" data-v="small" data-qa="ix.hang.helper.size">${d(a("hanging.helper.small"))}</button><button type="button" class="c-chip" aria-pressed="false" data-q="size" data-v="large" data-qa="ix.hang.helper.size">${d(a("hanging.helper.large"))}</button></div></div>
+      <p class="ix-hang__result" aria-live="polite" hidden data-qa="ix.hang.helper.result"><b></b> <span></span> <button type="button" class="c-btn c-btn--ghost c-btn--sm" data-qa="ix.hang.helper.goto">${d(a("hanging.helper.goto"))}</button></p>
+    </div>`;const A=r(n,"[role=tablist]"),M=r(n,".ix-hang__strip"),Y=r(n,".ix-hang__stage");R=r(n,".ix-hang__mount");const m=r(n,'[data-qa="ix.hang.step"]'),B=r(n,'[data-qa="ix.hang.play"]'),G=()=>Object.assign({},h,{scene:"s01-living",hang:i.hang,backing:i.id==="stand"?"stand":h.backing==="stand"?"cut":h.backing,on:!0,night:!0,view:"room"});function J(){if(!g)return;let t=Y.querySelector(".ix-hang__ov");t||(t=P('<div class="ix-hang__ov" aria-hidden="true"></div>'),Y.appendChild(t));const s=g.el.getBoundingClientRect(),e=g.signBBox(),o=e.left-s.left,p=e.top-s.top,q=e.width,O=e.height;if(t.dataset.method=i.id,t.innerHTML="",i.id==="screws"){const x=q*.12,E=O*.22;[[o+x,p+E],[o+q-x,p+E],[o+x,p+O-E],[o+q-x,p+O-E]].forEach(([et,dt])=>t.appendChild(P(`<i class="ix-hang__cap" style="left:${et}px;top:${dt}px"></i>`)))}i.id==="chains"&&[o+q*.18,o+q*.82].forEach(x=>t.appendChild(P(`<i class="chain ix-hang__chain" style="left:${x}px;top:0;height:${Math.max(0,p+2)}px"></i>`)))}function _(){C(A,"[role=tab]").forEach(o=>{const p=o.dataset.id===i.id;o.setAttribute("aria-selected",String(p)),o.tabIndex=p?0:-1}),r(n,".ix-hang__panel").setAttribute("aria-labelledby",`${v}-t-${i.id}`),n.dataset.method=i.id,g&&(g.setDesign(G()),g.scene&&(i.id==="stand"?g.setPos(.5,1):g.setPos(.5,.44))),r(n,".ix-hang__best").innerHTML=(a("hanging.best."+i.id+".0")?[a("hanging.best."+i.id+".0"),a("hanging.best."+i.id+".1")]:[]).filter(Boolean).map(o=>`<span class="c-pill">${d(o)}</span>`).join(" ");const t="kitContents."+i.id,s=r(n,".ix-hang__kit");s.hidden=!u.has(t)&&!U(),s.hidden||(s.querySelector("dd").innerHTML=u.has(t)?d(u.get(t)):u.chip(t));const e=r(n,".ix-hang__time");e.hidden=!u.has("installMinutes")&&!U(),e.hidden||(e.querySelector("dd").innerHTML=u.has("installMinutes")?d(a("hanging.time",{minutes:u.value("installMinutes")})+", "+a("hanging.timeTools."+i.id)):u.chip("installMinutes")),r(n,'[data-qa="ix.hang.cta"]').href=ot(Object.assign({},h,{hang:i.hang,backing:i.id==="stand"?"stand":h.backing==="stand"?"cut":h.backing})),m.max=String(i.steps),l>i.steps&&(l=1),m.value=String(l),b&&b.paint(),at(),J()}async function at(){const t=i;if(!L[t.id]){const e=await _t(t.svg,`${v}-${t.id}`);if(!e)return;L[t.id]=e}const s=L[t.id];M.querySelector("svg")!==s&&(C(M,"svg").forEach(e=>e.remove()),M.appendChild(s),s.classList.add("ix-hang__svg")),N()}function N(){const t=L[i.id];if(!t)return;const s=i.steps;M.classList.toggle("is-static",T()),T()?t.setAttribute("viewBox",`0 0 ${Z*2+s*X-16} 216`):t.setAttribute("viewBox",`${Z+(l-1)*X-6} 2 212 212`),C(t,".step").forEach(e=>{const o=+e.dataset.step===l;o&&!e.classList.contains("is-active")&&(e.classList.remove("is-active"),e.getBoundingClientRect()),e.classList.toggle("is-active",o),e.classList.toggle("is-done",+e.dataset.step<l)}),r(n,".ix-hang__stepn").textContent=a("hanging.stepOf",{n:l,total:s}),r(n,".ix-hang__steptxt").textContent=a(`hanging.steps.${i.id}.${l-1}`,{},""),m.setAttribute("aria-label",`${a("hanging.stepOf",{n:l,total:s})}: ${a(`hanging.steps.${i.id}.${l-1}`,{},"")}`),m.setAttribute("aria-valuetext",a(`hanging.steps.${i.id}.${l-1}`,{},String(l))),n.dataset.step=String(l)}function Q(t){l=Math.max(1,Math.min(i.steps,t)),m.value=String(l),b&&b.paint(),N()}function y(){const t=c&&I&&!T()&&!f;n.dataset.playing=String(c),clearInterval(z),z=0,t&&(z=setInterval(()=>Q(l>=i.steps?1:l+1),bt)),B.setAttribute("aria-pressed",String(!c)),B.innerHTML=`${w(c?"pause":"play")}<span class="label">${d(c?a("hanging.pause"):a("hanging.play"))}</span>`}function H(t){i=S.find(s=>s.id===t)||S[0],l=1,_(),g&&!T()&&g.strike()}A.addEventListener("click",t=>{const s=t.target.closest("[role=tab]");s&&H(s.dataset.id)}),ut(A,"[role=tab]",{onMove:t=>H(t.dataset.id)}),B.addEventListener("click",()=>{c=!c,y()}),r(n,".ix-hang__helper").addEventListener("click",t=>{const s=t.target.closest(".c-chip[data-q]");if(s){$[s.dataset.q]=s.dataset.v,C(n,`.c-chip[data-q="${s.dataset.q}"]`).forEach(e=>e.setAttribute("aria-pressed",String(e===s))),it();return}if(t.target.closest('[data-qa="ix.hang.helper.goto"]')){const e=r(n,".ix-hang__result").dataset.method;e&&(H(e),r(n,`[role=tab][data-id="${e}"]`).focus())}});function it(){const t=r(n,".ix-hang__result");if(!$.drill||!$.size){t.hidden=!0;return}const s=$.drill==="yes"?"screws":$.size==="small"?"strips":"chains";t.hidden=!1,t.dataset.method=s,t.querySelector("b").textContent=a("hanging.helper.result",{method:a("hanging.tabs."+s)}),t.querySelector("span").textContent=a("hanging.helper.why."+s)}function nt(t={}){f||(h=F(n,{state:k.set(t)}),_())}function st(){f=!0,y(),V(),D(),W(),K(),g&&g.destroy(),n.innerHTML=""}return lt().then(()=>{f||(h=F(n,{state:k.get()}),b=pt.range(r(n,".ix-hang__range"),{text:t=>a("hanging.stepOf",{n:t,total:i.steps}),onInput:t=>{c=!1,y(),Q(t)}}),g=ct.mount(R,{frame:"ix-hang",scene:"s01-living",design:G(),interactive:!1,pill:!0,rulers:!1,qa:"ix.hang.stage"}),K=g.on("frame",J),_(),g.ready.then(()=>{f||_()}),V=rt(k,()=>{const t=F(n,{state:k.get()});(t.text!==h.text||t.font!==h.font||t.colour!==h.colour||t.size!==h.size)&&(h=t,_())}),D=ht(()=>{_()}),W=vt(n,t=>{I=t,y()},{threshold:.2}),y())}),tt}export default{mount};

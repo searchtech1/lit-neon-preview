@@ -1,97 +1,20 @@
-/* Lit Neon v2 — ix/cost.js (brief §5.8): the running-cost calculator. Inputs: size chips (default = the design's
-   size), hours a day (1–24, default 5), "Dimmed to half", the tariff (editable, p/kWh). Watts = the LED flex metres of
-   the visitor's design (renderer.flexMetres) × facts.wattsPerMetre (× 0.55 dimmed). Outputs per evening, month and
-   year with money formatting (pence under a pound), one factual bulb comparison, and the assumptions line.
-   Gating (§3.9.2): with wattsPerMetre unconfirmed the calculator shows only if the owner approved a typical value
-   (wattsPerMetreTypical); otherwise, in customer mode, the whole block collapses — the element (and a [data-gated]
-   ancestor, and the tab that controls its panel) is removed — and mount() returns { gated: true }. Review mode shows it
-   with chips using the drafts. */
-import { boot, readState, watchState, hostState, onFonts, t, esc, icon, R, facts, money, ui, h, $, $$, reviewMode } from './_ix.js';
-
-const BULBS = [3, 5, 7, 10, 15, 20, 30, 40, 60, 100];
-const draft = k => { const e = facts.describe(k); return e && Number.isFinite(+e.draft) ? +e.draft : null; };
-
-export function mount(el, opts = {}) {
-  const host = hostState(opts);
-  el.classList.add('ix', 'ix-cost'); el.dataset.qa = 'ix.cost';
-  let state = null, killed = false, hours = +(el.dataset.hours || 5), dimmed = false, tariff = null, tariffDefault = null, wpm = null, typical = false, size = null, range = null;
-  let offWatch = () => {}, offFonts = () => {};
-  const api = { destroy, setState, gated: false };
-
-  function collapse() {
-    api.gated = true;
-    const panel = el.closest('[role=tabpanel]'); const gated = (el.parentElement && el.parentElement.closest('[data-gated]')) || panel || el;
-    el.dataset.gated = 'true';
-    if (panel && panel.id) { const tab = document.querySelector(`[role=tab][aria-controls="${panel.id}"]`); if (tab) { const list = tab.closest('[role=tablist]'); const wasSelected = tab.getAttribute('aria-selected') === 'true'; tab.remove(); if (wasSelected && list) { const first = list.querySelector('[role=tab]'); first && first.click(); } } }
-    document.dispatchEvent(new CustomEvent('ln:ix-gated', { detail: { name: 'cost', el: gated } }));
-    gated.remove();
-  }
-  function resolveFacts() {
-    const review = reviewMode();
-    if (facts.has('wattsPerMetre')) { wpm = +facts.value('wattsPerMetre'); typical = false; }
-    else if (facts.has('wattsPerMetreTypical')) { wpm = +facts.value('wattsPerMetreTypical'); typical = true; }
-    else if (review) { wpm = draft('wattsPerMetre') ?? draft('wattsPerMetreTypical'); typical = true; }
-    else wpm = null;
-    tariffDefault = facts.has('electricityPencePerKwh') ? +facts.value('electricityPencePerKwh') : (review ? draft('electricityPencePerKwh') : null);
-    if (tariff == null) tariff = tariffDefault;
-    return Number.isFinite(wpm) && wpm > 0 && Number.isFinite(tariffDefault) && tariffDefault > 0;
-  }
-  function markup() {
-    const sizes = R.OPTIONS.sizes;
-    el.innerHTML = `
+import{boot as j,readState as M,watchState as B,hostState as D,onFonts as U,t as e,esc as c,icon as R,R as P,facts as r,money as k,ui as W,$ as i,$$ as F,reviewMode as G}from"./_ix.js";const C=[3,5,7,10,15,20,30,40,60,100],z=t=>{const b=r.describe(t);return b&&Number.isFinite(+b.draft)?+b.draft:null};export function mount(t,b={}){const v=D(b);t.classList.add("ix","ix-cost"),t.dataset.qa="ix.cost";let d=null,$=!1,m=+(t.dataset.hours||5),h=!1,l=null,_=null,u=null,g=!1,p=null,K=null,S=()=>{},E=()=>{};const w={destroy:O,setState:I,gated:!1};function N(){w.gated=!0;const s=t.closest("[role=tabpanel]"),n=t.parentElement&&t.parentElement.closest("[data-gated]")||s||t;if(t.dataset.gated="true",s&&s.id){const a=document.querySelector(`[role=tab][aria-controls="${s.id}"]`);if(a){const o=a.closest("[role=tablist]"),x=a.getAttribute("aria-selected")==="true";if(a.remove(),x&&o){const q=o.querySelector("[role=tab]");q&&q.click()}}}document.dispatchEvent(new CustomEvent("ln:ix-gated",{detail:{name:"cost",el:n}})),n.remove()}function A(){const s=G();return r.has("wattsPerMetre")?(u=+r.value("wattsPerMetre"),g=!1):r.has("wattsPerMetreTypical")?(u=+r.value("wattsPerMetreTypical"),g=!0):s?(u=z("wattsPerMetre")??z("wattsPerMetreTypical"),g=!0):u=null,_=r.has("electricityPencePerKwh")?+r.value("electricityPencePerKwh"):s?z("electricityPencePerKwh"):null,l==null&&(l=_),Number.isFinite(u)&&u>0&&Number.isFinite(_)&&_>0}function H(){const s=P.OPTIONS.sizes;t.innerHTML=`
       <div class="ix-cost__grid">
         <div class="ix-cost__inputs">
-          <div class="ix-cost__field"><span class="ix__label">${esc(t('cost.size'))}</span><div class="ix__chips" role="group" aria-label="${esc(t('cost.size'))}">${sizes.map(s => `<button type="button" class="c-chip" aria-pressed="${s.id === size}" data-id="${s.id}" data-qa="ix.cost.size">${esc(s.name)}</button>`).join('')}</div></div>
-          <div class="ix-cost__field c-range ix-cost__hours"><label class="ix__label" for="${el.dataset.qa}-h">${esc(t('cost.hours'))} <span class="readout"></span></label><input type="range" id="${el.dataset.qa}-h" min="1" max="24" step="1" value="${hours}" data-qa="ix.cost.hours"></div>
-          <div class="ix-cost__field"><button type="button" class="ix-cost__toggle" role="switch" aria-checked="false" data-qa="ix.cost.dimmed"><span class="c-switch" aria-hidden="true"></span><span class="lbl">${esc(t('cost.dimmed'))}</span></button></div>
-          <div class="ix-cost__field"><label class="ix__label" for="${el.dataset.qa}-t">${esc(t('cost.tariff'))} ${facts.has('electricityPencePerKwh') ? '' : facts.chip('electricityPencePerKwh')}</label>
-            <div class="ix-cost__tariff"><input class="c-input" id="${el.dataset.qa}-t" type="number" inputmode="decimal" min="1" max="200" step="0.1" value="${tariff}" data-qa="ix.cost.tariff"><span class="unit">${esc(t('cost.tariffUnit'))}</span><button type="button" class="c-btn c-btn--text" data-qa="ix.cost.reset" hidden><span class="label">${esc(t('cost.reset'))}</span></button></div></div>
+          <div class="ix-cost__field"><span class="ix__label">${c(e("cost.size"))}</span><div class="ix__chips" role="group" aria-label="${c(e("cost.size"))}">${s.map(a=>`<button type="button" class="c-chip" aria-pressed="${a.id===p}" data-id="${a.id}" data-qa="ix.cost.size">${c(a.name)}</button>`).join("")}</div></div>
+          <div class="ix-cost__field c-range ix-cost__hours"><label class="ix__label" for="${t.dataset.qa}-h">${c(e("cost.hours"))} <span class="readout"></span></label><input type="range" id="${t.dataset.qa}-h" min="1" max="24" step="1" value="${m}" data-qa="ix.cost.hours"></div>
+          <div class="ix-cost__field"><button type="button" class="ix-cost__toggle" role="switch" aria-checked="false" data-qa="ix.cost.dimmed"><span class="c-switch" aria-hidden="true"></span><span class="lbl">${c(e("cost.dimmed"))}</span></button></div>
+          <div class="ix-cost__field"><label class="ix__label" for="${t.dataset.qa}-t">${c(e("cost.tariff"))} ${r.has("electricityPencePerKwh")?"":r.chip("electricityPencePerKwh")}</label>
+            <div class="ix-cost__tariff"><input class="c-input" id="${t.dataset.qa}-t" type="number" inputmode="decimal" min="1" max="200" step="0.1" value="${l}" data-qa="ix.cost.tariff"><span class="unit">${c(e("cost.tariffUnit"))}</span><button type="button" class="c-btn c-btn--text" data-qa="ix.cost.reset" hidden><span class="label">${c(e("cost.reset"))}</span></button></div></div>
         </div>
         <div class="ix-cost__out" aria-live="polite" data-qa="ix.cost.readout">
           <div class="ix-cost__tiles">
-            <div class="ix-cost__tile"><span class="lbl">${esc(t('cost.evening'))}</span><b class="val" data-qa="ix.cost.evening"></b></div>
-            <div class="ix-cost__tile"><span class="lbl">${esc(t('cost.month'))}</span><b class="val" data-qa="ix.cost.month"></b></div>
-            <div class="ix-cost__tile"><span class="lbl">${esc(t('cost.year'))}</span><b class="val" data-qa="ix.cost.year"></b></div>
+            <div class="ix-cost__tile"><span class="lbl">${c(e("cost.evening"))}</span><b class="val" data-qa="ix.cost.evening"></b></div>
+            <div class="ix-cost__tile"><span class="lbl">${c(e("cost.month"))}</span><b class="val" data-qa="ix.cost.month"></b></div>
+            <div class="ix-cost__tile"><span class="lbl">${c(e("cost.year"))}</span><b class="val" data-qa="ix.cost.year"></b></div>
           </div>
           <p class="ix-cost__watts"><b data-qa="ix.cost.watts"></b> · <span class="ix-cost__flex"></span></p>
-          <p class="ix-cost__compare">${icon('info', 'ic--sm')}<span></span></p>
+          <p class="ix-cost__compare">${R("info","ic--sm")}<span></span></p>
           <p class="ix-cost__assume t-caption"></p>
         </div>
-      </div>`;
-    range = ui.range($(el, '.ix-cost__hours'), { text: v => t('cost.hoursText', { n: v }), onInput: v => { hours = v; paint(); } });
-    $(el, '.ix__chips').addEventListener('click', e => { const b = e.target.closest('.c-chip'); if (!b) return; size = b.dataset.id; $$(el, '[data-qa="ix.cost.size"]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.id === size))); paint(); });
-    $(el, '[data-qa="ix.cost.dimmed"]').addEventListener('click', e => { dimmed = !dimmed; e.currentTarget.setAttribute('aria-checked', String(dimmed)); paint(); });
-    const tIn = $(el, '[data-qa="ix.cost.tariff"]'); tIn.addEventListener('input', () => { const v = parseFloat(tIn.value); tariff = Number.isFinite(v) && v > 0 ? v : tariffDefault; paint(); });
-    $(el, '[data-qa="ix.cost.reset"]').addEventListener('click', () => { tariff = tariffDefault; tIn.value = String(tariff); paint(); });
-  }
-  const fmt = pence => money.pence(Math.round(pence * 10) / 10);
-  function paint() {
-    const st = Object.assign({}, state, { size });
-    const res = R.resolve(st); const flex = R.flexMetres(res);
-    const watts = Math.max(1, Math.round(flex * wpm * (dimmed ? .55 : 1)));
-    const perDay = watts / 1000 * hours * tariff; /* pence */
-    $(el, '[data-qa="ix.cost.evening"]').textContent = fmt(perDay);
-    $(el, '[data-qa="ix.cost.month"]').textContent = fmt(perDay * 30);
-    $(el, '[data-qa="ix.cost.year"]').textContent = fmt(perDay * 365);
-    $(el, '[data-qa="ix.cost.watts"]').textContent = t('cost.watts', { w: watts }); $(el, '[data-qa="ix.cost.watts"]').dataset.watts = String(watts);
-    $(el, '.ix-cost__flex').textContent = t('cost.flex', { m: money.fmtMetres(flex) });
-    const bulb = BULBS.reduce((a, b) => Math.abs(b - watts) < Math.abs(a - watts) ? b : a, BULBS[0]);
-    $(el, '.ix-cost__compare span').textContent = t('cost.comparison', { w: bulb });
-    $(el, '.ix-cost__assume').innerHTML = esc(t('cost.assumptions', { wpm, tariff })) + (typical ? ' ' + esc(t('cost.typical', { wpm })) + ' ' + (facts.has('wattsPerMetreTypical') ? '' : facts.chip('wattsPerMetre')) : '');
-    $(el, '[data-qa="ix.cost.reset"]').hidden = tariff === tariffDefault;
-    el.dataset.size = size; el.dataset.hours = String(hours);
-  }
-  function setState(partial = {}) { if (killed || api.gated) return; state = readState(el, { state: host.set(partial) }); if (partial.size) size = partial.size; paint(); }
-  function destroy() { killed = true; offWatch(); offFonts(); if (!api.gated) el.innerHTML = ''; }
-
-  boot().then(() => {
-    if (killed) return;
-    if (!resolveFacts()) { collapse(); return; }
-    state = readState(el, { state: host.get() }); size = state.size === 'custom' ? 'm' : state.size;
-    markup(); paint();
-    offWatch = watchState(host, () => { const s = readState(el, { state: host.get() }); if (s.text !== state.text || s.font !== state.font || s.size !== state.size) { state = s; if (s.size !== 'custom') { size = s.size; $$(el, '[data-qa="ix.cost.size"]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.id === size))); } paint(); } });
-    offFonts = onFonts(paint);
-  });
-  return api;
-}
-export default { mount };
+      </div>`,K=W.range(i(t,".ix-cost__hours"),{text:a=>e("cost.hoursText",{n:a}),onInput:a=>{m=a,f()}}),i(t,".ix__chips").addEventListener("click",a=>{const o=a.target.closest(".c-chip");o&&(p=o.dataset.id,F(t,'[data-qa="ix.cost.size"]').forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.id===p))),f())}),i(t,'[data-qa="ix.cost.dimmed"]').addEventListener("click",a=>{h=!h,a.currentTarget.setAttribute("aria-checked",String(h)),f()});const n=i(t,'[data-qa="ix.cost.tariff"]');n.addEventListener("input",()=>{const a=parseFloat(n.value);l=Number.isFinite(a)&&a>0?a:_,f()}),i(t,'[data-qa="ix.cost.reset"]').addEventListener("click",()=>{l=_,n.value=String(l),f()})}const y=s=>k.pence(Math.round(s*10)/10);function f(){const s=Object.assign({},d,{size:p}),n=P.resolve(s),a=P.flexMetres(n),o=Math.max(1,Math.round(a*u*(h?.55:1))),x=o/1e3*m*l;i(t,'[data-qa="ix.cost.evening"]').textContent=y(x),i(t,'[data-qa="ix.cost.month"]').textContent=y(x*30),i(t,'[data-qa="ix.cost.year"]').textContent=y(x*365),i(t,'[data-qa="ix.cost.watts"]').textContent=e("cost.watts",{w:o}),i(t,'[data-qa="ix.cost.watts"]').dataset.watts=String(o),i(t,".ix-cost__flex").textContent=e("cost.flex",{m:k.fmtMetres(a)});const q=C.reduce((T,L)=>Math.abs(L-o)<Math.abs(T-o)?L:T,C[0]);i(t,".ix-cost__compare span").textContent=e("cost.comparison",{w:q}),i(t,".ix-cost__assume").innerHTML=c(e("cost.assumptions",{wpm:u,tariff:l}))+(g?" "+c(e("cost.typical",{wpm:u}))+" "+(r.has("wattsPerMetreTypical")?"":r.chip("wattsPerMetre")):""),i(t,'[data-qa="ix.cost.reset"]').hidden=l===_,t.dataset.size=p,t.dataset.hours=String(m)}function I(s={}){$||w.gated||(d=M(t,{state:v.set(s)}),s.size&&(p=s.size),f())}function O(){$=!0,S(),E(),w.gated||(t.innerHTML="")}return j().then(()=>{if(!$){if(!A()){N();return}d=M(t,{state:v.get()}),p=d.size==="custom"?"m":d.size,H(),f(),S=B(v,()=>{const s=M(t,{state:v.get()});(s.text!==d.text||s.font!==d.font||s.size!==d.size)&&(d=s,s.size!=="custom"&&(p=s.size,F(t,'[data-qa="ix.cost.size"]').forEach(n=>n.setAttribute("aria-pressed",String(n.dataset.id===p)))),f())}),E=U(f)}}),w}export default{mount};

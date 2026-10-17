@@ -1,258 +1,56 @@
-/* Lit Neon v2 — inspiration gallery (brief §4.9, owner P5). "Ideas, rendered": every catalogue design composited on
-   its scene (delivered plates only), in an even 4:5 grid (4 / 3 / 2). Filters: room · occasion · colour (chips,
-   URL-synced, counts, clear). Each card: day/night toggle (the honest off state by day), "Apply this style to my
-   words" (inline input that previews your words on the card in that lettering and colour, then opens the designer
-   with them), "Open in the designer" (the design's own words). A lightbox (live stage on the design's scene, day /
-   night, prev / next, the same two actions + the product page) opens from the image. No customer, town or date
-   captions (rule 4); the header disclaimer and a pill on every render say what these are. data-qa="inspiration.*". */
-import * as R from 'core/renderer.js';
-import stage from 'core/stage.js';
-import router from 'core/router.js';
-import * as ui from 'core/ui.js';
-import * as copy from 'core/copy.js';
-import { esc } from 'core/money.js';
-import { collectionById } from 'pages/shop.js';
-import { $, $$, t, icon, bootHub, tileHtml, hydrateTiles, cleanText, stripGlyphs, reduced } from 'pages/business.js';
-
-const GROUPS = ['room', 'use', 'colour'];
-
-(async function init() {
-  if (document.body.dataset.page !== 'inspiration') return;
-  const D = await bootHub('inspiration', ['shop']);
-  const colours = R.OPTIONS.colours;
-  const colourName = id => (colours.find(c => c.id === id) || {}).name || id;
-  const fontName = id => (R.fontOf(id) || {}).name || id;
-
-  /* designs → ideas (use = occasion tags, plus Business for the business collection) */
-  const ideas = D.designs.map((d, i) => ({ d, i, room: d.tags.room || [], use: [...(d.tags.occasion || []), ...((d.collections || []).includes('business') ? ['business'] : [])], colour: [d.colour] }));
-  const facetValues = {
-    room: (D.facets.room || []).map(f => ({ id: f.id, label: f.label })),
-    use: [...(D.facets.occasion || []).map(f => ({ id: f.id, label: f.label })), { id: 'business', label: t('inspiration.filters.business') }],
-    colour: colours.filter(c => ideas.some(x => x.colour.includes(c.id))).map(c => ({ id: c.id, label: c.name, hex: c.hex, core: c.core, rgb: !!c.rgb }))
-  };
-
-  /* ---------- filter state (URL-synced, one value per group) ---------- */
-  const q = new URLSearchParams(location.search);
-  const sel = Object.fromEntries(GROUPS.map(g => [g, facetValues[g].some(v => v.id === q.get(g)) ? q.get(g) : '']));
-  const matches = (x, except) => GROUPS.every(g => g === except || !sel[g] || x[g].includes(sel[g]));
-  function writeUrl() { const p = new URLSearchParams(); GROUPS.forEach(g => sel[g] && p.set(g, sel[g])); history.replaceState(null, '', location.pathname + (p.toString() ? '?' + p : '')); }
-
-  function paintFilters() {
-    GROUPS.forEach(g => {
-      const el = $('#in-f-' + g); el.setAttribute('aria-label', t('inspiration.filters.' + g));
-      const counts = v => ideas.filter(x => matches(x, g) && x[g].includes(v)).length;
-      const all = `<button type="button" class="c-chip in-chip" aria-pressed="${!sel[g]}" data-qa="inspiration.filter.${g}" data-id="">${esc(t('inspiration.filters.all'))}</button>`;
-      const chips = facetValues[g].map(v => { const n = counts(v.id); const on = sel[g] === v.id;
-        if (g === 'colour') return `<button type="button" class="c-swatch in-swatch${v.rgb ? ' c-swatch--rgb' : ''}" style="--tube:${v.hex};--core:${v.core || v.hex}" aria-pressed="${on}" data-qa="inspiration.filter.colour" data-id="${v.id}" ${!n && !on ? 'disabled' : ''} aria-label="${esc(`${v.label} (${n})`)}"><span class="tube"></span><span class="name">${esc(v.label)}</span></button>`;
-        return `<button type="button" class="c-chip in-chip" aria-pressed="${on}" data-qa="inspiration.filter.${g}" data-id="${v.id}" ${!n && !on ? 'disabled' : ''}>${esc(v.label)} <span class="in-chip__n">${n}</span></button>`; }).join('');
-      el.innerHTML = `<span class="in-fgroup__label">${esc(t('inspiration.filters.' + g))}</span><div class="in-fgroup__chips">${g === 'colour' ? '' : all}${chips}</div>`;
-    });
-    $('#in-clear').hidden = !GROUPS.some(g => sel[g]);
-  }
-  $('.in-filters').addEventListener('click', e => {
-    const b = e.target.closest('[data-qa^="inspiration.filter."]'); if (!b || b.disabled) return;
-    const g = b.dataset.qa.split('.').pop(); const id = b.dataset.id;
-    sel[g] = sel[g] === id ? '' : id; writeUrl(); paintFilters(); paintGrid();
-  });
-  $('#in-clear').addEventListener('click', () => { GROUPS.forEach(g => (sel[g] = '')); writeUrl(); paintFilters(); paintGrid(); });
-
-  /* ---------- scenes: spread the delivered rooms down the grid (own scene and alternatives first, then the studios),
-     picking the least recently used so the masonry never shows one room four times in a row ---------- */
-  const isDelivered = id => { const s = stage.getScene(id); return !!s && !s.placeholder; };
-  const recent = []; const sceneMap = new Map();
-  ideas.forEach(x => {
-    /* one consistent default across the grid: every card opens at night, lit. The daylight studio is left out (its
-       plate has no night state, so it read as "off" beside lit neighbours); the per-card toggle shows the day view. */
-    const d = x.d;
-    const cands = Array.from(new Set([d.scene, ...(d.altScenes || []), 's00-studio-dark'])).filter(id => isDelivered(id) && id !== 's00-studio-light');
-    const pick = cands.slice().sort((a, b) => { const ra = recent.lastIndexOf(a), rb = recent.lastIndexOf(b); return ra - rb || cands.indexOf(a) - cands.indexOf(b); })[0] || 's00-studio-dark';
-    sceneMap.set(d.id, pick); recent.push(pick);
-  });
-  const sceneFor = d => sceneMap.get(d.id) || 's00-studio-dark';
-
-  /* phones (two narrow columns): ONE action per card (round-2 review). The card itself opens the designer with that
-     design's style and words (you change the words there), so neither "Apply this style to my words" nor "Open in the
-     designer" is stacked under all 48 cards; the action row is hidden and the whole tile becomes the designer link.
-     Wider screens keep both actions and the larger view. */
-  const compactMq = matchMedia('(max-width: 599px)');
-  function paintCompact() {
-    const c = compactMq.matches;
-    document.querySelectorAll('.in-card').forEach(card => {
-      const acts = card.querySelector('.in-card__actions'); if (acts) acts.hidden = c;
-      if (c) { const form = card.querySelector('.in-apply'); if (form && !form.hidden) closeApply(card); }
-      const open = card.querySelector('[data-qa="inspiration.card.open"]'); if (!open) return;
-      const name = card.querySelector('.in-card__name')?.textContent || '';
-      if (c) { open.removeAttribute('aria-haspopup'); open.setAttribute('aria-label', t('inspiration.openNamed', { name }, `Open ${name} in the designer`)); open.classList.add('is-designer'); }
-      else { open.setAttribute('aria-haspopup', 'dialog'); open.setAttribute('aria-label', t('inspiration.view', { name })); open.classList.remove('is-designer'); }
-    });
-  }
-  compactMq.addEventListener('change', paintCompact);
-
-  /* ---------- cards ---------- */
-  const stateOf = (d, extra = {}) => R.normalise({ text: (d.lines || []).join('\n'), font: d.font, colour: d.colour, icon: d.icon || '', iconPos: d.iconPos || 'above', size: 'm', scene: sceneFor(d), view: 'room', ...extra });
-  function cardHtml(x, n) {
-    const d = x.d; const scene = sceneFor(d); const col = collectionById((d.collections || [])[0]);
-    return `<article class="in-card" data-qa="inspiration.card" data-id="${esc(d.id)}" data-colour="${esc(d.colour)}" data-font="${esc(d.font)}">
+import*as v from"core/renderer.js";import J from"core/stage.js";import d from"core/router.js";import*as it from"core/ui.js";import"core/copy.js";import{esc as a}from"core/money.js";import{collectionById as K}from"pages/shop.js";import{$ as o,$$ as nt,t as r,icon as h,bootHub as at,tileHtml as et,hydrateTiles as ot,cleanText as Q,stripGlyphs as X}from"pages/business.js";const _=["room","use","colour"];(async function(){if(document.body.dataset.page!=="inspiration")return;const O=await at("inspiration",["shop"]),R=v.OPTIONS.colours,L=t=>(R.find(i=>i.id===t)||{}).name||t,k=t=>(v.fontOf(t)||{}).name||t,$=O.designs.map((t,i)=>({d:t,i,room:t.tags.room||[],use:[...t.tags.occasion||[],...(t.collections||[]).includes("business")?["business"]:[]],colour:[t.colour]})),F={room:(O.facets.room||[]).map(t=>({id:t.id,label:t.label})),use:[...(O.facets.occasion||[]).map(t=>({id:t.id,label:t.label})),{id:"business",label:r("inspiration.filters.business")}],colour:R.filter(t=>$.some(i=>i.colour.includes(t.id))).map(t=>({id:t.id,label:t.name,hex:t.hex,core:t.core,rgb:!!t.rgb}))},G=new URLSearchParams(location.search),u=Object.fromEntries(_.map(t=>[t,F[t].some(i=>i.id===G.get(t))?G.get(t):""])),U=(t,i)=>_.every(n=>n===i||!u[n]||t[n].includes(u[n]));function B(){const t=new URLSearchParams;_.forEach(i=>u[i]&&t.set(i,u[i])),history.replaceState(null,"",location.pathname+(t.toString()?"?"+t:""))}function D(){_.forEach(t=>{const i=o("#in-f-"+t);i.setAttribute("aria-label",r("inspiration.filters."+t));const n=s=>$.filter(c=>U(c,t)&&c[t].includes(s)).length,e=`<button type="button" class="c-chip in-chip" aria-pressed="${!u[t]}" data-qa="inspiration.filter.${t}" data-id="">${a(r("inspiration.filters.all"))}</button>`,l=F[t].map(s=>{const c=n(s.id),b=u[t]===s.id;return t==="colour"?`<button type="button" class="c-swatch in-swatch${s.rgb?" c-swatch--rgb":""}" style="--tube:${s.hex};--core:${s.core||s.hex}" aria-pressed="${b}" data-qa="inspiration.filter.colour" data-id="${s.id}" ${!c&&!b?"disabled":""} aria-label="${a(`${s.label} (${c})`)}"><span class="tube"></span><span class="name">${a(s.label)}</span></button>`:`<button type="button" class="c-chip in-chip" aria-pressed="${b}" data-qa="inspiration.filter.${t}" data-id="${s.id}" ${!c&&!b?"disabled":""}>${a(s.label)} <span class="in-chip__n">${c}</span></button>`}).join("");i.innerHTML=`<span class="in-fgroup__label">${a(r("inspiration.filters."+t))}</span><div class="in-fgroup__chips">${t==="colour"?"":e}${l}</div>`}),o("#in-clear").hidden=!_.some(t=>u[t])}o(".in-filters").addEventListener("click",t=>{const i=t.target.closest('[data-qa^="inspiration.filter."]');if(!i||i.disabled)return;const n=i.dataset.qa.split(".").pop(),e=i.dataset.id;u[n]=u[n]===e?"":e,B(),D(),I()}),o("#in-clear").addEventListener("click",()=>{_.forEach(t=>u[t]=""),B(),D(),I()});const Y=t=>{const i=J.getScene(t);return!!i&&!i.placeholder},P=[],N=new Map;$.forEach(t=>{const i=t.d,n=Array.from(new Set([i.scene,...i.altScenes||[],"s00-studio-dark"])).filter(l=>Y(l)&&l!=="s00-studio-light"),e=n.slice().sort((l,s)=>{const c=P.lastIndexOf(l),b=P.lastIndexOf(s);return c-b||n.indexOf(l)-n.indexOf(s)})[0]||"s00-studio-dark";N.set(i.id,e),P.push(e)});const M=t=>N.get(t.id)||"s00-studio-dark",H=matchMedia("(max-width: 599px)");function z(){const t=H.matches;document.querySelectorAll(".in-card").forEach(i=>{const n=i.querySelector(".in-card__actions");if(n&&(n.hidden=t),t){const s=i.querySelector(".in-apply");s&&!s.hidden&&E(i)}const e=i.querySelector('[data-qa="inspiration.card.open"]');if(!e)return;const l=i.querySelector(".in-card__name")?.textContent||"";t?(e.removeAttribute("aria-haspopup"),e.setAttribute("aria-label",r("inspiration.openNamed",{name:l},`Open ${l} in the designer`)),e.classList.add("is-designer")):(e.setAttribute("aria-haspopup","dialog"),e.setAttribute("aria-label",r("inspiration.view",{name:l})),e.classList.remove("is-designer"))})}H.addEventListener("change",z);const y=(t,i={})=>v.normalise({text:(t.lines||[]).join(`
+`),font:t.font,colour:t.colour,icon:t.icon||"",iconPos:t.iconPos||"above",size:"m",scene:M(t),view:"room",...i});function Z(t,i){const n=t.d,e=M(n),l=K((n.collections||[])[0]);return`<article class="in-card" data-qa="inspiration.card" data-id="${a(n.id)}" data-colour="${a(n.colour)}" data-font="${a(n.font)}">
       <div class="in-card__media">
-        ${tileHtml({ scene, words: (d.lines || []).join('\n'), font: d.font, colour: d.colour, icon: d.icon || '', qa: 'inspiration.card.render', id: d.id, portrait: true, lazy: n >= 8, cls: 'in-card__tile hub-tile--portrait' })}
-        <button type="button" class="in-card__open" data-qa="inspiration.card.open" data-id="${esc(d.id)}" aria-haspopup="dialog" aria-label="${esc(t('inspiration.view', { name: d.name }))}"></button>
-        <div class="in-dn" role="group" aria-label="${esc(d.name)}">
-          <button type="button" aria-pressed="true" data-qa="inspiration.card.night" data-id="${esc(d.id)}" aria-label="${esc(t('inspiration.nightLabel', { name: d.name }))}">${icon('moon')}</button>
-          <button type="button" aria-pressed="false" data-qa="inspiration.card.day" data-id="${esc(d.id)}" aria-label="${esc(t('inspiration.dayLabel', { name: d.name }))}">${icon('sun')}</button>
+        ${et({scene:e,words:(n.lines||[]).join(`
+`),font:n.font,colour:n.colour,icon:n.icon||"",qa:"inspiration.card.render",id:n.id,portrait:!0,lazy:i>=8,cls:"in-card__tile hub-tile--portrait"})}
+        <button type="button" class="in-card__open" data-qa="inspiration.card.open" data-id="${a(n.id)}" aria-haspopup="dialog" aria-label="${a(r("inspiration.view",{name:n.name}))}"></button>
+        <div class="in-dn" role="group" aria-label="${a(n.name)}">
+          <button type="button" aria-pressed="true" data-qa="inspiration.card.night" data-id="${a(n.id)}" aria-label="${a(r("inspiration.nightLabel",{name:n.name}))}">${h("moon")}</button>
+          <button type="button" aria-pressed="false" data-qa="inspiration.card.day" data-id="${a(n.id)}" aria-label="${a(r("inspiration.dayLabel",{name:n.name}))}">${h("sun")}</button>
         </div>
       </div>
       <div class="in-card__body">
-        <p class="in-card__eyebrow">${esc(col ? col.name : '')}</p>
-        <h2 class="in-card__name">${esc(d.name)}</h2>
-        <p class="in-card__meta">${esc(t('inspiration.meta', { colour: colourName(d.colour), font: fontName(d.font) }))}</p>
+        <p class="in-card__eyebrow">${a(l?l.name:"")}</p>
+        <h2 class="in-card__name">${a(n.name)}</h2>
+        <p class="in-card__meta">${a(r("inspiration.meta",{colour:L(n.colour),font:k(n.font)}))}</p>
         <div class="in-card__actions">
-          <button type="button" class="c-btn c-btn--ghost in-card__apply" data-qa="inspiration.card.apply" data-id="${esc(d.id)}" aria-expanded="false">${icon('pencil')}<span>${esc(t('inspiration.apply'))}</span></button>
-          <a class="c-btn c-btn--text" href="${esc(router.builderLink(stateOf(d)))}" data-qa="inspiration.card.designer" data-id="${esc(d.id)}"><span class="label">${esc(t('inspiration.open'))}</span>${icon('arrow-right')}</a>
+          <button type="button" class="c-btn c-btn--ghost in-card__apply" data-qa="inspiration.card.apply" data-id="${a(n.id)}" aria-expanded="false">${h("pencil")}<span>${a(r("inspiration.apply"))}</span></button>
+          <a class="c-btn c-btn--text" href="${a(d.builderLink(y(n)))}" data-qa="inspiration.card.designer" data-id="${a(n.id)}"><span class="label">${a(r("inspiration.open"))}</span>${h("arrow-right")}</a>
         </div>
-        <form class="in-apply" data-qa="inspiration.card.applyform" data-id="${esc(d.id)}" hidden novalidate>
-          <label class="sr-only" for="in-apply-${esc(d.id)}">${esc(t('inspiration.applyLabel', { font: fontName(d.font), colour: colourName(d.colour) }))}</label>
-          <input id="in-apply-${esc(d.id)}" class="c-input" type="text" maxlength="24" autocomplete="off" autocapitalize="sentences" spellcheck="false" enterkeyhint="go" placeholder="${esc(t('inspiration.applyPlaceholder'))}" data-qa="inspiration.card.apply.input" data-id="${esc(d.id)}">
+        <form class="in-apply" data-qa="inspiration.card.applyform" data-id="${a(n.id)}" hidden novalidate>
+          <label class="sr-only" for="in-apply-${a(n.id)}">${a(r("inspiration.applyLabel",{font:k(n.font),colour:L(n.colour)}))}</label>
+          <input id="in-apply-${a(n.id)}" class="c-input" type="text" maxlength="24" autocomplete="off" autocapitalize="sentences" spellcheck="false" enterkeyhint="go" placeholder="${a(r("inspiration.applyPlaceholder"))}" data-qa="inspiration.card.apply.input" data-id="${a(n.id)}">
           <p class="in-apply__note" aria-live="polite" hidden></p>
           <div class="in-apply__row">
-            <a class="c-btn c-btn--primary" href="${esc(router.builderLink(stateOf(d)))}" data-qa="inspiration.card.apply.go" data-id="${esc(d.id)}">${esc(t('inspiration.applyGo'))}</a>
-            <button type="button" class="c-btn c-btn--text" data-qa="inspiration.card.apply.cancel" data-id="${esc(d.id)}"><span class="label">${esc(t('inspiration.applyCancel'))}</span></button>
+            <a class="c-btn c-btn--primary" href="${a(d.builderLink(y(n)))}" data-qa="inspiration.card.apply.go" data-id="${a(n.id)}">${a(r("inspiration.applyGo"))}</a>
+            <button type="button" class="c-btn c-btn--text" data-qa="inspiration.card.apply.cancel" data-id="${a(n.id)}"><span class="label">${a(r("inspiration.applyCancel"))}</span></button>
           </div>
         </form>
       </div>
-    </article>`;
-  }
-  let tiles = null, shown = [];
-  function paintGrid() {
-    shown = ideas.filter(x => matches(x));
-    $('#in-count').textContent = shown.length === 1 ? t('inspiration.countOne') : t('inspiration.count', { n: shown.length });
-    const grid = $('#in-grid'); const empty = $('#in-empty');
-    if (!shown.length) {
-      grid.innerHTML = ''; empty.hidden = false;
-      empty.innerHTML = `<div class="c-empty in-empty"><p>${esc(t('inspiration.empty'))}</p><button type="button" class="c-btn c-btn--primary" data-qa="inspiration.empty.clear">${esc(t('inspiration.emptyCta'))}</button></div>`;
-      $('[data-qa="inspiration.empty.clear"]').addEventListener('click', () => $('#in-clear').click());
-      return;
-    }
-    empty.hidden = true; empty.innerHTML = '';
-    grid.innerHTML = shown.map(cardHtml).join('');
-    tiles = hydrateTiles(grid, { fitW: .9, fitH: .9, margin: '1600px 0px' });
-    paintCompact();
-  }
-
-  /* ---------- card interactions (delegated) ---------- */
-  const ideaById = id => ideas.find(x => x.d.id === id);
-  function setDay(card, day) {
-    const tile = $('.hub-tile', card); tiles && tiles.setLit(tile, !day);
-    $('[data-qa="inspiration.card.night"]', card).setAttribute('aria-pressed', String(!day));
-    $('[data-qa="inspiration.card.day"]', card).setAttribute('aria-pressed', String(day));
-  }
-  function applyPaint(card, form) {
-    const x = ideaById(card.dataset.id); const inp = $('input', form); const note = $('.in-apply__note', form);
-    const c = cleanText(inp.value, x.d.font); const typed = inp.value.trim() ? stripGlyphs(c.text, c.bad) : '';
-    const words = typed || (x.d.lines || []).join('\n');
-    tiles && tiles.update($('.hub-tile', card), { words, icon: typed ? '' : (x.d.icon || '') });
-    note.hidden = !c.bad.length; if (c.bad.length) note.textContent = t('inspiration.applyBad', { glyphs: c.bad.join(' ') });
-    $('[data-qa="inspiration.card.apply.go"]', form).href = router.builderLink(stateOf(x.d, typed ? { text: typed, icon: '' } : {}));
-    return { typed, state: stateOf(x.d, typed ? { text: typed, icon: '' } : {}) };
-  }
-  function closeApply(card) {
-    const form = $('.in-apply', card); const btn = $('.in-card__apply', card); if (form.hidden) return;
-    form.hidden = true; btn.setAttribute('aria-expanded', 'false'); $('input', form).value = ''; applyPaint(card, form); btn.focus({ preventScroll: true });
-  }
-  const grid = $('#in-grid');
-  grid.addEventListener('click', e => {
-    const card = e.target.closest('.in-card'); if (!card) return;
-    if (e.target.closest('[data-qa="inspiration.card.day"]')) return setDay(card, true);
-    if (e.target.closest('[data-qa="inspiration.card.night"]')) return setDay(card, false);
-    if (e.target.closest('[data-qa="inspiration.card.open"]')) {
-      if (compactMq.matches) { const x = ideaById(card.dataset.id); if (x) { location.href = router.builderLink(stateOf(x.d)); return; } }
-      return openLightbox(card.dataset.id, e.target.closest('button'));
-    }
-    if (e.target.closest('[data-qa="inspiration.card.apply"]')) {
-      const form = $('.in-apply', card); const btn = $('.in-card__apply', card);
-      if (!form.hidden) return closeApply(card);
-      form.hidden = false; btn.setAttribute('aria-expanded', 'true'); setDay(card, false); $('input', form).focus(); return;
-    }
-    if (e.target.closest('[data-qa="inspiration.card.apply.cancel"]')) return closeApply(card);
-    const go = e.target.closest('[data-qa="inspiration.card.apply.go"]');
-    if (go) { const { typed, state } = applyPaint(card, $('.in-apply', card)); if (typed) { router.design.flush(); router.design.set(state, 'collection'); } }
-  });
-  grid.addEventListener('input', e => { const form = e.target.closest('.in-apply'); if (form) applyPaint(form.closest('.in-card'), form); });
-  grid.addEventListener('submit', e => { const form = e.target.closest('.in-apply'); if (!form) return; e.preventDefault(); const go = $('[data-qa="inspiration.card.apply.go"]', form); const { typed, state } = applyPaint(form.closest('.in-card'), form); if (typed) { router.design.flush(); router.design.set(state, 'collection'); } location.href = go.href; });
-  grid.addEventListener('keydown', e => { if (e.key === 'Escape') { const form = e.target.closest('.in-apply'); if (form) { e.stopPropagation(); closeApply(form.closest('.in-card')); } } });
-
-  /* ---------- lightbox: one live stage, prev / next, the same actions ---------- */
-  let lb = null, lbStage = null, lbIndex = 0, lbDay = false;
-  function lbBody() {
-    return `<div class="in-lb">
+    </article>`}let g=null,p=[];function I(){p=$.filter(n=>U(n)),o("#in-count").textContent=p.length===1?r("inspiration.countOne"):r("inspiration.count",{n:p.length});const t=o("#in-grid"),i=o("#in-empty");if(!p.length){t.innerHTML="",i.hidden=!1,i.innerHTML=`<div class="c-empty in-empty"><p>${a(r("inspiration.empty"))}</p><button type="button" class="c-btn c-btn--primary" data-qa="inspiration.empty.clear">${a(r("inspiration.emptyCta"))}</button></div>`,o('[data-qa="inspiration.empty.clear"]').addEventListener("click",()=>o("#in-clear").click());return}i.hidden=!0,i.innerHTML="",t.innerHTML=p.map(Z).join(""),g=ot(t,{fitW:.9,fitH:.9,margin:"1600px 0px"}),z()}const V=t=>$.find(i=>i.d.id===t);function T(t,i){const n=o(".hub-tile",t);g&&g.setLit(n,!i),o('[data-qa="inspiration.card.night"]',t).setAttribute("aria-pressed",String(!i)),o('[data-qa="inspiration.card.day"]',t).setAttribute("aria-pressed",String(i))}function S(t,i){const n=V(t.dataset.id),e=o("input",i),l=o(".in-apply__note",i),s=Q(e.value,n.d.font),c=e.value.trim()?X(s.text,s.bad):"",b=c||(n.d.lines||[]).join(`
+`);return g&&g.update(o(".hub-tile",t),{words:b,icon:c?"":n.d.icon||""}),l.hidden=!s.bad.length,s.bad.length&&(l.textContent=r("inspiration.applyBad",{glyphs:s.bad.join(" ")})),o('[data-qa="inspiration.card.apply.go"]',i).href=d.builderLink(y(n.d,c?{text:c,icon:""}:{})),{typed:c,state:y(n.d,c?{text:c,icon:""}:{})}}function E(t){const i=o(".in-apply",t),n=o(".in-card__apply",t);i.hidden||(i.hidden=!0,n.setAttribute("aria-expanded","false"),o("input",i).value="",S(t,i),n.focus({preventScroll:!0}))}const A=o("#in-grid");A.addEventListener("click",t=>{const i=t.target.closest(".in-card");if(!i)return;if(t.target.closest('[data-qa="inspiration.card.day"]'))return T(i,!0);if(t.target.closest('[data-qa="inspiration.card.night"]'))return T(i,!1);if(t.target.closest('[data-qa="inspiration.card.open"]')){if(H.matches){const e=V(i.dataset.id);if(e){location.href=d.builderLink(y(e.d));return}}return W(i.dataset.id,t.target.closest("button"))}if(t.target.closest('[data-qa="inspiration.card.apply"]')){const e=o(".in-apply",i),l=o(".in-card__apply",i);if(!e.hidden)return E(i);e.hidden=!1,l.setAttribute("aria-expanded","true"),T(i,!1),o("input",e).focus();return}if(t.target.closest('[data-qa="inspiration.card.apply.cancel"]'))return E(i);if(t.target.closest('[data-qa="inspiration.card.apply.go"]')){const{typed:e,state:l}=S(i,o(".in-apply",i));e&&(d.design.flush(),d.design.set(l,"collection"))}}),A.addEventListener("input",t=>{const i=t.target.closest(".in-apply");i&&S(i.closest(".in-card"),i)}),A.addEventListener("submit",t=>{const i=t.target.closest(".in-apply");if(!i)return;t.preventDefault();const n=o('[data-qa="inspiration.card.apply.go"]',i),{typed:e,state:l}=S(i.closest(".in-card"),i);e&&(d.design.flush(),d.design.set(l,"collection")),location.href=n.href}),A.addEventListener("keydown",t=>{if(t.key==="Escape"){const i=t.target.closest(".in-apply");i&&(t.stopPropagation(),E(i.closest(".in-card")))}});let m=null,q=null,x=0,f=!1;function tt(){return`<div class="in-lb">
       <div class="in-lb__stage" id="in-lb-stage"></div>
       <div class="in-lb__bar">
-        <div class="c-seg in-lb__dn" role="group" aria-label="${esc(t('inspiration.night'))} / ${esc(t('inspiration.day'))}">
-          <button type="button" aria-pressed="true" data-qa="inspiration.lightbox.night">${icon('moon')}<span>${esc(t('inspiration.night'))}</span></button>
-          <button type="button" aria-pressed="false" data-qa="inspiration.lightbox.day">${icon('sun')}<span>${esc(t('inspiration.day'))}</span></button>
+        <div class="c-seg in-lb__dn" role="group" aria-label="${a(r("inspiration.night"))} / ${a(r("inspiration.day"))}">
+          <button type="button" aria-pressed="true" data-qa="inspiration.lightbox.night">${h("moon")}<span>${a(r("inspiration.night"))}</span></button>
+          <button type="button" aria-pressed="false" data-qa="inspiration.lightbox.day">${h("sun")}<span>${a(r("inspiration.day"))}</span></button>
         </div>
         <p class="in-lb__of" id="in-lb-of" aria-live="polite"></p>
         <div class="in-lb__nav">
-          <button type="button" class="c-btn c-btn--icon c-btn--ghost" data-qa="inspiration.lightbox.prev" aria-label="${esc(t('inspiration.lightbox.prev'))}">${icon('arrow-left')}</button>
-          <button type="button" class="c-btn c-btn--icon c-btn--ghost" data-qa="inspiration.lightbox.next" aria-label="${esc(t('inspiration.lightbox.next'))}">${icon('arrow-right')}</button>
+          <button type="button" class="c-btn c-btn--icon c-btn--ghost" data-qa="inspiration.lightbox.prev" aria-label="${a(r("inspiration.lightbox.prev"))}">${h("arrow-left")}</button>
+          <button type="button" class="c-btn c-btn--icon c-btn--ghost" data-qa="inspiration.lightbox.next" aria-label="${a(r("inspiration.lightbox.next"))}">${h("arrow-right")}</button>
         </div>
       </div>
       <div class="in-lb__info">
         <div><p class="in-card__eyebrow" id="in-lb-eyebrow"></p><p class="in-lb__meta" id="in-lb-meta"></p></div>
         <form class="in-lb__apply" id="in-lb-apply" novalidate>
           <label class="sr-only" for="in-lb-input" id="in-lb-label"></label>
-          <input id="in-lb-input" class="c-input" type="text" maxlength="24" autocomplete="off" spellcheck="false" enterkeyhint="go" placeholder="${esc(t('inspiration.applyPlaceholder'))}" data-qa="inspiration.lightbox.input">
-          <a class="c-btn c-btn--primary" id="in-lb-go" href="/lit-neon-preview/rework/create.html" data-qa="inspiration.lightbox.go">${esc(t('inspiration.applyGo'))}</a>
+          <input id="in-lb-input" class="c-input" type="text" maxlength="24" autocomplete="off" spellcheck="false" enterkeyhint="go" placeholder="${a(r("inspiration.applyPlaceholder"))}" data-qa="inspiration.lightbox.input">
+          <a class="c-btn c-btn--primary" id="in-lb-go" href="/lit-neon-preview/rework/create.html" data-qa="inspiration.lightbox.go">${a(r("inspiration.applyGo"))}</a>
         </form>
         <div class="cluster in-lb__links">
-          <a class="c-btn c-btn--text" id="in-lb-designer" href="/lit-neon-preview/rework/create.html" data-qa="inspiration.lightbox.designer"><span class="label">${esc(t('inspiration.open'))}</span>${icon('arrow-right')}</a>
-          <a class="c-btn c-btn--text" id="in-lb-product" href="/lit-neon-preview/rework/shop.html" data-qa="inspiration.lightbox.product"><span class="label">${esc(t('inspiration.lightbox.shop'))}</span>${icon('arrow-right')}</a>
+          <a class="c-btn c-btn--text" id="in-lb-designer" href="/lit-neon-preview/rework/create.html" data-qa="inspiration.lightbox.designer"><span class="label">${a(r("inspiration.open"))}</span>${h("arrow-right")}</a>
+          <a class="c-btn c-btn--text" id="in-lb-product" href="/lit-neon-preview/rework/shop.html" data-qa="inspiration.lightbox.product"><span class="label">${a(r("inspiration.lightbox.shop"))}</span>${h("arrow-right")}</a>
         </div>
       </div>
-    </div>`;
-  }
-  function lbState() {
-    const x = shown[lbIndex]; const inp = $('#in-lb-input'); const c = cleanText(inp ? inp.value : '', x.d.font); const typed = inp && inp.value.trim() ? stripGlyphs(c.text, c.bad) : '';
-    const light = false;   /* no daylight-only scene in this gallery (see sceneMap) */
-    return { x, typed, light, state: stateOf(x.d, { ...(typed ? { text: typed, icon: '' } : {}), night: !lbDay && !light, on: !lbDay }) };
-  }
-  function lbPaint(full) {
-    const { x, typed, light, state } = lbState(); const d = x.d; const scene = sceneFor(d);
-    if (full) { lb.el.querySelector('.c-dialog__head .title').textContent = d.name; $('#in-lb-input').value = ''; }
-    $('#in-lb-of').textContent = t('inspiration.lightbox.of', { i: lbIndex + 1, n: shown.length });
-    $('#in-lb-eyebrow').textContent = (collectionById((d.collections || [])[0]) || {}).name || '';
-    $('#in-lb-meta').textContent = t('inspiration.meta', { colour: colourName(d.colour), font: fontName(d.font) });
-    $('#in-lb-label').textContent = t('inspiration.applyLabel', { font: fontName(d.font), colour: colourName(d.colour) });
-    $('#in-lb-go').href = router.builderLink(stateOf(d, typed ? { text: typed, icon: '' } : {}));
-    $('#in-lb-designer').href = router.builderLink(stateOf(d));
-    $('#in-lb-product').href = `/lit-neon-preview/rework/product.html?id=${encodeURIComponent(d.id)}`;
-    $$('[data-qa="inspiration.lightbox.night"], [data-qa="inspiration.lightbox.day"]').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.qa.endsWith('day')) === lbDay)));
-    if (!lbStage) lbStage = stage.mount($('#in-lb-stage'), { frame: 'guide', scene, design: state, interactive: false, rulers: false, qa: 'inspiration.lightbox.stage', view: { night: !lbDay && !light, on: !lbDay, rulers: 'off' } });
-    else { if (full) lbStage.setScene(scene); lbStage.setView({ night: !lbDay && !light, on: !lbDay }); lbStage.setDesign(state); }
-  }
-  function openLightbox(id, opener) {
-    lbIndex = Math.max(0, shown.findIndex(x => x.d.id === id)); lbDay = false;
-    if (!lb) {
-      lb = ui.modal({ title: shown[lbIndex].d.name, body: lbBody(), qa: 'inspiration.lightbox', onClose: () => {} });
-      lb.el.classList.add('in-lightbox');
-      lb.el.addEventListener('click', e => {
-        if (e.target.closest('[data-qa="inspiration.lightbox.prev"]')) step(-1);
-        else if (e.target.closest('[data-qa="inspiration.lightbox.next"]')) step(1);
-        else if (e.target.closest('[data-qa="inspiration.lightbox.day"]')) { lbDay = true; lbPaint(false); }
-        else if (e.target.closest('[data-qa="inspiration.lightbox.night"]')) { lbDay = false; lbPaint(false); }
-        else if (e.target.closest('#in-lb-go')) { const { typed, state } = lbState(); if (typed) { router.design.flush(); router.design.set(state, 'collection'); } }
-      });
-      lb.el.addEventListener('input', e => { if (e.target.id === 'in-lb-input') lbPaint(false); });
-      lb.el.addEventListener('submit', e => { e.preventDefault(); const { typed, state } = lbState(); if (typed) { router.design.flush(); router.design.set(state, 'collection'); } location.href = $('#in-lb-go').href; });
-      lb.el.addEventListener('keydown', e => { if (e.target.matches('input')) return; if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); } if (e.key === 'ArrowRight') { e.preventDefault(); step(1); } });
-    }
-    lb.open(opener);
-    requestAnimationFrame(() => lbPaint(true));
-  }
-  function step(dir) { lbIndex = (lbIndex + dir + shown.length) % shown.length; lbPaint(true); }
-
-  paintFilters(); paintGrid();
-  $('#in-end-design').href = router.builderLink(R.normalise(router.getDesign ? (router.getDesign() || {}) : {}));
-  R.ensureFonts().then(() => tiles && tiles.refit()); R.onFonts(() => tiles && tiles.refit());
-  document.documentElement.dataset.ready = 'inspiration';
-  window.__inspiration = { ideas, sel, shown: () => shown, openLightbox };
-})();
+    </div>`}function j(){const t=p[x],i=o("#in-lb-input"),n=Q(i?i.value:"",t.d.font),e=i&&i.value.trim()?X(n.text,n.bad):"",l=!1;return{x:t,typed:e,light:l,state:y(t.d,{...e?{text:e,icon:""}:{},night:!f&&!l,on:!f})}}function w(t){const{x:i,typed:n,light:e,state:l}=j(),s=i.d,c=M(s);t&&(m.el.querySelector(".c-dialog__head .title").textContent=s.name,o("#in-lb-input").value=""),o("#in-lb-of").textContent=r("inspiration.lightbox.of",{i:x+1,n:p.length}),o("#in-lb-eyebrow").textContent=(K((s.collections||[])[0])||{}).name||"",o("#in-lb-meta").textContent=r("inspiration.meta",{colour:L(s.colour),font:k(s.font)}),o("#in-lb-label").textContent=r("inspiration.applyLabel",{font:k(s.font),colour:L(s.colour)}),o("#in-lb-go").href=d.builderLink(y(s,n?{text:n,icon:""}:{})),o("#in-lb-designer").href=d.builderLink(y(s)),o("#in-lb-product").href=`/lit-neon-preview/rework/product.html?id=${encodeURIComponent(s.id)}`,nt('[data-qa="inspiration.lightbox.night"], [data-qa="inspiration.lightbox.day"]').forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.qa.endsWith("day")===f))),q?(t&&q.setScene(c),q.setView({night:!f&&!e,on:!f}),q.setDesign(l)):q=J.mount(o("#in-lb-stage"),{frame:"guide",scene:c,design:l,interactive:!1,rulers:!1,qa:"inspiration.lightbox.stage",view:{night:!f&&!e,on:!f,rulers:"off"}})}function W(t,i){x=Math.max(0,p.findIndex(n=>n.d.id===t)),f=!1,m||(m=it.modal({title:p[x].d.name,body:tt(),qa:"inspiration.lightbox",onClose:()=>{}}),m.el.classList.add("in-lightbox"),m.el.addEventListener("click",n=>{if(n.target.closest('[data-qa="inspiration.lightbox.prev"]'))C(-1);else if(n.target.closest('[data-qa="inspiration.lightbox.next"]'))C(1);else if(n.target.closest('[data-qa="inspiration.lightbox.day"]'))f=!0,w(!1);else if(n.target.closest('[data-qa="inspiration.lightbox.night"]'))f=!1,w(!1);else if(n.target.closest("#in-lb-go")){const{typed:e,state:l}=j();e&&(d.design.flush(),d.design.set(l,"collection"))}}),m.el.addEventListener("input",n=>{n.target.id==="in-lb-input"&&w(!1)}),m.el.addEventListener("submit",n=>{n.preventDefault();const{typed:e,state:l}=j();e&&(d.design.flush(),d.design.set(l,"collection")),location.href=o("#in-lb-go").href}),m.el.addEventListener("keydown",n=>{n.target.matches("input")||(n.key==="ArrowLeft"&&(n.preventDefault(),C(-1)),n.key==="ArrowRight"&&(n.preventDefault(),C(1)))})),m.open(i),requestAnimationFrame(()=>w(!0))}function C(t){x=(x+t+p.length)%p.length,w(!0)}D(),I(),o("#in-end-design").href=d.builderLink(v.normalise(d.getDesign?d.getDesign()||{}:{})),v.ensureFonts().then(()=>g&&g.refit()),v.onFonts(()=>g&&g.refit()),document.documentElement.dataset.ready="inspiration",window.__inspiration={ideas:$,sel:u,shown:()=>p,openLightbox:W}})();

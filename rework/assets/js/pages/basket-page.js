@@ -1,408 +1,51 @@
-/* Lit Neon v2 — basket page (brief §4.19, owner P7): the full-page fallback of the basket drawer, built on the same
-   store (core/basket.js) so the two always agree. Lines are re-priced from the stored spec on every render (never a
-   stored price), identical specs merge (qty stepper), Edit reopens the line in the builder (or the product page for a
-   ready-made line), Remove collapses the line into an inline "Removed · Undo" row for 5 s (no toast, C14).
-   The summary shows ONE payable subtotal plus the §3.7a promo line while the promo is live — never a saving — the
-   delivery postcode check, BNPL inside its limits, the express row (hidden with a quoted line), the checkout CTA,
-   the assurances and the payment marks. A sticky checkout bar takes over on phones once the summary CTA is off-screen.
-   Every control carries data-qa="basket.page.*" (the drawer owns basket.*) and is listed in qa/matrix/basket.json.
-
-   Also exports the line helpers checkout.js reuses (name, spec rows, edit link, mini render, hours text), so the two
-   pages describe a line in exactly the same words. The page code runs only when body[data-page="basket"]. */
-import * as R from 'core/renderer.js';
-import stage from 'core/stage.js';
-import pricing from 'core/pricing.js';
-import basket from 'core/basket.js';
-import router from 'core/router.js';
-import * as ui from 'core/ui.js';
-import * as copy from 'core/copy.js';
-import * as facts from 'core/facts.js';
-import { gbp, fmtDims, esc } from 'core/money.js';
-import { mount as mountChrome } from 'core/chrome.js';
-import { track } from 'core/analytics.js';
-
-export const t = (k, v, f) => copy.t(k, v, f);
-export const $ = (s, r = document) => r.querySelector(s);
-export const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
-const icon = ui.icon;
-
-/* ============================================================ shared line helpers ============================================================ */
-let DESIGNS = null;
-/** designs.json (names for ready-made lines, empty-state picks). Cached; never throws. */
-export function loadDesigns() {
-  if (DESIGNS) return DESIGNS;
-  DESIGNS = fetch('/lit-neon-preview/rework/data/designs.json').then(r => (r.ok ? r.json() : null)).then(j => (j && j.designs) || []).catch(() => []);
-  return DESIGNS;
-}
-let designList = [];
-export const setDesignList = list => { designList = list || []; };
-const designById = id => designList.find(d => d.id === id) || null;
-
-/** the words a shopper typed, or the design name for a ready-made line */
-export function lineName(line) {
-  if (line.kind === 'photo') return t('line.photoName', {}, 'Your photo, traced in neon');
-  if (line.kind === 'ready' && line.meta && line.meta.design) { const d = designById(line.meta.design); if (d) return d.name; }
-  const res = R.resolve(line.state);
-  if (res.lines.length) return res.lines.join(' ');
-  if (res.icon) return t('line.symbolOnly', { symbol: symbolName(res.icon) }, '{symbol} symbol');
-  return t('line.fallbackName', {}, 'Your sign');
-}
-export const symbolName = id => t('symbols.' + id, {}, id);
-export const kindLabel = line => t('kind.' + line.kind, {}, line.kind);
-
-/** customer-facing spec rows (names only, never ids or hex; brief §3.7 Spec table) */
-export function specRows(line) {
-  if (line.kind === 'photo') return photoRows(line);
-  const res = R.resolve(line.state), st = res.state;
-  const colour = st.colours ? res.lineColours.map(c => c.name).join(' / ') : res.colour.name;
-  const sizeName = res.sizeId === 'custom' ? 'Custom' : R.sizeOf(res.sizeId).name;
-  const rows = [
-    { k: 'lettering', label: t('spec.lettering', {}, 'Lettering'), value: res.font.name },
-    { k: 'colour', label: t('spec.colour', {}, 'Colour'), value: `${colour}, ${R.jacketOf(st.jacket).name.toLowerCase()}` },
-    { k: 'size', label: t('spec.size', {}, 'Size'), value: `${sizeName}, ${res.dims ? fmtDims(res.dims.W, res.dims.H, st.unit === 'in' ? 'in' : 'cm') : '—'}` },
-    { k: 'backing', label: t('spec.backing', {}, 'Backing'), value: `${res.backing.name}, ${res.finish.name.toLowerCase()}` },
-    { k: 'hangs', label: t('spec.hangs', {}, 'Hangs'), value: `${st.backing === 'stand' ? t('spec.stand', {}, 'On its stand') : res.hang.name} · ${t('spec.plug', {}, 'UK plug')}` }
-  ];
-  if (st.icon) rows.push({ k: 'symbol', label: t('spec.symbol', {}, 'Symbol'), value: symbolName(st.icon) + (st.iconPos === 'inline' ? `, ${t('spec.inline', {}, 'inline')}` : '') });
-  if (st.use === 'out') rows.push({ k: 'where', label: t('spec.where', {}, 'Where'), value: t('spec.outdoors', {}, 'Outdoors') });
-  if (line.kind === 'photo') rows.push({ k: 'proof', label: t('spec.proof', {}, 'Proof'), value: t('spec.photoProof', {}, 'A designer draws your proof before anything is made') });
-  return rows;
-}
-/** a photo line is the traced design, not a text sign: size and LED length come from the photo meta (upload.html),
-    never from resolving the text state (which would read "Medium, 65 × 18 cm" for words nobody typed) */
-export function photoSize(line) {
-  const m = line.meta || {}; const W = m.widthCm, H = m.heightCm; const unit = line.state && line.state.unit === 'in' ? 'in' : 'cm';
-  if (!(W && H)) return '—';
-  const led = m.ledMetres ? ` · ${t('spec.ledMetres', { m: (Math.round(m.ledMetres * 10) / 10).toFixed(1) }, '{m} m of LED')}` : '';
-  return `${t('spec.about', {}, 'About')} ${fmtDims(W, H, unit)}${led}`;
-}
-function photoRows(line) {
-  const res = R.resolve(line.state), st = res.state;
-  return [
-    { k: 'made', label: t('spec.made', {}, 'Made from'), value: t('spec.madeFromPhoto', {}, 'Your photo, traced in neon') },
-    { k: 'colour', label: t('spec.colour', {}, 'Colour'), value: res.colour.name },
-    { k: 'size', label: t('spec.size', {}, 'Size'), value: photoSize(line) },
-    { k: 'backing', label: t('spec.backing', {}, 'Backing'), value: `${res.backing.name}, ${res.finish.name.toLowerCase()}` },
-    { k: 'hangs', label: t('spec.hangs', {}, 'Hangs'), value: `${st.backing === 'stand' ? t('spec.stand', {}, 'On its stand') : res.hang.name} · ${t('spec.plug', {}, 'UK plug')}` },
-    { k: 'proof', label: t('spec.proof', {}, 'Proof'), value: t('spec.photoProof', {}, 'A designer draws your proof before anything is made') }
-  ];
-}
-/** Edit design: the builder with the line's state and its uid (CTA reads "Update basket"), or the product page */
-export function editHref(line) {
-  if (line.kind === 'ready') return router.productLink(line.meta.design || '', { edit: line.uid });
-  return router.builderLink(line.state, { edit: line.uid });
-}
-/** the mini render: the stage engine on the dark studio wall, lit, card frame (same as the drawer) */
-export function mountMini(host, state, qa = 'basket.page.mini') {
-  try { return stage.mount(host, { frame: 'card', scene: 's00-studio-dark', design: { ...state, on: true, night: true }, interactive: false, pill: false, rulers: false, qa }); } catch { return null; }
-}
-/** the mini for any line: a photo line shows its traced preview (meta.png), never the text stage ("Your words") */
-export function mountLineMini(host, line, qa = 'basket.page.mini') {
-  if (!host || !line) return null;
-  if (line.kind === 'photo') {
-    const png = line.meta && line.meta.png;
-    host.classList.add('is-photo');
-    host.innerHTML = png ? `<img src="${esc(png)}" alt="" data-qa="${esc(qa)}.photo" decoding="async">` : `<span class="mini-photo-fallback">${icon('image')}</span>`;
-    return { destroy() { host.innerHTML = ''; host.classList.remove('is-photo'); } };
-  }
-  return mountMini(host, line.state, qa);
-}
-/** "12 hours" from the facts registry (confirmed), else a safe phrase */
-export const hoursText = () => (facts.has('mockupHours') ? `${facts.value('mockupHours')} hours` : '12 hours');
-export const daysRange = () => { try { const d = pricing.rules().delivery; return { min: d.minDays, max: d.maxDays }; } catch { return { min: 7, max: 10 }; } };
-/** where an excluded-postcode shopper can ask: the chrome's WhatsApp → email → contact.html chain, prefilled */
-export function contactLink(chromeApi, postcode) {
-  const text = `Hi, can you deliver a sign to ${postcode || 'my postcode'}?`;
-  const c = chromeApi && chromeApi.contactHref ? chromeApi.contactHref(text) : null;
-  if (c && c.href && c.kind !== 'contact') return c.href;
-  return `/lit-neon-preview/rework/contact.html?topic=delivery${postcode ? `&postcode=${encodeURIComponent(postcode)}` : ''}`;
-}
-export const fontIds = lines => Array.from(new Set(lines.map(l => R.resolve(l.state).font.id)));
-
-/** price text for one line (payable × qty), recomputed every call */
-export function linePrice(line) {
-  const p = basket.priceLine(line);
-  if (p.kind === 'price') return { kind: 'price', total: p.payable * line.qty, each: p.payable, everyday: p.everyday, p };
-  if (p.kind === 'wait') return { kind: 'wait', p };
-  return { kind: 'quote', p, reason: (line.meta && line.meta.reason) || p.reason || '' };
-}
-
-/* ============================================================ page ============================================================ */
-const isPage = typeof document !== 'undefined' && document.body && document.body.dataset.page === 'basket';
-if (isPage) boot();
-
-let chromeApi = null;
-const nodes = new Map();          // uid → { el, hash, mini }
-const removedRows = new Map();    // uid → { name, index, timer, undo }
-let editingPostcode = false;
-let pcResult = null;
-
-async function boot() {
-  copy.load(['chrome']).catch(() => {});
-  await Promise.all([copy.load(['basket']), facts.load(), ui.ensureSprite()]);
-  applyCopy();
-  mountChrome({ page: 'basket' }).then(api => { chromeApi = api; renderSummary(); }).catch(() => {});
-  /* the header basket button opens the drawer elsewhere; on this page the basket IS the page */
-  document.addEventListener('click', e => {
-    const b = e.target.closest && e.target.closest('[data-qa="chrome.basket"]');
-    if (!b) return; e.preventDefault(); e.stopImmediatePropagation();
-    window.scrollTo({ top: 0, behavior: R.reducedMotion() ? 'auto' : 'smooth' }); const h = $('#bk-h1'); h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true });
-  }, true);
-  setDesignList(await loadDesigns());
-  stage.loadScenes().then(() => pricing.setScenes(stage.scenes())).catch(() => {});
-  R.ensureFonts(fontIds(basket.lines())).catch(() => {});
-  R.onFonts(scheduleRender);
-  basket.subscribe(type => { if (type === 'change') scheduleRender(); });
-  render();
-  renderNext();
-  initBar();
-}
-
-function applyCopy() {
-  $$('[data-copy]').forEach(el => { const v = t(el.dataset.copy); if (v) el.textContent = v; });
-  document.title = t('meta.title', {}, document.title);
-}
-
-let renderQueued = 0;
-function scheduleRender() { if (renderQueued) return; renderQueued = requestAnimationFrame(() => { renderQueued = 0; render(); }); }
-
-let emptyBuilt = false;
-function render() {
-  const lines = basket.lines();
-  const root = $('#bk-lines');
-  const n = lines.length;
-  /* the title counts signs (summed quantities), like the header badge and the drawer: one line at quantity 10 is 10 signs */
-  const nSigns = basket.signs ? basket.signs() : n;
-  $('[data-qa="basket.page.count"]').textContent = n ? `(${t('count', { n: nSigns, unit: t(nSigns === 1 ? 'unit.one' : 'unit.many') }, '{n} {unit}')})` : '';
-  if (!n && !removedRows.size) { renderEmpty(); return; }
-  emptyBuilt = false;
-  document.body.classList.remove('bk--empty');
-  $('#bk-summary').hidden = false; $('#bk-next').hidden = false;
-  root.querySelector('.bk-skel')?.remove(); root.querySelector('.bk-empty')?.remove();
-
-  /* keyed update: reuse a line's node (and its live mini) while its spec is unchanged */
-  const seen = new Set();
-  const order = [];
-  lines.forEach(l => {
-    seen.add(l.uid);
-    let rec = nodes.get(l.uid);
-    if (!rec || rec.hash !== l.specHash) { if (rec) destroyRec(rec); rec = buildLine(l); nodes.set(l.uid, rec); }
-    updateLine(rec, l);
-    order.push(rec.el);
-  });
-  nodes.forEach((rec, uid) => { if (!seen.has(uid)) { destroyRec(rec); nodes.delete(uid); } });
-  /* splice the undo rows back in at the position the line had */
-  removedRows.forEach((r, uid) => { if (!r.el) r.el = buildUndo(uid, r); order.splice(Math.min(r.index, order.length), 0, r.el); });
-  order.forEach((el, i) => { if (root.children[i] !== el) root.insertBefore(el, root.children[i] || null); });
-  Array.from(root.children).forEach(ch => { if (!order.includes(ch)) ch.remove(); });
-  renderSummary();
-}
-
-function destroyRec(rec) { try { rec.mini && rec.mini.destroy && rec.mini.destroy(); } catch {} rec.el.remove(); }
-
-function buildLine(l) {
-  const el = document.createElement('article');
-  el.className = 'bk-line'; el.dataset.uid = l.uid; el.dataset.kind = l.kind; el.dataset.qa = 'basket.page.line';
-  const name = lineName(l);
-  el.setAttribute('aria-label', name);
-  const rows = specRows(l).map(r => `<div><dt>${esc(r.label)}</dt><dd>${esc(r.value)}</dd></div>`).join('');
-  el.innerHTML = `
-    <figure class="bk-line__fig"><div class="bk-line__mini" data-mini></div><figcaption class="bk-line__cap" data-caption="rendered">${icon('image', 'ic--sm')}${esc(t('line.preview', {}, 'Rendered preview'))}</figcaption></figure>
+import*as p from"core/renderer.js";import C from"core/stage.js";import g from"core/pricing.js";import d from"core/basket.js";import v from"core/router.js";import*as f from"core/ui.js";import*as A from"core/copy.js";import*as q from"core/facts.js";import{gbp as m,fmtDims as F,esc as s}from"core/money.js";import{mount as Q}from"core/chrome.js";import{track as I}from"core/analytics.js";export const t=(e,a,n)=>A.t(e,a,n),$=(e,a=document)=>a.querySelector(e),$$=(e,a=document)=>Array.from(a.querySelectorAll(e));const u=f.icon;let w=null;export function loadDesigns(){return w||(w=fetch("/lit-neon-preview/rework/data/designs.json").then(e=>e.ok?e.json():null).then(e=>e&&e.designs||[]).catch(()=>[]),w)}let x=[];export const setDesignList=e=>{x=e||[]};const T=e=>x.find(a=>a.id===e)||null;export function lineName(e){if(e.kind==="photo")return t("line.photoName",{},"Your photo, traced in neon");if(e.kind==="ready"&&e.meta&&e.meta.design){const n=T(e.meta.design);if(n)return n.name}const a=p.resolve(e.state);return a.lines.length?a.lines.join(" "):a.icon?t("line.symbolOnly",{symbol:symbolName(a.icon)},"{symbol} symbol"):t("line.fallbackName",{},"Your sign")}export const symbolName=e=>t("symbols."+e,{},e),kindLabel=e=>t("kind."+e.kind,{},e.kind);export function specRows(e){if(e.kind==="photo")return V(e);const a=p.resolve(e.state),n=a.state,o=n.colours?a.lineColours.map(r=>r.name).join(" / "):a.colour.name,i=a.sizeId==="custom"?"Custom":p.sizeOf(a.sizeId).name,c=[{k:"lettering",label:t("spec.lettering",{},"Lettering"),value:a.font.name},{k:"colour",label:t("spec.colour",{},"Colour"),value:`${o}, ${p.jacketOf(n.jacket).name.toLowerCase()}`},{k:"size",label:t("spec.size",{},"Size"),value:`${i}, ${a.dims?F(a.dims.W,a.dims.H,n.unit==="in"?"in":"cm"):"—"}`},{k:"backing",label:t("spec.backing",{},"Backing"),value:`${a.backing.name}, ${a.finish.name.toLowerCase()}`},{k:"hangs",label:t("spec.hangs",{},"Hangs"),value:`${n.backing==="stand"?t("spec.stand",{},"On its stand"):a.hang.name} · ${t("spec.plug",{},"UK plug")}`}];return n.icon&&c.push({k:"symbol",label:t("spec.symbol",{},"Symbol"),value:symbolName(n.icon)+(n.iconPos==="inline"?`, ${t("spec.inline",{},"inline")}`:"")}),n.use==="out"&&c.push({k:"where",label:t("spec.where",{},"Where"),value:t("spec.outdoors",{},"Outdoors")}),e.kind==="photo"&&c.push({k:"proof",label:t("spec.proof",{},"Proof"),value:t("spec.photoProof",{},"A designer draws your proof before anything is made")}),c}export function photoSize(e){const a=e.meta||{},n=a.widthCm,o=a.heightCm,i=e.state&&e.state.unit==="in"?"in":"cm";if(!(n&&o))return"—";const c=a.ledMetres?` · ${t("spec.ledMetres",{m:(Math.round(a.ledMetres*10)/10).toFixed(1)},"{m} m of LED")}`:"";return`${t("spec.about",{},"About")} ${F(n,o,i)}${c}`}function V(e){const a=p.resolve(e.state),n=a.state;return[{k:"made",label:t("spec.made",{},"Made from"),value:t("spec.madeFromPhoto",{},"Your photo, traced in neon")},{k:"colour",label:t("spec.colour",{},"Colour"),value:a.colour.name},{k:"size",label:t("spec.size",{},"Size"),value:photoSize(e)},{k:"backing",label:t("spec.backing",{},"Backing"),value:`${a.backing.name}, ${a.finish.name.toLowerCase()}`},{k:"hangs",label:t("spec.hangs",{},"Hangs"),value:`${n.backing==="stand"?t("spec.stand",{},"On its stand"):a.hang.name} · ${t("spec.plug",{},"UK plug")}`},{k:"proof",label:t("spec.proof",{},"Proof"),value:t("spec.photoProof",{},"A designer draws your proof before anything is made")}]}export function editHref(e){return e.kind==="ready"?v.productLink(e.meta.design||"",{edit:e.uid}):v.builderLink(e.state,{edit:e.uid})}export function mountMini(e,a,n="basket.page.mini"){try{return C.mount(e,{frame:"card",scene:"s00-studio-dark",design:{...a,on:!0,night:!0},interactive:!1,pill:!1,rulers:!1,qa:n})}catch{return null}}export function mountLineMini(e,a,n="basket.page.mini"){if(!e||!a)return null;if(a.kind==="photo"){const o=a.meta&&a.meta.png;return e.classList.add("is-photo"),e.innerHTML=o?`<img src="${s(o)}" alt="" data-qa="${s(n)}.photo" decoding="async">`:`<span class="mini-photo-fallback">${u("image")}</span>`,{destroy(){e.innerHTML="",e.classList.remove("is-photo")}}}return mountMini(e,a.state,n)}export const hoursText=()=>q.has("mockupHours")?`${q.value("mockupHours")} hours`:"12 hours",daysRange=()=>{try{const e=g.rules().delivery;return{min:e.minDays,max:e.maxDays}}catch{return{min:7,max:10}}};export function contactLink(e,a){const n=`Hi, can you deliver a sign to ${a||"my postcode"}?`,o=e&&e.contactHref?e.contactHref(n):null;return o&&o.href&&o.kind!=="contact"?o.href:`/lit-neon-preview/rework/contact.html?topic=delivery${a?`&postcode=${encodeURIComponent(a)}`:""}`}export const fontIds=e=>Array.from(new Set(e.map(a=>p.resolve(a.state).font.id)));export function linePrice(e){const a=d.priceLine(e);return a.kind==="price"?{kind:"price",total:a.payable*e.qty,each:a.payable,everyday:a.everyday,p:a}:a.kind==="wait"?{kind:"wait",p:a}:{kind:"quote",p:a,reason:e.meta&&e.meta.reason||a.reason||""}}const G=typeof document<"u"&&document.body&&document.body.dataset.page==="basket";G&&W();let O=null;const b=new Map,h=new Map;let P=!1,L=null;async function W(){A.load(["chrome"]).catch(()=>{}),await Promise.all([A.load(["basket"]),q.load(),f.ensureSprite()]),Y(),Q({page:"basket"}).then(e=>{O=e,S()}).catch(()=>{}),document.addEventListener("click",e=>{if(!(e.target.closest&&e.target.closest('[data-qa="chrome.basket"]')))return;e.preventDefault(),e.stopImmediatePropagation(),window.scrollTo({top:0,behavior:p.reducedMotion()?"auto":"smooth"});const n=$("#bk-h1");n.setAttribute("tabindex","-1"),n.focus({preventScroll:!0})},!0),setDesignList(await loadDesigns()),C.loadScenes().then(()=>g.setScenes(C.scenes())).catch(()=>{}),p.ensureFonts(fontIds(d.lines())).catch(()=>{}),p.onFonts(j),d.subscribe(e=>{e==="change"&&j()}),_(),oe(),H()}function Y(){$$("[data-copy]").forEach(e=>{const a=t(e.dataset.copy);a&&(e.textContent=a)}),document.title=t("meta.title",{},document.title)}let R=0;function j(){R||(R=requestAnimationFrame(()=>{R=0,_()}))}let z=!1;function _(){const e=d.lines(),a=$("#bk-lines"),n=e.length,o=d.signs?d.signs():n;if($('[data-qa="basket.page.count"]').textContent=n?`(${t("count",{n:o,unit:t(o===1?"unit.one":"unit.many")},"{n} {unit}")})`:"",!n&&!h.size){ne();return}z=!1,document.body.classList.remove("bk--empty"),$("#bk-summary").hidden=!1,$("#bk-next").hidden=!1,a.querySelector(".bk-skel")?.remove(),a.querySelector(".bk-empty")?.remove();const i=new Set,c=[];e.forEach(r=>{i.add(r.uid);let l=b.get(r.uid);(!l||l.hash!==r.specHash)&&(l&&N(l),l=K(r),b.set(r.uid,l)),X(l,r),c.push(l.el)}),b.forEach((r,l)=>{i.has(l)||(N(r),b.delete(l))}),h.forEach((r,l)=>{r.el||(r.el=ee(l,r)),c.splice(Math.min(r.index,c.length),0,r.el)}),c.forEach((r,l)=>{a.children[l]!==r&&a.insertBefore(r,a.children[l]||null)}),Array.from(a.children).forEach(r=>{c.includes(r)||r.remove()}),S()}function N(e){try{e.mini&&e.mini.destroy&&e.mini.destroy()}catch{}e.el.remove()}function K(e){const a=document.createElement("article");a.className="bk-line",a.dataset.uid=e.uid,a.dataset.kind=e.kind,a.dataset.qa="basket.page.line";const n=lineName(e);a.setAttribute("aria-label",n);const o=specRows(e).map(c=>`<div><dt>${s(c.label)}</dt><dd>${s(c.value)}</dd></div>`).join("");a.innerHTML=`
+    <figure class="bk-line__fig"><div class="bk-line__mini" data-mini></div><figcaption class="bk-line__cap" data-caption="rendered">${u("image","ic--sm")}${s(t("line.preview",{},"Rendered preview"))}</figcaption></figure>
     <div class="bk-line__main">
       <div class="bk-line__top">
-        <div class="bk-line__title"><span class="c-pill bk-kind bk-kind--${esc(l.kind)}">${esc(kindLabel(l))}</span><h2 class="t-title bk-line__name" data-qa="basket.page.line.name">${esc(name)}</h2></div>
+        <div class="bk-line__title"><span class="c-pill bk-kind bk-kind--${s(e.kind)}">${s(kindLabel(e))}</span><h2 class="t-title bk-line__name" data-qa="basket.page.line.name">${s(n)}</h2></div>
         <div class="bk-line__price" data-qa="basket.page.line.price"></div>
       </div>
-      <dl class="bk-spec">${rows}</dl>
+      <dl class="bk-spec">${o}</dl>
       <div class="bk-line__acts">
         <div class="bk-line__qtywrap" data-qtywrap></div>
         <div class="bk-line__links">
-          ${l.kind === 'photo' ? '' : `<a class="c-btn c-btn--text" href="${esc(editHref(l))}" data-qa="basket.page.line.edit">${icon('pencil')}<span class="label">${esc(t('line.edit', {}, 'Edit design'))}</span></a>`}
-          <button type="button" class="c-btn c-btn--text" data-remove data-qa="basket.page.line.remove">${icon('trash')}<span class="label">${esc(t('line.remove', {}, 'Remove'))}</span></button>
+          ${e.kind==="photo"?"":`<a class="c-btn c-btn--text" href="${s(editHref(e))}" data-qa="basket.page.line.edit">${u("pencil")}<span class="label">${s(t("line.edit",{},"Edit design"))}</span></a>`}
+          <button type="button" class="c-btn c-btn--text" data-remove data-qa="basket.page.line.remove">${u("trash")}<span class="label">${s(t("line.remove",{},"Remove"))}</span></button>
         </div>
       </div>
-    </div>`;
-  el.querySelector('[data-remove]').addEventListener('click', () => removeLine(l.uid));
-  const mini = mountLineMini(el.querySelector('[data-mini]'), l);
-  return { el, hash: l.specHash, mini, qty: null };
-}
-
-const specHtml = l => specRows(l).map(r => `<div><dt>${esc(r.label)}</dt><dd>${esc(r.value)}</dd></div>`).join('');
-function updateLine(rec, l) {
-  const el = rec.el; const lp = linePrice(l);
-  /* sizes are measured from the lettering face, so the spec text refreshes when a face lands */
-  const spec = specHtml(l); const dl = el.querySelector('.bk-spec'); if (dl.dataset.html !== spec) { dl.innerHTML = spec; dl.dataset.html = spec; }
-  el.querySelector('[data-qa="basket.page.line.name"]').textContent = lineName(l);
-  const priceEl = el.querySelector('[data-qa="basket.page.line.price"]');
-  if (lp.kind === 'price') {
-    priceEl.innerHTML = `<b>${gbp(lp.total)}</b>${l.qty > 1 ? `<span>${esc(t('line.each', { price: gbp(lp.each) }, '{price} each'))}</span>` : ''}`;
-    priceEl.removeAttribute('aria-busy');
-  } else if (lp.kind === 'wait') { priceEl.innerHTML = '<b class="is-wait">…</b>'; priceEl.setAttribute('aria-busy', 'true'); }
-  else priceEl.innerHTML = `<b>${esc(t('line.quote', {}, 'Quote'))}</b>`;
-  const wrap = el.querySelector('[data-qtywrap]');
-  if (l.kind === 'quote') {
-    if (rec.qty !== 'quote') { wrap.innerHTML = `<p class="bk-line__note">${esc(lp.reason ? lp.reason + '. ' : '')}${esc(t('line.quoteNote', { hours: hoursText() }, 'A designer prices this one by hand.'))}</p>`; rec.qty = 'quote'; }
-    return;
-  }
-  if (rec.qty == null) {
-    wrap.innerHTML = `<div class="c-qty" role="group" aria-label="${esc(t('line.qty', {}, 'Quantity'))}" data-qa="basket.page.line.qty">
-      <button type="button" data-step="-1" aria-label="${esc(t('line.fewer', {}, 'One fewer'))}" data-qa="basket.page.line.minus">${icon('minus')}</button>
+    </div>`,a.querySelector("[data-remove]").addEventListener("click",()=>Z(e.uid));const i=mountLineMini(a.querySelector("[data-mini]"),e);return{el:a,hash:e.specHash,mini:i,qty:null}}const J=e=>specRows(e).map(a=>`<div><dt>${s(a.label)}</dt><dd>${s(a.value)}</dd></div>`).join("");function X(e,a){const n=e.el,o=linePrice(a),i=J(a),c=n.querySelector(".bk-spec");c.dataset.html!==i&&(c.innerHTML=i,c.dataset.html=i),n.querySelector('[data-qa="basket.page.line.name"]').textContent=lineName(a);const r=n.querySelector('[data-qa="basket.page.line.price"]');o.kind==="price"?(r.innerHTML=`<b>${m(o.total)}</b>${a.qty>1?`<span>${s(t("line.each",{price:m(o.each)},"{price} each"))}</span>`:""}`,r.removeAttribute("aria-busy")):o.kind==="wait"?(r.innerHTML='<b class="is-wait">…</b>',r.setAttribute("aria-busy","true")):r.innerHTML=`<b>${s(t("line.quote",{},"Quote"))}</b>`;const l=n.querySelector("[data-qtywrap]");if(a.kind==="quote"){e.qty!=="quote"&&(l.innerHTML=`<p class="bk-line__note">${s(o.reason?o.reason+". ":"")}${s(t("line.quoteNote",{hours:hoursText()},"A designer prices this one by hand."))}</p>`,e.qty="quote");return}e.qty==null&&(l.innerHTML=`<div class="c-qty" role="group" aria-label="${s(t("line.qty",{},"Quantity"))}" data-qa="basket.page.line.qty">
+      <button type="button" data-step="-1" aria-label="${s(t("line.fewer",{},"One fewer"))}" data-qa="basket.page.line.minus">${u("minus")}</button>
       <output aria-live="polite" data-qa="basket.page.line.qtyvalue"></output>
-      <button type="button" data-step="1" aria-label="${esc(t('line.more', {}, 'One more'))}" data-qa="basket.page.line.plus">${icon('plus')}</button></div>
-      <a class="bk-line__bulk" href="/lit-neon-preview/rework/bulk-quote.html" data-qa="basket.page.line.bulk" hidden>${esc(t('line.bulk', {}, 'Need more? Bulk quote'))}</a>`;
-    wrap.querySelectorAll('[data-step]').forEach(b => b.addEventListener('click', () => { const cur = basket.get(l.uid); if (cur) basket.setQty(l.uid, cur.qty + (+b.dataset.step)); }));
-  }
-  rec.qty = l.qty;
-  wrap.querySelector('output').value = String(l.qty);
-  wrap.querySelector('[data-step="-1"]').disabled = l.qty <= 1;
-  wrap.querySelector('[data-step="1"]').disabled = l.qty >= 10;
-  wrap.querySelector('.bk-line__bulk').hidden = l.qty < 10;
-}
-
-function removeLine(uid) {
-  const lines = basket.lines(); const index = lines.findIndex(l => l.uid === uid); if (index < 0) return;
-  const name = lineName(lines[index]);
-  const { undo } = basket.remove(uid);
-  const r = { name, index, undo, el: null, timer: setTimeout(() => { removedRows.delete(uid); render(); }, 5000) };
-  removedRows.set(uid, r);
-  render();
-  r.el && r.el.querySelector('button').focus();
-}
-
-function buildUndo(uid, r) {
-  const el = document.createElement('div');
-  el.className = 'bk-undo'; el.setAttribute('role', 'status'); el.dataset.qa = 'basket.page.undo';
-  el.innerHTML = `<span>${esc(t('line.removed', { name: r.name }, 'Removed'))}</span><button type="button" class="c-btn c-btn--ghost c-btn--sm bk-undo__btn" data-qa="basket.page.undo.button">${icon('rotate')}${esc(t('line.undo', {}, 'Undo'))}</button>`;
-  el.querySelector('button').addEventListener('click', () => { clearTimeout(r.timer); removedRows.delete(uid); r.undo(); /* render() runs from the basket change */ requestAnimationFrame(() => { const back = nodes.get(uid); back && back.el.querySelector('[data-remove]')?.focus(); }); });
-  return el;
-}
-
-/* ============================================================ summary ============================================================ */
-function renderSummary() {
-  const box = $('#bk-sum'); if (!box) return;
-  const lines = basket.lines(); if (!lines.length) return;
-  const sub = basket.subtotal(); const hasQuote = sub.quotes > 0; const priced = sub.items > 0;
-  const pc = basket.postcode.get(); const d = pcResult || basket.delivery(pc);
-  const promoLine = priced && sub.promo ? pricing.promoLine(sub.everyday) : null;
-  const waiting = lines.some(l => basket.priceLine(l).kind === 'wait');
-  const quoteNote = sub.quotes === 1 ? t('summary.quotedOne', { hours: hoursText() }) : t('summary.quotedMany', { n: sub.quotes, hours: hoursText() });
-  box.innerHTML = `
-    ${priced ? `<div class="bk-row"><span>${esc(t('summary.signs', { n: sub.items }, 'Signs ({n})'))}</span><span class="num">${waiting ? '…' : gbp(sub.payable)}</span></div>` : ''}
-    <div class="bk-row"><span>${esc(t('summary.delivery', {}, 'Delivery'))}</span><span>${esc(t('summary.free', {}, 'Free'))}</span></div>
-    ${priced ? `<div class="bk-row bk-row--total"><span>${esc(t('summary.subtotal', {}, 'Subtotal'))}</span><b class="num" data-qa="basket.page.subtotal">${waiting ? '…' : gbp(sub.payable)}</b></div>` : ''}
-    ${promoLine ? `<p class="bk-promo" data-qa="basket.page.promo"><span class="c-pill c-pill--launch">${esc(t('pills.launch', {}, 'Launch price'))}</span>${esc(promoLine.replace(/^Launch price · /, ''))}</p>` : ''}
-    ${hasQuote ? `<p class="bk-note" data-qa="basket.page.quoted">${esc(priced ? quoteNote : t('summary.onlyQuotes'))}</p>` : ''}
-    <div class="bk-deliv" data-qa="basket.page.delivery">${deliveryHtml(d)}</div>
+      <button type="button" data-step="1" aria-label="${s(t("line.more",{},"One more"))}" data-qa="basket.page.line.plus">${u("plus")}</button></div>
+      <a class="bk-line__bulk" href="/lit-neon-preview/rework/bulk-quote.html" data-qa="basket.page.line.bulk" hidden>${s(t("line.bulk",{},"Need more? Bulk quote"))}</a>`,l.querySelectorAll("[data-step]").forEach(k=>k.addEventListener("click",()=>{const y=d.get(a.uid);y&&d.setQty(a.uid,y.qty+ +k.dataset.step)}))),e.qty=a.qty,l.querySelector("output").value=String(a.qty),l.querySelector('[data-step="-1"]').disabled=a.qty<=1,l.querySelector('[data-step="1"]').disabled=a.qty>=10,l.querySelector(".bk-line__bulk").hidden=a.qty<10}function Z(e){const a=d.lines(),n=a.findIndex(r=>r.uid===e);if(n<0)return;const o=lineName(a[n]),{undo:i}=d.remove(e),c={name:o,index:n,undo:i,el:null,timer:setTimeout(()=>{h.delete(e),_()},5e3)};h.set(e,c),_(),c.el&&c.el.querySelector("button").focus()}function ee(e,a){const n=document.createElement("div");return n.className="bk-undo",n.setAttribute("role","status"),n.dataset.qa="basket.page.undo",n.innerHTML=`<span>${s(t("line.removed",{name:a.name},"Removed"))}</span><button type="button" class="c-btn c-btn--ghost c-btn--sm bk-undo__btn" data-qa="basket.page.undo.button">${u("rotate")}${s(t("line.undo",{},"Undo"))}</button>`,n.querySelector("button").addEventListener("click",()=>{clearTimeout(a.timer),h.delete(e),a.undo(),requestAnimationFrame(()=>{const o=b.get(e);o&&o.el.querySelector("[data-remove]")?.focus()})}),n}function S(){const e=$("#bk-sum");if(!e)return;const a=d.lines();if(!a.length)return;const n=d.subtotal(),o=n.quotes>0,i=n.items>0,c=d.postcode.get(),r=L||d.delivery(c),l=i&&n.promo?g.promoLine(n.everyday):null,k=a.some(M=>d.priceLine(M).kind==="wait"),y=n.quotes===1?t("summary.quotedOne",{hours:hoursText()}):t("summary.quotedMany",{n:n.quotes,hours:hoursText()});e.innerHTML=`
+    ${i?`<div class="bk-row"><span>${s(t("summary.signs",{n:n.items},"Signs ({n})"))}</span><span class="num">${k?"…":m(n.payable)}</span></div>`:""}
+    <div class="bk-row"><span>${s(t("summary.delivery",{},"Delivery"))}</span><span>${s(t("summary.free",{},"Free"))}</span></div>
+    ${i?`<div class="bk-row bk-row--total"><span>${s(t("summary.subtotal",{},"Subtotal"))}</span><b class="num" data-qa="basket.page.subtotal">${k?"…":m(n.payable)}</b></div>`:""}
+    ${l?`<p class="bk-promo" data-qa="basket.page.promo"><span class="c-pill c-pill--launch">${s(t("pills.launch",{},"Launch price"))}</span>${s(l.replace(/^Launch price · /,""))}</p>`:""}
+    ${o?`<p class="bk-note" data-qa="basket.page.quoted">${s(i?y:t("summary.onlyQuotes"))}</p>`:""}
+    <div class="bk-deliv" data-qa="basket.page.delivery">${te(r)}</div>
     <div class="bk-bnpl" data-slot="bnpl"></div>
-    ${priced
-      ? `<a class="c-btn c-btn--primary c-btn--lg c-btn--block bk-cta" href="/lit-neon-preview/rework/checkout.html" data-qa="basket.page.checkout">${icon('lock')}<span>${esc(t('summary.checkout', {}, 'Go to checkout'))}</span></a>`
-      : `<button type="button" class="c-btn c-btn--primary c-btn--lg c-btn--block bk-cta" disabled data-qa="basket.page.checkout">${icon('lock')}<span>${esc(t('summary.checkout', {}, 'Go to checkout'))}</span></button>`}
+    ${i?`<a class="c-btn c-btn--primary c-btn--lg c-btn--block bk-cta" href="/lit-neon-preview/rework/checkout.html" data-qa="basket.page.checkout">${u("lock")}<span>${s(t("summary.checkout",{},"Go to checkout"))}</span></a>`:`<button type="button" class="c-btn c-btn--primary c-btn--lg c-btn--block bk-cta" disabled data-qa="basket.page.checkout">${u("lock")}<span>${s(t("summary.checkout",{},"Go to checkout"))}</span></button>`}
     <div class="bk-express" data-slot="express"></div>
-    <ul class="bk-assure" aria-label="${esc(t('assure.title', {}, 'Before anything is made'))}">
-      <li>${icon('drawing')}<span>${esc(t('assure.drawing'))}</span></li>
-      <li>${icon('shield')}<span>${esc(t('assure.warranty', { warranty: facts.get('warrantyYears') || '3-year warranty' }))}</span></li>
-      <li>${icon('truck')}<span>${esc(t('assure.delivery'))}</span></li>
-      <li>${icon('remote')}<span>${esc(t('assure.kit'))}</span></li>
+    <ul class="bk-assure" aria-label="${s(t("assure.title",{},"Before anything is made"))}">
+      <li>${u("drawing")}<span>${s(t("assure.drawing"))}</span></li>
+      <li>${u("shield")}<span>${s(t("assure.warranty",{warranty:q.get("warrantyYears")||"3-year warranty"}))}</span></li>
+      <li>${u("truck")}<span>${s(t("assure.delivery"))}</span></li>
+      <li>${u("remote")}<span>${s(t("assure.kit"))}</span></li>
     </ul>
     <div class="bk-marks" data-slot="marks"></div>
-    <p class="bk-note bk-note--center">${esc(t('summary.invoice'))}</p>`;
-  if (priced) ui.bnpl(box.querySelector('[data-slot="bnpl"]'), sub.payable, { qa: 'basket.page.bnpl' }).catch(() => {});
-  else box.querySelector('[data-slot="bnpl"]').hidden = true;
-  ui.expressRow(box.querySelector('[data-slot="express"]'), { hidden: hasQuote || !priced, qa: 'basket.page.express', onPick: id => { location.href = '/lit-neon-preview/rework/checkout.html#express=' + encodeURIComponent(id); } }).catch(() => {});
-  ui.paymentMarks(box.querySelector('[data-slot="marks"]'), { qa: 'basket.page.marks' }).catch(() => {});
-  wireDelivery(box);
-  const cta = box.querySelector('a.bk-cta'); if (cta) cta.addEventListener('click', () => track('basket_checkout', { items: sub.items, subtotal: sub.payable, from: 'basket-page' }));
-  $('[data-qa="basket.page.bar.total"]').textContent = priced ? gbp(sub.payable) : '—';
-  observeCta();
-}
-
-function deliveryHtml(d) {
-  if (d.status === 'ok' && !editingPostcode) {
-    return `<p class="bk-deliv__ok">${icon('check')}<b data-qa="basket.page.postcode.ok">${esc(d.prefix || '')}</b><button type="button" class="c-btn c-btn--text bk-deliv__change" data-qa="basket.page.postcode.change"><span class="label">${esc(t('postcode.change', {}, 'Change'))}</span></button></p><p class="bk-note" data-qa="basket.page.postcode.line">${esc(d.line || '')}</p>`;
-  }
-  const bad = d.status === 'excluded' || d.status === 'invalid';
-  const contact = d.status === 'excluded' ? contactLink(chromeApi, d.formatted) : '';
-  return `<form class="bk-pc${bad ? ' is-bad' : ''}" novalidate data-pc>
-      <label class="bk-pc__label" for="bk-pc-in">${esc(t('postcode.label', {}, 'Delivery postcode'))}</label>
-      <div class="bk-pc__row"><input id="bk-pc-in" class="c-input" name="postcode" inputmode="text" autocomplete="postal-code" autocapitalize="characters" spellcheck="false" maxlength="10" placeholder="${esc(t('postcode.placeholder', {}, 'e.g. E1 6AN'))}" value="${esc(d.formatted || basket.postcode.get() || '')}" ${bad ? 'aria-invalid="true"' : ''} aria-describedby="bk-pc-msg" data-qa="basket.page.postcode.input">
-      <button type="submit" class="c-btn c-btn--ghost" data-qa="basket.page.postcode.check">${esc(t('postcode.check', {}, 'Check'))}</button></div>
-      <p id="bk-pc-msg" class="bk-pc__msg${bad ? ' is-bad' : ''}" data-qa="basket.page.postcode.msg">${bad ? icon('warning', 'ic--sm') : ''}<span>${esc(d.status === 'empty' ? `${t('postcode.hint', {}, 'Free delivery across mainland GB.')} ${d.text}` : d.text)}</span>${d.status === 'excluded' ? ` <a href="${esc(contact)}" data-qa="basket.page.postcode.ask">${esc(t('postcode.ask', {}, 'Ask us about delivery'))}</a>` : ''}</p>
-    </form>`;
-}
-
-function wireDelivery(box) {
-  const form = box.querySelector('[data-pc]');
-  if (form) form.addEventListener('submit', e => {
-    e.preventDefault(); const v = form.querySelector('input').value; const d = basket.delivery(v);
-    pcResult = d; editingPostcode = false;
-    if (d.status === 'ok') { basket.postcode.set(d.formatted); router.postcode.set(d.formatted); pcResult = null; /* the store change re-renders */ requestAnimationFrame(() => box.querySelector('[data-qa="basket.page.postcode.change"]')?.focus()); }
-    else { renderSummary(); box.querySelector('input')?.focus(); }
-  });
-  const ch = box.querySelector('[data-qa="basket.page.postcode.change"]');
-  if (ch) ch.addEventListener('click', () => { editingPostcode = true; pcResult = null; renderSummary(); const i = $('#bk-pc-in'); i && i.focus(); i && i.select(); });
-}
-
-/* ============================================================ empty state ============================================================ */
-async function renderEmpty() {
-  if (emptyBuilt) { refreshPicks(); return; }
-  emptyBuilt = true;
-  document.body.classList.add('bk--empty');
-  $('#bk-summary').hidden = true; $('#bk-next').hidden = true; nodes.forEach(destroyRec); nodes.clear();
-  const root = $('#bk-lines');
-  root.innerHTML = `<div class="bk-empty" data-qa="basket.page.empty">
+    <p class="bk-note bk-note--center">${s(t("summary.invoice"))}</p>`,i?f.bnpl(e.querySelector('[data-slot="bnpl"]'),n.payable,{qa:"basket.page.bnpl"}).catch(()=>{}):e.querySelector('[data-slot="bnpl"]').hidden=!0,f.expressRow(e.querySelector('[data-slot="express"]'),{hidden:o||!i,qa:"basket.page.express",onPick:M=>{location.href="/lit-neon-preview/rework/checkout.html#express="+encodeURIComponent(M)}}).catch(()=>{}),f.paymentMarks(e.querySelector('[data-slot="marks"]'),{qa:"basket.page.marks"}).catch(()=>{}),ae(e);const D=e.querySelector("a.bk-cta");D&&D.addEventListener("click",()=>I("basket_checkout",{items:n.items,subtotal:n.payable,from:"basket-page"})),$('[data-qa="basket.page.bar.total"]').textContent=i?m(n.payable):"—",re()}function te(e){if(e.status==="ok"&&!P)return`<p class="bk-deliv__ok">${u("check")}<b data-qa="basket.page.postcode.ok">${s(e.prefix||"")}</b><button type="button" class="c-btn c-btn--text bk-deliv__change" data-qa="basket.page.postcode.change"><span class="label">${s(t("postcode.change",{},"Change"))}</span></button></p><p class="bk-note" data-qa="basket.page.postcode.line">${s(e.line||"")}</p>`;const a=e.status==="excluded"||e.status==="invalid",n=e.status==="excluded"?contactLink(O,e.formatted):"";return`<form class="bk-pc${a?" is-bad":""}" novalidate data-pc>
+      <label class="bk-pc__label" for="bk-pc-in">${s(t("postcode.label",{},"Delivery postcode"))}</label>
+      <div class="bk-pc__row"><input id="bk-pc-in" class="c-input" name="postcode" inputmode="text" autocomplete="postal-code" autocapitalize="characters" spellcheck="false" maxlength="10" placeholder="${s(t("postcode.placeholder",{},"e.g. E1 6AN"))}" value="${s(e.formatted||d.postcode.get()||"")}" ${a?'aria-invalid="true"':""} aria-describedby="bk-pc-msg" data-qa="basket.page.postcode.input">
+      <button type="submit" class="c-btn c-btn--ghost" data-qa="basket.page.postcode.check">${s(t("postcode.check",{},"Check"))}</button></div>
+      <p id="bk-pc-msg" class="bk-pc__msg${a?" is-bad":""}" data-qa="basket.page.postcode.msg">${a?u("warning","ic--sm"):""}<span>${s(e.status==="empty"?`${t("postcode.hint",{},"Free delivery across mainland GB.")} ${e.text}`:e.text)}</span>${e.status==="excluded"?` <a href="${s(n)}" data-qa="basket.page.postcode.ask">${s(t("postcode.ask",{},"Ask us about delivery"))}</a>`:""}</p>
+    </form>`}function ae(e){const a=e.querySelector("[data-pc]");a&&a.addEventListener("submit",o=>{o.preventDefault();const i=a.querySelector("input").value,c=d.delivery(i);L=c,P=!1,c.status==="ok"?(d.postcode.set(c.formatted),v.postcode.set(c.formatted),L=null,requestAnimationFrame(()=>e.querySelector('[data-qa="basket.page.postcode.change"]')?.focus())):(S(),e.querySelector("input")?.focus())});const n=e.querySelector('[data-qa="basket.page.postcode.change"]');n&&n.addEventListener("click",()=>{P=!0,L=null,S();const o=$("#bk-pc-in");o&&o.focus(),o&&o.select()})}async function ne(){if(z){B();return}z=!0,document.body.classList.add("bk--empty"),$("#bk-summary").hidden=!0,$("#bk-next").hidden=!0,b.forEach(N),b.clear();const e=$("#bk-lines");e.innerHTML=`<div class="bk-empty" data-qa="basket.page.empty">
       <img src="/lit-neon-preview/rework/assets/img/empty/basket.svg" alt="" width="160" height="120">
-      <h2 class="t-display-3">${esc(t('empty.title', {}, 'Nothing in here yet'))}</h2>
-      <p class="t-lead">${esc(t('empty.text'))}</p>
-      <div class="bk-empty__acts"><a class="c-btn c-btn--primary c-btn--lg" href="/lit-neon-preview/rework/create.html" data-qa="basket.page.empty.design">${esc(t('empty.design', {}, 'Design a sign'))}</a><a class="c-btn c-btn--ghost c-btn--lg" href="/lit-neon-preview/rework/shop.html" data-qa="basket.page.empty.shop">${esc(t('empty.shop', {}, 'Browse ready-made'))}</a></div>
-      <div class="bk-picks" data-picks hidden><h3 class="t-eyebrow">${esc(t('empty.picks', {}, 'Start from a favourite'))}</h3><div class="bk-picks__row" data-row></div></div>
-    </div>`;
-  $('#bk-bar').hidden = true; document.body.classList.remove('bk-has-bar');
-  const list = (designList.length ? designList : await loadDesigns()).filter(d => d.bestseller).sort((a, b) => a.bestsellerRank - b.bestsellerRank).slice(0, 4);
-  if (!list.length) return;
-  const picks = root.querySelector('[data-picks]'); if (!picks) return;
-  picks.querySelector('[data-row]').innerHTML = list.map(d => `<a class="bk-pick" href="${esc(router.productLink(d.id))}" data-qa="basket.page.pick" data-id="${esc(d.id)}">
+      <h2 class="t-display-3">${s(t("empty.title",{},"Nothing in here yet"))}</h2>
+      <p class="t-lead">${s(t("empty.text"))}</p>
+      <div class="bk-empty__acts"><a class="c-btn c-btn--primary c-btn--lg" href="/lit-neon-preview/rework/create.html" data-qa="basket.page.empty.design">${s(t("empty.design",{},"Design a sign"))}</a><a class="c-btn c-btn--ghost c-btn--lg" href="/lit-neon-preview/rework/shop.html" data-qa="basket.page.empty.shop">${s(t("empty.shop",{},"Browse ready-made"))}</a></div>
+      <div class="bk-picks" data-picks hidden><h3 class="t-eyebrow">${s(t("empty.picks",{},"Start from a favourite"))}</h3><div class="bk-picks__row" data-row></div></div>
+    </div>`,$("#bk-bar").hidden=!0,document.body.classList.remove("bk-has-bar");const a=(x.length?x:await loadDesigns()).filter(o=>o.bestseller).sort((o,i)=>o.bestsellerRank-i.bestsellerRank).slice(0,4);if(!a.length)return;const n=e.querySelector("[data-picks]");n&&(n.querySelector("[data-row]").innerHTML=a.map(o=>`<a class="bk-pick" href="${s(v.productLink(o.id))}" data-qa="basket.page.pick" data-id="${s(o.id)}">
       <span class="bk-pick__tile" data-tile aria-hidden="true"></span>
-      <span class="bk-pick__name">${esc(d.name)}</span><span class="bk-pick__from" data-from></span></a>`).join('');
-  picks.hidden = false;
-  /* each tile is the real renderer in the design's own lettering face, lit */
-  $$('.bk-pick[data-id]', picks).forEach(a => { const d = designById(a.dataset.id); if (d) { try { R.mountNeon(a.querySelector('[data-tile]'), { ...R.normalise({ text: d.lines.join('\n'), font: d.font, colour: d.colour, icon: d.icon || '', iconPos: d.iconPos || 'above' }) }, { fitW: .8, fitH: .62, lit: true }); } catch {} } });
-  refreshPicks();
-  R.ensureFonts(list.map(d => d.font)).catch(() => {});   /* each face that lands re-runs refreshPicks via onFonts → render */
-}
-/** from-prices need the lettering metrics, so they fill in as the faces load (never a wrong number meanwhile) */
-/** the cheapest size this design can actually be made in (a face's minimum letter height can rule out Small) */
-function pickFrom(d) { for (const size of ['s', 'm', 'l', 'xl', 'xxl']) { const v = pricing.fromPrice(d, { size }); if (v != null) return v; } return null; }
-function refreshPicks() {
-  $$('.bk-pick[data-id]').forEach(a => { const d = designById(a.dataset.id); const from = d ? pickFrom(d) : null; a.querySelector('[data-from]').textContent = from != null ? t('empty.from', { price: gbp(from) }, 'from {price}') : ''; });
-}
-
-/* ============================================================ what happens next (paper band) ============================================================ */
-function renderNext() {
-  const { min, max } = daysRange();
-  const steps = [['drawing', 's1t', 's1'], ['check', 's2t', 's2'], ['ruler', 's3t', 's3'], ['truck', 's4t', 's4']];
-  $('#bk-next-steps').innerHTML = steps.map(([ic, ti, tx], i) => `<li><span class="bk-next__num">${i + 1}</span>${icon(ic, 'ic--lg')}<h3 class="t-title">${esc(t('next.' + ti))}</h3><p>${esc(t('next.' + tx, { hours: hoursText(), min, max }))}</p></li>`).join('');
-}
-
-/* ============================================================ mobile sticky checkout bar ============================================================ */
-let ctaObserver = null, ctaVisible = true;
-function initBar() {
-  const mq = matchMedia('(max-width: 767px)');
-  const paint = () => {
-    const sub = basket.subtotal(); const overlay = document.documentElement.dataset.scrollLock === '1' || document.body.classList.contains('has-overlay');
-    const show = mq.matches && sub.items > 0 && !ctaVisible && !overlay && !keyboardUp();
-    $('#bk-bar').hidden = !show; document.body.classList.toggle('bk-has-bar', show);
-  };
-  initBar.paint = paint;
-  mq.addEventListener('change', paint);
-  document.addEventListener('ln:overlay', paint); document.addEventListener('ln:basket', () => requestAnimationFrame(paint));
-  if (window.visualViewport) visualViewport.addEventListener('resize', paint);
-  $('#bk-bar a').addEventListener('click', () => track('basket_checkout', { from: 'basket-bar' }));
-  paint();
-}
-const keyboardUp = () => !!(window.visualViewport && visualViewport.height < window.innerHeight * 0.75);
-function observeCta() {
-  const cta = $('#bk-sum .bk-cta'); if (!cta || !('IntersectionObserver' in window)) return;
-  if (ctaObserver) ctaObserver.disconnect();
-  ctaObserver = new IntersectionObserver(([e]) => { ctaVisible = e.isIntersecting; initBar.paint && initBar.paint(); }, { threshold: 0.01 });
-  ctaObserver.observe(cta);
-}
+      <span class="bk-pick__name">${s(o.name)}</span><span class="bk-pick__from" data-from></span></a>`).join(""),n.hidden=!1,$$(".bk-pick[data-id]",n).forEach(o=>{const i=T(o.dataset.id);if(i)try{p.mountNeon(o.querySelector("[data-tile]"),{...p.normalise({text:i.lines.join(`
+`),font:i.font,colour:i.colour,icon:i.icon||"",iconPos:i.iconPos||"above"})},{fitW:.8,fitH:.62,lit:!0})}catch{}}),B(),p.ensureFonts(a.map(o=>o.font)).catch(()=>{}))}function se(e){for(const a of["s","m","l","xl","xxl"]){const n=g.fromPrice(e,{size:a});if(n!=null)return n}return null}function B(){$$(".bk-pick[data-id]").forEach(e=>{const a=T(e.dataset.id),n=a?se(a):null;e.querySelector("[data-from]").textContent=n!=null?t("empty.from",{price:m(n)},"from {price}"):""})}function oe(){const{min:e,max:a}=daysRange(),n=[["drawing","s1t","s1"],["check","s2t","s2"],["ruler","s3t","s3"],["truck","s4t","s4"]];$("#bk-next-steps").innerHTML=n.map(([o,i,c],r)=>`<li><span class="bk-next__num">${r+1}</span>${u(o,"ic--lg")}<h3 class="t-title">${s(t("next."+i))}</h3><p>${s(t("next."+c,{hours:hoursText(),min:e,max:a}))}</p></li>`).join("")}let E=null,U=!0;function H(){const e=matchMedia("(max-width: 767px)"),a=()=>{const n=d.subtotal(),o=document.documentElement.dataset.scrollLock==="1"||document.body.classList.contains("has-overlay"),i=e.matches&&n.items>0&&!U&&!o&&!ie();$("#bk-bar").hidden=!i,document.body.classList.toggle("bk-has-bar",i)};H.paint=a,e.addEventListener("change",a),document.addEventListener("ln:overlay",a),document.addEventListener("ln:basket",()=>requestAnimationFrame(a)),window.visualViewport&&visualViewport.addEventListener("resize",a),$("#bk-bar a").addEventListener("click",()=>I("basket_checkout",{from:"basket-bar"})),a()}const ie=()=>!!(window.visualViewport&&visualViewport.height<window.innerHeight*.75);function re(){const e=$("#bk-sum .bk-cta");!e||!("IntersectionObserver"in window)||(E&&E.disconnect(),E=new IntersectionObserver(([a])=>{U=a.isIntersecting,H.paint&&H.paint()},{threshold:.01}),E.observe(e))}

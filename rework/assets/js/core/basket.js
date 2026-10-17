@@ -1,196 +1,4 @@
-/* Lit Neon v2 — basket (brief §4.18, §4.19, §6.2): the store (localStorage.basket), merge by specHash, qty, edit,
-   inline undo, re-price from the stored spec on every render, the per-kind Shopify /cart/add.js payload, the delivery
-   line, events — and the global drawer (markup template lives here: foundation-owned, pages request changes via
-   INTEGRATION.md). Prices are never stored: every render recomputes them from the spec under the live clock (§3.7a).
-   Line kinds: custom · photo · ready · quote. Quote lines never reach payload().items (they go out via forms.submit).
-   Node-safe: createBasket({ storage, pricing, resolve, variants, now }) — the drawer is DOM-only and mounted on demand. */
-import { resolve as resolveDesign, OPTIONS, iconPlaceName, fontOf, colourOf, sizeOf, backingOf, finishOf, hangOf, useOf, jacketOf } from './renderer.js';
-import pricingDefault from './pricing.js';
-import * as clock from './clock.js';
-import { gbp, esc, fmtDims, sayDims } from './money.js';
-
-export const KINDS = ['custom', 'photo', 'ready', 'quote'];
-const STRIP = ['pos', 'scene', 'view', 'night', 'on', 'unit', 'v'];
-
-/** stable hash of what the workshop would make — identical specs merge into one line */
-export function specHash(state, kind = 'custom', extra = {}) {
-  const st = resolveDesign(state).state; const o = {};
-  for (const k of Object.keys(st).sort()) if (!STRIP.includes(k)) o[k] = st[k];
-  const s = kind + '|' + JSON.stringify(o) + '|' + JSON.stringify(extra);
-  let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
-  return (h >>> 0).toString(36);
-}
-
-export function createBasket({ storage, pricing = pricingDefault, resolve = resolveDesign, variants = null, now = () => clock.now().getTime(), undoMs = 5000 } = {}) {
-  const store = storage === undefined ? (() => { try { return globalThis.localStorage || null; } catch { return null; } })() : storage;
-  const KEY = 'basket';
-  const read = () => { try { const v = JSON.parse((store && store.getItem(KEY)) || '[]'); return Array.isArray(v) ? v.filter(l => l && l.uid && KINDS.includes(l.kind)) : []; } catch { return []; } };
-  let lines = read(); let variantMap = variants; const removed = new Map();
-  const target = typeof EventTarget !== 'undefined' ? new EventTarget() : null; const subs = new Set();
-  const emit = (type, detail) => { subs.forEach(fn => { try { fn(type, detail); } catch {} }); if (target && typeof CustomEvent !== 'undefined') target.dispatchEvent(new CustomEvent(type, { detail })); };
-  const save = () => { try { store && store.setItem(KEY, JSON.stringify(lines)); } catch {} emit('change', { lines }); if (typeof document !== 'undefined') document.dispatchEvent(new CustomEvent('ln:basket', { detail: { count: signs(), signs: signs(), lines: lines.length } })); };
-  const uid = () => now().toString(36) + Math.random().toString(36).slice(2, 6);
-  if (typeof window !== 'undefined' && store === globalThis.localStorage) window.addEventListener('storage', e => { if (e.key === KEY) { lines = read(); emit('change', { lines, external: true }); } });
-
-  /** add({ kind, state, qty, meta }) → { uid, merged, line }. Identical specs merge (qty += n). */
-  function add({ kind = 'custom', state, qty = 1, meta = {} }) {
-    if (!KINDS.includes(kind)) throw new Error('unknown line kind ' + kind);
-    const st = resolve(state).state; const hash = specHash(st, kind, kind === 'ready' ? { design: meta.design } : kind === 'photo' ? { photoHash: meta.photoHash } : {});
-    const existing = kind === 'quote' ? null : lines.find(l => l.specHash === hash);
-    if (existing) { existing.qty = Math.min(10, existing.qty + qty); existing.updatedAt = now(); save(); emit('add', { line: existing, merged: true }); return { uid: existing.uid, merged: true, line: existing }; }
-    const line = { uid: uid(), kind, state: st, qty: Math.max(1, Math.min(10, qty)), specHash: hash, addedAt: now(), updatedAt: now(), meta };
-    lines.push(line); save(); emit('add', { line, merged: false }); return { uid: line.uid, merged: false, line };
-  }
-  function get(id) { return lines.find(l => l.uid === id) || null; }
-  /** remove → { undo() } ; the line can be restored for undoMs (drawer shows "Removed · Undo") */
-  function remove(id) {
-    const i = lines.findIndex(l => l.uid === id); if (i < 0) return { undo() { return false; } };
-    const [line] = lines.splice(i, 1); const at = i; save(); emit('remove', { line });
-    const t = setTimeout(() => removed.delete(id), undoMs); removed.set(id, { line, at, t });
-    return { undo() { const r = removed.get(id); if (!r) return false; clearTimeout(r.t); removed.delete(id); lines.splice(Math.min(r.at, lines.length), 0, r.line); save(); emit('add', { line: r.line, merged: false, restored: true }); return true; } };
-  }
-  function undo(id) { const r = removed.get(id); if (!r) return false; clearTimeout(r.t); removed.delete(id); lines.splice(Math.min(r.at, lines.length), 0, r.line); save(); emit('add', { line: r.line, restored: true }); return true; }
-  function setQty(id, n) { const l = get(id); if (!l) return; l.qty = Math.max(1, Math.min(10, Math.round(n) || 1)); l.updatedAt = now(); save(); }
-  /** edit: replace the spec; merges into another identical line if one exists */
-  function update(id, state, meta) {
-    const l = get(id); if (!l) return null; const st = resolve(state).state; if (meta) Object.assign(l.meta, meta);
-    const hash = specHash(st, l.kind, l.kind === 'ready' ? { design: l.meta.design } : l.kind === 'photo' ? { photoHash: l.meta.photoHash } : {});
-    const other = lines.find(x => x.uid !== id && x.specHash === hash);
-    if (other) { other.qty = Math.min(10, other.qty + l.qty); lines = lines.filter(x => x.uid !== id); save(); return other; }
-    l.state = st; l.specHash = hash; l.updatedAt = now(); save(); return l;
-  }
-  function clear() { lines = []; save(); }
-  function useVariants(map) { variantMap = map; }
-
-  /* ---------- prices (recomputed, never stored) ---------- */
-  function priceLine(line) {
-    if (line.kind === 'quote') return { kind: 'quote', everyday: null, payable: null, reason: line.meta.reason || 'Quoted separately' };
-    if (line.kind === 'photo' && line.meta.ledMetres) { const p = pricing.photo(line.meta.ledMetres, line.meta.heightCm, { backing: line.state.backing, finish: line.state.board, rgb: colourOf(line.state.colour).rgb }); return p.kind === 'price' ? { kind: 'price', everyday: p.everyday, payable: p.payable } : { kind: 'quote', everyday: null, payable: null }; }
-    const p = pricing.price(line.state);
-    return p.kind === 'price' ? { kind: 'price', everyday: p.everyday, payable: p.payable, promoLine: p.promoLine } : { kind: p.kind, everyday: null, payable: null, reason: pricing.quoteReason(p) };
-  }
-  function subtotal() {
-    let everyday = 0, payable = 0, quotes = 0, items = 0;
-    for (const l of lines) { const p = priceLine(l); if (p.kind === 'price') { everyday += p.everyday * l.qty; payable += p.payable * l.qty; items += l.qty; } else quotes++; }
-    return { everyday: Math.round(everyday * 100) / 100, payable: Math.round(payable * 100) / 100, discount: Math.round((everyday - payable) * 100) / 100, quotes, items, promo: pricing.promoLive() };
-  }
-  const count = () => lines.length;
-  /** how many SIGNS are in the basket (sum of line quantities) — what the header badge shows (round-2 review) */
-  const signs = () => lines.reduce((n, l) => n + (Math.max(1, +l.qty || 1)), 0);
-
-  /* ---------- spec + payload (§4.18) ---------- */
-  function specFor(line, p = priceLine(line)) {
-    const res = resolve(line.state); const st = res.state;
-    const colours = st.colours ? res.lineColours.map(c => c.name) : [res.colour.name];
-    return { v: 3, kind: line.kind, lines: res.lines, align: st.align, icon: st.icon || null, iconPos: st.icon ? st.iconPos : null, iconAt: st.icon ? res.iconAt : null,
-      lettering: res.font.name, font_family: res.font.family, font_actual: res.font.realName || res.font.family, tube_mm: st.tube === '8' ? 8 : 6, colour: res.colour.name, colour_hex: res.colour.hex, colours, rgb: res.rgb, jacket: st.jacket,
-      ...(line.kind === 'photo'
-        ? { lines: [], lettering: null, font_family: null, size: 'photo', letter_height_cm: null, width_cm: line.meta.widthCm || null, height_cm: line.meta.heightCm || null }
-        : { size: res.sizeId, letter_height_cm: res.letterCm, width_cm: res.dims ? res.dims.W : null, height_cm: res.dims ? res.dims.H : null }),
-      backing: st.backing, finish: st.board, hang: st.backing === 'stand' ? 'stand' : st.hang, use: st.use, dimmer: !!st.dimmer, plug: 'UK', everyday_gbp: p.everyday, qty: line.qty, ref: line.uid,
-      ...(line.kind === 'photo' ? { photoHash: line.meta.photoHash || null, render: line.meta.png ? 'attached' : null, ledMetres: line.meta.ledMetres || null } : {}),
-      ...(line.kind === 'ready' ? { design: line.meta.design || null } : {}) };
-  }
-  function properties(line, p, postcode) {
-    const res = resolve(line.state); const st = res.state; const spec = specFor(line, p);
-    const colourText = st.colours ? res.lineColours.map((c, i) => `${c.name} (line ${i + 1})`).join(' / ') : res.colour.name;
-    const photo = line.kind === 'photo';
-    const props = { Words: photo ? 'From your photo' : (res.words || '—'), Lettering: photo ? 'Traced from your photo' : res.font.name, Colour: colourText, Jacket: jacketOf(st.jacket).name, Size: photo ? `About ${fmtDims(spec.width_cm, spec.height_cm)}${spec.ledMetres ? ` · ${spec.ledMetres} m LED` : ''}` : `${res.sizeId === 'custom' ? 'Custom' : sizeOf(res.sizeId).name}, ${fmtDims(spec.width_cm, spec.height_cm)}`,
-      Backing: backingOf(st.backing).name, Finish: finishOf(st.board).name, Hangs: st.backing === 'stand' ? 'On its stand' : hangOf(st.hang).name };
-    if (st.icon) props.Symbol = `${st.icon}, ${iconPlaceName(res.iconAt).replace(/^tl$/, 'top left').replace(/^tr$/, 'top right').replace(/^bl$/, 'bottom left').replace(/^br$/, 'bottom right')}`;
-    if (!photo) props.Tube = st.tube === '8' ? '8 mm bold' : '6 mm standard';
-    props['Dimmer + remote'] = st.dimmer ? 'Yes' : 'No';
-    /* owner 2026-10-17: customers see the public lettering name; the workshop needs the real font. Shopify hides "_" properties
-       from shoppers (cart, checkout, emails) but shows them on the order in admin */
-    if (!photo) props['_Font (actual)'] = res.font.realName || res.font.family;
-    if (postcode) props['Deliver to'] = postcode;
-    props._spec = JSON.stringify(spec);
-    return props;
-  }
-  const variantFor = everyday => { if (variantMap && variantMap[String(everyday)]) return variantMap[String(everyday)]; const pp = globalThis.LitNeonCore.pricePointFor(everyday, pricing.rules().pricing); return pp ? 'price-point:' + pp.key : null; };
-  /** the exact /cart/add.js payload (items) + the quote lines listed separately; opts.postcode is added as a line property */
-  function payload(opts = {}) {
-    const items = [], quoted = [], unpriced = [];
-    for (const l of lines) {
-      const p = priceLine(l);
-      if (l.kind === 'quote') { quoted.push({ uid: l.uid, reason: l.meta.reason || 'Quoted separately', spec: specFor(l, p) }); continue; }
-      if (p.kind !== 'price') { unpriced.push({ uid: l.uid, kind: p.kind, reason: p.reason }); continue; }
-      const props = properties(l, p, opts.postcode);
-      if (l.kind === 'ready') {
-        const st = l.state; const id = `ready:${l.meta.design || 'design'}:${st.size}:${st.colour}:${st.backing}`;
-        items.push({ id, quantity: l.qty, properties: { Jacket: props.Jacket, Hangs: props.Hangs, Finish: props.Finish, ...(props['_Font (actual)'] ? { '_Font (actual)': props['_Font (actual)'] } : {}), _spec: props._spec } });
-        if (st.board !== 'clear') items.push({ id: `finish-upgrade:${st.board}`, quantity: l.qty, properties: { For: l.uid, _addon: true } });
-      } else {
-        const id = variantFor(p.everyday); if (!id) { unpriced.push({ uid: l.uid, kind: 'quote', reason: 'no-variant' }); continue; }
-        items.push({ id, quantity: l.qty, properties: props });
-      }
-    }
-    return { items, quoted, unpriced, subtotal: subtotal() };
-  }
-  const delivery = pc => pricing.deliveryLine(pc);
-  const postcode = { get() { try { return (store && store.getItem('postcode')) || ''; } catch { return ''; } }, set(v) { try { if (!store) return; v ? store.setItem('postcode', v) : store.removeItem('postcode'); } catch {} emit('change', { lines }); } };
-  function on(type, fn) { subs.add((t, d) => { if (t === type) fn(d); }); return () => {}; }
-  function subscribe(fn) { subs.add(fn); return () => subs.delete(fn); }
-
-  return { add, get, remove, undo, setQty, update, clear, useVariants, priceLine, subtotal, count, signs, specFor, properties, payload, delivery, postcode, on, subscribe, specHash,
-    lines: () => lines.slice(), get removed() { return Array.from(removed.keys()); }, reload() { lines = read(); emit('change', { lines }); } };
-}
-
-/* =====================================================================
-   Dialog helper (focus trap, inert page, scroll lock, Escape, focus return) — shared by the basket drawer, the share
-   sheet and the AR sheet. Exported so the other foundation modules do not duplicate it.
-   ===================================================================== */
-const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
-let openCount = 0; const stack = [];
-export const dialog = {
-  /** open(el, { onClose, initialFocus }) → close(). el must be a direct child of <body> and carry role=dialog. */
-  open(el, { onClose, initialFocus } = {}) {
-    const opener = document.activeElement;
-    const siblings = Array.from(document.body.children).filter(x => x !== el && x.tagName !== 'SCRIPT' && !x.hasAttribute('data-ln-overlay'));
-    siblings.forEach(s => { if (!s.inert) { s.inert = true; s.dataset.lnInert = '1'; } });
-    if (!openCount++) { document.documentElement.dataset.scrollLock = '1'; document.documentElement.style.overflow = 'hidden'; }
-    el.hidden = false; el.setAttribute('aria-modal', 'true'); el.removeAttribute('aria-hidden'); requestAnimationFrame(() => el.classList.add('is-open'));
-    const focusables = () => Array.from(el.querySelectorAll(FOCUSABLE)).filter(x => x.offsetParent !== null || x === document.activeElement);
-    const first = initialFocus ? el.querySelector(initialFocus) : (el.querySelector('[data-autofocus]') || el.querySelector('h2, h3, [role=heading]') || focusables()[0]);
-    if (first) { if (!first.hasAttribute('tabindex') && !first.matches(FOCUSABLE)) first.setAttribute('tabindex', '-1'); setTimeout(() => first.focus({ preventScroll: true }), 30); }
-    const isTop = () => stack[stack.length - 1] === close;
-    const onKey = e => {
-      if (!isTop()) return;
-      if (e.key === 'Escape') { e.preventDefault(); close(); return; }
-      if (e.key !== 'Tab') return; const f = focusables(); if (!f.length) { e.preventDefault(); return; }
-      const i = f.indexOf(document.activeElement);
-      if (e.shiftKey && (i <= 0)) { e.preventDefault(); f[f.length - 1].focus(); } else if (!e.shiftKey && (i === f.length - 1 || i < 0)) { e.preventDefault(); f[0].focus(); }
-    };
-    let refocusing = false;
-    const onFocusIn = e => { if (!isTop() || refocusing || el.contains(e.target)) return; const f = focusables(); if (!f.length) return; refocusing = true; try { f[0].focus(); } finally { refocusing = false; } };
-    const onClickClose = e => { if (e.target.closest('[data-close]')) close(); };
-    el.addEventListener('click', onClickClose);
-    document.addEventListener('keydown', onKey); document.addEventListener('focusin', onFocusIn);
-    let closed = false;
-    function close() {
-      if (closed) return; closed = true;
-      document.removeEventListener('keydown', onKey); document.removeEventListener('focusin', onFocusIn); el.removeEventListener('click', onClickClose);
-      el.classList.remove('is-open'); el.setAttribute('aria-hidden', 'true');
-      const done = () => { el.hidden = true; }; const dur = parseFloat(getComputedStyle(el).transitionDuration) || 0; dur ? setTimeout(done, dur * 1000 + 20) : done();
-      siblings.forEach(s => { if (s.dataset.lnInert) { s.inert = false; delete s.dataset.lnInert; } });
-      if (!--openCount) { delete document.documentElement.dataset.scrollLock; document.documentElement.style.overflow = ''; }
-      stack.splice(stack.indexOf(close), 1);
-      if (opener && typeof opener.focus === 'function') opener.focus({ preventScroll: true });
-      onClose && onClose();
-    }
-    stack.push(close);
-    return close;
-  },
-  closeAll() { stack.slice().reverse().forEach(c => c()); },
-  get isOpen() { return openCount > 0; }
-};
-
-/* =====================================================================
-   Drawer (§4.19) — mounted once per page by chrome/pages: basket.drawer.mount(); open via basket.drawer.open()
-   ===================================================================== */
-/* base controls shared by every foundation overlay (drawer, share sheet, AR sheet): injected by each of them, so a sheet
-   opened before the drawer ever mounted still gets real buttons (adversarial review: share actions rendered as bare text) */
-export const BASE_CSS = `
+import{resolve as Q,iconPlaceName as oe,colourOf as re,sizeOf as Z,backingOf as se,finishOf as ie,hangOf as de,jacketOf as ee}from"./renderer.js";import te from"./pricing.js";import*as le from"./clock.js";import{gbp as G,esc as ce,fmtDims as Y}from"./money.js";export const KINDS=["custom","photo","ready","quote"];const ue=["pos","scene","view","night","on","unit","v"];export function specHash(n,E="custom",A={}){const O=Q(n).state,l={};for(const v of Object.keys(O).sort())ue.includes(v)||(l[v]=O[v]);const _=E+"|"+JSON.stringify(l)+"|"+JSON.stringify(A);let h=5381;for(let v=0;v<_.length;v++)h=(h<<5)+h+_.charCodeAt(v)|0;return(h>>>0).toString(36)}export function createBasket({storage:n,pricing:E=te,resolve:A=Q,variants:O=null,now:l=()=>le.now().getTime(),undoMs:_=5e3}={}){const h=n===void 0?(()=>{try{return globalThis.localStorage||null}catch{return null}})():n,v="basket",$=()=>{try{const e=JSON.parse(h&&h.getItem(v)||"[]");return Array.isArray(e)?e.filter(t=>t&&t.uid&&KINDS.includes(t.kind)):[]}catch{return[]}};let u=$(),p=O;const S=new Map,F=typeof EventTarget<"u"?new EventTarget:null,L=new Set,i=(e,t)=>{L.forEach(o=>{try{o(e,t)}catch{}}),F&&typeof CustomEvent<"u"&&F.dispatchEvent(new CustomEvent(e,{detail:t}))},b=()=>{try{h&&h.setItem(v,JSON.stringify(u))}catch{}i("change",{lines:u}),typeof document<"u"&&document.dispatchEvent(new CustomEvent("ln:basket",{detail:{count:w(),signs:w(),lines:u.length}}))},T=()=>l().toString(36)+Math.random().toString(36).slice(2,6);typeof window<"u"&&h===globalThis.localStorage&&window.addEventListener("storage",e=>{e.key===v&&(u=$(),i("change",{lines:u,external:!0}))});function H({kind:e="custom",state:t,qty:o=1,meta:a={}}){if(!KINDS.includes(e))throw new Error("unknown line kind "+e);const s=A(t).state,c=specHash(s,e,e==="ready"?{design:a.design}:e==="photo"?{photoHash:a.photoHash}:{}),g=e==="quote"?null:u.find(M=>M.specHash===c);if(g)return g.qty=Math.min(10,g.qty+o),g.updatedAt=l(),b(),i("add",{line:g,merged:!0}),{uid:g.uid,merged:!0,line:g};const f={uid:T(),kind:e,state:s,qty:Math.max(1,Math.min(10,o)),specHash:c,addedAt:l(),updatedAt:l(),meta:a};return u.push(f),b(),i("add",{line:f,merged:!1}),{uid:f.uid,merged:!1,line:f}}function N(e){return u.find(t=>t.uid===e)||null}function K(e){const t=u.findIndex(c=>c.uid===e);if(t<0)return{undo(){return!1}};const[o]=u.splice(t,1),a=t;b(),i("remove",{line:o});const s=setTimeout(()=>S.delete(e),_);return S.set(e,{line:o,at:a,t:s}),{undo(){const c=S.get(e);return c?(clearTimeout(c.t),S.delete(e),u.splice(Math.min(c.at,u.length),0,c.line),b(),i("add",{line:c.line,merged:!1,restored:!0}),!0):!1}}}function P(e){const t=S.get(e);return t?(clearTimeout(t.t),S.delete(e),u.splice(Math.min(t.at,u.length),0,t.line),b(),i("add",{line:t.line,restored:!0}),!0):!1}function m(e,t){const o=N(e);o&&(o.qty=Math.max(1,Math.min(10,Math.round(t)||1)),o.updatedAt=l(),b())}function d(e,t,o){const a=N(e);if(!a)return null;const s=A(t).state;o&&Object.assign(a.meta,o);const c=specHash(s,a.kind,a.kind==="ready"?{design:a.meta.design}:a.kind==="photo"?{photoHash:a.meta.photoHash}:{}),g=u.find(f=>f.uid!==e&&f.specHash===c);return g?(g.qty=Math.min(10,g.qty+a.qty),u=u.filter(f=>f.uid!==e),b(),g):(a.state=s,a.specHash=c,a.updatedAt=l(),b(),a)}function I(){u=[],b()}function k(e){p=e}function q(e){if(e.kind==="quote")return{kind:"quote",everyday:null,payable:null,reason:e.meta.reason||"Quoted separately"};if(e.kind==="photo"&&e.meta.ledMetres){const o=E.photo(e.meta.ledMetres,e.meta.heightCm,{backing:e.state.backing,finish:e.state.board,rgb:re(e.state.colour).rgb});return o.kind==="price"?{kind:"price",everyday:o.everyday,payable:o.payable}:{kind:"quote",everyday:null,payable:null}}const t=E.price(e.state);return t.kind==="price"?{kind:"price",everyday:t.everyday,payable:t.payable,promoLine:t.promoLine}:{kind:t.kind,everyday:null,payable:null,reason:E.quoteReason(t)}}function y(){let e=0,t=0,o=0,a=0;for(const s of u){const c=q(s);c.kind==="price"?(e+=c.everyday*s.qty,t+=c.payable*s.qty,a+=s.qty):o++}return{everyday:Math.round(e*100)/100,payable:Math.round(t*100)/100,discount:Math.round((e-t)*100)/100,quotes:o,items:a,promo:E.promoLive()}}const C=()=>u.length,w=()=>u.reduce((e,t)=>e+Math.max(1,+t.qty||1),0);function D(e,t=q(e)){const o=A(e.state),a=o.state,s=a.colours?o.lineColours.map(c=>c.name):[o.colour.name];return{v:3,kind:e.kind,lines:o.lines,align:a.align,icon:a.icon||null,iconPos:a.icon?a.iconPos:null,iconAt:a.icon?o.iconAt:null,lettering:o.font.name,font_family:o.font.family,font_actual:o.font.realName||o.font.family,tube_mm:a.tube==="8"?8:6,colour:o.colour.name,colour_hex:o.colour.hex,colours:s,rgb:o.rgb,jacket:a.jacket,...e.kind==="photo"?{lines:[],lettering:null,font_family:null,size:"photo",letter_height_cm:null,width_cm:e.meta.widthCm||null,height_cm:e.meta.heightCm||null}:{size:o.sizeId,letter_height_cm:o.letterCm,width_cm:o.dims?o.dims.W:null,height_cm:o.dims?o.dims.H:null},backing:a.backing,finish:a.board,hang:a.backing==="stand"?"stand":a.hang,use:a.use,dimmer:!!a.dimmer,plug:"UK",everyday_gbp:t.everyday,qty:e.qty,ref:e.uid,...e.kind==="photo"?{photoHash:e.meta.photoHash||null,render:e.meta.png?"attached":null,ledMetres:e.meta.ledMetres||null}:{},...e.kind==="ready"?{design:e.meta.design||null}:{}}}function x(e,t,o){const a=A(e.state),s=a.state,c=D(e,t),g=s.colours?a.lineColours.map((V,ae)=>`${V.name} (line ${ae+1})`).join(" / "):a.colour.name,f=e.kind==="photo",M={Words:f?"From your photo":a.words||"—",Lettering:f?"Traced from your photo":a.font.name,Colour:g,Jacket:ee(s.jacket).name,Size:f?`About ${Y(c.width_cm,c.height_cm)}${c.ledMetres?` · ${c.ledMetres} m LED`:""}`:`${a.sizeId==="custom"?"Custom":Z(a.sizeId).name}, ${Y(c.width_cm,c.height_cm)}`,Backing:se(s.backing).name,Finish:ie(s.board).name,Hangs:s.backing==="stand"?"On its stand":de(s.hang).name};return s.icon&&(M.Symbol=`${s.icon}, ${oe(a.iconAt).replace(/^tl$/,"top left").replace(/^tr$/,"top right").replace(/^bl$/,"bottom left").replace(/^br$/,"bottom right")}`),f||(M.Tube=s.tube==="8"?"8 mm bold":"6 mm standard"),M["Dimmer + remote"]=s.dimmer?"Yes":"No",f||(M["_Font (actual)"]=a.font.realName||a.font.family),o&&(M["Deliver to"]=o),M._spec=JSON.stringify(c),M}const B=e=>{if(p&&p[String(e)])return p[String(e)];const t=globalThis.LitNeonCore.pricePointFor(e,E.rules().pricing);return t?"price-point:"+t.key:null};function W(e={}){const t=[],o=[],a=[];for(const s of u){const c=q(s);if(s.kind==="quote"){o.push({uid:s.uid,reason:s.meta.reason||"Quoted separately",spec:D(s,c)});continue}if(c.kind!=="price"){a.push({uid:s.uid,kind:c.kind,reason:c.reason});continue}const g=x(s,c,e.postcode);if(s.kind==="ready"){const f=s.state,M=`ready:${s.meta.design||"design"}:${f.size}:${f.colour}:${f.backing}`;t.push({id:M,quantity:s.qty,properties:{Jacket:g.Jacket,Hangs:g.Hangs,Finish:g.Finish,...g["_Font (actual)"]?{"_Font (actual)":g["_Font (actual)"]}:{},_spec:g._spec}}),f.board!=="clear"&&t.push({id:`finish-upgrade:${f.board}`,quantity:s.qty,properties:{For:s.uid,_addon:!0}})}else{const f=B(c.everyday);if(!f){a.push({uid:s.uid,kind:"quote",reason:"no-variant"});continue}t.push({id:f,quantity:s.qty,properties:g})}}return{items:t,quoted:o,unpriced:a,subtotal:y()}}const U=e=>E.deliveryLine(e),J={get(){try{return h&&h.getItem("postcode")||""}catch{return""}},set(e){try{if(!h)return;e?h.setItem("postcode",e):h.removeItem("postcode")}catch{}i("change",{lines:u})}};function R(e,t){return L.add((o,a)=>{o===e&&t(a)}),()=>{}}function r(e){return L.add(e),()=>L.delete(e)}return{add:H,get:N,remove:K,undo:P,setQty:m,update:d,clear:I,useVariants:k,priceLine:q,subtotal:y,count:C,signs:w,specFor:D,properties:x,payload:W,delivery:U,postcode:J,on:R,subscribe:r,specHash,lines:()=>u.slice(),get removed(){return Array.from(S.keys())},reload(){u=$(),i("change",{lines:u})}}}const ne='a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';let X=0;const z=[];export const dialog={open(n,{onClose:E,initialFocus:A}={}){const O=document.activeElement,l=Array.from(document.body.children).filter(i=>i!==n&&i.tagName!=="SCRIPT"&&!i.hasAttribute("data-ln-overlay"));l.forEach(i=>{i.inert||(i.inert=!0,i.dataset.lnInert="1")}),X++||(document.documentElement.dataset.scrollLock="1",document.documentElement.style.overflow="hidden"),n.hidden=!1,n.setAttribute("aria-modal","true"),n.removeAttribute("aria-hidden"),requestAnimationFrame(()=>n.classList.add("is-open"));const _=()=>Array.from(n.querySelectorAll(ne)).filter(i=>i.offsetParent!==null||i===document.activeElement),h=A?n.querySelector(A):n.querySelector("[data-autofocus]")||n.querySelector("h2, h3, [role=heading]")||_()[0];h&&(!h.hasAttribute("tabindex")&&!h.matches(ne)&&h.setAttribute("tabindex","-1"),setTimeout(()=>h.focus({preventScroll:!0}),30));const v=()=>z[z.length-1]===L,$=i=>{if(!v())return;if(i.key==="Escape"){i.preventDefault(),L();return}if(i.key!=="Tab")return;const b=_();if(!b.length){i.preventDefault();return}const T=b.indexOf(document.activeElement);i.shiftKey&&T<=0?(i.preventDefault(),b[b.length-1].focus()):!i.shiftKey&&(T===b.length-1||T<0)&&(i.preventDefault(),b[0].focus())};let u=!1;const p=i=>{if(!v()||u||n.contains(i.target))return;const b=_();if(b.length){u=!0;try{b[0].focus()}finally{u=!1}}},S=i=>{i.target.closest("[data-close]")&&L()};n.addEventListener("click",S),document.addEventListener("keydown",$),document.addEventListener("focusin",p);let F=!1;function L(){if(F)return;F=!0,document.removeEventListener("keydown",$),document.removeEventListener("focusin",p),n.removeEventListener("click",S),n.classList.remove("is-open"),n.setAttribute("aria-hidden","true");const i=()=>{n.hidden=!0},b=parseFloat(getComputedStyle(n).transitionDuration)||0;b?setTimeout(i,b*1e3+20):i(),l.forEach(T=>{T.dataset.lnInert&&(T.inert=!1,delete T.dataset.lnInert)}),--X||(delete document.documentElement.dataset.scrollLock,document.documentElement.style.overflow=""),z.splice(z.indexOf(L),1),O&&typeof O.focus=="function"&&O.focus({preventScroll:!0}),E&&E()}return z.push(L),L},closeAll(){z.slice().reverse().forEach(n=>n())},get isOpen(){return X>0}},BASE_CSS=`
 .ln-btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s-2);min-height:var(--btn-md,44px);padding:0 var(--s-5);border-radius:var(--r-2);font:600 var(--t-body) var(--f-ui);text-decoration:none;cursor:pointer;border:1px solid transparent;transition:box-shadow var(--d-base),transform var(--d-fast),background var(--d-base);white-space:nowrap}
 .ln-btn--primary{background:var(--bone);color:var(--night)}.ln-btn--primary:hover{box-shadow:var(--glow-ring)}
 .ln-btn--ghost{background:transparent;color:var(--bone);border-color:var(--hair)}.ln-btn--ghost:hover{box-shadow:var(--glow-ring)}
@@ -200,13 +8,7 @@ export const BASE_CSS = `
 .ln-iconbtn{width:var(--touch,44px);height:var(--touch,44px);display:grid;place-items:center;background:none;border:1px solid transparent;border-radius:var(--r-2);color:var(--bone);cursor:pointer}
 .ln-iconbtn:hover{background:var(--night-3)}
 .ln-textbtn{display:inline-flex;align-items:center;background:none;border:0;color:var(--bone);text-decoration:underline;text-underline-offset:3px;font:500 var(--t-small) var(--f-ui);min-height:var(--touch,44px);padding:0 var(--s-2);cursor:pointer}
-.ln-note{margin:0;color:var(--smoke);font-size:var(--t-caption);line-height:var(--lh-caption)}`;
-export function injectBase() { if (typeof document === 'undefined' || document.getElementById('ln-base-css')) return; const s = document.createElement('style'); s.id = 'ln-base-css'; s.textContent = BASE_CSS; document.head.appendChild(s); }
-
-/* Drawer layout: the panel is exactly the viewport tall (the drawer grid has ONE 100% row — an implicit auto row let the
-   panel grow to its content and pushed "Go to checkout" below the fold). Head · scrolling body · compact sticky foot
-   (subtotal + checkout only); delivery, BNPL, express, the 3-step strip and the marks scroll with the lines. */
-const DRAWER_CSS = `
+.ln-note{margin:0;color:var(--smoke);font-size:var(--t-caption);line-height:var(--lh-caption)}`;export function injectBase(){if(typeof document>"u"||document.getElementById("ln-base-css"))return;const n=document.createElement("style");n.id="ln-base-css",n.textContent=BASE_CSS,document.head.appendChild(n)}const pe=`
 .ln-drawer{position:fixed;inset:0;z-index:var(--z-drawer,60);display:grid;grid-template-columns:1fr min(var(--drawer-w,420px),100%);grid-template-rows:100%;height:100%;height:100dvh;pointer-events:none}
 .ln-drawer[hidden]{display:none}
 /* .c-drawer (components.css) is kept as a hook only: its fixed 420px width + translateX would pin this full-screen wrapper
@@ -255,118 +57,21 @@ const DRAWER_CSS = `
 .ln-pcmsg{margin:0;font-size:var(--t-caption);color:var(--bone-2)}.ln-pcmsg.is-bad{color:var(--amber)}
 @media (max-width:767px){.ln-drawer{grid-template-columns:0 100%}.ln-drawer__panel{border-left:0}.ln-steps li{padding:var(--s-2) var(--s-2)}}
 @media (max-height:640px){.ln-drawer__foot .ln-note{display:none}}
-@media (prefers-reduced-motion:reduce){.ln-drawer__panel,.ln-drawer__scrim{transition:none}}`;
-
-export function createDrawer(basket, { stageLoader = () => import('./stage.js'), uiLoader = () => import('./ui.js').catch(() => null), paymentsUrl = '/lit-neon-preview/rework/config/payments.json' } = {}) {
-  let el = null, close = null, miniStages = [], payments = null, lastUndo = null, undoTimer = 0;
-  const esc2 = esc;
-  function mount() {
-    if (el) return el;
-    injectBase(); if (!document.getElementById('ln-drawer-css')) { const s = document.createElement('style'); s.id = 'ln-drawer-css'; s.textContent = DRAWER_CSS; document.head.appendChild(s); }
-    el = document.createElement('div'); el.className = 'ln-drawer c-drawer'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-labelledby', 'ln-drawer-title'); el.hidden = true; el.dataset.lnOverlay = '1'; el.dataset.qa = 'basket.drawer';
-    el.innerHTML = `<div class="ln-drawer__scrim" data-close></div><div class="ln-drawer__panel">
+@media (prefers-reduced-motion:reduce){.ln-drawer__panel,.ln-drawer__scrim{transition:none}}`;export function createDrawer(n,{stageLoader:E=()=>import("./stage.js"),uiLoader:A=()=>import("./ui.js").catch(()=>null),paymentsUrl:O="/lit-neon-preview/rework/config/payments.json"}={}){let l=null,_=null,h=[],v=null,$=null,u=0;const p=ce;function S(){if(l)return l;if(injectBase(),!document.getElementById("ln-drawer-css")){const m=document.createElement("style");m.id="ln-drawer-css",m.textContent=pe,document.head.appendChild(m)}return l=document.createElement("div"),l.className="ln-drawer c-drawer",l.setAttribute("role","dialog"),l.setAttribute("aria-modal","true"),l.setAttribute("aria-labelledby","ln-drawer-title"),l.hidden=!0,l.dataset.lnOverlay="1",l.dataset.qa="basket.drawer",l.innerHTML=`<div class="ln-drawer__scrim" data-close></div><div class="ln-drawer__panel">
       <div class="ln-drawer__head"><h2 id="ln-drawer-title" tabindex="-1" data-qa="basket.title">Your basket</h2><button type="button" class="ln-iconbtn" data-close aria-label="Close basket" data-qa="basket.close"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
-      <div class="ln-drawer__body" data-qa="basket.lines"></div><div class="ln-drawer__foot" data-qa="basket.footer" hidden></div></div>`;
-    document.body.appendChild(el);
-    el.addEventListener('click', onClick);
-    basket.subscribe(() => { if (!el.hidden) render(); updateCounts(); });
-    fetch(paymentsUrl, { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(p => { payments = p; if (el && !el.hidden) render(); }).catch(() => {});
-    updateCounts();
-    return el;
-  }
-  function updateCounts() { const n = basket.signs ? basket.signs() : basket.count(); document.querySelectorAll('[data-basket-count]').forEach(x => { x.textContent = String(n); x.dataset.n = String(n); x.setAttribute('aria-label', `${n} ${n === 1 ? 'sign' : 'signs'} in your basket`); }); }
-  function onClick(e) {
-    const t = e.target;
-    if (t.closest('[data-close]')) return; /* the dialog helper closes */
-    const line = t.closest('[data-uid]'); const id = line && line.dataset.uid;
-    if (t.closest('[data-qty]') && id) { const l = basket.get(id); basket.setQty(id, l.qty + (+t.closest('[data-qty]').dataset.qty)); return; }
-    if (t.closest('[data-remove]') && id) { const { undo } = basket.remove(id); lastUndo = { id, undo }; clearTimeout(undoTimer); undoTimer = setTimeout(() => { lastUndo = null; render(); }, 5000); render(); return; }
-    if (t.closest('[data-undo]')) { if (lastUndo) { lastUndo.undo(); lastUndo = null; clearTimeout(undoTimer); } render(); return; }
-    if (t.closest('[data-pc-check]')) { const inp = el.querySelector('[data-qa="basket.postcode.input"]'); checkPostcode(inp.value); return; }
-    const edit = t.closest('[data-qa="basket.line.edit"]');
-    if (edit && edit.tagName === 'A') {
-      let same = false; try { const u = new URL(edit.href, location.href); same = u.pathname === location.pathname && u.search === location.search; } catch {}
-      if (same) { closeDrawer(); setTimeout(() => { const n = document.querySelector('#b-editing:not([hidden]), [data-edit-note]:not([hidden])'); if (n) { if (!n.hasAttribute('tabindex')) n.setAttribute('tabindex', '-1'); n.focus({ preventScroll: true }); n.scrollIntoView({ block: 'nearest', behavior: (matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth') }); } }, 160); }
-      return;
-    }
-    if (t.closest('[data-checkout]')) { import('./analytics.js').then(a => a.track('basket_checkout', { items: basket.count(), subtotal: basket.subtotal().payable })).catch(() => {}); }
-  }
-  function checkPostcode(v) { const d = basket.delivery(v); if (d.status === 'ok') basket.postcode.set(d.formatted); render(d); }
-  const lineName = l => { if (l.kind === 'photo') return 'From your photo'; const r = resolveDesign(l.state); return r.lines.length ? r.lines.join(' ') : (r.icon ? `${r.icon} symbol` : 'Your sign'); };
-  /* a photo line is the traced design, not a text sign: its size and LED length come from the photo meta (upload.html) */
-  function photoSpec(l, res, st) {
-    const m = l.meta || {}; const W = m.widthCm, H = m.heightCm;
-    const size = W && H ? `About ${fmtDims(W, H, st.unit)}${m.ledMetres ? ` · ${(Math.round(m.ledMetres * 10) / 10).toFixed(1)}\u00a0m of LED` : ''}` : '—';
-    return `<dl><dt>Made from</dt><dd>Your photo, traced in neon</dd><dt>Colour</dt><dd>${esc2(res.colour.name)}</dd><dt>Size</dt><dd data-qa="basket.line.size">${esc2(size)}</dd><dt>Backing</dt><dd>${esc2(res.backing.name)}, ${esc2(res.finish.name.toLowerCase())}</dd><dt>Hangs</dt><dd>${st.backing === 'stand' ? 'On its stand' : esc2(res.hang.name)} · UK plug</dd><dt>Proof</dt><dd>A designer draws your proof before anything is made</dd></dl>`;
-  }
-  function render(pcResult) {
-    if (!el) mount();
-    const body = el.querySelector('.ln-drawer__body'), foot = el.querySelector('.ln-drawer__foot');
-    const lines = basket.lines(); const n = lines.length;
-    const nSigns = basket.signs ? basket.signs() : n; el.querySelector('#ln-drawer-title').textContent = n ? `Your basket (${nSigns} ${nSigns === 1 ? 'sign' : 'signs'})` : 'Your basket'; /* signs, like the header badge */
-    miniStages.forEach(s => s.destroy && s.destroy()); miniStages = [];
-    if (!n && !lastUndo) {
-      body.innerHTML = `<div class="ln-empty c-empty" data-qa="basket.empty"><img src="/lit-neon-preview/rework/assets/img/empty/basket.svg" alt="" width="120" height="120"><p class="c-title">Nothing in here yet</p><p class="ln-note">Design a sign in a couple of minutes, or start from one of ours.</p><a class="ln-btn ln-btn--primary" href="/lit-neon-preview/rework/create.html" data-qa="basket.empty.design">Design a sign</a><a class="ln-btn ln-btn--ghost" href="/lit-neon-preview/rework/shop.html" data-qa="basket.empty.shop">Browse ready-made</a></div>`;
-      foot.hidden = true; return;
-    }
-    const undoRow = lastUndo ? `<div class="ln-undo" role="status" data-qa="basket.undo"><span>Removed</span><button type="button" class="ln-textbtn" data-undo data-qa="basket.undo.button">Undo</button></div>` : '';
-    body.innerHTML = undoRow + '<div class="ln-lines">' + lines.map(l => {
-      const res = resolveDesign(l.state), st = res.state, p = basket.priceLine(l);
-      const photo = l.kind === 'photo';
-      const editHref = photo ? `/lit-neon-preview/rework/contact.html?topic=design&order=${encodeURIComponent(l.uid.toUpperCase())}&text=${encodeURIComponent('Please change my photo sign (basket ref ' + l.uid.toUpperCase() + '): ')}` : l.kind === 'ready' ? `/lit-neon-preview/rework/product.html?id=${encodeURIComponent(l.meta.design || '')}#edit=${l.uid}` : `/lit-neon-preview/rework/create.html${basket.editHash ? basket.editHash(l) : ''}`;
-      const editLabel = photo ? 'Ask for a change' : 'Edit design';
-      const colour = st.colours ? res.lineColours.map(c => c.name).join(' / ') : res.colour.name;
-      const sizeName = res.sizeId === 'custom' ? 'Custom' : sizeOf(res.sizeId).name;
-      const price = p.kind === 'price' ? gbp(p.payable * l.qty) : (l.kind === 'quote' ? 'Quoted' : '—');
-      return `<article class="ln-bline" data-uid="${l.uid}" data-kind="${l.kind}" data-qa="basket.line">
-        <div class="ln-bline__mini" data-mini aria-hidden="true">${photo && l.meta.png ? `<img src="${esc2(l.meta.png)}" alt="" data-qa="basket.line.photo">` : ''}</div>
-        <div><p class="ln-bline__name"><span>${esc2(lineName(l))}</span><span class="ln-bline__price" data-qa="basket.line.price">${price}</span></p>
-          ${photo ? photoSpec(l, res, st) : `<dl><dt>Lettering</dt><dd>${esc2(res.font.name)}</dd><dt>Colour</dt><dd>${esc2(colour)}, ${esc2(jacketOf(st.jacket).name.toLowerCase())}</dd><dt>Size</dt><dd>${esc2(sizeName)}, ${res.dims ? fmtDims(res.dims.W, res.dims.H, st.unit) : '—'}</dd><dt>Backing</dt><dd>${esc2(res.backing.name)}, ${esc2(res.finish.name.toLowerCase())}</dd><dt>Hangs</dt><dd>${st.backing === 'stand' ? 'On its stand' : esc2(res.hang.name)} · UK plug</dd>${st.icon ? `<dt>Symbol</dt><dd>${esc2(st.icon)}</dd>` : ''}</dl>`}</div>
-        <div class="ln-bline__acts">${l.kind === 'quote' ? `<span class="ln-note">${esc2(l.meta.reason || 'Quoted separately')}</span>` : `<div class="ln-qty c-qty" role="group" aria-label="Quantity"><button type="button" data-qty="-1" ${l.qty <= 1 ? 'disabled' : ''} aria-label="One fewer" data-qa="basket.line.minus">−</button><output aria-live="polite" data-qa="basket.line.qty">${l.qty}</output><button type="button" data-qty="1" ${l.qty >= 10 ? 'disabled' : ''} aria-label="One more" data-qa="basket.line.plus">+</button></div>${l.qty >= 10 ? '<a class="ln-textbtn" href="/lit-neon-preview/rework/bulk-quote.html">Need more? Bulk quote</a>' : ''}`}
-          <span><a class="ln-textbtn" href="${esc2(editHref)}" data-qa="basket.line.edit"${photo ? ' data-photo-edit aria-label="Ask a designer to change your photo sign"' : ''}>${editLabel}</a><button type="button" class="ln-textbtn" data-remove data-qa="basket.line.remove">Remove</button></span></div></article>`;
-    }).join('') + '</div><div class="ln-sum" data-qa="basket.summary"></div>';
-    /* minis: the stage engine on s00-studio-dark, lit, `thumb` frame (the sign fills ~80 % of the tile so it reads at a glance) */
-    stageLoader().then(mod => { el.querySelectorAll('.ln-bline').forEach(node => { const l = basket.get(node.dataset.uid); if (!l || (l.kind === 'photo' && l.meta && l.meta.png)) return; const host = node.querySelector('[data-mini]'); const s = mod.mount(host, { frame: 'thumb', scene: 's00-studio-dark', design: { ...l.state, on: true, night: true }, interactive: false, pill: false, rulers: false, qa: 'basket.drawer.line.stage' }); miniStages.push(s); }); }).catch(() => {});
-    /* footer */
-    const sub = basket.subtotal(); const pc = basket.postcode.get(); const d = pcResult || basket.delivery(pc);
-    foot.hidden = false;
-    const hasQuote = sub.quotes > 0;
-    const providers = (payments && Array.isArray(payments.express) ? payments.express : (payments && payments.providers) || []).filter(p => p.enabled !== false);
-    const sum = body.querySelector('.ln-sum');
-    sum.innerHTML = `
-      ${hasQuote ? `<p class="ln-note">${sub.quotes === 1 ? 'One line is quoted separately' : `${sub.quotes} lines are quoted separately`} — a designer prices it within 12 hours.</p>` : ''}
-      <div data-qa="basket.delivery">${d.status === 'ok' ? `<p class="ln-pcmsg"><b>${esc2(d.prefix || '')}</b> · ${esc2(d.line || d.text)} <button type="button" class="ln-textbtn" data-pc-change data-qa="basket.postcode.change">Change</button></p>` : `<form class="ln-pc${d.status === 'excluded' || d.status === 'invalid' ? ' ln-pc--bad' : ''}" data-pc onsubmit="return false"><label class="visually-hidden" for="ln-pc-in">Delivery postcode</label><input id="ln-pc-in" inputmode="text" autocomplete="postal-code" placeholder="Postcode" value="${esc2(pc || '')}" data-qa="basket.postcode.input"><button type="button" class="ln-btn ln-btn--ghost" data-pc-check data-qa="basket.postcode.check">Check</button></form><p class="ln-pcmsg${d.status === 'excluded' || d.status === 'invalid' ? ' is-bad' : ''}" data-qa="basket.postcode.msg">${d.status === 'empty' ? 'Free delivery across mainland GB · ' + esc2(d.text) : esc2(d.text)}${d.status === 'excluded' ? ` → <a class="ln-textbtn" href="/lit-neon-preview/rework/contact.html?postcode=${encodeURIComponent(d.formatted || '')}">Ask us about delivery</a>` : ''}</p>`}</div>
-      <div data-slot="bnpl" data-total="${sub.payable}"></div>
-      ${!hasQuote && sub.items && providers.length ? `<div class="ln-express" data-qa="basket.express" data-slot="express"></div>` : ''}
+      <div class="ln-drawer__body" data-qa="basket.lines"></div><div class="ln-drawer__foot" data-qa="basket.footer" hidden></div></div>`,document.body.appendChild(l),l.addEventListener("click",L),n.subscribe(()=>{l.hidden||H(),F()}),fetch(O,{cache:"no-store"}).then(m=>m.ok?m.json():null).then(m=>{v=m,l&&!l.hidden&&H()}).catch(()=>{}),F(),l}function F(){const m=n.signs?n.signs():n.count();document.querySelectorAll("[data-basket-count]").forEach(d=>{d.textContent=String(m),d.dataset.n=String(m),d.setAttribute("aria-label",`${m} ${m===1?"sign":"signs"} in your basket`)})}function L(m){const d=m.target;if(d.closest("[data-close]"))return;const I=d.closest("[data-uid]"),k=I&&I.dataset.uid;if(d.closest("[data-qty]")&&k){const y=n.get(k);n.setQty(k,y.qty+ +d.closest("[data-qty]").dataset.qty);return}if(d.closest("[data-remove]")&&k){const{undo:y}=n.remove(k);$={id:k,undo:y},clearTimeout(u),u=setTimeout(()=>{$=null,H()},5e3),H();return}if(d.closest("[data-undo]")){$&&($.undo(),$=null,clearTimeout(u)),H();return}if(d.closest("[data-pc-check]")){const y=l.querySelector('[data-qa="basket.postcode.input"]');i(y.value);return}const q=d.closest('[data-qa="basket.line.edit"]');if(q&&q.tagName==="A"){let y=!1;try{const C=new URL(q.href,location.href);y=C.pathname===location.pathname&&C.search===location.search}catch{}y&&(P(),setTimeout(()=>{const C=document.querySelector("#b-editing:not([hidden]), [data-edit-note]:not([hidden])");C&&(C.hasAttribute("tabindex")||C.setAttribute("tabindex","-1"),C.focus({preventScroll:!0}),C.scrollIntoView({block:"nearest",behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"}))},160));return}d.closest("[data-checkout]")&&import("./analytics.js").then(y=>y.track("basket_checkout",{items:n.count(),subtotal:n.subtotal().payable})).catch(()=>{})}function i(m){const d=n.delivery(m);d.status==="ok"&&n.postcode.set(d.formatted),H(d)}const b=m=>{if(m.kind==="photo")return"From your photo";const d=Q(m.state);return d.lines.length?d.lines.join(" "):d.icon?`${d.icon} symbol`:"Your sign"};function T(m,d,I){const k=m.meta||{},q=k.widthCm,y=k.heightCm,C=q&&y?`About ${Y(q,y,I.unit)}${k.ledMetres?` · ${(Math.round(k.ledMetres*10)/10).toFixed(1)} m of LED`:""}`:"—";return`<dl><dt>Made from</dt><dd>Your photo, traced in neon</dd><dt>Colour</dt><dd>${p(d.colour.name)}</dd><dt>Size</dt><dd data-qa="basket.line.size">${p(C)}</dd><dt>Backing</dt><dd>${p(d.backing.name)}, ${p(d.finish.name.toLowerCase())}</dd><dt>Hangs</dt><dd>${I.backing==="stand"?"On its stand":p(d.hang.name)} · UK plug</dd><dt>Proof</dt><dd>A designer draws your proof before anything is made</dd></dl>`}function H(m){l||S();const d=l.querySelector(".ln-drawer__body"),I=l.querySelector(".ln-drawer__foot"),k=n.lines(),q=k.length,y=n.signs?n.signs():q;if(l.querySelector("#ln-drawer-title").textContent=q?`Your basket (${y} ${y===1?"sign":"signs"})`:"Your basket",h.forEach(r=>r.destroy&&r.destroy()),h=[],!q&&!$){d.innerHTML='<div class="ln-empty c-empty" data-qa="basket.empty"><img src="/lit-neon-preview/rework/assets/img/empty/basket.svg" alt="" width="120" height="120"><p class="c-title">Nothing in here yet</p><p class="ln-note">Design a sign in a couple of minutes, or start from one of ours.</p><a class="ln-btn ln-btn--primary" href="/lit-neon-preview/rework/create.html" data-qa="basket.empty.design">Design a sign</a><a class="ln-btn ln-btn--ghost" href="/lit-neon-preview/rework/shop.html" data-qa="basket.empty.shop">Browse ready-made</a></div>',I.hidden=!0;return}const C=$?'<div class="ln-undo" role="status" data-qa="basket.undo"><span>Removed</span><button type="button" class="ln-textbtn" data-undo data-qa="basket.undo.button">Undo</button></div>':"";d.innerHTML=C+'<div class="ln-lines">'+k.map(r=>{const e=Q(r.state),t=e.state,o=n.priceLine(r),a=r.kind==="photo",s=a?`/lit-neon-preview/rework/contact.html?topic=design&order=${encodeURIComponent(r.uid.toUpperCase())}&text=${encodeURIComponent("Please change my photo sign (basket ref "+r.uid.toUpperCase()+"): ")}`:r.kind==="ready"?`/lit-neon-preview/rework/product.html?id=${encodeURIComponent(r.meta.design||"")}#edit=${r.uid}`:`/lit-neon-preview/rework/create.html${n.editHash?n.editHash(r):""}`,c=a?"Ask for a change":"Edit design",g=t.colours?e.lineColours.map(V=>V.name).join(" / "):e.colour.name,f=e.sizeId==="custom"?"Custom":Z(e.sizeId).name,M=o.kind==="price"?G(o.payable*r.qty):r.kind==="quote"?"Quoted":"—";return`<article class="ln-bline" data-uid="${r.uid}" data-kind="${r.kind}" data-qa="basket.line">
+        <div class="ln-bline__mini" data-mini aria-hidden="true">${a&&r.meta.png?`<img src="${p(r.meta.png)}" alt="" data-qa="basket.line.photo">`:""}</div>
+        <div><p class="ln-bline__name"><span>${p(b(r))}</span><span class="ln-bline__price" data-qa="basket.line.price">${M}</span></p>
+          ${a?T(r,e,t):`<dl><dt>Lettering</dt><dd>${p(e.font.name)}</dd><dt>Colour</dt><dd>${p(g)}, ${p(ee(t.jacket).name.toLowerCase())}</dd><dt>Size</dt><dd>${p(f)}, ${e.dims?Y(e.dims.W,e.dims.H,t.unit):"—"}</dd><dt>Backing</dt><dd>${p(e.backing.name)}, ${p(e.finish.name.toLowerCase())}</dd><dt>Hangs</dt><dd>${t.backing==="stand"?"On its stand":p(e.hang.name)} · UK plug</dd>${t.icon?`<dt>Symbol</dt><dd>${p(t.icon)}</dd>`:""}</dl>`}</div>
+        <div class="ln-bline__acts">${r.kind==="quote"?`<span class="ln-note">${p(r.meta.reason||"Quoted separately")}</span>`:`<div class="ln-qty c-qty" role="group" aria-label="Quantity"><button type="button" data-qty="-1" ${r.qty<=1?"disabled":""} aria-label="One fewer" data-qa="basket.line.minus">−</button><output aria-live="polite" data-qa="basket.line.qty">${r.qty}</output><button type="button" data-qty="1" ${r.qty>=10?"disabled":""} aria-label="One more" data-qa="basket.line.plus">+</button></div>${r.qty>=10?'<a class="ln-textbtn" href="/lit-neon-preview/rework/bulk-quote.html">Need more? Bulk quote</a>':""}`}
+          <span><a class="ln-textbtn" href="${p(s)}" data-qa="basket.line.edit"${a?' data-photo-edit aria-label="Ask a designer to change your photo sign"':""}>${c}</a><button type="button" class="ln-textbtn" data-remove data-qa="basket.line.remove">Remove</button></span></div></article>`}).join("")+'</div><div class="ln-sum" data-qa="basket.summary"></div>',E().then(r=>{l.querySelectorAll(".ln-bline").forEach(e=>{const t=n.get(e.dataset.uid);if(!t||t.kind==="photo"&&t.meta&&t.meta.png)return;const o=e.querySelector("[data-mini]"),a=r.mount(o,{frame:"thumb",scene:"s00-studio-dark",design:{...t.state,on:!0,night:!0},interactive:!1,pill:!1,rulers:!1,qa:"basket.drawer.line.stage"});h.push(a)})}).catch(()=>{});const w=n.subtotal(),D=n.postcode.get(),x=m||n.delivery(D);I.hidden=!1;const B=w.quotes>0,W=(v&&Array.isArray(v.express)?v.express:v&&v.providers||[]).filter(r=>r.enabled!==!1),U=d.querySelector(".ln-sum");U.innerHTML=`
+      ${B?`<p class="ln-note">${w.quotes===1?"One line is quoted separately":`${w.quotes} lines are quoted separately`} — a designer prices it within 12 hours.</p>`:""}
+      <div data-qa="basket.delivery">${x.status==="ok"?`<p class="ln-pcmsg"><b>${p(x.prefix||"")}</b> · ${p(x.line||x.text)} <button type="button" class="ln-textbtn" data-pc-change data-qa="basket.postcode.change">Change</button></p>`:`<form class="ln-pc${x.status==="excluded"||x.status==="invalid"?" ln-pc--bad":""}" data-pc onsubmit="return false"><label class="visually-hidden" for="ln-pc-in">Delivery postcode</label><input id="ln-pc-in" inputmode="text" autocomplete="postal-code" placeholder="Postcode" value="${p(D||"")}" data-qa="basket.postcode.input"><button type="button" class="ln-btn ln-btn--ghost" data-pc-check data-qa="basket.postcode.check">Check</button></form><p class="ln-pcmsg${x.status==="excluded"||x.status==="invalid"?" is-bad":""}" data-qa="basket.postcode.msg">${x.status==="empty"?"Free delivery across mainland GB · "+p(x.text):p(x.text)}${x.status==="excluded"?` → <a class="ln-textbtn" href="/lit-neon-preview/rework/contact.html?postcode=${encodeURIComponent(x.formatted||"")}">Ask us about delivery</a>`:""}</p>`}</div>
+      <div data-slot="bnpl" data-total="${w.payable}"></div>
+      ${!B&&w.items&&W.length?'<div class="ln-express" data-qa="basket.express" data-slot="express"></div>':""}
       <ol class="ln-steps"><li><b>1 · Proof</b>Your drawing within 12 hours</li><li><b>2 · Approve</b>Tweaks are free until you say yes</li><li><b>3 · Made</b>7–10 working days, then tracked delivery</li></ol>
-      <div class="ln-marks" aria-label="Payment methods" data-slot="marks"></div>`;
-    foot.innerHTML = `
-      ${sub.items ? `<div class="ln-row"><span>Subtotal</span><b data-qa="basket.subtotal">${gbp(sub.payable)}</b></div>` : ''}
-      ${sub.promo && sub.items ? `<p class="ln-note" data-qa="basket.promo">${esc2(basketPromoLine(sub))}</p>` : ''}
-      <div class="ln-foot-acts"><a class="ln-btn ln-btn--primary ln-btn--lg" href="/lit-neon-preview/rework/checkout.html" data-checkout data-qa="basket.checkout"${sub.items ? '' : ' aria-disabled="true" tabindex="-1"'}>Go to checkout</a>
-      <button type="button" class="ln-textbtn" data-close data-qa="basket.continue">Continue shopping</button></div>`;
-    const changeBtn = body.querySelector('[data-pc-change]'); if (changeBtn) changeBtn.addEventListener('click', () => { basket.postcode.set(''); render({ status: 'empty', text: basket.delivery('').text }); });
-    const pcForm = body.querySelector('[data-pc]'); if (pcForm) pcForm.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); checkPostcode(pcForm.querySelector('input').value); } });
-    uiLoader().then(ui => { const slot = body.querySelector('[data-slot="bnpl"]'); if (ui && slot && typeof ui.bnpl === 'function') ui.bnpl(slot, sub.payable); }).catch(() => {});
-    /* payment marks: the shared row (inline SVG in the text colour; as <img> their currentColor rendered black on the dark drawer) */
-    uiLoader().then(ui => { const slot = body.querySelector('[data-slot="marks"]'); if (ui && slot && typeof ui.paymentMarks === 'function') ui.paymentMarks(slot).catch(() => {}); }).catch(() => {});
-    /* express pay: the same component as the product page and checkout (inline mark in the text colour + 'Pay with …' label) */
-    uiLoader().then(ui => { const slot = body.querySelector('[data-slot="express"]'); if (ui && slot && typeof ui.expressRow === 'function') ui.expressRow(slot, { qa: 'basket.express', onPick: id => { location.href = `/lit-neon-preview/rework/checkout.html#express=${encodeURIComponent(id)}`; } }).then(() => slot.classList.add('ln-express')).catch(() => {}); }).catch(() => {});
-    if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('debug') === '1' && sessionStorage.getItem('review') === '1') { const pre = document.createElement('details'); pre.className = 'ln-note'; pre.innerHTML = `<summary>What the store receives</summary><pre data-qa="basket.payload">${esc2(JSON.stringify(basket.payload({ postcode: basket.postcode.get() }), null, 2))}</pre>`; sum.appendChild(pre); }
-  }
-  function basketPromoLine(sub) { const pl = basket.promoLineFor ? basket.promoLineFor(sub.everyday) : null; return pl || `Launch price · everyday ${gbp(sub.everyday)}`; }
-  function openDrawer() { mount(); render(); if (close) return; close = dialog.open(el, { onClose: () => { close = null; miniStages.forEach(s => s.destroy && s.destroy()); miniStages = []; } }); }
-  function closeDrawer() { if (close) close(); }
-  return { mount, open: openDrawer, close: closeDrawer, render, updateCounts, get el() { return el; } };
-}
-
-const basket = createBasket();
-/* promo line + edit hash need pricing/router: wired lazily so Node tests of the store never load them */
-basket.promoLineFor = everyday => pricingDefault.promoLine(everyday);
-basket.editHash = line => { try { return globalThis.__lnRouter ? globalThis.__lnRouter.buildHash(line.state, { edit: line.uid }) : ''; } catch { return ''; } };
-import('./router.js').then(r => { globalThis.__lnRouter = r.default; }).catch(() => {});
-export const drawer = typeof document !== 'undefined' ? createDrawer(basket) : null;
-basket.open = () => { if (drawer) drawer.open(); };
-basket.close = () => { if (drawer) drawer.close(); };
-export default basket;
-export const { add, get, remove, undo, setQty, update, clear, useVariants, priceLine, subtotal, count, signs, specFor, properties, payload, delivery, postcode, subscribe } = basket;
+      <div class="ln-marks" aria-label="Payment methods" data-slot="marks"></div>`,I.innerHTML=`
+      ${w.items?`<div class="ln-row"><span>Subtotal</span><b data-qa="basket.subtotal">${G(w.payable)}</b></div>`:""}
+      ${w.promo&&w.items?`<p class="ln-note" data-qa="basket.promo">${p(N(w))}</p>`:""}
+      <div class="ln-foot-acts"><a class="ln-btn ln-btn--primary ln-btn--lg" href="/lit-neon-preview/rework/checkout.html" data-checkout data-qa="basket.checkout"${w.items?"":' aria-disabled="true" tabindex="-1"'}>Go to checkout</a>
+      <button type="button" class="ln-textbtn" data-close data-qa="basket.continue">Continue shopping</button></div>`;const J=d.querySelector("[data-pc-change]");J&&J.addEventListener("click",()=>{n.postcode.set(""),H({status:"empty",text:n.delivery("").text})});const R=d.querySelector("[data-pc]");if(R&&R.addEventListener("keydown",r=>{r.key==="Enter"&&(r.preventDefault(),i(R.querySelector("input").value))}),A().then(r=>{const e=d.querySelector('[data-slot="bnpl"]');r&&e&&typeof r.bnpl=="function"&&r.bnpl(e,w.payable)}).catch(()=>{}),A().then(r=>{const e=d.querySelector('[data-slot="marks"]');r&&e&&typeof r.paymentMarks=="function"&&r.paymentMarks(e).catch(()=>{})}).catch(()=>{}),A().then(r=>{const e=d.querySelector('[data-slot="express"]');r&&e&&typeof r.expressRow=="function"&&r.expressRow(e,{qa:"basket.express",onPick:t=>{location.href=`/lit-neon-preview/rework/checkout.html#express=${encodeURIComponent(t)}`}}).then(()=>e.classList.add("ln-express")).catch(()=>{})}).catch(()=>{}),typeof sessionStorage<"u"&&sessionStorage.getItem("debug")==="1"&&sessionStorage.getItem("review")==="1"){const r=document.createElement("details");r.className="ln-note",r.innerHTML=`<summary>What the store receives</summary><pre data-qa="basket.payload">${p(JSON.stringify(n.payload({postcode:n.postcode.get()}),null,2))}</pre>`,U.appendChild(r)}}function N(m){return(n.promoLineFor?n.promoLineFor(m.everyday):null)||`Launch price · everyday ${G(m.everyday)}`}function K(){S(),H(),!_&&(_=dialog.open(l,{onClose:()=>{_=null,h.forEach(m=>m.destroy&&m.destroy()),h=[]}}))}function P(){_&&_()}return{mount:S,open:K,close:P,render:H,updateCounts:F,get el(){return l}}}const j=createBasket();j.promoLineFor=n=>te.promoLine(n),j.editHash=n=>{try{return globalThis.__lnRouter?globalThis.__lnRouter.buildHash(n.state,{edit:n.uid}):""}catch{return""}},import("./router.js").then(n=>{globalThis.__lnRouter=n.default}).catch(()=>{});export const drawer=typeof document<"u"?createDrawer(j):null;j.open=()=>{drawer&&drawer.open()},j.close=()=>{drawer&&drawer.close()};export default j;export const{add,get,remove,undo,setQty,update,clear,useVariants,priceLine,subtotal,count,signs,specFor,properties,payload,delivery,postcode,subscribe}=j;

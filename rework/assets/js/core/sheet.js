@@ -1,18 +1,4 @@
-/* Lit Neon v2 — proof sheet (brief §3.7 c-titleblock, §4.2 step 7, §6.2): the Workshop drawing the customer approves.
-   Drafting-blue outline lettering on paper, backing outline, dimension lines, cap-height mark, construction notes,
-   "For approval" stamp and the title block (Title · Acrylic W×H · LED flex · Power · Date · Drawn by Lit Neon).
-   Ported from the fused prototype with: customer names only (no font families on the customer surface), per-line
-   colours named, the stamp laid out in its own row (no overlap with the title at any width), facts via the registry
-   (voltage, cable length and watts render only when confirmed — never a [CONFIRM] on a customer sheet), clock.now().
-   sheet.render(el, state, { compact, lite }) → { flex, ppc, dims } ; sheet.svg(state, { width }) → standalone SVG string. */
-import { resolve as resolveDesign, flexMetres, OPTIONS, escapeHtml as esc, injectCss } from './renderer.js';
-import { fmtDate, fmtDims, cmToIn, fmtMetres } from './money.js';
-import * as clock from './clock.js';
-
-let factsPeer = null; try { const m = await import('./facts.js'); factsPeer = m.default && typeof m.default.get === 'function' ? m.default : m; } catch { factsPeer = null; }
-const F = { has: k => { try { return !!(factsPeer && factsPeer.has && factsPeer.has(k)); } catch { return false; } }, get: k => { try { const v = factsPeer && factsPeer.get ? factsPeer.get(k) : undefined; return v && typeof v === 'object' && 'value' in v ? v.value : v; } catch { return undefined; } } };
-
-const CSS = `
+import{resolve as ot,flexMetres as nt,OPTIONS as K,escapeHtml as w,injectCss as ut}from"./renderer.js";import{fmtDate as it,fmtDims as bt,cmToIn as st}from"./money.js";import*as rt from"./clock.js";let L=null;try{const o=await import("./facts.js");L=o.default&&typeof o.default.get=="function"?o.default:o}catch{L=null}const S={has:o=>{try{return!!(L&&L.has&&L.has(o))}catch{return!1}},get:o=>{try{const i=L&&L.get?L.get(o):void 0;return i&&typeof i=="object"&&"value"in i?i.value:i}catch{return}}},$t=`
 .ln-sheet{position:relative;color:var(--paper-ink,#180E1F);background:var(--paper,#F2E9DF);overflow:hidden;border-radius:2px;font-family:var(--f-ui,sans-serif);
   background-image:linear-gradient(var(--draft-faint,rgba(47,93,138,.14)) 1px,transparent 1px),linear-gradient(90deg,var(--draft-faint,rgba(47,93,138,.14)) 1px,transparent 1px);background-size:24px 24px;background-position:12px 12px}
 .ln-sheet *{box-sizing:border-box}
@@ -64,121 +50,22 @@ const CSS = `
 .ln-sheet.compact .spec,.ln-sheet.compact .notes,.ln-sheet.lite .notes{display:none}
 .ln-sheet.narrow .spec,.ln-sheet.narrow .notes{display:none}.ln-sheet.narrow .tb{grid-auto-flow:row;grid-template-columns:1fr 1fr}.ln-sheet.narrow .tb div{border-bottom:1px solid var(--rule,#CFC3B9)}.ln-sheet.narrow .tb div:nth-child(2n){border-right:0}.ln-sheet.narrow .tb div:nth-last-child(-n+2){border-bottom:0}
 .ln-sheet.narrow .stamp{font-size:13px;padding:5px 8px 4px}.ln-sheet.narrow .head{left:18px;right:18px;top:18px}.ln-sheet.narrow .title{font-size:var(--t-title,20px)}.ln-sheet.narrow .tb{left:18px;right:18px;bottom:18px}.ln-sheet.narrow .tb div{padding:4px 8px}.ln-sheet.narrow .tb small{font-size:10px}.ln-sheet.narrow .tb b{font-size:12px}.ln-sheet.narrow .stamp small{display:none}
-.ln-sheet .cf{color:#7a4a12;border:1px dashed currentColor;border-radius:3px;padding:0 4px;font:500 10px/1.4 var(--f-ui,sans-serif)}`;
-
-let uid = 0;
-const dimH = (left, top, width, label, cls = '') => `<div class="dim h ${cls}" style="left:${left}px;top:${top}px;width:${width}px"><i></i><span>${label}</span></div>`;
-const dimV = (left, top, height, label, cls = '') => `<div class="dim v ${cls}" style="left:${left}px;top:${top}px;height:${height}px"><i></i><span>${label}</span></div>`;
-
-function ensure(container) {
-  injectCss('ln-sheet-css', CSS);
-  if (container.dataset.sheet) return container.dataset.sheet;
-  const id = 'lnsheet' + (++uid); container.dataset.sheet = id; container.classList.add('ln-sheet', 'c-paper'); container.removeAttribute('data-composite'); container.setAttribute('role', 'img');   /* a line drawing, never mistaken for a photo: not a rule-4 composite */
-  container.innerHTML = `<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><filter id="${id}" x="-8%" y="-8%" width="116%" height="116%" color-interpolation-filters="sRGB">
+.ln-sheet .cf{color:#7a4a12;border:1px dashed currentColor;border-radius:3px;padding:0 4px;font:500 10px/1.4 var(--f-ui,sans-serif)}`;let vt=0;const at=(o,i,c,r,t="")=>`<div class="dim h ${t}" style="left:${o}px;top:${i}px;width:${c}px"><i></i><span>${r}</span></div>`,lt=(o,i,c,r,t="")=>`<div class="dim v ${t}" style="left:${o}px;top:${i}px;height:${c}px"><i></i><span>${r}</span></div>`;function wt(o){if(ut("ln-sheet-css",$t),o.dataset.sheet)return o.dataset.sheet;const i="lnsheet"+ ++vt;return o.dataset.sheet=i,o.classList.add("ln-sheet","c-paper"),o.removeAttribute("data-composite"),o.setAttribute("role","img"),o.innerHTML=`<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><filter id="${i}" x="-8%" y="-8%" width="116%" height="116%" color-interpolation-filters="sRGB">
       <feMorphology in="SourceAlpha" operator="dilate" radius="10" result="d"/><feGaussianBlur in="d" stdDeviation="4" result="b"/>
       <feComponentTransfer in="b" result="shape"><feFuncA type="linear" slope="24" intercept="-11"/></feComponentTransfer>
       <feMorphology in="shape" operator="erode" radius="1.2" result="inner"/><feComposite in="shape" in2="inner" operator="out" result="edge"/>
       <feFlood flood-color="#2F5D8A" flood-opacity=".9"/><feComposite in2="edge" operator="in"/></filter></svg>
     <div class="frame"></div><div class="head"><div><h3 class="title"></h3><p class="sub"></p></div><div class="stamp">For approval<small>nothing is made until you say yes</small></div></div>
-    <div class="drawing"></div><div class="dims"></div><div class="spec"></div><div class="notes"></div><div class="tb"></div>`;
-  return id;
-}
-
-/** power in watts from the flex metres, only when wattsPerMetre is confirmed */
-export function wattsFor(flex) { const wpm = F.has('wattsPerMetre') ? +F.get('wattsPerMetre') : NaN; return Number.isFinite(wpm) ? Math.round(flex * wpm) : null; }
-
-/** render(el, state, { compact, lite, title }) → { flex, ppc, dims, watts } | null */
-export function render(container, state, opts = {}) {
-  const id = ensure(container);
-  const res = resolveDesign(state); const { m, dims: d } = res; if (!d || !m) return null;
-  const compact = !!opts.compact; container.classList.toggle('compact', compact);
-  const R = container.getBoundingClientRect(), SW = R.width, SH = R.height; if (!SW || !SH) return null;
-  const narrow = SW < 620 && !compact; const lite = compact || !!opts.lite || SH < 620; container.classList.toggle('lite', lite && !compact); container.classList.toggle('narrow', narrow);
-  const lines = res.drawLines.length ? res.drawLines : (res.hasText ? [] : ['Your words']);
-  const flex = flexMetres(res); const watts = wattsFor(flex);
-  const words = res.words || (res.hasText ? '' : 'Your words');
-  const colourText = res.state.colours ? res.lineColours.map((c, i) => `${c.name} (line ${i + 1})`).join(', ') : res.colour.name;
-  container.setAttribute('aria-label', `Proof drawing: ${words}, ${res.font.name} lettering in ${colourText}, ${fmtDims(d.W, d.H)}`);
-  container.querySelector('.title').textContent = opts.title || (compact ? 'Proof drawing' : 'Custom neon sign · drawing 1');
-  const sub = container.querySelector('.sub'); sub.textContent = `${lines.length} line${lines.length === 1 ? '' : 's'} · ${res.letterCm} cm letters · not to scale`; sub.hidden = (compact && SH < 320) || (narrow && SH < 420);
-  const today = fmtDate(clock.now());
-  /* spec table (customer names only) */
-  const rows = compact || lite ? [] : [['Words', esc(words), 'name'], ['Lettering', esc(res.font.name)], ['Colour', esc(colourText) + (res.rgb ? '' : ` · ${res.colour.hex}`)], ['Tube', res.jacket.name.toLowerCase()],
-    ['Letter height', `${res.letterCm} cm`], ['Overall', `${d.W} × ${d.H} cm (${cmToIn(d.W)} × ${cmToIn(d.H)} in)`], ['Backing', `${res.backing.name}, ${res.finish.name.toLowerCase()} acrylic`],
-    ['Hangs', `${res.use.name.toLowerCase()}, ${res.backing.id === 'stand' ? 'on its stand' : res.hang.name.toLowerCase()}`], ['Power', [F.has('psuVoltage') ? `${F.get('psuVoltage')} supply` : null, 'UK plug', res.state && res.state.dimmer ? 'dimmer and remote' : null].filter(Boolean).join(', ')], ['Drawn', `${today}, sheet 1 of 1`]];
-  const spec = container.querySelector('.spec'); spec.innerHTML = rows.length ? `<table>${rows.map(([k, v, cls]) => `<tr><td>${k}</td><td${cls ? ` class="${cls}"` : ''}>${v}</td></tr>`).join('')}</table>` : '';
-  const notes = container.querySelector('.notes'); notes.innerHTML = lite ? '' : `<h4>Construction notes</h4><ol>
-    <li>Tube path follows the centreline of each letter${res.icon ? ' and the symbol' : ''}.</li>
-    <li>${(res.backing.id === 'cut' || res.backing.id === 'letter') ? `Acrylic cut ${res.backing.margin} cm outside the lettering.` : `Acrylic panel with ${res.backing.margin} cm clearance, four brass standoffs.`}</li>
-    <li>Lines ${res.state.align === 'center' ? 'centred' : 'aligned ' + res.state.align}. Cable exits bottom right${F.has('cableLengthM') ? `, ${F.get('cableLengthM')} m clear` : ''}.</li>
-    <li>Made in a UK workshop. You approve this drawing before anything is made.</li></ol>`;
-  /* title block: Title · Acrylic W×H · LED flex · Power (if confirmed) · Date · Drawn by */
-  const tb = container.querySelector('.tb');
-  const cells = compact ? [['Acrylic', `${d.W} × ${d.H} cm`, 'mono'], ['Date', today, 'mono']] : narrow ? [['Title', esc(words.slice(0, 24)) || '—'], ['Acrylic', `${d.W} × ${d.H} cm`, 'mono'], ['Date', today, 'mono']] : [['Title', esc(words.slice(0, 40)) || '—'], ['Acrylic', `${d.W} × ${d.H} cm`, 'mono']];   /* LED flex removed from the drawing (owner 2026-10-16) */
-  if (!compact && !narrow) { if (watts != null) cells.push(['Power', `${watts} W`, 'mono']); cells.push(['Date', today, 'mono'], ['Drawn by', 'Lit Neon']); }
-  tb.innerHTML = cells.map(([k, v, cls]) => `<div><small>${k}</small><b${cls ? ` class="${cls}"` : ''}>${v}</b></div>`).join('');
-  /* layout */
-  const headH = container.querySelector('.head').offsetHeight || 60, tbH = tb.offsetHeight || 0;
-  const pad = compact ? 18 : 30;
-  const specW = (!compact && !lite && !narrow) ? spec.offsetWidth + 16 : 0; const notesW = (!lite && !narrow) ? notes.offsetWidth + 16 : 0;
-  const capPad = (!narrow && lines.length && !compact) ? 52 : 0;
-  const areaT = (compact ? 16 : narrow ? 18 : 26) + headH + (compact ? 6 : 12), areaB = SH - pad - tbH - (compact ? 8 : 12);
-  const areaL = pad + capPad + notesW, areaW = SW - areaL - pad - specW, areaH = areaB - areaT;
-  if (!lite && !narrow) { spec.style.top = areaT + 'px'; notes.style.top = areaT + 'px'; }
-  const ppc = Math.max(.25, Math.min((areaW - (compact ? 24 : narrow ? 40 : 170)) / d.W, (areaH - (compact ? 30 : narrow ? 44 : 76)) / d.H));
-  const w = d.W * ppc, h = d.H * ppc, left = areaL + (areaW - w) / 2, top = areaT + (areaH - h) / 2 - 4;
-  const mg = res.backing.margin * ppc, emPx = d.emCm * ppc;
-  const dr = container.querySelector('.drawing'); Object.assign(dr.style, { left: left + 'px', top: top + 'px', width: w + 'px', height: h + 'px' });
-  const s = 100, iw = m.inkW * emPx, ih = m.inkH * emPx;
-  const textShiftX = m.textOffX - m.minX;   /* one layout: renderer.measure places text + symbol */
-  const alignOff = li => res.state.align === 'left' ? 0 : res.state.align === 'right' ? (m.blockW - m.lineWidths[li]) : (m.blockW - m.lineWidths[li]) / 2;
-  const f = res.font;
-  let svg = `<svg viewBox="0 0 ${m.inkW * s} ${m.inkH * s}" style="left:${mg}px;top:${mg}px;width:${iw}px;height:${ih}px">`;
-  if (res.icon) { const ix = m.iconX, iy = m.iconY; svg += `<g transform="translate(${ix * s} ${iy * s}) scale(${m.iconEm * s / 24})"><path d="${OPTIONS.icons[res.icon]}" style="stroke-width:${(1.7 * 24 / (m.iconEm * s)).toFixed(3)}"/></g>`; }
-  lines.forEach((line, li) => { svg += `<text x="${((textShiftX + alignOff(li)) * s).toFixed(1)}" y="${((m.textOffY + m.baselines[li] - m.top) * s).toFixed(1)}" style="font-family:'${f.family}';font-weight:${f.weight || 400};font-size:100px;word-spacing:${f.wordSpacingEm || 0}em">${esc(line)}</text>`; });
-  svg += '</svg>';
-  let back = '';
-  if (res.backing.id === 'cut' || res.backing.id === 'letter') {
-    const fl = container.querySelector('filter'), ms = fl.querySelectorAll('feMorphology');
-    ms[0].setAttribute('radius', (mg * .9).toFixed(2)); fl.querySelector('feGaussianBlur').setAttribute('stdDeviation', Math.max(1, mg * .32).toFixed(2));
-    const padC = mg * 1.4;
-    const B = m.bridge, bridgeH = B ? `<i style="position:absolute;background:#fff;transform-origin:0 50%;left:${B.x1 * emPx}px;top:${(B.y1 - B.w / 2) * emPx}px;width:${Math.hypot(B.x2 - B.x1, B.y2 - B.y1) * emPx}px;height:${B.w * emPx}px;transform:rotate(${Math.atan2(B.y2 - B.y1, B.x2 - B.x1)}rad)"></i>` : '';
-    const iconH = res.icon ? `<svg viewBox="0 0 24 24" style="left:${m.iconX * emPx}px;top:${m.iconY * emPx}px;width:${m.iconEm * emPx}px;height:${m.iconEm * emPx}px"><path d="${OPTIONS.icons[res.icon]}"/></svg>` : '';
-    const textH = lines.length ? `<p class="c-text" style="left:${textShiftX * emPx}px;top:${(m.textOffY - m.top) * emPx}px;width:${m.blockW * emPx}px;font-family:'${f.family}',cursive;font-weight:${f.weight || 400};font-size:${emPx}px;line-height:1.15;text-align:${res.state.align};word-spacing:${f.wordSpacingEm || 0}em">${esc(lines.join('\n'))}</p>` : '';
-    back = `<div class="contourL" style="left:${mg - padC}px;top:${mg - padC}px;width:${iw + 2 * padC}px;height:${ih + 2 * padC}px;filter:url(#${id})"><div style="position:absolute;left:${padC}px;top:${padC}px;width:${iw}px;height:${ih}px">${bridgeH}${iconH}${textH}</div></div>`;
-  } else {
-    back = `<div class="rectL" style="left:0;top:0;width:${w}px;height:${h}px"><i></i><i></i><i></i><i></i></div>` + (res.backing.id === 'stand' ? `<div class="rectL" style="left:${w * .18}px;top:${h}px;width:${w * .64}px;height:${5 * ppc}px;border-style:solid"></div>` : '');
-  }
-  dr.innerHTML = back + svg;
-  let dims = narrow || compact ? dimH(left, top + h + 18, w, `${d.W} × ${d.H} cm`, 'below') : dimH(left, top + h + 22, w, `${d.W} cm`, 'below') + dimV(left + w + 22, top, h, `${d.H} cm`);
-  if (lines.length && !narrow && !compact) {
-    const base = top + mg + (m.textOffY + m.baselines[0] - m.top) * emPx, capTop = base - m.cap * emPx;
-    dims += dimV(left - 22, capTop, base - capTop, `${res.letterCm} cm`, 'flip') + `<div class="capline" style="left:${left - 30}px;width:${mg + 30}px;top:${capTop}px"></div><div class="capline" style="left:${left - 30}px;width:${mg + 30}px;top:${base}px"></div>`;
-  }
-  container.querySelector('.dims').innerHTML = dims;
-  return { flex, ppc, dims: d, watts };
-}
-
-/** A standalone SVG of the drawing (for drawing-export / the share preview). Lettering as outlined <text> in the real face. */
-export function svg(state, { width = 1123, height = 794 } = {}) {
-  const res = resolveDesign(state); const { m, dims: d } = res; if (!d) return '';
-  const lines = res.drawLines.length ? res.drawLines : (res.hasText ? [] : ['Your words']);
-  const pad = 60, areaW = width - pad * 2, areaH = height - pad * 2 - 90;
-  const ppc = Math.min((areaW - 80) / d.W, (areaH - 60) / d.H); const w = d.W * ppc, h = d.H * ppc, left = pad + (areaW - w) / 2, top = pad + (areaH - h) / 2;
-  const emPx = d.emCm * ppc, mg = res.backing.margin * ppc;
-  const textShiftX = m.textOffX - m.minX; const alignOff = li => res.state.align === 'left' ? 0 : res.state.align === 'right' ? (m.blockW - m.lineWidths[li]) : (m.blockW - m.lineWidths[li]) / 2;
-  const text = lines.map((line, li) => `<text x="${(left + mg + (textShiftX + alignOff(li)) * emPx).toFixed(1)}" y="${(top + mg + (m.textOffY + m.baselines[li] - m.top) * emPx).toFixed(1)}" font-family="${esc(res.font.family)}" font-weight="${res.font.weight || 400}" font-size="${emPx.toFixed(1)}" fill="none" stroke="#2F5D8A" stroke-width="1.6">${esc(line)}</text>`).join('');
-  const icon = res.icon ? `<g transform="translate(${left + mg + m.iconX * emPx} ${top + mg + m.iconY * emPx}) scale(${m.iconEm * emPx / 24})"><path d="${OPTIONS.icons[res.icon]}" fill="none" stroke="#2F5D8A" stroke-width="${(1.7 * 24 / (m.iconEm * emPx)).toFixed(3)}"/></g>` : '';
-  const backing = (res.backing.id === 'cut' || res.backing.id === 'letter') ? `<rect x="${left}" y="${top}" width="${w}" height="${h}" rx="${mg}" fill="none" stroke="#2F5D8A" stroke-dasharray="4 4"/>` : `<rect x="${left}" y="${top}" width="${w}" height="${h}" rx="3" fill="none" stroke="#2F5D8A" stroke-dasharray="6 4"/>`;
-  const flex = flexMetres(res);
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><rect width="100%" height="100%" fill="#F2E9DF"/><rect x="14" y="14" width="${width - 28}" height="${height - 28}" fill="none" stroke="#180E1F"/>
+    <div class="drawing"></div><div class="dims"></div><div class="spec"></div><div class="notes"></div><div class="tb"></div>`,i}export function wattsFor(o){const i=S.has("wattsPerMetre")?+S.get("wattsPerMetre"):NaN;return Number.isFinite(i)?Math.round(o*i):null}export function render(o,i,c={}){const r=wt(o),t=ot(i),{m:e,dims:n}=t;if(!n||!e)return null;const s=!!c.compact;o.classList.toggle("compact",s);const z=o.getBoundingClientRect(),D=z.width,b=z.height;if(!D||!b)return null;const a=D<620&&!s,h=s||!!c.lite||b<620;o.classList.toggle("lite",h&&!s),o.classList.toggle("narrow",a);const p=t.drawLines.length?t.drawLines:t.hasText?[]:["Your words"],x=nt(t),u=wattsFor(x),$=t.words||(t.hasText?"":"Your words"),j=t.state.colours?t.lineColours.map((l,f)=>`${l.name} (line ${f+1})`).join(", "):t.colour.name;o.setAttribute("aria-label",`Proof drawing: ${$}, ${t.font.name} lettering in ${j}, ${bt(n.W,n.H)}`),o.querySelector(".title").textContent=c.title||(s?"Proof drawing":"Custom neon sign · drawing 1");const O=o.querySelector(".sub");O.textContent=`${p.length} line${p.length===1?"":"s"} · ${t.letterCm} cm letters · not to scale`,O.hidden=s&&b<320||a&&b<420;const W=it(rt.now()),Y=s||h?[]:[["Words",w($),"name"],["Lettering",w(t.font.name)],["Colour",w(j)+(t.rgb?"":` · ${t.colour.hex}`)],["Tube",t.jacket.name.toLowerCase()],["Letter height",`${t.letterCm} cm`],["Overall",`${n.W} × ${n.H} cm (${st(n.W)} × ${st(n.H)} in)`],["Backing",`${t.backing.name}, ${t.finish.name.toLowerCase()} acrylic`],["Hangs",`${t.use.name.toLowerCase()}, ${t.backing.id==="stand"?"on its stand":t.hang.name.toLowerCase()}`],["Power",[S.has("psuVoltage")?`${S.get("psuVoltage")} supply`:null,"UK plug",t.state&&t.state.dimmer?"dimmer and remote":null].filter(Boolean).join(", ")],["Drawn",`${W}, sheet 1 of 1`]],B=o.querySelector(".spec");B.innerHTML=Y.length?`<table>${Y.map(([l,f,g])=>`<tr><td>${l}</td><td${g?` class="${g}"`:""}>${f}</td></tr>`).join("")}</table>`:"";const q=o.querySelector(".notes");q.innerHTML=h?"":`<h4>Construction notes</h4><ol>
+    <li>Tube path follows the centreline of each letter${t.icon?" and the symbol":""}.</li>
+    <li>${t.backing.id==="cut"||t.backing.id==="letter"?`Acrylic cut ${t.backing.margin} cm outside the lettering.`:`Acrylic panel with ${t.backing.margin} cm clearance, four brass standoffs.`}</li>
+    <li>Lines ${t.state.align==="center"?"centred":"aligned "+t.state.align}. Cable exits bottom right${S.has("cableLengthM")?`, ${S.get("cableLengthM")} m clear`:""}.</li>
+    <li>Made in a UK workshop. You approve this drawing before anything is made.</li></ol>`;const y=o.querySelector(".tb"),k=s?[["Acrylic",`${n.W} × ${n.H} cm`,"mono"],["Date",W,"mono"]]:a?[["Title",w($.slice(0,24))||"—"],["Acrylic",`${n.W} × ${n.H} cm`,"mono"],["Date",W,"mono"]]:[["Title",w($.slice(0,40))||"—"],["Acrylic",`${n.W} × ${n.H} cm`,"mono"]];!s&&!a&&(u!=null&&k.push(["Power",`${u} W`,"mono"]),k.push(["Date",W,"mono"],["Drawn by","Lit Neon"])),y.innerHTML=k.map(([l,f,g])=>`<div><small>${l}</small><b${g?` class="${g}"`:""}>${f}</b></div>`).join("");const P=o.querySelector(".head").offsetHeight||60,X=y.offsetHeight||0,R=s?18:30,pt=!s&&!h&&!a?B.offsetWidth+16:0,dt=!h&&!a?q.offsetWidth+16:0,ct=!a&&p.length&&!s?52:0,N=(s?16:a?18:26)+P+(s?6:12),ht=b-R-X-(s?8:12),J=R+ct+dt,Q=D-J-R-pt,Z=ht-N;!h&&!a&&(B.style.top=N+"px",q.style.top=N+"px");const E=Math.max(.25,Math.min((Q-(s?24:a?40:170))/n.W,(Z-(s?30:a?44:76))/n.H)),F=n.W*E,A=n.H*E,H=J+(Q-F)/2,T=N+(Z-A)/2-4,v=t.backing.margin*E,d=n.emCm*E,_=o.querySelector(".drawing");Object.assign(_.style,{left:H+"px",top:T+"px",width:F+"px",height:A+"px"});const C=100,U=e.inkW*d,V=e.inkH*d,tt=e.textOffX-e.minX,ft=l=>t.state.align==="left"?0:t.state.align==="right"?e.blockW-e.lineWidths[l]:(e.blockW-e.lineWidths[l])/2,M=t.font;let G=`<svg viewBox="0 0 ${e.inkW*C} ${e.inkH*C}" style="left:${v}px;top:${v}px;width:${U}px;height:${V}px">`;if(t.icon){const l=e.iconX,f=e.iconY;G+=`<g transform="translate(${l*C} ${f*C}) scale(${e.iconEm*C/24})"><path d="${K.icons[t.icon]}" style="stroke-width:${(1.7*24/(e.iconEm*C)).toFixed(3)}"/></g>`}p.forEach((l,f)=>{G+=`<text x="${((tt+ft(f))*C).toFixed(1)}" y="${((e.textOffY+e.baselines[f]-e.top)*C).toFixed(1)}" style="font-family:'${M.family}';font-weight:${M.weight||400};font-size:100px;word-spacing:${M.wordSpacingEm||0}em">${w(l)}</text>`}),G+="</svg>";let I="";if(t.backing.id==="cut"||t.backing.id==="letter"){const l=o.querySelector("filter");l.querySelectorAll("feMorphology")[0].setAttribute("radius",(v*.9).toFixed(2)),l.querySelector("feGaussianBlur").setAttribute("stdDeviation",Math.max(1,v*.32).toFixed(2));const g=v*1.4,m=e.bridge,xt=m?`<i style="position:absolute;background:#fff;transform-origin:0 50%;left:${m.x1*d}px;top:${(m.y1-m.w/2)*d}px;width:${Math.hypot(m.x2-m.x1,m.y2-m.y1)*d}px;height:${m.w*d}px;transform:rotate(${Math.atan2(m.y2-m.y1,m.x2-m.x1)}rad)"></i>`:"",mt=t.icon?`<svg viewBox="0 0 24 24" style="left:${e.iconX*d}px;top:${e.iconY*d}px;width:${e.iconEm*d}px;height:${e.iconEm*d}px"><path d="${K.icons[t.icon]}"/></svg>`:"",gt=p.length?`<p class="c-text" style="left:${tt*d}px;top:${(e.textOffY-e.top)*d}px;width:${e.blockW*d}px;font-family:'${M.family}',cursive;font-weight:${M.weight||400};font-size:${d}px;line-height:1.15;text-align:${t.state.align};word-spacing:${M.wordSpacingEm||0}em">${w(p.join(`
+`))}</p>`:"";I=`<div class="contourL" style="left:${v-g}px;top:${v-g}px;width:${U+2*g}px;height:${V+2*g}px;filter:url(#${r})"><div style="position:absolute;left:${g}px;top:${g}px;width:${U}px;height:${V}px">${xt}${mt}${gt}</div></div>`}else I=`<div class="rectL" style="left:0;top:0;width:${F}px;height:${A}px"><i></i><i></i><i></i><i></i></div>`+(t.backing.id==="stand"?`<div class="rectL" style="left:${F*.18}px;top:${A}px;width:${F*.64}px;height:${5*E}px;border-style:solid"></div>`:"");_.innerHTML=I+G;let et=a||s?at(H,T+A+18,F,`${n.W} × ${n.H} cm`,"below"):at(H,T+A+22,F,`${n.W} cm`,"below")+lt(H+F+22,T,A,`${n.H} cm`);if(p.length&&!a&&!s){const l=T+v+(e.textOffY+e.baselines[0]-e.top)*d,f=l-e.cap*d;et+=lt(H-22,f,l-f,`${t.letterCm} cm`,"flip")+`<div class="capline" style="left:${H-30}px;width:${v+30}px;top:${f}px"></div><div class="capline" style="left:${H-30}px;width:${v+30}px;top:${l}px"></div>`}return o.querySelector(".dims").innerHTML=et,{flex:x,ppc:E,dims:n,watts:u}}export function svg(o,{width:i=1123,height:c=794}={}){const r=ot(o),{m:t,dims:e}=r;if(!e)return"";const n=r.drawLines.length?r.drawLines:r.hasText?[]:["Your words"],s=60,z=i-s*2,D=c-s*2-90,b=Math.min((z-80)/e.W,(D-60)/e.H),a=e.W*b,h=e.H*b,p=s+(z-a)/2,x=s+(D-h)/2,u=e.emCm*b,$=r.backing.margin*b,j=t.textOffX-t.minX,O=y=>r.state.align==="left"?0:r.state.align==="right"?t.blockW-t.lineWidths[y]:(t.blockW-t.lineWidths[y])/2,W=n.map((y,k)=>`<text x="${(p+$+(j+O(k))*u).toFixed(1)}" y="${(x+$+(t.textOffY+t.baselines[k]-t.top)*u).toFixed(1)}" font-family="${w(r.font.family)}" font-weight="${r.font.weight||400}" font-size="${u.toFixed(1)}" fill="none" stroke="#2F5D8A" stroke-width="1.6">${w(y)}</text>`).join(""),Y=r.icon?`<g transform="translate(${p+$+t.iconX*u} ${x+$+t.iconY*u}) scale(${t.iconEm*u/24})"><path d="${K.icons[r.icon]}" fill="none" stroke="#2F5D8A" stroke-width="${(1.7*24/(t.iconEm*u)).toFixed(3)}"/></g>`:"",B=r.backing.id==="cut"||r.backing.id==="letter"?`<rect x="${p}" y="${x}" width="${a}" height="${h}" rx="${$}" fill="none" stroke="#2F5D8A" stroke-dasharray="4 4"/>`:`<rect x="${p}" y="${x}" width="${a}" height="${h}" rx="3" fill="none" stroke="#2F5D8A" stroke-dasharray="6 4"/>`,q=nt(r);return`<svg xmlns="http://www.w3.org/2000/svg" width="${i}" height="${c}" viewBox="0 0 ${i} ${c}"><rect width="100%" height="100%" fill="#F2E9DF"/><rect x="14" y="14" width="${i-28}" height="${c-28}" fill="none" stroke="#180E1F"/>
     <text x="30" y="46" font-family="Big Shoulders Display, Arial Narrow, sans-serif" font-weight="800" font-size="26" fill="#180E1F">Custom neon sign · drawing 1</text>
-    <text x="30" y="66" font-family="B612 Mono, monospace" font-size="11" fill="#5A4F5C">${lines.length} line${lines.length === 1 ? '' : 's'} · ${res.letterCm} cm letters · not to scale</text>
-    ${backing}${icon}${text}
-    <line x1="${left}" y1="${top + h + 24}" x2="${left + w}" y2="${top + h + 24}" stroke="#2F5D8A"/><text x="${left + w / 2}" y="${top + h + 40}" text-anchor="middle" font-family="B612 Mono, monospace" font-size="12" fill="#2F5D8A">${d.W} cm</text>
-    <line x1="${left + w + 24}" y1="${top}" x2="${left + w + 24}" y2="${top + h}" stroke="#2F5D8A"/><text x="${left + w + 32}" y="${top + h / 2 + 4}" font-family="B612 Mono, monospace" font-size="12" fill="#2F5D8A">${d.H} cm</text>
-    <g font-family="Hanken Grotesk, Arial, sans-serif" font-size="12" fill="#180E1F"><rect x="30" y="${height - 76}" width="${width - 60}" height="46" fill="none" stroke="#180E1F"/>
-      ${[['Title', res.words || '—'], ['Acrylic', `${d.W} × ${d.H} cm`], ['Date', fmtDate(clock.now())], ['Drawn by', 'Lit Neon']].map(([k, v], i, a) => `<text x="${40 + i * (width - 80) / a.length}" y="${height - 58}" font-size="9" fill="#5A4F5C">${k.toUpperCase()}</text><text x="${40 + i * (width - 80) / a.length}" y="${height - 40}" font-weight="600">${esc(String(v))}</text>`).join('')}</g></svg>`;
-}
-
-export default { render, svg, wattsFor };
+    <text x="30" y="66" font-family="B612 Mono, monospace" font-size="11" fill="#5A4F5C">${n.length} line${n.length===1?"":"s"} · ${r.letterCm} cm letters · not to scale</text>
+    ${B}${Y}${W}
+    <line x1="${p}" y1="${x+h+24}" x2="${p+a}" y2="${x+h+24}" stroke="#2F5D8A"/><text x="${p+a/2}" y="${x+h+40}" text-anchor="middle" font-family="B612 Mono, monospace" font-size="12" fill="#2F5D8A">${e.W} cm</text>
+    <line x1="${p+a+24}" y1="${x}" x2="${p+a+24}" y2="${x+h}" stroke="#2F5D8A"/><text x="${p+a+32}" y="${x+h/2+4}" font-family="B612 Mono, monospace" font-size="12" fill="#2F5D8A">${e.H} cm</text>
+    <g font-family="Hanken Grotesk, Arial, sans-serif" font-size="12" fill="#180E1F"><rect x="30" y="${c-76}" width="${i-60}" height="46" fill="none" stroke="#180E1F"/>
+      ${[["Title",r.words||"—"],["Acrylic",`${e.W} × ${e.H} cm`],["Date",it(rt.now())],["Drawn by","Lit Neon"]].map(([y,k],P,X)=>`<text x="${40+P*(i-80)/X.length}" y="${c-58}" font-size="9" fill="#5A4F5C">${y.toUpperCase()}</text><text x="${40+P*(i-80)/X.length}" y="${c-40}" font-weight="600">${w(String(k))}</text>`).join("")}</g></svg>`}export default{render,svg,wattsFor};
