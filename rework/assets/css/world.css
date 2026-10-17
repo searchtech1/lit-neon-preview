@@ -541,3 +541,4 @@ body[data-page="builder"] .w-wa { display: none; }
 .b-iconpad__words { display: grid; place-items: center; border: 1px dashed var(--hair); border-radius: var(--r-2); font-family: var(--f-display); font-weight: 800; color: var(--bone-2); }
 /* backing cards show a clean line diagram of the cut (owner 2026-10-17: match Custom Neon's examples) */
 .b-backcard .b-backcard__img--diagram { aspect-ratio: 11 / 8; object-fit: contain; background: #FFFFFF; padding: 6px 10px; }
+.ch-mega__end { justify-content: flex-end; }   /* reviews line removed (owner 2026-10-17); "All designs" stays right */

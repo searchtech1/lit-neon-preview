@@ -144,7 +144,7 @@ async function megaShop(el) {
     ['logo', 'business.html', 'photos/p49-800.jpg', copy.t('mega.feat.logo', {}, 'Your logo in neon'), copy.t('mega.feat.logoSub', { hours: facts.get('mockupHours') || '' }, 'Free mockup within {hours}')]];
   const featHtml = `<div class="ch-mega__feats">${feats.map(([id, href, img, t1, t2]) => `<a class="ch-mega__feat" href="${url(href)}" data-qa="chrome.megamenu.feature" data-id="${id}"><img src="${url('assets/img/' + img)}" alt="" loading="lazy" decoding="async"><span class="cap"><b>${esc(t1)}</b><small>${esc(t2)}</small></span></a>`).join('')}</div>`;
   el.innerHTML = `<div class="wrap">${col(copy.t('mega.room', {}, 'By room'), ROOMS, 'rooms')}${col(copy.t('mega.occasion', {}, 'By occasion'), OCCASIONS, 'occasions')}${col(copy.t('mega.style', {}, 'By style'), STYLES, 'styles')}${featHtml}
-  <div class="ch-mega__foot">${trustStrip('ch-mega__trust')}<div class="ch-mega__end"><span class="ch-mega__reviews">${icon('trustpilot', 'ic--sm')}${esc(copy.t('footer.reviews', {}, 'Reviews on Trustpilot from our first orders'))}</span><a href="${url('shop.html')}" data-qa="chrome.megamenu.shop.all">${esc(copy.t('mega.all', {}, 'All designs'))} ${icon('arrow-right')}</a></div></div></div>`;
+  <div class="ch-mega__foot">${trustStrip('ch-mega__trust')}<div class="ch-mega__end"><a href="${url('shop.html')}" data-qa="chrome.megamenu.shop.all">${esc(copy.t('mega.all', {}, 'All designs'))} ${icon('arrow-right')}</a></div></div></div>`;
 }
 async function megaGuides(el) {
   const guides = await data('guides');
@@ -402,7 +402,7 @@ async function footer() {
         ${contact.kind === 'whatsapp' && facts.has('supportEmail') ? `<li><a href="mailto:${esc(facts.value('supportEmail'))}" data-qa="chrome.footer.email">${icon('mail')}<span>${esc(facts.value('supportEmail'))}</span></a></li>` : ''}
         ${contact.kind !== 'contact' ? `<li><a href="${url('contact.html')}" data-qa="chrome.footer.link" data-id="contactForm">${icon('chat')}<span>${esc(copy.t('footer.contactForm'))}</span></a></li>` : ''}
       </ul></div>
-      <div><h3>${esc(copy.t('footer.cols.trust'))}</h3><div class="ch-footer__pay" data-qa="chrome.footer.pay"></div><p class="ch-footer__reviews">${icon('trustpilot', 'ic--sm')}${esc(copy.t('footer.reviews'))}</p><div class="ch-footer__social" data-qa="chrome.footer.social"></div></div>
+      <div><h3>${esc(copy.t('footer.cols.trust'))}</h3><div class="ch-footer__pay" data-qa="chrome.footer.pay"></div><div class="ch-footer__social" data-qa="chrome.footer.social"></div></div>
     </div>
     <div class="w-news" data-qa="chrome.footer.news">
       <div><h3>${esc(copy.t('footer.newsTitle', {}, 'New signs and offers, now and then'))}</h3><p>${esc(copy.t('footer.newsBody', {}, 'One email a month at most. Unsubscribe in one tap.'))}</p></div>
