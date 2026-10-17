@@ -2097,7 +2097,8 @@
    "label": "Rendered preview",
    "placeholder": false,
    "collection": null,
-   "studio": true
+   "studio": true,
+   "nightFilter": "brightness(.55) saturate(.85)"
   },
   {
    "id": "s00-studio-light",

@@ -127,7 +127,7 @@
       "related": ["bedroom", "bar", "wall-art"],
       "tile": { "words": "Game on", "line": "Static or colour changing, above the monitor." },
       "metaTitle": "Gaming room neon signs | Lit Neon",
-      "metaDescription": "LED neon gaming signs in static or colour-changing tube, with a remote in the box. Your gamertag or ours, made in the UK."
+      "metaDescription": "LED neon gaming signs in static or colour-changing tube, with an optional dimmer and remote. Your gamertag or ours, made in the UK."
     },
     {
       "id": "business",
@@ -173,7 +173,7 @@
       "scene": "s09-kids",
       "eyebrow": "Room",
       "h1": "Kids and nursery signs",
-      "intro": "A name above the cot or a night light with a bit of personality. Dim it right down at bedtime with the remote in the box.",
+      "intro": "A name above the cot or a night light with a bit of personality. Dim it right down at bedtime with the optional dimmer and remote.",
       "sizeGuide": { "text": "Above a cot or toddler bed, 50 to 70 cm reads best.", "cm": [50, 70] },
       "phrases": ["Little dreamer", "Sweet pea", "Oh baby", "Hello, little one", "Dream big", "Sleep tight"],
       "faq": ["q-power", "q-box", "q-size"],

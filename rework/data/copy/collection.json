@@ -21,7 +21,7 @@
       "placeholder": "Try “{phrase}”",
       "colourLabel": "Tube colour",
       "cta": "Open in the designer",
-      "price": "{price} at Medium · {dims}",
+      "price": "{price} at {size} · {dims}",
       "priceWait": "Measuring your lettering…",
       "quote": "Over 2 m wide: a designer prices this one",
       "reset": "Back to the sample",

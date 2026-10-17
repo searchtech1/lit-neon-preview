@@ -112,14 +112,14 @@
     "gateTitle": "How it reads as tube",
     "gate": {
       "ready": "Looks sign-ready",
-      "good": "A good start",
+      "good": "Traced, a designer will refine it",
       "pet": "Simplified — a designer will refine the face",
       "detailed": "Too detailed for tube; a designer will simplify it",
       "fallback": "A designer will refine this"
     },
     "gateWhy": {
       "ready": "Clean lines that bend well. A designer still checks every curve before your proof.",
-      "good": "We found the person and traced the outline. The designer tidies the details on your proof.",
+      "good": "We found the person and traced the outline. Faces and hands are the hardest part to bend, so a designer redraws them on your proof before anything is made.",
       "pet": "Faces are the hardest part to bend. The designer redraws the eyes and nose by hand.",
       "detailed": "There’s more going on here than tube can show. A designer picks out the lines that matter.",
       "fallback": "We traced it without spotting a subject, so a designer will check it closely."

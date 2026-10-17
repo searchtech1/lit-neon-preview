@@ -275,7 +275,7 @@
         "help"
       ],
       "q": "How long will it last?",
-      "a": "Every sign comes with a {value:warrantyYears}-year warranty on the LEDs, the power supply, the dimmer and the remote. {fact:ledLifetimeHours} Keep it indoors and give it a dust now and then.",
+      "a": "Every sign comes with a {value:warrantyYears}-year warranty on the LEDs and the power supply, and on the dimmer and remote if you added them. {fact:ledLifetimeHours} Keep it indoors and give it a dust now and then.",
       "links": [
         {
           "label": "Looking after your sign",
@@ -306,8 +306,8 @@
       "a": "Yes. Choose Outdoors in the Fitting step of the designer: outdoor signs get a sealed supply and a weatherproof jacket, and the outdoor build adds {value:outdoorIndicativePct}% to the sign price.",
       "links": [
         {
-          "label": "Ask for an outdoor quote",
-          "href": "upload.html"
+          "label": "Choose Outdoors in the designer",
+          "href": "create.html"
         }
       ],
       "keywords": [
@@ -568,7 +568,7 @@
         "help"
       ],
       "q": "What does the warranty cover?",
-      "a": "{value:warrantyYears} years on the LEDs, the power supply, the dimmer and the remote, under normal indoor use. It doesn't cover accidental damage, or a standard indoor sign used outdoors. Your statutory rights are not affected.",
+      "a": "{value:warrantyYears} years on the LEDs and the power supply, and on the dimmer and remote if you added them, under normal indoor use. It doesn't cover accidental damage, or a standard indoor sign used outdoors. Your statutory rights are not affected.",
       "links": [
         {
           "label": "Returns and warranty",
@@ -593,7 +593,7 @@
         "help"
       ],
       "q": "My sign won't light. What should I check?",
-      "a": "Work along the chain: is the socket switched on, is the power supply's cable pushed fully into the dimmer, and is the dimmer connected to the sign? Then try the remote with fresh batteries and turn the brightness up. Still dark? Send us a photo and we'll sort it under your warranty.",
+      "a": "Work along the chain: is the socket switched on, and is the power supply's cable pushed fully into the sign's cable? If you added the dimmer, check both of its connections, then try the remote with fresh batteries and turn the brightness up. Still dark? Send us a photo and we'll sort it under your warranty.",
       "links": [
         {
           "label": "The troubleshooting guide",
@@ -828,7 +828,7 @@
         "weddings"
       ],
       "q": "What happens to it after the wedding?",
-      "a": "It comes home with you. A wedding sign makes a lovely hallway or bedroom sign, and the dimmer takes it from dance floor to bedside. We don't hire signs out; every one is made for you to keep.",
+      "a": "It comes home with you. A wedding sign makes a lovely hallway or bedroom sign, and with the optional dimmer it goes from dance floor to bedside. We don't hire signs out; every one is made for you to keep.",
       "links": [],
       "keywords": [
         "after",

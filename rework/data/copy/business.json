@@ -115,14 +115,14 @@
           "line": "“{short}” {a} · “{long}” {b}"
         },
         {
-          "title": "Colours and RGB",
-          "body": "One colour is included. Each extra line colour and colour-changing RGB tube add to it.",
-          "line": "Extra colour {a} · RGB {b}"
+          "title": "Colour and RGB",
+          "body": "Any one of the tube colours is included. Colour-changing RGB tube adds to it.",
+          "line": "RGB colour changing {b}"
         },
         {
           "title": "Backing and finish",
-          "body": "Cut to shape in clear acrylic is included. Rectangles, stands and mirror finishes cost more.",
-          "line": "Rectangle {a} · Gold mirror {b}"
+          "body": "Every backing shape and mounting is included. Black, white and mirror finishes add to it.",
+          "line": "Gold mirror finish {b}"
         }
       ],
       "bandsH3": "What most businesses spend",
@@ -137,7 +137,7 @@
         },
         {
           "range": "{b} and up",
-          "use": "Large, multi-colour or outdoor builds, quoted by hand"
+          "use": "Large or multi-colour builds, quoted by hand"
         }
       ],
       "bandsNote": "Indicative; your mockup carries the exact price.",

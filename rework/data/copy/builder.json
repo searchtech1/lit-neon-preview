@@ -312,8 +312,8 @@
     },
     "plugValue": "Moulded UK plug",
     "kitTitle": "What's in the box",
-    "kitNote": "Your sign, the UK plug and adapter, the fixings you picked and your proof drawing. The dimmer and remote are the optional extra from the Fitting step.",
-    "kitAlt": "Diagram of everything that ships with a sign: the neon sign, UK plug, adapter, dimmer, power cord, remote and screws"
+    "kitNote": "Your sign, its power supply with a UK plug (the adapter in the picture), the fixings you picked and your proof drawing. The dimmer and remote are the optional extra from the Fitting step.",
+    "kitAlt": "Diagram of everything that ships with a sign: the neon sign, the power supply with its UK plug and cord, screws, and the optional dimmer and remote"
   },
   "dock": {
     "add": "Add to basket",
