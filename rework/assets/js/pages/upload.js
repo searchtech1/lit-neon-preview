@@ -250,7 +250,7 @@ async function readable(f) {
 
 /* ====================================================================== sample proof sheet ====================================================================== */
 function sample() {
-  const el = $('#u-sample-sheet'); const design = R.normalise({ ...R.DEFAULT_DESIGN, text: 'Lit Neon', font: 'shoreditch', colour: 'pink', size: 'm' });
+  const el = $('#u-sample-sheet'); const design = R.normalise({ ...R.DEFAULT_DESIGN, text: 'Lit Neon', font: 'soho', colour: 'pink', size: 'm' });
   const paint = () => { if (el.offsetWidth) sheetMod.render(el, design, { compact: true, title: 'Lit Neon' }); };
   R.ensureFonts(['shoreditch']).then(paint).catch(paint);
   let raf = 0; new ResizeObserver(() => { cancelAnimationFrame(raf); raf = requestAnimationFrame(paint); }).observe(el);

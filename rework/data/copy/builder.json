@@ -183,7 +183,9 @@
     },
     "mostChosen": "Most chosen",
     "thinAtSmall": "Thin at {size}",
-    "thinNote": "{face} needs letters at least {min} cm tall, so {size} is off for this face."
+    "thinNote": "{face} needs letters at least {min} cm tall, so {size} is off for this face.",
+    "sheetTitle": "Choose your lettering",
+    "done": "Done"
   },
   "colour": {
     "label": "Tube colour",

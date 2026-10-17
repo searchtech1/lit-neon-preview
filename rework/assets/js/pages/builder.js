@@ -414,15 +414,27 @@ function renderLettering() {
     <p class="b-help">${esc(t('lettering.help'))}</p>
     <div class="b-fontpick" id="b-fontpick">
       <button type="button" class="b-fontpick__btn" id="b-fontbtn" aria-haspopup="listbox" aria-expanded="false" aria-controls="b-fontpop" data-qa="builder.font.open"><span class="face" data-face></span><span class="meta"><span class="nm" data-facename></span><span class="note" data-note></span></span>${icon('chevron-down')}</button>
+      <div class="b-fontpop__scrim" id="b-fontscrim" hidden></div>
       <div class="b-fontpick__pop" id="b-fontpop" hidden>
+        <div class="b-fontpop__head"><b>${esc(t('lettering.sheetTitle', {}, 'Choose your lettering'))}</b><button type="button" class="c-btn c-btn--primary b-fontpop__done" data-qa="builder.font.done">${esc(t('lettering.done', {}, 'Done'))}</button></div>
         <div class="c-chips" role="group" aria-label="${esc(t('lettering.label'))}" id="b-styles">${styles.map(st => `<button type="button" class="c-chip" aria-pressed="${st === 'all'}" data-style="${st}" data-qa="builder.font.style" data-id="${st}">${esc(t(`lettering.styles.${st}`, {}, st))}</button>`).join('')}</div>
         <div class="b-fontlist" role="listbox" aria-label="${esc(t('lettering.label'))}" id="b-tiles">${faces.map(f => `<button type="button" role="option" class="b-fontopt" aria-selected="${f.id === design.font}" data-font="${f.id}" data-style="${f.style || 'script'}" aria-label="${esc(t('a11y.tile', { face: f.name }))}" data-qa="builder.font.tile" data-id="${f.id}"><span class="face" style="${fam(f)}">${esc(f.name)}</span><span class="meta"><span class="nm">${esc(f.name)}</span><span class="note" data-note></span></span></button>`).join('')}</div>
       </div>
     </div>`;
   const btn = $('#b-fontbtn'), pop = $('#b-fontpop');
-  const open = on => { pop.hidden = !on; btn.setAttribute('aria-expanded', String(on)); if (on) { const sel = $('#b-tiles [aria-selected="true"]'); if (sel) sel.scrollIntoView({ block: 'nearest' }); } };
+  /* phones/tablets: a bottom sheet with its own scroll (owner 2026-10-17: "make its scroll experience good"); the page behind
+     is locked, the sign above stays visible and updates on every tap; Done closes. Desktop keeps the dropdown. */
+  const scrim = $('#b-fontscrim');
+  const open = on => {
+    pop.hidden = !on; btn.setAttribute('aria-expanded', String(on));
+    const sheet = isMobile();
+    scrim.hidden = !(on && sheet); document.documentElement.classList.toggle('b-sheet-open', on && sheet);
+    if (on) { const sel = $('#b-tiles [aria-selected="true"]'); if (sel) { const list = $('#b-tiles'); list.scrollTop = Math.max(0, sel.offsetTop - list.offsetTop - list.clientHeight / 2 + sel.offsetHeight / 2); } }
+  };
+  scrim.addEventListener('click', () => { open(false); btn.focus(); });
+  pop.querySelector('.b-fontpop__done').addEventListener('click', () => { open(false); btn.focus(); });
   btn.addEventListener('click', () => open(pop.hidden));
-  $('#b-tiles').addEventListener('click', e => { const b = e.target.closest('[data-font]'); if (!b) return; setDesign({ font: b.dataset.font }); stageApi.strike(); open(false); btn.focus(); });
+  $('#b-tiles').addEventListener('click', e => { const b = e.target.closest('[data-font]'); if (!b) return; setDesign({ font: b.dataset.font }); stageApi.strike(); if (!isMobile()) { open(false); btn.focus(); } });
   $('#b-styles').addEventListener('click', e => { const b = e.target.closest('[data-style]'); if (!b) return; $$('#b-styles .c-chip').forEach(x => x.setAttribute('aria-pressed', String(x === b))); $$('#b-tiles .b-fontopt').forEach(tl => { tl.hidden = b.dataset.style !== 'all' && tl.dataset.style !== b.dataset.style; }); });
   document.addEventListener('click', e => { if (!pop.hidden && !$('#b-fontpick').contains(e.target)) open(false); });
   pop.addEventListener('keydown', e => { if (e.key === 'Escape') { open(false); btn.focus(); } });
@@ -452,13 +464,17 @@ function renderColour() {
         <button type="button" aria-pressed="${design.jacket === 'colour'}" data-jacket="colour" data-qa="builder.colour.jacket.colour"><span class="b-jacket__mini" data-mini="colour" aria-hidden="true"></span><span>${esc(t('colour.jacketColoured'))}</span><span class="sub">${esc(t('colour.jacketColouredSub'))}</span></button>
       </div>
       <p class="b-help" id="b-jacketnote" hidden></p>
-    </div>
-    <div class="b-group">
-      <span class="b-label"><span>${esc(t('colour.examples'))}</span><span class="sub">${esc(t('colour.examplesNote'))}</span></span>
-      <div class="b-examples" id="b-examples"></div>
     </div>`;
   $('#b-swatches').addEventListener('click', e => { const b = e.target.closest('[data-colour]'); if (!b) return; const id = b.dataset.colour; const patch = { colour: id }; if (design.colours) patch.colours = design.colours.map((c, i) => (i === 0 ? id : c)); setDesign(patch); stageApi.strike(); });
-  $('#b-jacket').addEventListener('click', e => { const b = e.target.closest('[data-jacket]'); if (!b || b.disabled) return; setDesign({ jacket: b.dataset.jacket }); });
+  /* "When it's off": the tube colour by day only shows with the sign switched off, so show it: switch off for a few seconds,
+     then light it again (owner 2026-10-17: "selection is not working" = nothing visibly changed) */
+  let jacketPeek = null;
+  $('#b-jacket').addEventListener('click', e => {
+    const b = e.target.closest('[data-jacket]'); if (!b || b.disabled) return;
+    const wasOn = jacketPeek ? jacketPeek.wasOn : design.on; clearTimeout(jacketPeek && jacketPeek.t);
+    setDesign({ jacket: b.dataset.jacket, on: false }); paintToolbar();
+    jacketPeek = { wasOn, t: setTimeout(() => { jacketPeek = null; if (wasOn && !design.on) { setDesign({ on: true }); paintToolbar(); stageApi.strike(); } }, 2600) };
+  });
   minis.white = R.mountNeon($('[data-mini="white"]'), { ...design, jacket: 'white' }, { lit: true, fitW: .9, fitH: .8, perLine: false }); minis.white.setLit(false);
   minis.colour = R.mountNeon($('[data-mini="colour"]'), { ...design, jacket: 'colour' }, { lit: true, fitW: .9, fitH: .8, perLine: false }); minis.colour.setLit(false);
   if ($('#b-perline')) $('#b-perline').addEventListener('click', e => { if (e.currentTarget.disabled) return; const on = e.currentTarget.getAttribute('aria-checked') !== 'true'; togglePerLine(on); });
@@ -466,7 +482,7 @@ function renderColour() {
   if ($('#b-twocolours')) $('#b-twocolours').addEventListener('click', () => { const sw = $('#b-perline'); if (sw.disabled) { jumpTo('words'); showNote(t('colour.perLineNeedsLines'), 'warn', [], true); return; } togglePerLine(true); sw.focus(); });
   /* example signs in this colour: three catalogue designs, rendered, opening a lightbox of baked renders */
   const EX = [{ text: 'Open late', font: 'shoreditch' }, { text: 'Mr & Mrs', font: 'notting' }, { text: 'Cuppa first', font: 'margate' }];
-  $('#b-examples').dataset.ex = JSON.stringify(EX);
+  if ($('#b-examples')) $('#b-examples').dataset.ex = JSON.stringify(EX);   /* examples block removed (owner 2026-10-17) */
   paintExamples();
 }
 function togglePerLine(on) {
