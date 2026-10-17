@@ -422,14 +422,18 @@ body[data-page="builder"] .w-wa { display: none; }
   .has-hero-film .hero--photo .hero__copy { max-width: 640px; }
 }
 
-/* hero film on phones and tablets (owner 2026-10-17: "full hero background integrated, not in the box"): the loop fills the
-   whole hero behind the copy, darkened towards the bottom so the cards and badges stay readable */
+/* hero film on phones and tablets (owner 2026-10-17, option 3 of the fit-to-screen mockups): the whole 16:9 frame at full
+   width, never zoomed or cropped; an eased mask dissolves it into the page from the bottom and the headline sits over its foot */
 @media (max-width: 1023px) {
-  .has-hero-film .home .hero.hero--photo { position: relative; width: 100%; max-width: none; margin: 0; padding: var(--s-7) var(--gutter) var(--s-7); isolation: isolate; min-height: 72dvh; }
-  .has-hero-film .hero__video { display: block; position: absolute; inset: 0; z-index: -1; overflow: hidden; background: var(--night); }
-  .has-hero-film .hero__video video { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(.6) saturate(1.05); }
-  .has-hero-film .hero__video::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,10,21,.5) 0%, rgba(11,10,21,.3) 30%, rgba(11,10,21,.72) 62%, rgba(11,10,21,.96) 100%); }
+  .has-hero-film .home .hero.hero--photo { position: relative; width: 100%; max-width: none; margin: 0; padding: 0 var(--gutter) var(--s-7); min-height: 0; isolation: isolate; }
+  .has-hero-film .hero__video { display: block; position: relative; order: -1; z-index: 0; aspect-ratio: 16 / 9; margin-inline: calc(-1 * var(--gutter)); background: none; overflow: hidden; border: 0; border-radius: 0; box-shadow: none; }
+  .has-hero-film .hero__video video { width: 100%; height: 100%; object-fit: contain; display: block; filter: brightness(.92) saturate(1.05); -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,.94) 50%, rgba(0,0,0,.8) 59%, rgba(0,0,0,.6) 68%, rgba(0,0,0,.38) 77%, rgba(0,0,0,.19) 86%, rgba(0,0,0,.06) 94%, rgba(0,0,0,0) 100%); mask-image: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,.94) 50%, rgba(0,0,0,.8) 59%, rgba(0,0,0,.6) 68%, rgba(0,0,0,.38) 77%, rgba(0,0,0,.19) 86%, rgba(0,0,0,.06) 94%, rgba(0,0,0,0) 100%); }
+  .has-hero-film .hero__video::after { content: none; }
   .has-hero-film .hero--photo .hero__media { display: none; }
+  .has-hero-film .hero--photo .hero__copy { position: relative; left: auto; top: auto; z-index: 1; margin-top: calc(-1 * clamp(84px, 26vw, 200px)); }
+  .has-hero-film .hero--photo .hero__h1 { text-shadow: 0 2px 18px rgba(0,0,0,.65); }
+  .has-hero-film .hero--photo .hero__door { background: rgba(11,10,21,.28); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-color: rgba(255,255,255,.28); }
+}
 }
 }
 
@@ -440,3 +444,8 @@ body[data-page="builder"] .w-wa { display: none; }
 .w-kitlay.w-kitlay--diagram { background: #ededf0; }
 .w-kitlay.w-kitlay--diagram img { aspect-ratio: 1600 / 1075; object-fit: contain; background: #ededf0; }
 .w-kitlay.w-kitlay--diagram figcaption { background: var(--night-3); color: var(--bone-2); border-top: 1px solid var(--hair); }
+
+/* WhatsApp float: brand-correct mark (white glyph on #25D366, owner 2026-10-17 "WhatsApp icon is not real") */
+.w-wa { color: #fff; background: #25D366; }
+.w-wa .ic { width: 32px; height: 32px; }
+@media (max-width: 767px) { .w-wa .ic { width: 28px; height: 28px; } }

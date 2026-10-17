@@ -572,7 +572,9 @@ function waFloat() {
   const c = contactHref();
   const a = document.createElement('a'); a.className = 'w-wa'; a.href = c.href; a.setAttribute('data-qa', 'chrome.wa'); a.setAttribute('aria-label', c.kind === 'whatsapp' ? copy.t('nav.whatsapp', {}, 'Message us on WhatsApp') : copy.t('footer.contactForm', {}, 'Contact us'));
   if (c.external) { a.target = '_blank'; a.rel = 'noopener'; }
-  a.innerHTML = icon(c.kind === 'whatsapp' ? 'whatsapp' : 'chat');
+  /* owner 2026-10-17: the float always wears the official WhatsApp mark (white glyph on WhatsApp green); until the number is
+     set in facts / Theme settings it opens the contact page, then it opens wa.me directly */
+  a.innerHTML = icon('whatsapp');
   document.body.appendChild(a);
 }
 function firstOrderPop() {
