@@ -125,7 +125,7 @@
     "bands": [
       { "range": "Under {a}", "use": "A small logo or wordmark for a counter or a shelf" },
       { "range": "{a} to {b}", "use": "Most shop, café and salon signs" },
-      { "range": "{b} and up", "use": "Large, multi-colour or outdoor builds, quoted by hand" }
+      { "range": "{b} and up", "use": "Large and custom builds, quoted by hand" }
     ],
     "ctaMockup": "Get a free mockup",
     "ctaBulk": "Bulk quote"

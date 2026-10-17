@@ -36,7 +36,7 @@ const isPhone = () => matchMedia('(max-width: 767px)').matches;
 
 /* a close-up frame for the stage: the same scene and scale, zoomed until the sign fills most of the stage
    (capped by the stage's own sharpness rule). Registered here, requested as an official frame in INTEGRATION.md. */
-FRAMES.closeup = SW => SW < 768 ? [.82, .92] : [.78, .9];
+FRAMES.closeup = SW => SW < 768 ? [.72, .9] : [.7, .88];   /* leaves room for the height ruler + label beside the sign */
 /* keyboard mode on phones: the stage is ~150 px tall, so after 'guide' a wider view of the room before the whole plate */
 FRAMES.typing = () => [.2, .26];
 
@@ -61,21 +61,22 @@ let learnDone = false;
   const q = new URLSearchParams(location.search);
   if (res.mode === 'url') { design = R.normalise(res.state); editUid = res.editUid || null; }
   else if (res.mode === 'direct') { design = R.normalise(res.state); }
-  else if (res.mode === 'welcome') { design = R.normalise(R.DEFAULT_DESIGN); showWelcome(res.state); }
-  else { /* cold load: the hero's default words, lit, so the first screen is a priced sign (decision in INTEGRATION.md) */ design = R.normalise({ ...R.DEFAULT_DESIGN, text: 'After dark', font: 'soho', colour: 'pink' }); if (q.get('text')) design.text = String(q.get('text')).slice(0, 80); }
+  else if (res.mode === 'welcome') { design = R.normalise({ ...R.DEFAULT_DESIGN, colour: 'cool' }); showWelcome(res.state); }
+  else { /* cold load: the hero's default words, lit, so the first screen is a priced sign (decision in INTEGRATION.md) */ design = R.normalise({ ...R.DEFAULT_DESIGN, text: 'After dark', font: 'soho', colour: 'cool' });   /* owner 2026-10-17: default colour = best contrast on the default wall (measured: cool white) */ if (q.get('text')) design.text = String(q.get('text')).slice(0, 80); }
   /* a truncated/hand-edited share link (router.parseHash malformed:true) that yielded no design: say so, after the page has booted (WS0-B request) */
   /* malformed = a broken %-escape (router flag) OR a d= code that decodes to nothing (a cut-off base64 such as #d=zz) */
   const badLink = res.mode !== 'url' && res.hash && (res.hash.malformed || (res.hash.code && !res.hash.d));
   if (badLink) setTimeout(() => ui.toast(res.mode !== 'direct' ? t('ui.hashMalformedFresh', {}, 'That link looks incomplete, so we started a fresh design for you.') : t('ui.hashMalformed', {}, 'That link looks incomplete, so we started from your last design.'), { kind: 'info', duration: 6000 }), 900);
   if (res.hash && res.hash.scene && stage.getScene) design.scene = res.hash.scene || design.scene;
   if (!design.scene || design.scene === 'wall' || !['s0', 's1'].includes(String(design.scene).slice(0, 2))) design.scene = 's00-studio-dark';   /* owner pick 2026-10-17: the dark plaster studio */
+  design.colours = null;   /* owner 2026-10-17: "two colours" removed from the editor; a sign is one colour */
   design.text = R.resolve(design).clean.text;
   roomScene = design.scene && design.scene !== 's00-studio-dark' ? design.scene : 's05-pub';
   rulers = design.unit === 'in' ? 'in' : 'cm';
   if (editUid) showEditing();
 
   /* stage */
-  stageApi = stage.mount($('#b-stage'), { frame: design.view === 'drawing' ? 'room' : 'real', scene: design.scene, design, qa: 'builder.stage', priority: 'high', view: { rulers } });   /* owner 2026-10-17: real size is the default frame */
+  stageApi = stage.mount($('#b-stage'), { frame: design.view === 'drawing' ? 'room' : (isMobile() ? 'closeup' : 'real'), scene: design.scene, design, qa: 'builder.stage', priority: 'high', view: { rulers } });   /* owner 2026-10-17: real size is the default frame */
   stageApi.on('change', e => { design.pos = e.pos; autosave(); });
   stageApi.on('wall', onWall);
   window.__builder = { get stage() { return stageApi; }, get design() { return design; } };   /* QA hook (like window.__p4) */
@@ -84,7 +85,7 @@ let learnDone = false;
   renderToolbar(); renderTabs(); renderRail();
   renderWords(); renderLettering(); renderColour(); renderSize(); renderBacking(); renderFitting(); renderSymbol(); renderReview();
   wireDock(); wireShell(); wireSpy();
-  applyView(design.view, true);
+  applyView(isMobile() && design.view === 'room' ? 'fit' : design.view, true);   /* owner 2026-10-17: phones open zoomed in (Close-up), desktop at real size */
   update({ silent: true });
 
   R.ensureFonts().then(() => update({ silent: true }));
@@ -186,7 +187,7 @@ function applyView(v, initial = false) {
   $$('#b-view [role=tab]').forEach(b => { const on = b.dataset.view === v; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; });
   const drawingEl = $('#b-drawing'), stageEl = $('#b-stage');
   if (v === 'drawing') { drawingEl.hidden = false; stageEl.classList.add('is-hidden'); paintDrawing(); }
-  else { drawingEl.hidden = true; stageEl.classList.remove('is-hidden'); const real = initial || $('#b-realsize').getAttribute('aria-pressed') === 'true'; $('#b-realsize').setAttribute('aria-pressed', String(real)); stageApi.setFrame(real ? 'real' : (v === 'fit' ? 'closeup' : 'room')); }
+  else { drawingEl.hidden = true; stageEl.classList.remove('is-hidden'); const real = initial ? !isMobile() : false;   /* a tapped view tab always wins (owner 2026-10-17: Close-up did nothing while Real size was on) */ $('#b-realsize').setAttribute('aria-pressed', String(real)); stageApi.setFrame(real ? 'real' : (v === 'fit' ? 'closeup' : 'room')); }
   $('#b-realsize').hidden = v === 'drawing';
   paintToolbar();
   if (!initial) autosave();
@@ -452,11 +453,6 @@ function renderColour() {
       <p class="b-help" id="b-jacketnote" hidden></p>
     </div>
     <div class="b-group">
-      <div class="b-switchrow"><span class="txt"><b id="b-perline-label">${esc(t('colour.perLine'))}</b><small id="b-perline-help"></small></span><button type="button" class="c-switch" role="switch" aria-checked="${!!design.colours}" aria-labelledby="b-perline-label" id="b-perline" data-qa="builder.colour.perline"></button></div>
-      <div class="b-lines" id="b-lines" hidden data-qa="builder.colour.lines"></div>
-      <button type="button" class="c-btn c-btn--text" id="b-twocolours" data-qa="builder.colour.twocolours"><span class="label">${esc(t('colour.twoColours'))}</span></button>
-    </div>
-    <div class="b-group">
       <span class="b-label"><span>${esc(t('colour.examples'))}</span><span class="sub">${esc(t('colour.examplesNote'))}</span></span>
       <div class="b-examples" id="b-examples"></div>
     </div>`;
@@ -464,9 +460,9 @@ function renderColour() {
   $('#b-jacket').addEventListener('click', e => { const b = e.target.closest('[data-jacket]'); if (!b || b.disabled) return; setDesign({ jacket: b.dataset.jacket }); });
   minis.white = R.mountNeon($('[data-mini="white"]'), { ...design, jacket: 'white' }, { lit: true, fitW: .9, fitH: .8, perLine: false }); minis.white.setLit(false);
   minis.colour = R.mountNeon($('[data-mini="colour"]'), { ...design, jacket: 'colour' }, { lit: true, fitW: .9, fitH: .8, perLine: false }); minis.colour.setLit(false);
-  $('#b-perline').addEventListener('click', e => { if (e.currentTarget.disabled) return; const on = e.currentTarget.getAttribute('aria-checked') !== 'true'; togglePerLine(on); });
-  $('#b-lines').addEventListener('click', e => { const b = e.target.closest('[data-line-colour]'); if (!b) return; const i = +b.closest('[data-line]').dataset.line; const cs = (design.colours || []).slice(); cs[i] = b.dataset.lineColour; if (i === 0) design.colour = cs[0]; setDesign({ colours: cs }); stageApi.strike(); });
-  $('#b-twocolours').addEventListener('click', () => { const sw = $('#b-perline'); if (sw.disabled) { jumpTo('words'); showNote(t('colour.perLineNeedsLines'), 'warn', [], true); return; } togglePerLine(true); sw.focus(); });
+  if ($('#b-perline')) $('#b-perline').addEventListener('click', e => { if (e.currentTarget.disabled) return; const on = e.currentTarget.getAttribute('aria-checked') !== 'true'; togglePerLine(on); });
+  if ($('#b-lines')) $('#b-lines').addEventListener('click', e => { const b = e.target.closest('[data-line-colour]'); if (!b) return; const i = +b.closest('[data-line]').dataset.line; const cs = (design.colours || []).slice(); cs[i] = b.dataset.lineColour; if (i === 0) design.colour = cs[0]; setDesign({ colours: cs }); stageApi.strike(); });
+  if ($('#b-twocolours')) $('#b-twocolours').addEventListener('click', () => { const sw = $('#b-perline'); if (sw.disabled) { jumpTo('words'); showNote(t('colour.perLineNeedsLines'), 'warn', [], true); return; } togglePerLine(true); sw.focus(); });
   /* example signs in this colour: three catalogue designs, rendered, opening a lightbox of baked renders */
   const EX = [{ text: 'Open late', font: 'shoreditch' }, { text: 'Mr & Mrs', font: 'notting' }, { text: 'Cuppa first', font: 'margate' }];
   $('#b-examples').dataset.ex = JSON.stringify(EX);
@@ -486,10 +482,10 @@ function paintColour() {
   const jn = $('#b-jacketnote'); jn.hidden = !res.rgb; jn.textContent = t('colour.rgbJacket');
   for (const j of ['white', 'colour']) { minis[j].update({ ...design, jacket: j, colours: null }); minis[j].setLit(false); }
   /* per-line colours (owner D5) */
-  const sw = $('#b-perline'); const can = res.lines.length > 1 && !res.rgb; sw.disabled = !can; sw.setAttribute('aria-checked', String(!!design.colours));
-  $('#b-perline-help').textContent = res.rgb ? t('colour.perLineRgb') : res.lines.length < 2 ? t('colour.perLineNeedsLines') : t('colour.perLineHelp', { delta: fmtDelta(rules.multicolourDelta) });
-  const linesEl = $('#b-lines'); linesEl.hidden = !design.colours || !can;
-  $('#b-twocolours').hidden = !!design.colours && can;   /* the shortcut is redundant once each line has its own row */
+  const sw = $('#b-perline'); const can = !!sw && res.lines.length > 1 && !res.rgb; if (sw) { sw.disabled = !can; sw.setAttribute('aria-checked', String(!!design.colours)); }
+  if ($('#b-perline-help')) $('#b-perline-help').textContent = res.rgb ? t('colour.perLineRgb') : res.lines.length < 2 ? t('colour.perLineNeedsLines') : t('colour.perLineHelp', { delta: fmtDelta(rules.multicolourDelta) });
+  const linesEl = $('#b-lines'); if (linesEl) linesEl.hidden = !design.colours || !can;
+  if ($('#b-twocolours')) $('#b-twocolours').hidden = !!design.colours && can;   /* the shortcut is redundant once each line has its own row */
   if (design.colours && can) {
     const key = res.lines.length + '|' + res.lines.join('\n');
     if (linesEl.dataset.key !== key) { linesEl.dataset.key = key; linesEl.innerHTML = res.lines.map((l, i) => `<div class="b-line" data-line="${i}"><span class="b-line__label"><span>${esc(t('words.lineLabel', { n: i + 1 }))}</span><b>${esc(l)}</b><span class="b-line__now" data-qa="builder.colour.line.name" data-line="${i}"></span></span><div class="c-swatches" role="group" aria-label="${esc(t('colour.lineLabel', { n: i + 1, text: l }))}">${R.OPTIONS.colours.filter(x => !x.rgb).map(x => `<button type="button" class="c-swatch" aria-pressed="false" style="--tube:${x.hex};--core:${x.core || '#fff'}" data-line-colour="${x.id}" aria-label="${esc(x.name)}" data-qa="builder.colour.line" data-id="${i}-${x.id}"><span class="tube"></span><span class="name">${esc(x.name)}</span></button>`).join('')}</div></div>`).join(''); }
@@ -949,8 +945,8 @@ function paintLearn() {
   const small = px(ref, 's'), large = px(ref, 'l'); const shortP = px({ ...ref, text: 'Hi' }, 'm'), longP = px({ ...ref, text: 'Happy birthday' }, 'm');
   if (!small || !large || !shortP || !longP) return; learnDone = true;
   const rules = pricing.rules().pricing; const cards = copy.get('learn.priceCards', []); const lines = copy.get('learn.priceCardLines', []);
-  const vars = { words: ref.text, small, large, short: 'Hi', shortPrice: shortP, long: 'Happy birthday', longPrice: longP, delta: fmtDelta(rules.multicolourDelta), rgbPct: Math.round((rules.rgbMultiplier - 1) * 100) + '%', stand: fmtDelta(rules.backing.stand), mirror: fmtDelta(rules.finish.gold) };
-  const nums = [`${small} – ${large}`, `${shortP} – ${longP}`, fmtDelta(rules.multicolourDelta), fmtDelta(rules.finish.gold)];
+  const vars = { words: ref.text, small, large, short: 'Hi', shortPrice: shortP, long: 'Happy birthday', longPrice: longP, rgb: fmtDelta(rules.rgbDelta), mirror: fmtDelta(rules.finish.gold) };
+  const nums = [`${small} – ${large}`, `${shortP} – ${longP}`, fmtDelta(rules.rgbDelta), fmtDelta(rules.finish.gold)];
   $('#learn-price-cards').innerHTML = cards.map((c, i) => `<div class="b-learn__card"><span class="num">${esc(nums[i])}</span><h3>${esc(c)}</h3><p>${esc(copy.fill(lines[i], vars))}</p></div>`).join('');
   /* on phones the four cards are a swipe row: a scrollable region must be keyboard-reachable, and only while it scrolls */
   const cardsEl = $('#learn-price-cards'); cardsEl.setAttribute('role', 'region'); cardsEl.setAttribute('aria-labelledby', 'learn-h');

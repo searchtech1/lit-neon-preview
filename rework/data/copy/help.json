@@ -2,7 +2,9 @@
   "_meta": {
     "page": "help",
     "owner": "P6",
-    "renders": ["help.html"],
+    "renders": [
+      "help.html"
+    ],
     "status": "filled by P6. The 20 questions and answers live in data/faq.json (WS-DATA); this file holds the help centre's own UI strings."
   },
   "help": {
@@ -18,7 +20,12 @@
     "emptyBody": "Try a shorter word, or ask us: a person reads every message.",
     "emptyAsk": "Ask us about “{q}”",
     "popular": "Popular",
-    "popularIds": ["q-delivery-time", "q-proof", "q-return-custom", "q-two-colours"],
+    "popularIds": [
+      "q-delivery-time",
+      "q-proof",
+      "q-return-custom",
+      "q-cost"
+    ],
     "linksTitle": "The details, in full",
     "links": {
       "delivery": "Delivery",

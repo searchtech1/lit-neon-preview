@@ -275,8 +275,8 @@ fontsLoading.then(() => { heroRender(); refreshAll(); });
   const wants = () => !matchMedia('(prefers-reduced-motion: reduce)').matches;
   const small = () => matchMedia('(max-width: 767px)').matches;
   let armed = false;
-  const arm = () => { if (armed || !wants()) return; armed = true; (small() ? [['video/mp4', v.dataset.mp4Sm || v.dataset.mp4]] : [['video/webm', v.dataset.webm], ['video/mp4', v.dataset.mp4]]).forEach(([type, src]) => { if (!src) return; const el = document.createElement('source'); el.type = type; el.src = src; v.appendChild(el); }); v.load(); const p = v.play(); if (p && p.catch) p.catch(() => {}); document.documentElement.classList.add('has-hero-film'); };
-  if (document.readyState === 'complete') setTimeout(arm, 400); else window.addEventListener('load', () => setTimeout(arm, 400), { once: true });
+  const arm = () => { if (armed) return; if (!wants()) { document.documentElement.classList.remove('has-hero-film'); return; } armed = true; (small() ? [['video/mp4', v.dataset.mp4Sm || v.dataset.mp4]] : [['video/webm', v.dataset.webm], ['video/mp4', v.dataset.mp4]]).forEach(([type, src]) => { if (!src) return; const el = document.createElement('source'); el.type = type; el.src = src; v.appendChild(el); }); v.load(); const p = v.play(); if (p && p.catch) p.catch(() => {}); document.documentElement.classList.add('has-hero-film'); };
+  arm();   /* start straight away (module runs once the HTML is parsed): no wait for every image to load */
   document.addEventListener('visibilitychange', () => { if (!armed) return; document.hidden ? v.pause() : v.play().catch(() => {}); });
 })();
 

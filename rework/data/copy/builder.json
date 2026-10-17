@@ -424,14 +424,14 @@
     "priceCards": [
       "Size",
       "Letters and tube length",
-      "Colours and colour changing",
+      "Colour and colour changing",
       "Backing and finish"
     ],
     "priceCardLines": [
       "Letter height sets the size. “{words}” is {small} at Small and {large} at Large.",
       "More letters mean more tube to bend. “{short}” is {shortPrice}; “{long}” is {longPrice} at the same size.",
-      "One colour is included. A second colour adds {delta}; colour changing adds {rgbPct} and comes with effects on the remote.",
-      "Cut-to-shape and rectangle clear acrylic are included. A table stand adds {stand}; a mirror finish adds {mirror}."
+      "Every sign is one colour of your choice. Colour changing adds {rgb} and comes with effects on the remote.",
+      "Cut to shape, cut to letter, rectangle and the table stand are all included. A black, white or mirror backboard adds {mirror}."
     ],
     "sizeH2": "How big for the room",
     "sizeLede": "The preview is to scale, so trust your eyes. As a rule of thumb:",
