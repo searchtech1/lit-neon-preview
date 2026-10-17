@@ -22,7 +22,7 @@ window.LIT = {
   // (per-face gaps the renderer and the measurer both apply, B44). minLetterCm values are workshop estimates [CONFIRM].
   fonts: [
     // owner's list 2026-10-17, in his order (Custom Neon-style set, real font names). Missing until files arrive:
-    // Kabel (8), Linoleo Script (9), Wardrum Bold Outline (11). licence: 'demo' = the owner's file is the free
+    // Kabel (8), Linoleo Script (9). licence: 'demo' = the owner's file is the free
     // personal-use download; buy the commercial/webfont licence before the store goes live (tools/build-shopify.mjs warns).
     // minLetterCm are workshop estimates [CONFIRM].
     { id: 'rocket', name: 'Rocket Clouds', family: 'Rocket Clouds', style: 'script', enabled: true, minLetterCm: 9, wordSpacingEm: 0.18, ampersandGapEm: 0.14, licence: 'demo' },
@@ -33,6 +33,7 @@ window.LIT = {
     { id: 'nickainley', name: 'Nickainley', family: 'Nickainley', style: 'script', enabled: true, minLetterCm: 8, wordSpacingEm: 0.14, ampersandGapEm: 0.14 },
     { id: 'neoneon', name: 'Neoneon', family: 'Neoneon', style: 'retro', enabled: true, minLetterCm: 7, wordSpacingEm: 0.12, ampersandGapEm: 0.12 },
     { id: 'poiret', name: 'Poiret One', family: 'Poiret One', style: 'modern', enabled: true, minLetterCm: 7, wordSpacingEm: 0.10, ampersandGapEm: 0.12 },
+    { id: 'wardrum', name: 'Wardrum Bold Outline', family: 'Wardrum Bold Outline', style: 'retro', enabled: true, minLetterCm: 9, wordSpacingEm: 0.12, ampersandGapEm: 0.12, licence: 'demo' },
     { id: 'soho', name: 'Soho', family: 'Neonderthaw', style: 'script', enabled: true, minLetterCm: 8, wordSpacingEm: 0.18, ampersandGapEm: 0.14 },
     { id: 'shoreditch', name: 'Shoreditch', family: 'Tilt Neon', style: 'modern', enabled: true, minLetterCm: 7, wordSpacingEm: 0.10, ampersandGapEm: 0.12 },
     { id: 'brighton', name: 'Brighton', family: 'Pacifico', style: 'script', enabled: true, minLetterCm: 7, wordSpacingEm: 0.12, ampersandGapEm: 0.14 },
