@@ -1,6 +1,7 @@
 {
- "_about": "Live discount codes for the preview checkout (audit B C1, 2026-10-17). LIT10 is the code the announcement bar and the first-order popup advertise. On Shopify the real discount lives in Shopify admin (Discounts) with the same code; this file only drives the static preview. Same shape as qa/fixtures/codes.json, which stays for the QA matrix.",
+ "_about": "Live discount codes for the preview checkout (audit B C1, 2026-10-17). LIT35 is the code the announcement bar and the first-order popup advertise (owner changed 10% to 35% on 2026-10-18; LIT10 stays valid until switched off in Shopify). On Shopify the real discount lives in Shopify admin (Discounts) with the same code; this file only drives the static preview. Same shape as qa/fixtures/codes.json, which stays for the QA matrix.",
  "codes": [
+  { "code": "LIT35", "type": "percent", "value": 35, "label": "35% off your first sign" },
   { "code": "LIT10", "type": "percent", "value": 10, "label": "10% off your first sign" }
  ]
 }
