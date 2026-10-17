@@ -328,7 +328,7 @@
         "help"
       ],
       "q": "Where are you based?",
-      "a": "{fact:workshopTown} Every sign is drawn, bent and mounted in a UK workshop, then sent out with free delivery across mainland GB.",
+      "a": "Our address is {fact:registeredAddress}. Every sign is drawn, bent and mounted in a UK workshop, then sent out with free delivery across mainland GB.",
       "links": [
         {
           "label": "The workshop",

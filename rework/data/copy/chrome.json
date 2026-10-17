@@ -162,7 +162,7 @@
     "payWith": "Pay with",
     "legal": "{company}{number}{address}Prices in £. Custom signs are made to order and can’t be returned for a change of mind; your statutory rights are not affected.",
     "legalNumber": ", company no. {number}",
-    "legalAddress": ", registered office {address}",
+    "legalAddress": ", {address}",
     "copyright": "© {year} Lit Neon"
   },
   "pills": {

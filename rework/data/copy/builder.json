@@ -263,7 +263,7 @@
     "outdoors": "Outdoors",
     "outdoorQuoted": "Quoted",
     "outdoorIndicative": "+{pct}",
-    "outdoorNote": "Outdoor signs get a sealed supply and a weatherproof jacket. The outdoor build adds {pct} to the sign price and shows in the breakdown.",
+    "outdoorNote": "Outdoor signs get a sealed supply and a weatherproof jacket. The outdoor build adds {pct} to the whole sign price, extras included, and shows as its own line in the breakdown.",
     "dimmer": "Dimmer + remote",
     "dimmerHelp": "Dim it, flash it or fade it from the sofa. Optional extra.",
     "dimmerNo": "No thanks",
