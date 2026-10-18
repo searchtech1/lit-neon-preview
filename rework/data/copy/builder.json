@@ -20,7 +20,9 @@
   "resume": "Resume “{words}”?",
   "resumeBtn": "Resume",
   "fresh": "Start fresh",
-  "editing": "Editing a basket line · changes replace it when you update"
+  "editing": "Editing a basket line · changes replace it when you update",
+  "addNew": "Add as a new sign",
+  "stopEditing": "Stop editing"
  },
  "steps": {
   "words": "Your words",
@@ -107,7 +109,8 @@
    "s11-shopwindow": "Door",
    "s12-gaming": "Desk",
    "s00-studio-dark": "Wall",
-   "s00-studio-light": "Wall"
+   "s00-studio-light": "Wall",
+   "s13-brick-loft": "Brick wall"
   },
   "arFallback": "Room view (AR) isn’t available on this phone. Use a photo of your own wall instead — it hangs at true size once you set the scale.",
   "arFallbackAndroid": "This phone’s browser can’t open room view (AR). Use a photo of your own wall instead — it hangs at true size once you set the scale."
@@ -174,7 +177,15 @@
   "helpBaselines": "Up to {maxLines} lines. Each line has its own character limit for the size you pick. Press Enter for a new line.",
   "counterLine": "{name} · {n} / {max}",
   "counterOff": "{name} · not at {size}",
-  "counterOver": "{name} · {n} / {max} · too long for {size}"
+  "counterOver": "{name} · {n} / {max} · too long for {size}",
+  "makeTwoLinesAt": "Two lines at {size} · {price}",
+  "makeTwoLinesPrice": "Make it two lines · {price}",
+  "counterWide": "{name} · {n} / {max} · over 2 m at {size}",
+  "glyphGap": "{face} has no {glyphs} of its own, so they would be drawn in a stand-in lettering.",
+  "glyphAlt": "These faces have them:",
+  "useFace": "Use {face}",
+  "retiredFace": "{face} is no longer in our range. Your link still shows it; {alt} is the closest face we make now.",
+  "symbolSame": "No change"
  },
  "lettering": {
   "label": "Pick a face",
@@ -189,7 +200,9 @@
   "thinAtSmall": "Thin at {size}",
   "thinNote": "{face} needs letters at least {min} cm tall, so {size} is off for this face.",
   "sheetTitle": "Choose your lettering",
-  "done": "Done"
+  "done": "Done",
+  "retired": "No longer offered",
+  "noGlyphs": "No {glyphs}"
  },
  "colour": {
   "label": "Tube colour",
@@ -200,7 +213,7 @@
   "jacketColoured": "Coloured jacket",
   "jacketColouredSub": "Tinted tube by day",
   "rgbJacket": "Colour-changing tubes have a white jacket",
-  "rgbNote": "Colour changing adds {pct} to the sign. The remote picks the colour and the effects.",
+  "rgbNote": "Colour changing adds {price} to the sign. The remote picks the colour and the effects.",
   "examples": "Example signs in this colour",
   "examplesNote": "Rendered previews, not photographs.",
   "examplesPhotos": "Real photos in this colour",
@@ -238,7 +251,9 @@
   },
   "unitCm": "cm",
   "unitIn": "in",
-  "tooLong": "Too long"
+  "tooLong": "Too long",
+  "onWall": "on this wall",
+  "thisWall": "this wall"
  },
  "backing": {
   "label": "Acrylic backing",
@@ -324,7 +339,9 @@
   "plugValue": "Moulded UK plug",
   "kitTitle": "What's in the box",
   "kitNote": "Your sign, its power supply with a UK plug (the adapter in the picture), the fixings you picked and your proof drawing. The dimmer and remote are the optional extra from the Fitting step.",
-  "kitAlt": "Diagram of everything that ships with a sign: the neon sign, the power supply with its UK plug and cord, screws, and the optional dimmer and remote"
+  "kitAlt": "Diagram of everything that ships with a sign: the neon sign, the power supply with its UK plug and cord, screws, and the optional dimmer and remote",
+  "yes": "Yes",
+  "no": "No"
  },
  "dock": {
   "add": "Add to basket",
@@ -382,7 +399,17 @@
   "details": "Postcode and delivery date",
   "detailsOpen": "Less",
   "detailsCheck": "Check your postcode",
-  "detailsAsk": "Ask about delivery"
+  "detailsAsk": "Ask about delivery",
+  "fixSize": "Make it {size} · {price}",
+  "fixTwoLines": "Split over two lines · {price}",
+  "fixLines": "Split over {n} lines · {price}",
+  "tooLongShort": "{line} too long for {size}",
+  "tooManyShort": "{size} takes {n} line{s}",
+  "thinShort": "{face} is too thin at {size}",
+  "orQuote": "Or request a free quote as it is",
+  "reasonNoSymbol": "Symbol removed",
+  "reasonNoDimmer": "No dimmer",
+  "reasonWords": "Your words"
  },
  "postcode": {
   "title": "Where are we delivering?",
@@ -528,5 +555,20 @@
  "ui": {
   "hashMalformed": "That link looks incomplete, so we started from your last design.",
   "hashMalformedFresh": "That link looks incomplete, so we started a fresh design for you."
+ },
+ "confirm": {
+  "title": "Check your words",
+  "lede": "This is exactly what we will make:",
+  "oneLine": "1 line",
+  "lines": "{n} lines",
+  "letters": "{n} characters"
+ },
+ "quote": {
+  "_about": "Overrides the pricing.js default on the designer (audit WORDS-9: there may be no bigger size).",
+  "tooManyLines": "{size} takes up to {n} line{s}. Use fewer lines, or pick a size that takes more."
+ },
+ "breakdown": {
+  "_about": "Overrides the pricing.js default on the designer (audit UX-8).",
+  "round": "Rounded up to the next {step}"
  }
 }

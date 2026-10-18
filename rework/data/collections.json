@@ -36,8 +36,8 @@
       "defaults": { "font": "notting", "colour": "warm" },
       "related": ["wedding", "kids", "bedroom"],
       "tile": { "words": "The Smiths", "line": "Surnames, first names and initials, drawn to order." },
-      "metaTitle": "Personalised neon name signs | Lit Neon",
-      "metaDescription": "Personalised LED neon name signs for homes, nurseries and weddings. Type any name, approve the drawing, free mainland-GB delivery."
+      "metaTitle": "Personalised neon name signs, made in the UK | Lit Neon",
+      "metaDescription": "Personalised LED neon name signs for homes, nurseries and weddings. Type any name, approve a proof drawing before we make it, and get free mainland-GB delivery."
     },
     {
       "id": "bedroom",
@@ -54,8 +54,8 @@
       "defaults": { "font": "soho", "colour": "pink" },
       "related": ["names", "wall-art", "kids"],
       "tile": { "words": "Sweet dreams", "line": "Soft light above the bed, dimmable from the pillow." },
-      "metaTitle": "Neon signs for the bedroom | Lit Neon",
-      "metaDescription": "LED neon bedroom signs with an optional dimmer and remote. Ready-made phrases or your own words, made in a UK workshop."
+      "metaTitle": "Bedroom neon signs, made to order in the UK | Lit Neon",
+      "metaDescription": "LED neon signs for the bedroom: ready-made phrases or your own words, in 12 tube colours with an optional dimmer and remote. Made to order in a UK workshop."
     },
     {
       "id": "bar",
@@ -72,8 +72,8 @@
       "defaults": { "font": "camden", "colour": "warm" },
       "related": ["kitchen", "gaming", "wall-art"],
       "tile": { "words": "The Local", "line": "A name in lights for the bar, the shed or the shelf." },
-      "metaTitle": "Home bar and pub neon signs | Lit Neon",
-      "metaDescription": "LED neon bar signs for home bars, sheds and pubs. Classic phrases or your bar's own name, made in the UK."
+      "metaTitle": "Home bar and pub neon signs, made in the UK | Lit Neon",
+      "metaDescription": "LED neon signs for home bars, garden sheds and pubs: classic phrases or your bar's own name, made to order in a UK workshop with free mainland-GB delivery."
     },
     {
       "id": "wedding",
@@ -90,8 +90,8 @@
       "defaults": { "font": "notting", "colour": "warm" },
       "related": ["names", "bedroom", "wall-art"],
       "tile": { "words": "Better together", "line": "Top tables, backdrops, then the hallway for good." },
-      "metaTitle": "Wedding neon signs | Lit Neon",
-      "metaDescription": "Wedding LED neon signs with your names or vows: a proof drawing first, made in a UK workshop, yours to keep after the day."
+      "metaTitle": "Ready-made wedding neon signs, made in the UK | Lit Neon",
+      "metaDescription": "Wedding LED neon signs with your names or a favourite line: a proof drawing before we make it, made in a UK workshop, and yours to keep long after the day."
     },
     {
       "id": "kitchen",
@@ -108,8 +108,8 @@
       "defaults": { "font": "margate", "colour": "warm" },
       "related": ["bar", "names", "bedroom"],
       "tile": { "words": "Kettle's on", "line": "House rules for the room where everyone ends up." },
-      "metaTitle": "Neon signs for the kitchen and hallway | Lit Neon",
-      "metaDescription": "LED neon kitchen signs: cuppa-first classics or your own words, made in the UK, with an optional dimmer and remote."
+      "metaTitle": "Kitchen and hallway neon signs, made in the UK | Lit Neon",
+      "metaDescription": "LED neon signs for the kitchen and hallway: cuppa-first classics or your own words, made to order in a UK workshop, with an optional dimmer and remote."
     },
     {
       "id": "gaming",
@@ -126,8 +126,8 @@
       "defaults": { "font": "brixton", "colour": "blue" },
       "related": ["bedroom", "bar", "wall-art"],
       "tile": { "words": "Game on", "line": "Static or colour changing, above the monitor." },
-      "metaTitle": "Gaming room neon signs | Lit Neon",
-      "metaDescription": "LED neon gaming signs in static or colour-changing tube, with an optional dimmer and remote. Your gamertag or ours, made in the UK."
+      "metaTitle": "Gaming room neon signs, made to order in the UK | Lit Neon",
+      "metaDescription": "LED neon gaming signs in static or colour-changing tube, with an optional dimmer and remote. Your gamertag or one of ours, made to order in a UK workshop."
     },
     {
       "id": "business",
@@ -163,8 +163,8 @@
       "defaults": { "font": "soho", "colour": "pink" },
       "related": ["bedroom", "gaming", "names"],
       "tile": { "words": "Lit", "line": "Line-art icons and one-word signs for any wall." },
-      "metaTitle": "Neon wall art | Lit Neon",
-      "metaDescription": "LED neon wall art: hearts, moons, lightning bolts and one-word signs, drawn as tube and made in a UK workshop."
+      "metaTitle": "Neon wall art: hearts, moons and bolts in LED | Lit Neon",
+      "metaDescription": "LED neon wall art: hearts, crescent moons, lightning bolts and one-word signs, drawn as tube and made to order in a UK workshop with free mainland-GB delivery."
     },
     {
       "id": "kids",
@@ -181,8 +181,8 @@
       "defaults": { "font": "brighton", "colour": "candy" },
       "related": ["names", "bedroom", "wall-art"],
       "tile": { "words": "Oh baby", "line": "Nursery names and night lights, dimmable at bedtime." },
-      "metaTitle": "Kids and nursery neon signs | Lit Neon",
-      "metaDescription": "LED neon signs for nurseries and kids' rooms: names, night lights and new-baby gifts, with an optional dimmer and remote."
+      "metaTitle": "Kids and nursery neon signs, made in the UK | Lit Neon",
+      "metaDescription": "LED neon signs for nurseries and kids' rooms: names, night lights and new-baby gifts, with an optional dimmer and remote. Made to order in a UK workshop."
     },
     {
       "id": "christmas",
@@ -200,8 +200,8 @@
       "defaults": { "font": "notting", "colour": "warm" },
       "related": ["halloween", "names", "bar"],
       "tile": { "words": "Merry & bright", "line": "The decoration that never needs untangling." },
-      "metaTitle": "Christmas neon signs | Lit Neon",
-      "metaDescription": "Christmas LED neon signs made to order in a UK workshop, with free mainland-GB delivery."
+      "metaTitle": "Christmas neon signs, made to order in the UK | Lit Neon",
+      "metaDescription": "Christmas LED neon signs to light up the season: ready-made festive phrases or your own words, made to order in a UK workshop with free mainland-GB delivery."
     },
     {
       "id": "halloween",
@@ -219,8 +219,8 @@
       "defaults": { "font": "brixton", "colour": "orange" },
       "related": ["christmas", "bar", "wall-art"],
       "tile": { "words": "Boo", "line": "Orange, violet and green, for the door and the bar cart." },
-      "metaTitle": "Halloween neon signs | Lit Neon",
-      "metaDescription": "Halloween LED neon signs in orange, violet and green, made to order in a UK workshop."
+      "metaTitle": "Halloween neon signs, made to order in the UK | Lit Neon",
+      "metaDescription": "Halloween LED neon signs in orange, violet and green: spooky phrases or your own words, made to order in a UK workshop with free mainland-GB delivery."
     }
   ],
   "homeTiles": {

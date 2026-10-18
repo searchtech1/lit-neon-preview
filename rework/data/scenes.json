@@ -90,6 +90,162 @@
  },
  "scenes": [
   {
+   "id": "s13-brick-loft",
+   "name": "London brick loft",
+   "tags": [
+    "home",
+    "loft",
+    "brick",
+    "default",
+    "closeup"
+   ],
+   "plates": {
+    "day": "scenes/s13-brick-loft/day",
+    "night": "scenes/s13-brick-loft/night",
+    "portrait": {
+     "day": "scenes/s13-brick-loft/day-portrait",
+     "night": "scenes/s13-brick-loft/night-portrait"
+    },
+    "wall": {
+     "landscape": {
+      "day": "scenes/s13-brick-loft/day-wall",
+      "night": "scenes/s13-brick-loft/night-wall"
+     },
+     "portrait": {
+      "day": "scenes/s13-brick-loft/day-portrait-wall",
+      "night": "scenes/s13-brick-loft/night-portrait-wall"
+     }
+    },
+    "widths": {
+     "plate": [
+      600,
+      1000,
+      1600,
+      2400
+     ],
+     "portrait": [
+      600,
+      1000,
+      1600,
+      2048
+     ],
+     "wall": [
+      1000,
+      1600,
+      3000,
+      6000
+     ],
+     "portraitWall": [
+      1000,
+      1600,
+      3000,
+      4000
+     ]
+    },
+    "formats": [
+     "avif",
+     "webp",
+     "jpg"
+    ]
+   },
+   "aspect": {
+    "landscape": [
+     3072,
+     2048
+    ],
+    "portrait": [
+     2048,
+     2560
+    ]
+   },
+   "calib": {
+    "object": "brick wall (UK brick course 7.5 cm)",
+    "cm": 472,
+    "px": [
+     522,
+     2289
+    ]
+   },
+   "wallBox": {
+    "x": 0.1826,
+    "y": 0.1841,
+    "w": 0.5537,
+    "h": 0.4752
+   },
+   "anchor": {
+    "x": 0.4575,
+    "y": 0.3938
+   },
+   "portrait": {
+    "crop": {
+     "x": 0.1908,
+     "y": 0,
+     "w": 0.5333,
+     "h": 1
+    },
+    "calibPx": [
+     -81,
+     2129
+    ],
+    "wallBox": {
+     "x": 0,
+     "y": 0.1841,
+     "w": 1,
+     "h": 0.4752
+    },
+    "anchor": {
+     "x": 0.5,
+     "y": 0.3938
+    },
+    "calibInFrame": false
+   },
+   "wall": {
+    "landscape": {
+     "crop": {
+      "x": 0.1826,
+      "y": 0.1656,
+      "w": 0.5537,
+      "h": 0.5537
+     },
+     "px": [
+      6000,
+      4000
+     ]
+    },
+    "portrait": {
+     "crop": {
+      "x": 0,
+      "y": 0,
+      "w": 1,
+      "h": 1
+     },
+     "px": [
+      4000,
+      5000
+     ]
+    }
+   },
+   "light": "warm",
+   "floorY": 0.6858,
+   "mobileDefault": true,
+   "source": {
+    "generator": "Higgsfield gpt_image_2_5 (4k, medium)",
+    "jobs": {
+     "day": "d5015933-ffc8-4d6e-84e3-d3da7271eead",
+     "night": "c28491c7-09d6-4b4f-854c-e0bdac793b3b"
+    },
+    "night": "edit of the day image",
+    "generatedPx": [
+     3504,
+     2336
+    ],
+    "wallCropUpscale": 3.0928
+   },
+   "label": "Rendered preview",
+   "placeholder": false,
+   "collection": "home"
+  },
+  {
    "id": "s01-living",
    "name": "Living room",
    "tags": [
