@@ -55,8 +55,20 @@
   "brief": {
     "width": "Roughly how wide?",
     "widthHelp": "A guess is fine. The mockup shows the size to scale.",
-    "widthChips": ["40 cm", "60 cm", "80 cm", "100 cm", "120 cm +"],
-    "widthHints": ["About a laptop’s width: a shelf or a counter", "Above a desk or a reception counter", "Above a sofa or a bed", "A feature wall or a shop wall", "Big walls, shopfronts and stages: quoted by a designer"],
+    "widthChips": [
+      "40 cm",
+      "60 cm",
+      "80 cm",
+      "100 cm",
+      "120 cm +"
+    ],
+    "widthHints": [
+      "About a laptop’s width: a shelf or a counter",
+      "Above a desk or a reception counter",
+      "Above a sofa or a bed",
+      "A feature wall or a shop wall",
+      "Big walls, shopfronts and stages: quoted by a designer"
+    ],
     "notSure": "Not sure",
     "notSureHint": "No problem. The designer suggests a size that suits the logo",
     "where": "Where will it hang?",
@@ -93,8 +105,7 @@
   },
   "getCard": {
     "eyebrow": "What you’ll get",
-    "title": "A proof drawing, like this",
-    "sampleLabel": "Sample: our own wordmark",
+    "title": "Your logo in neon, like this",
     "railTitle": "What happens next",
     "rail": [
       "You upload your file",
