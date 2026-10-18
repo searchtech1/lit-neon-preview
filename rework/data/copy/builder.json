@@ -405,7 +405,7 @@
   "fixLines": "Split over {n} lines · {price}",
   "tooLongShort": "{line} too long for {size}",
   "tooManyShort": "{size} takes {n} line{s}",
-  "thinShort": "{face} is too thin at {size}",
+  "thinShort": "{face} needs bigger letters than {size}",
   "orQuote": "Or request a free quote as it is",
   "reasonNoSymbol": "Symbol removed",
   "reasonNoDimmer": "No dimmer",
