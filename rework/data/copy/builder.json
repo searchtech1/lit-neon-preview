@@ -301,6 +301,7 @@
   "chainsSub": "From hooks or a picture rail",
   "strips": "Adhesive strips",
   "stripsSub": "No drilling, for lighter signs",
+  "example": "See an example",
   "standNote": "A table stand sits on its base, so there is nothing to hang.",
   "badges": "Included with every sign",
   "badgeFixings": "Fixings of your choice",
@@ -554,7 +555,9 @@
  },
  "ui": {
   "hashMalformed": "That link looks incomplete, so we started from your last design.",
-  "hashMalformedFresh": "That link looks incomplete, so we started a fresh design for you."
+  "hashMalformedFresh": "That link looks incomplete, so we started a fresh design for you.",
+  "optionSwapped": "The {what} on this design isn’t offered any more, so it now uses {name}.",
+  "optionsSwapped": "Some choices on this design aren’t offered any more, so it now uses {names}."
  },
  "confirm": {
   "title": "Check your words",
