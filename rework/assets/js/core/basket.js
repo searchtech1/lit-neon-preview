@@ -21,7 +21,7 @@ import{resolve as ee,iconPlaceName as fe,colourOf as he,sizeOf as ie,backingOf a
 .ln-drawer__head{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:var(--s-3);padding:var(--s-3) var(--s-5);border-bottom:1px solid var(--hair)}
 .ln-drawer__head h2{font:600 var(--t-title)/var(--lh-title) var(--f-ui);margin:0}
 .ln-drawer__body{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:var(--s-2) var(--s-5) var(--s-5);display:flex;flex-direction:column;gap:var(--s-4)}
-.ln-drawer__foot{flex:0 0 auto;border-top:1px solid var(--hair);padding:var(--s-3) var(--s-5) calc(var(--s-3) + env(safe-area-inset-bottom));display:grid;gap:var(--s-2);background:var(--night-2)}
+.ln-drawer__foot{flex:0 0 auto;border-top:1px solid var(--hair);padding:var(--s-3) var(--s-5) calc(var(--s-3) + var(--sab, env(safe-area-inset-bottom, 0px)));display:grid;gap:var(--s-2);background:var(--night-2)}
 .ln-drawer__foot .ln-foot-acts{display:grid;grid-template-columns:1fr;gap:var(--s-1);justify-items:center}
 .ln-drawer__foot .ln-foot-acts .ln-btn{width:100%}
 .ln-lines{display:grid}
