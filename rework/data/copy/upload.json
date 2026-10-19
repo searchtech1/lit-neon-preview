@@ -35,7 +35,7 @@
     "logo": "Logo or artwork",
     "logoSub": "A designer redraws it and emails a free mockup",
     "photo": "A photo (person, pet, place)",
-    "photoSub": "See it as neon now, right here on your device"
+    "photoSub": "Let our team handle it"
   },
   "steps": {
     "file": "Your file",
@@ -44,6 +44,8 @@
   },
   "drop": {
     "label": "Drop your logo here, or choose a file",
+    "labelPhoto": "Drop your photo here, or choose a file",
+    "ariaPhoto": "Add your photo: choose a file or drag it here",
     "hint": "PNG, JPG, SVG or PDF · up to 20 MB",
     "aria": "Add your logo or artwork: choose a file or drag it here",
     "remove": "Remove",
@@ -90,6 +92,7 @@
     "deadlineTight": "That’s sooner than our standard time. Send it anyway and the designer will tell you straight away what’s possible.",
     "notes": "Anything else we should know? (optional)",
     "notesPlaceholder": "Wording, which part of the logo matters most, a photo of the wall it’s going on…",
+    "notesPhotoPlaceholder": "Her smile, the ears, the outline of the house, the dates underneath…",
     "fromBuilder": "From my design in the designer: “{words}” in {lettering}, {colour}, {size}.",
     "name": "Your name",
     "email": "Email",
@@ -100,6 +103,7 @@
     "replyNote": "We email your mockup and price to the address above, and use your details for this request only",
     "privacy": "privacy notice",
     "rights": "I have the right to use this artwork",
+    "rightsPhoto": "I have the right to use this photo",
     "submit": "Request my free mockup",
     "reassure": "Free, no payment, no obligation."
   },
@@ -114,54 +118,6 @@
       "We make it in 7–10 working days"
     ],
     "private": "Your files are used only to draw your mockup. We never share them."
-  },
-  "photo": {
-    "intro": "Drop in a photo of a person, a pet or a place. We trace it into tube right here on your device, so you can see the sign before anyone draws it.",
-    "privacy": "Your photo stays on this device until you choose to send it.",
-    "rendered": "Rendered preview",
-    "waiting": "Add a photo above and the preview appears here, with an honest read on how well it will work as tube.",
-    "gateTitle": "How it reads as tube",
-    "gate": {
-      "ready": "Looks sign-ready",
-      "good": "Traced, a designer will refine it",
-      "pet": "Simplified — a designer will refine the face",
-      "detailed": "Too detailed for tube; a designer will simplify it",
-      "fallback": "A designer will refine this"
-    },
-    "gateWhy": {
-      "ready": "Clean lines that bend well. A designer still checks every curve before your proof.",
-      "good": "We found the person and traced the outline. Faces and hands are the hardest part to bend, so a designer redraws them on your proof before anything is made.",
-      "pet": "Faces are the hardest part to bend. The designer redraws the eyes and nose by hand.",
-      "detailed": "There’s more going on here than tube can show. A designer picks out the lines that matter.",
-      "fallback": "We traced it without spotting a subject, so a designer will check it closely."
-    },
-    "sizePick": "Size (longest side)",
-    "size": "About {size} · {metres} of LED tube",
-    "sizeNote": "Indicative size, confirmed on your proof",
-    "happy": "Are you happy with this preview?",
-    "buy": "Buy at this price — {price}",
-    "buyLine": "A designer draws your proof before anything is made",
-    "buyAdded": "Added",
-    "buyQuote": "At this size a designer prices it for you. Send it to a designer and the price comes with your mockup.",
-    "buyTwoTone": "Two-colour photo signs are priced by a designer. Send it over and the price comes with your mockup.",
-    "buyGated": "This one needs a designer’s hand before we can price it, so we haven’t shown a buy button.",
-    "designer": "Send this to a designer first",
-    "indicative": "Indicative price {price}, confirmed in your mockup",
-    "notQuite": "Not quite — let a designer draw it from the photo",
-    "formDesignerTitle": "Send your preview to a designer",
-    "formDesignerLede": "We attach the preview and its settings. You get a mockup and a firm price within 12 hours.",
-    "formDrawTitle": "Let a designer draw it from your photo",
-    "formDrawLede": "We attach your original photo. Tell us what matters most and the designer draws it from scratch.",
-    "matters": "What matters most? (optional)",
-    "mattersPlaceholder": "Her smile, the ears, the outline of the house, the dates underneath…",
-    "sizeField": "Roughly how wide?",
-    "attached": "Attached: {what}",
-    "attachedPreview": "your neon preview and its settings",
-    "attachedPhoto": "your original photo",
-    "attachedCamera": "your neon preview (taken with the camera)",
-    "submit": "Send to a designer",
-    "cancel": "Back to the preview",
-    "basketName": "Photo sign"
   },
   "faqH2": "Questions about files and logos",
   "faqEyebrow": "Good to know",

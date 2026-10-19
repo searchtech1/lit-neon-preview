@@ -42,7 +42,6 @@
 <link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/contour.js">
 <link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/options-merge.js">
 <link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/rules.js">
-<link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/basket.js">
 <link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/router.js">
 <link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/chrome.js">
 <link rel="modulepreload" href="/lit-neon-preview/rework/assets/js/core/titlecase.js">
@@ -101,9 +100,9 @@
           <svg class="ic ic--lg" aria-hidden="true"><use href="#i-drawing"></use></svg>
           <span><b data-copy="path.logo">Logo or artwork</b><small data-copy="path.logoSub">A designer redraws it and emails a free mockup</small></span>
         </button>
-        <button type="button" role="tab" id="tab-photo" aria-controls="photo" aria-selected="false" class="u-path__opt" data-path="photo" data-qa="upload.path.photo">
+        <button type="button" role="tab" id="tab-photo" aria-controls="logo" aria-selected="false" class="u-path__opt" data-path="photo" data-qa="upload.path.photo">
           <svg class="ic ic--lg" aria-hidden="true"><use href="#i-camera"></use></svg>
-          <span><b data-copy="path.photo">A photo (person, pet, place)</b><small data-copy="path.photoSub">See it as neon now, right here on your device</small></span>
+          <span><b data-copy="path.photo">A photo (person, pet, place)</b><small data-copy="path.photoSub">Let our team handle it</small></span>
         </button>
       </div>
 
@@ -206,78 +205,6 @@
         </aside>
       </div>
 
-      <!-- ---------- photo path ---------- -->
-      <div class="u-panel u-photo" id="photo" role="tabpanel" aria-labelledby="tab-photo" tabindex="-1" hidden>
-        <p class="t-lead u-photo__intro" data-copy="photo.intro">Drop in a photo of a person, a pet or a place. We trace it into tube right here on your device, so you can see the sign before anyone draws it.</p>
-        <div class="u-card u-photo__engine" id="u-photo" data-qa="upload.photo" aria-label="Photo to neon preview"></div>
-
-        <div class="u-card u-gate" id="u-gate" data-qa="upload.photo.gate" aria-live="polite">
-          <p class="u-gate__wait" id="u-gate-wait" data-copy="photo.waiting">Add a photo above and the preview appears here, with an honest read on how well it will work as tube.</p>
-          <div class="u-gate__body" id="u-gate-body" hidden>
-            <div class="u-gate__read">
-              <p class="t-eyebrow" data-copy="photo.gateTitle">How it reads as tube</p>
-              <p class="u-score" id="u-score" data-qa="upload.photo.score"><svg class="ic" aria-hidden="true"><use href="#i-check"></use></svg><span></span></p>
-              <p class="u-gate__why" id="u-gate-why"></p>
-              <div class="c-field u-gate__sizes">
-                <span class="label" id="u-psize-l" data-copy="photo.sizePick">Size (longest side)</span>
-                <div class="c-chips" role="group" aria-labelledby="u-psize-l" data-qa="upload.photo.sizes"></div>
-              </div>
-              <p class="u-gate__size t-small" id="u-gate-size" data-qa="upload.photo.size"></p>
-            </div>
-            <div class="u-gate__decide">
-              <p class="u-gate__q" data-copy="photo.happy">Are you happy with this preview?</p>
-              <div class="u-gate__price" id="u-gate-price" data-qa="upload.photo.price"></div>
-              <div class="u-gate__btns">
-                <button type="button" class="c-btn c-btn--primary c-btn--lg" id="u-buy" data-qa="upload.photo.buy"><span class="label"></span></button>
-                <button type="button" class="c-btn c-btn--ghost c-btn--lg" id="u-designer" data-qa="upload.photo.designer"><span data-copy="photo.designer">Send this to a designer first</span></button>
-              </div>
-              <p class="t-caption u-gate__buyline" id="u-buyline" data-copy="photo.buyLine">A designer draws your proof before anything is made</p>
-              <p class="t-small u-gate__note" id="u-gate-note" hidden></p>
-              <button type="button" class="c-btn c-btn--text u-gate__notquite" id="u-notquite" data-qa="upload.photo.notquite"><span class="label" data-copy="photo.notQuite">Not quite — let a designer draw it from the photo</span></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="u-photoform-slot" id="u-photoform-slot" hidden>
-          <form class="u-card u-form u-photoform" id="u-photo-form" data-qa="upload.photoform" novalidate>
-            <div class="u-photoform__head">
-              <h3 id="u-pf-title"></h3>
-              <p class="t-small" id="u-pf-lede"></p>
-              <p class="u-attached t-small" id="u-pf-attached" data-qa="upload.photoform.attached"></p>
-            </div>
-            <div class="u-row2">
-              <div class="c-field">
-                <label for="u-pf-name" data-copy="brief.name">Your name</label>
-                <input class="c-input" type="text" id="u-pf-name" name="name" autocomplete="name" maxlength="120" data-qa="upload.photoform.name">
-              </div>
-              <div class="c-field">
-                <label for="u-pf-email" data-copy="brief.email">Email</label>
-                <input class="c-input" type="email" id="u-pf-email" name="email" autocomplete="email" inputmode="email" maxlength="200" data-qa="upload.photoform.email">
-              </div>
-            </div>
-            <div class="c-field">
-              <span class="label" id="u-pf-width-l" data-copy="photo.sizeField">Roughly how wide?</span>
-              <div class="c-chips u-chips" role="group" aria-labelledby="u-pf-width-l" data-qa="upload.photoform.width" data-single="pfwidth"></div>
-              <input type="hidden" name="width" value="">
-            </div>
-            <div class="c-field" id="u-pf-matters-f">
-              <label for="u-pf-matters" data-copy="photo.matters">What matters most? (optional)</label>
-              <textarea class="c-input" id="u-pf-matters" name="matters" rows="3" maxlength="2000" data-qa="upload.photoform.matters" placeholder="Her smile, the ears, the outline of the house, the dates underneath…"></textarea>
-            </div>
-            <div class="c-field">
-              <label class="c-check"><input type="checkbox" name="rights" data-qa="upload.photoform.rights"><span data-copy="brief.rights">I have the right to use this artwork</span></label>
-            </div>
-            <div class="c-field">
-              <p class="help prose" data-qa="upload.photoform.replynote"><span data-copy="brief.replyNote">We email your mockup and price to the address above, and use your details for this request only</span> (see our <a href="/lit-neon-preview/rework/legal/privacy.html" class="u-inline" data-qa="upload.photoform.privacy">privacy notice</a>).</p>
-              <label class="c-check"><input type="checkbox" name="consent" data-qa="upload.photoform.consent"><span data-copy="brief.consent">Also send me the occasional note from the workshop (optional, unsubscribe any time).</span></label>
-            </div>
-            <div class="u-submit u-submit--row">
-              <button type="submit" class="c-btn c-btn--primary c-btn--lg" data-qa="upload.photoform.submit"><span data-copy="photo.submit">Send to a designer</span></button>
-              <button type="button" class="c-btn c-btn--text" id="u-pf-cancel" data-qa="upload.photoform.cancel"><span class="label" data-copy="photo.cancel">Back to the preview</span></button>
-            </div>
-          </form>
-        </div>
-      </div>
     </div>
   </section>
 
